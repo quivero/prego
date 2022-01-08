@@ -26,6 +26,14 @@ New features to this service are:
 
 [:priority]: :explanation
 
-1) [  High  ]: Allow to identify cyclic paths;
-2) [ Medium ]: Given a node, which nodes it can reach;
-3) [ Medium ]: Return empty array in case there is no path feasible to B;
+1) [  High  ]: Allow to identify cyclic paths: 
+    How: A cycle appears in a graph if 
+        a) The current node has at least ONE upcoming arrow and ONE outcoming arrow
+        b) Both outer nodes were already visited.
+    Status: Undone
+2) [ Medium ]: identify loose nodes (vertices)
+    How: A loose node has no adjacent nodes.
+3) [ Medium ]: Given a node, which nodes it can reach;
+    Status: Done
+4) [ Low ]: Empty array for non-reachable destination node;
+    Status: Done
