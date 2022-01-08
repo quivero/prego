@@ -1,5 +1,4 @@
-# "Do you wanna develop an app?"
-(Glootie)
+# Paths in a Graph from A to B
 
 Hi, this is an app, but you can interpret it as a service. Its service is to find all paths in a connected graph com node A to B.
 
