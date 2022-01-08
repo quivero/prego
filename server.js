@@ -2,7 +2,7 @@
 
 // [START app]
 const express = require('express');
-const { Graph, addEdge, AllPaths, AllVicinity } = require('./utils/directed_graph.js');
+const { Graph, addEdge, allPaths, allVicinity, looseNodes } = require('./utils/directed_graph.js');
 
 const app = express();
 
@@ -37,8 +37,9 @@ app.get('/', (req, res) => {
   // arbitrary destination
   let d = 1;
 
-  const all_paths = AllPaths(s, d);
-  const all_vicinity = AllVicinity();
+  let all_paths = allPaths(s, d);
+  let all_vicinity = allVicinity();
+  let loose_nodes = looseNodes();
 
   console.log('Paths from '+s+' to '+d+' :');
   console.log(all_paths);
@@ -46,10 +47,19 @@ app.get('/', (req, res) => {
   console.log('Reachibility: ');
   console.log(all_vicinity);
 
-  let text_ = "Graph image:  <a href=https://www.geeksforgeeks.org/find-paths-given-source-destination//> Graph paths original post </a> " + "<br>";
-  text_ = text_ + "Following are all different paths from " + s + " to " + d + "<Br>";
-  for (let i=0; i< all_paths.length; i++) {
+  console.log('Loose nodes: ');
+  console.log(loose_nodes);
+
+  let text_ = "Original code from the URL:  <a href=https://www.geeksforgeeks.org/find-paths-given-source-destination//> Graph paths original post </a> " + "<br>";
+  
+  if(all_paths.length==0){
+    text_ = text_ + 'There is no path available from '+s+' to '+d+'!';
+  } else {
+    text_ = text_ + "Following are all different paths from " + s + " to " + d + "<br>";
+    
+    for (let i=0; i<all_paths.length; i++) {
       text_ = text_ + all_paths[i] + "<br>";
+    }
   }
 
   res.send(text_);

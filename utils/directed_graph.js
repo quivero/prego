@@ -28,7 +28,19 @@ function addEdge(u,v){
     adjList[u].push(v);
 }
 
-function AllVicinity(s, d){
+function looseNodes(s, d){
+    let loose_nodes = [];
+
+    for(let i=0; i<v; i++){
+        if(adjList[i].length==0){
+            loose_nodes.push(i);
+        }
+    }
+
+    return loose_nodes;
+}
+
+function allVicinity(s, d){
     let paths = {};
 
     // Initialization
@@ -39,7 +51,7 @@ function AllVicinity(s, d){
     // 
     for(let i=0; i<v; i++){
         for(let j=0; j<v; j++){
-            let paths_ij = AllPaths(i, j)
+            let paths_ij = allPaths(i, j)
             
             if(paths_ij.length!=0){
                 paths[i].push(j);
@@ -51,7 +63,7 @@ function AllVicinity(s, d){
 }
 
 // Prints all paths from 's' to 'd'
-function AllPaths(s, d){
+function allPaths(s, d){
     let isVisited = new Array(v);
     for(let i=0;i<v;i++) {
         isVisited[i]=false;
@@ -64,7 +76,7 @@ function AllPaths(s, d){
     pathList.push(s);
 
     // Call recursive utility
-    AllPathsUtil(s, d, isVisited, pathList, paths);
+    depth_search(s, d, isVisited, pathList, paths);
 
     return paths;
 }
@@ -72,7 +84,7 @@ function AllPaths(s, d){
 // A recursive function to print all paths from 'u' to 'd'.
 // isVisited[] keeps track of vertices in current path.
 // localPathList<> stores actual vertices in the current path
-function AllPathsUtil(u, d, isVisited, localPathList, paths) {
+function depth_search(u, d, isVisited, localPathList, paths) {
     if (u == (d)) {
         // Push the discoverred path
         paths.push([...localPathList]);
@@ -90,7 +102,7 @@ function AllPathsUtil(u, d, isVisited, localPathList, paths) {
             // store current node in path[]
             localPathList.push(adjList[u][i]);
 
-            AllPathsUtil(adjList[u][i], d, isVisited, localPathList, paths);
+            depth_search(adjList[u][i], d, isVisited, localPathList, paths);
             
             // remove current node  in path[]
             let idx = localPathList.indexOf(adjList[u][i]);
@@ -105,6 +117,7 @@ function AllPathsUtil(u, d, isVisited, localPathList, paths) {
 module.exports = {
     Graph: (num_vertices) => Graph(num_vertices),
     addEdge: (source, destination) => addEdge(source, destination),
-    AllPaths: (source, destination) => AllPaths(source, destination),
-    AllVicinity: () => AllVicinity()
+    allPaths: (source, destination) => allPaths(source, destination),
+    looseNodes: () => looseNodes(),
+    allVicinity: () => allVicinity()
 };
