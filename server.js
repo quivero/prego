@@ -2,7 +2,7 @@
 
 // [START app]
 const express = require('express');
-const { Graph, addEdge, AllPaths } = require('./utils/directed_graph.js');
+const { Graph, addEdge, AllPaths, AllVicinity } = require('./utils/directed_graph.js');
 
 const app = express();
 
@@ -32,13 +32,20 @@ app.get('/', (req, res) => {
   addEdge(1, 3);
 
   // arbitrary source
-  let s = 2;
+  let s = 3;
 
   // arbitrary destination
-  let d = 3;
+  let d = 1;
 
   const all_paths = AllPaths(s, d);
+  const all_vicinity = AllVicinity();
+
+  console.log('Paths from '+s+' to '+d+' :');
+  console.log(all_paths);
   
+  console.log('Reachibility: ');
+  console.log(all_vicinity);
+
   let text_ = "Graph image:  <a href=https://www.geeksforgeeks.org/find-paths-given-source-destination//> Graph paths original post </a> " + "<br>";
   text_ = text_ + "Following are all different paths from " + s + " to " + d + "<Br>";
   for (let i=0; i< all_paths.length; i++) {

@@ -25,7 +25,29 @@ function initAdjList(){
 // add edge from u to v
 function addEdge(u,v){
     // Add v to u's list.
-        adjList[u].push(v);
+    adjList[u].push(v);
+}
+
+function AllVicinity(s, d){
+    let paths = {};
+
+    // Initialization
+    for(let i=0; i<v; i++){
+        paths[i] = [];
+    }
+    
+    // 
+    for(let i=0; i<v; i++){
+        for(let j=0; j<v; j++){
+            let paths_ij = AllPaths(i, j)
+            
+            if(paths_ij.length!=0){
+                paths[i].push(j);
+            }
+        }
+    }
+
+    return paths;
 }
 
 // Prints all paths from 's' to 'd'
@@ -83,5 +105,6 @@ function AllPathsUtil(u, d, isVisited, localPathList, paths) {
 module.exports = {
     Graph: (num_vertices) => Graph(num_vertices),
     addEdge: (source, destination) => addEdge(source, destination),
-    AllPaths: (source, destination) => AllPaths(source, destination)
+    AllPaths: (source, destination) => AllPaths(source, destination),
+    AllVicinity: () => AllVicinity()
 };
