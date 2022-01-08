@@ -1,0 +1,15 @@
+{
+	"dependencies": {
+		"@google-cloud/logging-bunyan": "^3.1.1",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"knex": "^0.95.14",
+		"pg": "^8.7.1",
+		"pug": "^3.0.2",
+		"yargs": "^16.0.0"
+	},
+	"scripts": {
+		"start": "node server.js",
+		"test": "mocha system-test --timeout 600000"
+	}
+}
