@@ -6,9 +6,13 @@
 	},
 	"type": "module",
 	"scripts": {
-		"start": "nodemon server.js",
+		"start": "nodemon ./src/server.js",
 		"test": "jest",
-		"coverage": "npm run test -- --coverage"
+		"coverage": "npm run test -- --coverage",
+		"lint": "eslint ./src/**",
+		" ": "npm run test -- --coverage",
+		"ci": "npm run lint && npm run coverage",
+		"prepare": "husky install"
 	},
 	"devDependencies": {
 		"@babel/cli": "7.15.7",
@@ -16,6 +20,10 @@
 		"@types/jest": "27.0.2",
 		"canvas": "2.8.0",
 		"eslint": "8.0.1",
+		"eslint-plugin-import": "2.25.2",
+		"eslint-plugin-jest": "25.2.2",
+		"eslint-plugin-jsx-a11y": "6.4.1",
+		"eslint-plugin-react": "7.26.1",
 		"husky": "7.0.2",
 		"jest": "27.3.0"
 	},

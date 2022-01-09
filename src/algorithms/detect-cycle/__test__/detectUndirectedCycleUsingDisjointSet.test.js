@@ -1,9 +1,9 @@
-import GraphVertex from '../../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../../data-structures/graph/GraphEdge';
-import Graph from '../../../../data-structures/graph/Graph';
-import detectUndirectedCycle from '../detectUndirectedCycle';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import Graph from '../../../data-structures/graph/Graph.js';
+import detectUndirectedCycleUsingDisjointSet from '../detectUndirectedCycleUsingDisjointSet.js';
 
-describe('detectUndirectedCycle', () => {
+describe('detectUndirectedCycleUsingDisjointSet', () => {
   it('should detect undirected cycle', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
@@ -27,15 +27,10 @@ describe('detectUndirectedCycle', () => {
       .addEdge(edgeBC)
       .addEdge(edgeCD);
 
-    expect(detectUndirectedCycle(graph)).toBeNull();
+    expect(detectUndirectedCycleUsingDisjointSet(graph)).toBe(false);
 
     graph.addEdge(edgeDE);
 
-    expect(detectUndirectedCycle(graph)).toEqual({
-      B: vertexC,
-      C: vertexD,
-      D: vertexE,
-      E: vertexB,
-    });
+    expect(detectUndirectedCycleUsingDisjointSet(graph)).toBe(true);
   });
 });

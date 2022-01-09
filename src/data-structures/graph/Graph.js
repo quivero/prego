@@ -14,6 +14,7 @@ export default class Graph {
    */
   addVertex(newVertex) {
     this.vertices[newVertex.getKey()] = newVertex;
+    return this
   }
 
   /**

@@ -1,5 +1,5 @@
-import GraphVertex from '../GraphVertex';
-import GraphEdge from '../GraphEdge';
+import GraphVertex from '../GraphVertex.js';
+import GraphEdge from '../GraphEdge.js';
 
 describe('GraphVertex', () => {
   it('should throw an error when trying to create vertex without value', () => {

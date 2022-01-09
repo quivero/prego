@@ -1,4 +1,4 @@
-import DisjointSetItem from '../DisjointSetItem';
+import DisjointSetItem from '../DisjointSetItem.js';
 
 describe('DisjointSetItem', () => {
   it('should do basic manipulation with disjoint set item', () => {
