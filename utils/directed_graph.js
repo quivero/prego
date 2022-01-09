@@ -1,6 +1,5 @@
 // JavaScript program to print all paths from a source to destination.
 // Adapted from: https://www.geeksforgeeks.org/find-paths-given-source-destination/
-const findCycle = require('find-cycle/directed') 
 
 class Graph {
     constructor(num_vertices) {
@@ -107,8 +106,4 @@ class Graph {
         // Mark the current node
         isVisited[from] = false;
     }
-};
-
-module.exports = {
-    Graph: (num_vertices) => new Graph(num_vertices),
 };

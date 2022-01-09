@@ -1,8 +1,10 @@
 'use strict';
 
 // [START app]
-const express = require('express');
-const { Graph } = require('./utils/directed_graph.js');
+import express from 'express'
+import Graph from './data-structures/graph/Graph.js'
+import GraphVertex from './data-structures/graph/GraphVertex.js'
+import GraphEdge from './data-structures/graph/GraphEdge.js'
 
 const app = express();
 
@@ -23,14 +25,41 @@ app.get('/', (req, res) => {
   // Create a sample graph
   // const graph = req.blueprint.nodes;
   
-  let s = Graph(4);
-  s.addEdge(0, 1);
-  s.addEdge(0, 2);
-  s.addEdge(0, 3);
-  s.addEdge(2, 0);
-  s.addEdge(2, 1);
-  s.addEdge(1, 3);
+  let graph_ = new Graph(true);
 
+  // Nodes
+  let A = new GraphVertex('A');
+  let B = new GraphVertex('B');
+  let C = new GraphVertex('C');
+  let D = new GraphVertex('D');
+
+  // Vertices
+  let AB = new GraphEdge(A, B);
+  let AC = new GraphEdge(A, C);
+  let AD = new GraphEdge(A, D);
+  
+  A.addEdge(AB);
+  A.addEdge(AC);
+  A.addEdge(AD);
+
+  let BD = new GraphEdge(B, D);
+  
+  B.addEdge(BD);
+  
+  let CA = new GraphEdge(C, A);
+  let CB = new GraphEdge(C, B);
+  
+  C.addEdge(CA);
+  C.addEdge(CB);
+
+  graph_.addVertex(A);
+  graph_.addVertex(B);
+  graph_.addVertex(C);
+  graph_.addVertex(D);
+
+  
+
+  /*
   // arbitrary source
   let from_ = 1;
 
@@ -61,8 +90,8 @@ app.get('/', (req, res) => {
       text_ = text_ + all_paths[i] + "<br>";
     }
   }
-
-  res.send(text_);
+  */
+  res.send(graph_.toString());
 });
 // [END app]
 
