@@ -1,3 +1,5 @@
+import detectDirectedCycle from '../../algorithms/detect-cycle/detectDirectedCycle.js'
+
 export default class Graph {
   /**
    * @param {boolean} isDirected
@@ -48,6 +50,42 @@ export default class Graph {
   }
 
   /**
+   * @returns {Object}
+   */
+   getAdjacencyList(){
+    let adjMatrix = this.getAdjacencyMatrix();
+    let adjList = {};
+    let vertex_keys = Object.keys(this.getVerticesIndices());
+    let vertex_values = Object.values(this.getVerticesIndices());
+    let n_vertices = vertex_keys.length;
+
+    for(let i=0; i<n_vertices; i++){  
+      adjList[vertex_keys[i]] = [];
+    }
+
+    return {'Not implemented': []};
+  }
+  
+  /**
+   * @returns {GraphEdge[]}
+   */
+  looseNodes(){
+    let loose_nodes = [];
+    let adjMatrix = this.getAdjacencyMatrix();
+    let adjList = this.getAdjacencyList();
+    let vertices_idx = this.getVerticesIndices();
+    let n_vertices = this.getVerticesIndices().length;
+
+    for(let i=0; i<n_vertices; i++){
+        if(adjList[i].length==0){
+            loose_nodes.push(i);
+        }
+    }
+
+    return loose_nodes;
+  }
+
+  /**
    * @param {GraphEdge} edge
    * @returns {Graph}
    */
@@ -70,7 +108,7 @@ export default class Graph {
 
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
-      throw new Error('Edge has already been added before');
+      throw new Error('Edge has already been added before. Please, choose other key!');
     } else {
       this.edges[edge.getKey()] = edge;
     }
@@ -188,10 +226,14 @@ export default class Graph {
   }
 
   /**
-   * @return {string}
+   * @return {Object}
    */
   toString() {
-    return {'edges': Object.keys(this.edges).toString(),
-            'vertices': Object.keys(this.vertices).toString()};
+    return {
+      'edges': Object.keys(this.edges).toString(),
+      'vertices': Object.keys(this.vertices).toString(),
+      'adjacency_list': this.getAdjacencyList(),
+      'cycles': Object.keys(detectDirectedCycle(this)).toString()
+    };
   }
 }
