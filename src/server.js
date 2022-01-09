@@ -37,27 +37,26 @@ app.get('/', (req, res) => {
   let AB = new GraphEdge(A, B);
   let AC = new GraphEdge(A, C);
   let AD = new GraphEdge(A, D);
-  
-  A.addEdge(AB);
-  A.addEdge(AC);
-  A.addEdge(AD);
-
   let BD = new GraphEdge(B, D);
-  
-  B.addEdge(BD);
-  
   let CA = new GraphEdge(C, A);
   let CB = new GraphEdge(C, B);
   
-  C.addEdge(CA);
-  C.addEdge(CB);
-
   graph_.addVertex(A);
   graph_.addVertex(B);
   graph_.addVertex(C);
   graph_.addVertex(D);
 
-  
+  graph_
+    .addEdge(AB)
+    .addEdge(AC)
+    .addEdge(AD)
+    .addEdge(BD)
+    .addEdge(CA)
+    .addEdge(CB);
+
+  console.log(graph_.getAllEdges());
+  console.log(graph_.getAllVertices());
+  res.send(graph_.toString());
 
   /*
   // arbitrary source
@@ -91,7 +90,6 @@ app.get('/', (req, res) => {
     }
   }
   */
-  res.send(graph_.toString());
 });
 // [END app]
 

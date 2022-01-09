@@ -191,6 +191,7 @@ export default class Graph {
    * @return {string}
    */
   toString() {
-    return Object.keys(this.vertices).toString();
+    return {'edges': Object.keys(this.edges).toString(),
+            'vertices': Object.keys(this.vertices).toString()};
   }
 }

@@ -10,7 +10,6 @@
 		"test": "jest",
 		"coverage": "npm run test -- --coverage",
 		"lint": "eslint ./src/**",
-		" ": "npm run test -- --coverage",
 		"ci": "npm run lint && npm run coverage",
 		"prepare": "husky install"
 	},
