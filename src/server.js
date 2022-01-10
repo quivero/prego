@@ -34,32 +34,22 @@ app.get('/', (req, res) => {
   let B = new GraphVertex('B');
   let C = new GraphVertex('C');
   let D = new GraphVertex('D');
+  let E = new GraphVertex('E');
 
   // Vertices
   let AB = new GraphEdge(A, B);
-  let AC = new GraphEdge(A, C);
-  let AD = new GraphEdge(A, D);
-  let BD = new GraphEdge(B, D);
-  let CA = new GraphEdge(C, A);
-  let CB = new GraphEdge(C, B);
+  let BC = new GraphEdge(B, C);
+  let CD = new GraphEdge(C, D);
+  let CE = new GraphEdge(C, E);
+  let EB = new GraphEdge(E, B);
   
   // Add vertices
-  graph_
-    .addVertex(A)
-    .addVertex(B)
-    .addVertex(C)
-    .addVertex(D);
+  graph_.addVertices([A, B, C, D, E]);
 
   // Add edges
-  graph_
-    .addEdge(AB)
-    .addEdge(AC)
-    .addEdge(AD)
-    .addEdge(BD)
-    .addEdge(CA)
-    .addEdge(CB);
+  graph_.addEdges([AB, BC, CD, CE, EB]);
 
-  res.send(graph_.toString());
+  res.send(graph_.describe());
 });
 // [END app]
 
