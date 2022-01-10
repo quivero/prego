@@ -1,6 +1,6 @@
-# Paths in a Graph from A to B
+# A structure, many possibilities
 
-Hi, this is an app, but you can interpret it as a service. Its duty is to find all paths in a connected graph com node A to B. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
+Hi, this is an app, but you can interpret it as a service. Its main funcionality is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
 
 ## Preamble
 
