@@ -17,4 +17,3 @@ You must follow the instructions below
 3) Run the command `npm start` to run the server locally;
 4) Open a browser;
 5) Type `localhost:8080` on the URL field;
-6) See the possible paths from node 2 to 3.
