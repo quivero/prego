@@ -20,6 +20,14 @@ export default class Graph {
   }
 
   /**
+   * @param {GraphVertex[]} vertices
+   * @returns {Graph}
+   */
+  addVertices(newVertices) {
+    newVertices.forEach((vertex) => this.addVertex(vertex));
+  }
+
+  /**
    * @param {string} vertexKey
    * @returns GraphVertex
    */
