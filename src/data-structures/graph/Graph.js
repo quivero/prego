@@ -44,10 +44,17 @@ export default class Graph {
   }
 
   /**
-   * @return {GraphVertex[]}
-   */
+     * @return {GraphVertex[]}
+     */
   getAllVertices() {
     return Object.values(this.vertices);
+  }
+
+  /**
+   * @return {Integer}
+   */
+  getNumVertices() {
+    return this.getAllVertices().length;
   }
 
   /**
@@ -61,36 +68,76 @@ export default class Graph {
    * @returns {Object}
    */
    getAdjacencyList(){
-    let adjMatrix = this.getAdjacencyMatrix();
     let adjList = {};
-    let vertex_keys = Object.keys(this.getVerticesIndices());
-    let vertex_values = Object.values(this.getVerticesIndices());
-    let n_vertices = vertex_keys.length;
+    let vertices_index = this.getVerticesIndices();
+    let vertex_keys = Object.keys(vertices_index);
+    let vertex_values = Object.values(vertices_index);
+    let n_vertices = this.getNumVertices();
 
-    for(let i=0; i<n_vertices; i++){  
-      adjList[vertex_keys[i]] = [];
+    // Initialization
+    for(let i=0; i<n_vertices; i++){
+        adjList[vertex_values[i]] = []      
     }
 
-    return {'Not implemented': []};
+    for(let i=0; i<n_vertices; i++){  
+        let vertex_i = vertex_keys[i];
+        
+        for(let j=0; j<n_vertices; j++){
+            let neighbors_i = this.getNeighbors(this.getVertexByKey(vertex_i));
+            let neighbors_index = [];
+
+            neighbors_i.forEach((vertex) => {
+              neighbors_index.push(vertices_index[vertex.getKey()])
+            });
+            
+            adjList[i] = neighbors_index;
+        }
+    }
+    
+    return adjList;
   }
   
   /**
    * @returns {GraphEdge[]}
    */
   looseNodes(){
-    let loose_nodes = [];
-    let adjMatrix = this.getAdjacencyMatrix();
-    let adjList = this.getAdjacencyList();
-    let vertices_idx = this.getVerticesIndices();
-    let n_vertices = this.getVerticesIndices().length;
+      let loose_nodes = [];
+      let adjList = this.getAdjacencyList();
+      let n_vertices = this.getNumVertices();
+      
+      for(let i=0; i<n_vertices; i++){
+          if(adjList[i].length==0){
+              loose_nodes.push(i);
+          }
+      }
 
+      return loose_nodes;
+  }
+
+  orphanNodes(){
+    let orphan_nodes = [];
+    let adjList = this.getAdjacencyList();
+    let n_vertices = this.getNumVertices();
+    let indices_to_vertices = this.getIndicesToVertices();
+
+    let to_vertices = new Set();
+    
     for(let i=0; i<n_vertices; i++){
-        if(adjList[i].length==0){
-            loose_nodes.push(i);
-        }
+      let neighbors = adjList[i];
+      for(let j=0; j<neighbors.length; j++){
+          to_vertices.add(neighbors[j]);
+      }
     }
 
-    return loose_nodes;
+    this.getAllVertices().forEach((vertex)=>{
+        let vertex_index = this.getVertexIndex(vertex);
+        
+        if(!to_vertices.has(vertex_index)){
+          orphan_nodes.push(vertex_index);
+        }
+    });
+
+    return orphan_nodes
   }
 
   /**
@@ -135,13 +182,21 @@ export default class Graph {
   }
 
   /**
+   * @param {GraphEdge[]} edges
+   * @returns {}
+   */
+   addEdges(edges){
+      edges.forEach((edge) => this.addEdge(edge));
+   }
+
+  /**
    * @param {GraphEdge} edge
    */
   deleteEdge(edge) {
     // Delete edge from the list of edges.
     if (this.edges[edge.getKey()]) {
       delete this.edges[edge.getKey()];
-    } else {
+    } else { 
       throw new Error('Edge not found in graph');
     }
 
@@ -182,8 +237,9 @@ export default class Graph {
    * @return {Graph}
    */
   reverse() {
-    /** @param {GraphEdge} edge */
-    this.getAllEdges().forEach((edge) => {
+    if(this.isDirected){
+      /** @param {GraphEdge} edge */
+      this.getAllEdges().forEach((edge) => {
       // Delete straight edge from graph and from vertices.
       this.deleteEdge(edge);
 
@@ -192,7 +248,10 @@ export default class Graph {
 
       // Add reversed edge back to the graph and its vertices.
       this.addEdge(edge);
-    });
+      });
+    } else{
+        console.warn('Warning: This is an UNDIRECTED graph!');;
+    }
 
     return this;
   }
@@ -207,6 +266,23 @@ export default class Graph {
     });
 
     return verticesIndices;
+  }
+
+  /**
+   * @return {object}
+   */
+   getIndicesToVertices() {
+    const verticesIndices = this.getVerticesIndices();
+
+    return Object.fromEntries([Object.values(verticesIndices), Object.keys(verticesIndices)]);
+  }
+
+  /**
+   * @return {GraphVertex}
+   */
+   getVertexIndex(vertex) {
+    const verticesIndices = this.getVerticesIndices();
+    return verticesIndices[vertex.getKey()];
   }
 
   /**
@@ -234,14 +310,27 @@ export default class Graph {
   }
 
   /**
+   * @return {*[][]}
+   */  
+  getCycles(){
+    return detectDirectedCycle(this);
+  }
+
+  describe(){
+    return {
+      'vertices': Object.keys(this.vertices).toString(),
+      'edges': Object.keys(this.edges).toString(),
+      'vertices_to_indices': this.getVerticesIndices(),
+      'adjacency_list': this.getAdjacencyList(),
+      'loose_nodes': this.looseNodes(),
+      'orphan_nodes': this.orphanNodes()
+    }
+  }
+
+  /**
    * @return {Object}
    */
   toString() {
-    return {
-      'edges': Object.keys(this.edges).toString(),
-      'vertices': Object.keys(this.vertices).toString(),
-      'adjacency_list': this.getAdjacencyList(),
-      'cycles': Object.keys(detectDirectedCycle(this)).toString()
-    };
+    return Object.keys(this.vertices).toString();
   }
 }
