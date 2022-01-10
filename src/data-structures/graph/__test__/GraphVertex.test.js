@@ -164,6 +164,12 @@ describe('GraphVertex', () => {
     expect(vertexA.findEdge(vertexC)).toBeNull();
   });
 
+  it('should represent a vertex', () => {
+    const vertex = new GraphVertex('A');
+    console.log(vertex.toString())
+    expect(vertex.toString()).toEqual('A');
+  });
+
   it('should calculate vertex degree', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');

@@ -1,6 +1,6 @@
-import Graph from '../../../../data-structures/graph/Graph';
-import GraphVertex from '../../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../../data-structures/graph/GraphEdge';
+import Graph from '../../../data-structures/graph/Graph';
+import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import GraphEdge from '../../../data-structures/graph/GraphEdge';
 import breadthFirstSearch from '../breadthFirstSearch';
 
 describe('breadthFirstSearch', () => {
@@ -26,16 +26,7 @@ describe('breadthFirstSearch', () => {
     const edgeDH = new GraphEdge(vertexD, vertexH);
     const edgeGH = new GraphEdge(vertexG, vertexH);
 
-    graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC)
-      .addEdge(edgeCG)
-      .addEdge(edgeAD)
-      .addEdge(edgeAE)
-      .addEdge(edgeEF)
-      .addEdge(edgeFD)
-      .addEdge(edgeDH)
-      .addEdge(edgeGH);
+    graph.addEdges([edgeAB, edgeBC, edgeCG, edgeAD, edgeAE, edgeEF, edgeFD, edgeDH, edgeGH]);
 
     expect(graph.toString()).toBe('A,B,C,G,D,E,F,H');
 
@@ -111,16 +102,7 @@ describe('breadthFirstSearch', () => {
     const edgeDH = new GraphEdge(vertexD, vertexH);
     const edgeGH = new GraphEdge(vertexG, vertexH);
 
-    graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC)
-      .addEdge(edgeCG)
-      .addEdge(edgeAD)
-      .addEdge(edgeAE)
-      .addEdge(edgeEF)
-      .addEdge(edgeFD)
-      .addEdge(edgeDH)
-      .addEdge(edgeGH);
+    graph.addEdges([edgeAB, edgeBC, edgeCG, edgeAD, edgeAE, edgeEF, edgeFD, edgeDH, edgeGH]);;
 
     expect(graph.toString()).toBe('A,B,C,G,D,E,F,H');
 
