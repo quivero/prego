@@ -74,6 +74,36 @@ describe('Graph', () => {
     expect(graphVertexB.getNeighbors().length).toBe(0);
   });
 
+  it('Cycles in a finite graph must be finite', () => {
+    // A directed graph
+    let graph = new Graph(true);
+
+    // Nodes
+    let A = new GraphVertex('A');
+    let B = new GraphVertex('B');
+    let C = new GraphVertex('C');
+    let D = new GraphVertex('D');
+    let E = new GraphVertex('E');
+    let F = new GraphVertex('F');
+
+    // Vertices
+    let AB = new GraphEdge(A, B);
+    let BC = new GraphEdge(B, C);
+    let CD = new GraphEdge(C, D);
+    let CE = new GraphEdge(C, E);
+    let EB = new GraphEdge(E, B);
+    let CF = new GraphEdge(C, F);
+    let FB = new GraphEdge(F, B);
+    
+    // Add vertices
+    graph.addVertices([A, B, C, D, E, F]);
+
+    // Add edges
+    graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+
+    expect(graph.allCycles()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
+  })
+
   it('should find edge by vertices in undirected graph', () => {
     const graph = new Graph();
 

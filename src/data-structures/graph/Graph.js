@@ -1,6 +1,8 @@
-import detectDirectedCycle from '../../algorithms/detect-cycle/detectDirectedCycle.js'
+import getAllIndexes from '../../utils/arrays/arrays.js'
 
 export default class Graph {
+  #cycles;
+
   /**
    * @param {boolean} isDirected
    */
@@ -8,7 +10,12 @@ export default class Graph {
     this.vertices = {};
     this.edges = {};
     this.isDirected = isDirected;
+    this.#cycles = [];  
   }
+
+  get cycles(){
+      return this.allCycles();
+  } 
 
   /**
    * @param {GraphVertex} newVertex
@@ -272,9 +279,10 @@ export default class Graph {
    * @return {object}
    */
    getIndicesToVertices() {
-    const verticesIndices = this.getVerticesIndices();
+    const vertices_indices = this.getVerticesIndices();
 
-    return Object.fromEntries([Object.values(verticesIndices), Object.keys(verticesIndices)]);
+    return Object.fromEntries([Object.values(vertices_indices), 
+                               Object.keys(vertices_indices)]);
   }
 
   /**
@@ -312,18 +320,220 @@ export default class Graph {
   /**
    * @return {*[][]}
    */  
-  getCycles(){
-    return detectDirectedCycle(this);
+  #isCyclicUtil(index, visited, recStack){
+    let adjList = this.getAdjacencyList();
+    
+    // Mark the current node as visited and
+    // part of recursion stack
+    if (recStack[index])
+        return true;
+
+    if (visited[index])
+        return false;
+        
+    console.log(index);
+
+    visited[index] = true;
+    recStack[index] = true;
+    
+    let children = adjList[index];
+    
+    for (let c=0;c< children.length;c++){
+        if (this.#isCyclicUtil(children[c], visited, recStack)){
+            return true;
+        }
+    }
+
+    recStack[index] = false;
+
+    return false;
   }
 
+  /**
+   * @return {Boolean} is_cyclic
+   */
+  isCyclic(){
+      // Mark all the vertices as not visited and
+      // not part of recursion stack
+      let n_vertices = this.getNumVertices();
+      let visited = new Array(n_vertices);
+      let recStack = new Array(n_vertices);
+
+      for(let i=0; i<n_vertices; i++){
+          visited[i]=false;
+          recStack[i]=false;
+      }
+      
+      // Call the recursive helper function to
+      // detect cycle in different DFS trees
+      for (let i = 0; i<n_vertices;  i++){
+        if (this.#isCyclicUtil(i, visited, recStack)){
+            return true;
+        }
+      }
+
+      return false;
+  }
+
+  /**
+   * @abstract Tarjan method for cycles enumeration
+   * Extracted from: https://stackoverflow.com/questions/25898100/enumerating-cycles-in-a-graph-using-tarjans-algorithm
+   * @param {Integer} from_index
+   * @param {GraphVertex} to_index
+   * @return {Array[Array]} cycle
+   */
+  #tarjanCycleMethod(origin_index, curr_index, f, points, cycles, marked_stack, marked, is_finish){
+    let adjList = this.getAdjacencyList();
+    let n_vertices = this.getNumVertices();
+
+    points.push(curr_index)
+    marked_stack.push(curr_index)
+    marked[curr_index] = true
+    
+    let w;
+    for(let i=0; i<n_vertices; i++){
+        let w = adjList[curr_index][i];
+
+        if(w < origin_index){
+            adjList[curr_index].pop(adjList[curr_index][w])
+        } else {
+            // Cycle (!): Next node is equal do origin
+            if(w == origin_index) {
+                this.#cycles.push([...points]);
+                f = true
+            } else { 
+                // 
+                if(marked[w] == false){
+                    this.#tarjanCycleMethod(origin_index, w, is_finish, 
+                                            points, cycles, 
+                                            marked_stack, marked, is_finish);
+                }
+            }
+        }
+    }
+
+    is_finish = f;
+    if(f = true){
+        // Index v is now deleted from mark stacked, and has been called u unmark v  
+        let u = marked_stack.pop()
+
+        while (u != curr_index){
+            marked[u] = false
+            u = marked_stack.pop();
+        }
+
+        marked[u] = false
+    }
+    
+    points.pop(points[curr_index])
+    
+  }
+
+  /**
+   * @abstract Returns all cycles within a graph
+   * @return {Array[Array]} cycle
+   */
+  allCycles(){
+    let marked = [];
+    let marked_stack = [];
+    let n_vertices = this.getNumVertices();
+
+    for(let i=0; i<n_vertices; i++){
+        marked.push(false);
+    }
+
+    let cycles = [];
+    for(let i=0; i<n_vertices; i++){
+        let points = []
+        this.#tarjanCycleMethod(i, i, false, points, cycles, marked_stack, marked);
+        
+        while (marked_stack.length > 0){
+            u = marked_stack.pop()
+            marked[u] = false
+        }
+    }
+            
+    return this.#cycles;
+  }
+  
+  /**
+   * @param {GraphVertex} from
+   * @param {GraphVertex} to
+   * @return {Array[Integer]} paths
+   */
+  allPaths(from, to){
+      let from_index = this.getVertexIndex(from);
+      let to_index = this.getVertexIndex(to);
+      let n_vertices = this.getNumVertices();
+
+      let is_visited = new Array(this.v);
+      for(let i=0; i<n_vertices; i++) {
+        is_visited[i]=false;
+      }
+      
+      let path_list = [];
+      let paths = [];
+
+      // add source to path[]
+      path_list.push(from_index);
+
+      // Call recursive utility
+      this.#allPathsUtil(from_index, to_index, is_visited, path_list, paths);
+
+      return paths;
+  }
+
+  #allPathsUtil(from_index, to_index, is_visited, local_path_list, paths) {
+      let adj_list = this.getAdjacencyList();
+      let adj_len = adj_list[from_index].length;
+
+      if (from_index == to_index) {
+          // Push the discoverred path
+          paths.push([...local_path_list]);
+
+          // if match found then no need to traverse more till depth
+          return;
+      }
+      
+      // Mark the current node as visited
+      is_visited[from_index] = true;
+
+      // Recur for all the vertices adjacent to current vertex u
+      for (let i=0; i<adj_len; i++) {
+          let neighbor_i = adj_list[from_index][i];
+          let ith_was_visited = is_visited[neighbor_i];
+
+          if(!ith_was_visited) {
+              // store current node in path[]
+              local_path_list.push(neighbor_i);
+
+              this.#allPathsUtil(neighbor_i, to_index, is_visited, 
+                                 local_path_list, paths);
+              
+              // remove current node  in path[]
+              let idx = local_path_list.indexOf(neighbor_i);
+              local_path_list.splice(idx, 1);
+
+          } 
+      }
+      
+      // Mark the current node as unvisited
+      is_visited[from_index] = false;
+}
+
+  /**
+   * @return {object}
+   */
   describe(){
     return {
       'vertices': Object.keys(this.vertices).toString(),
       'edges': Object.keys(this.edges).toString(),
+      'is_cyclic': this.isCyclic(),
       'vertices_to_indices': this.getVerticesIndices(),
       'adjacency_list': this.getAdjacencyList(),
       'loose_nodes': this.looseNodes(),
-      'orphan_nodes': this.orphanNodes()
+      'orphan_nodes': this.orphanNodes(),
+      'all_cycles': this.allCycles()
     }
   }
 

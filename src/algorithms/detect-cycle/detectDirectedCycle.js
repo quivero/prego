@@ -45,9 +45,12 @@ export default function detectDirectedCycle(graph) {
         let previousCycleVertex = previousVertex;
 
         while (previousCycleVertex.getKey() !== currentVertex.getKey()) {
-          cycle[currentCycleVertex.getKey()] = previousCycleVertex;
+          let curr_key = currentCycleVertex.getKey();
+          let prev_key = previousCycleVertex.getKey();
+          
+          cycle[curr_key] = previousCycleVertex;
           currentCycleVertex = previousCycleVertex;
-          previousCycleVertex = dfsParentMap[previousCycleVertex.getKey()];
+          previousCycleVertex = dfsParentMap[prev_key];
         }
 
         cycle[currentCycleVertex.getKey()] = previousCycleVertex;
