@@ -35,6 +35,7 @@ app.get('/', (req, res) => {
   let C = new GraphVertex('C');
   let D = new GraphVertex('D');
   let E = new GraphVertex('E');
+  let F = new GraphVertex('F');
 
   // Vertices
   let AB = new GraphEdge(A, B);
@@ -42,12 +43,17 @@ app.get('/', (req, res) => {
   let CD = new GraphEdge(C, D);
   let CE = new GraphEdge(C, E);
   let EB = new GraphEdge(E, B);
+  let CF = new GraphEdge(C, F);
+  let FB = new GraphEdge(F, B);
   
   // Add vertices
-  graph_.addVertices([A, B, C, D, E]);
+  graph_.addVertices([A, B, C, D, E, F]);
 
   // Add edges
-  graph_.addEdges([AB, BC, CD, CE, EB]);
+  graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+
+  let from = A;
+  let to = D;
 
   res.send(graph_.describe());
 });

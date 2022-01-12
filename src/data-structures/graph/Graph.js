@@ -330,9 +330,7 @@ export default class Graph {
 
     if (visited[index])
         return false;
-        
-    console.log(index);
-
+    
     visited[index] = true;
     recStack[index] = true;
     

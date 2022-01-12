@@ -166,8 +166,12 @@ describe('GraphVertex', () => {
 
   it('should represent a vertex', () => {
     const vertex = new GraphVertex('A');
-    console.log(vertex.toString())
     expect(vertex.toString()).toEqual('A');
+  });
+
+  it('should represent a vertex with decorator', () => {
+    const vertex = new GraphVertex('A');
+    expect(vertex.toString((value) => `Name: ${value}`)).toEqual('Name: A');
   });
 
   it('should calculate vertex degree', () => {
