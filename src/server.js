@@ -55,6 +55,9 @@ app.get('/', (req, res) => {
   let from = A;
   let to = D;
 
+  console.log(graph_.getVertexCycles());
+  
+
   res.send(graph_.describe());
 });
 // [END app]

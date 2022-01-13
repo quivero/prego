@@ -1,4 +1,4 @@
-import getAllIndexes from '../../utils/arrays/arrays.js'
+import { cyclicSort, getAllIndexes } from '../../utils/arrays/arrays.js'
 
 export default class Graph {
   #cycles;
@@ -434,6 +434,7 @@ export default class Graph {
   allCycles(){
     let marked = [];
     let marked_stack = [];
+    this.#cycles = [];
     let n_vertices = this.getNumVertices();
 
     for(let i=0; i<n_vertices; i++){
@@ -453,35 +454,8 @@ export default class Graph {
             
     return this.#cycles;
   }
-  
-  /**
-   * @param {GraphVertex} from
-   * @param {GraphVertex} to
-   * @return {Array[Integer]} paths
-   */
-  allPaths(from, to){
-      let from_index = this.getVertexIndex(from);
-      let to_index = this.getVertexIndex(to);
-      let n_vertices = this.getNumVertices();
 
-      let is_visited = new Array(this.v);
-      for(let i=0; i<n_vertices; i++) {
-        is_visited[i]=false;
-      }
-      
-      let path_list = [];
-      let paths = [];
-
-      // add source to path[]
-      path_list.push(from_index);
-
-      // Call recursive utility
-      this.#allPathsUtil(from_index, to_index, is_visited, path_list, paths);
-
-      return paths;
-  }
-
-  #allPathsUtil(from_index, to_index, is_visited, local_path_list, paths) {
+  #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
       let adj_list = this.getAdjacencyList();
       let adj_len = adj_list[from_index].length;
 
@@ -505,7 +479,7 @@ export default class Graph {
               // store current node in path[]
               local_path_list.push(neighbor_i);
 
-              this.#allPathsUtil(neighbor_i, to_index, is_visited, 
+              this.#recurAcyclicPaths(neighbor_i, to_index, is_visited, 
                                  local_path_list, paths);
               
               // remove current node  in path[]

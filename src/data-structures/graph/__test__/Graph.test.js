@@ -160,9 +160,7 @@ describe('Graph', () => {
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexA, vertexC);
 
-    graph
-      .addEdge(edgeAB)
-      .addEdge(edgeAC);
+    graph.addEdges([edgeAB, edgeAC]);
 
     const neighbors = graph.getNeighbors(vertexA);
 
