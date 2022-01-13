@@ -491,7 +491,88 @@ export default class Graph {
       
       // Mark the current node as unvisited
       is_visited[from_index] = false;
-}
+  }
+
+  /**
+   * @param {GraphVertex} from
+   * @param {GraphVertex} to
+   * @return {Array[Integer]} paths
+   */
+  allAcyclicPaths(from, to){
+    let from_index = this.getVertexIndex(from);
+    let to_index = this.getVertexIndex(to);
+    let n_vertices = this.getNumVertices();
+
+    let is_visited = new Array(this.v);
+    for(let i=0; i<n_vertices; i++) {
+      is_visited[i]=false;
+    }
+    
+    let path_list = [];
+    let paths = [];
+
+    // add source to path[]
+    path_list.push(from_index);
+
+    // Call recursive utility
+    this.#recurAcyclicPaths(from_index, to_index, is_visited, path_list, paths);
+
+    return paths;
+  }
+
+  /**
+   * @param {GraphVertex} from
+   * @param {GraphVertex} to
+   * @return {Array[Array]} cycles
+   */
+  getVertexCycles(){
+    
+    let n_vertices = this.getNumVertices();
+    let cycles = this.allCycles();
+    let nodes_to_cycles = {};
+
+    for(let i = 0; i<n_vertices; i++){
+        nodes_to_cycles[i] = [];
+    }
+
+    let cnodes_temp = [];
+    for(let i = 0; i<cycles.length; i++){  
+      cnodes_temp = cnodes_temp.concat(cycles[i]);
+    }
+
+    let cyclic_nodes = Array.from(new Set(...[cnodes_temp]));
+
+    for(let i=0; i<cyclic_nodes.length; i++){
+      let j = cyclic_nodes[i];
+      
+      for(let k=0; k<cycles.length; k++){
+        if(cycles[k].includes(j)) {
+          let indexes = getAllIndexes(cycles[k], j);
+          nodes_to_cycles[j].push(cyclicSort(cycles[k], indexes[0]));
+        }
+      }
+    }
+
+    return nodes_to_cycles;
+  }
+  
+  /**
+   * @return {Array[Array]} paths
+   */
+  #allPaths(){
+      let acyclic_paths = this.allAcyclicPaths();
+      let vertex_to_cycles = getVertexCycles();
+      let cycles_i;
+
+      for(let i=0; i<acyclic_paths.length; i++){
+          path_i = acyclic_paths[i];
+
+          for(let j=0; j<path_i.length; j++){
+              verted_j = path_i[j];
+              cycles_j = vertex_to_cycles[verted_j];
+          }
+      }
+  }
 
   /**
    * @return {object}
