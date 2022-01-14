@@ -498,13 +498,6 @@ export default class Graph {
       return cycles_indices;
   }
 
-  getCycleToCyclesAdjacency() {
-      let cycles_dict = getCycleIndices();
-      let cycles_dict = this.getVertexCycles();
-
-      
-  }
-
   #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
       let adj_list = this.getAdjacencyList();
       let adj_len = adj_list[from_index].length;
@@ -604,25 +597,6 @@ export default class Graph {
     }
 
     return nodes_to_cycles;
-  }
-  
-  /**
-   * @abstract: WIP
-   * @return {Array[Array]} paths
-   */
-  #allPaths(){
-      let acyclic_paths = this.allAcyclicPaths();
-      let vertex_to_cycles = getVertexCycles();
-      let cycles_i;
-
-      for(let i=0; i<acyclic_paths.length; i++){
-          path_i = acyclic_paths[i];
-
-          for(let j=0; j<path_i.length; j++){
-              verted_j = path_i[j];
-              cycles_j = vertex_to_cycles[verted_j];
-          }
-      }
   }
 
   /**
