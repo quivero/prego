@@ -179,6 +179,15 @@ export default class Graph {
       endVertex = this.getVertexByKey(edge.endVertex.getKey());
     }
 
+    // Add start and end vertices if needed
+    if (!!this.vertices[edge.startVertex.getKey()]) {
+        this.addVertex(edge.startVertex);
+    }
+
+    if (!!this.vertices[edge.endVertex.getKey()]) {
+        this.addVertex(edge.endVertex);
+    }
+
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
       throw new Error('Edge has already been added before. Please, choose other key!');
@@ -472,6 +481,27 @@ export default class Graph {
     return this.#cycles;
   }
 
+  /**
+     * @return {object}
+     */
+  getCycleIndices() {
+      const cycles_indices = {};
+      let cycles = this.cyclicPaths();
+      
+      for(let i=0; i<cycles.length; i++){
+          cycles_indices[i] = cycles[i];
+      }
+
+      return cycles_indices;
+  }
+
+  getCycleToCyclesAdjacency() {
+      let cycles_dict = getCycleIndices();
+      let cycles_dict = this.getVertexCycles();
+
+      
+  }
+
   #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
       let adj_list = this.getAdjacencyList();
       let adj_len = adj_list[from_index].length;
@@ -543,9 +573,9 @@ export default class Graph {
    * @return {Array[Array]} cycles
    */
   getVertexCycles(){
-    
+
     let n_vertices = this.getNumVertices();
-    let cycles = this.allCycles();
+    let cycles = this.cyclicPaths();
     let nodes_to_cycles = {};
 
     for(let i = 0; i<n_vertices; i++){
@@ -565,7 +595,7 @@ export default class Graph {
       for(let k=0; k<cycles.length; k++){
         if(cycles[k].includes(j)) {
           let indexes = getAllIndexes(cycles[k], j);
-          nodes_to_cycles[j].push(cyclicSort(cycles[k], indexes[0]));
+          nodes_to_cycles[j].push(cycles[k]);
         }
       }
     }
@@ -595,15 +625,16 @@ export default class Graph {
    * @return {object}
    */
   describe(){
+    let is_cyclic = this.isCyclic();
     return {
       'vertices': Object.keys(this.vertices).toString(),
       'edges': Object.keys(this.edges).toString(),
-      'is_cyclic': this.isCyclic(),
       'vertices_to_indices': this.getVerticesIndices(),
       'adjacency_list': this.getAdjacencyList(),
       'loose_nodes': this.looseNodes(),
       'orphan_nodes': this.orphanNodes(),
-      'all_cycles': this.allCycles()
+      'is_cyclic': is_cyclic,
+      ...is_cyclic && {'all_cycles': this.cyclicPaths()}
     }
   }
 
