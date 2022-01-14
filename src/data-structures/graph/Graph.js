@@ -450,14 +450,17 @@ export default class Graph {
     }
     
     points.pop(points[curr_index])
-    
   }
 
   /**
    * @abstract Returns all cycles within a graph
    * @return {Array[Array]} cycle
    */
-  allCycles(){
+  cyclicPaths(){
+    if(!this.isCyclic()){
+        return []
+    }
+    
     let marked = [];
     let marked_stack = [];
     this.#cycles = [];
@@ -545,7 +548,7 @@ export default class Graph {
    * @param {GraphVertex} to
    * @return {Array[Integer]} paths
    */
-  allAcyclicPaths(from, to){
+  acyclicPaths(from, to){
     let from_index = this.getVertexIndex(from);
     let to_index = this.getVertexIndex(to);
     let n_vertices = this.getNumVertices();
@@ -563,7 +566,7 @@ export default class Graph {
 
     // Call recursive utility
     this.#recurAcyclicPaths(from_index, to_index, is_visited, path_list, paths);
-
+    
     return paths;
   }
 
