@@ -2,6 +2,7 @@ import { cyclicSort, getAllIndexes } from '../../utils/arrays/arrays.js'
 
 export default class Graph {
   #cycles;
+  #density;
 
   /**
    * @param {boolean} isDirected
@@ -10,12 +11,21 @@ export default class Graph {
     this.vertices = {};
     this.edges = {};
     this.isDirected = isDirected;
-    this.#cycles = [];  
+    this.#cycles = [];
+    this.#density = 0;
   }
 
   get cycles(){
-      return this.allCycles();
-  } 
+      return this.cyclicPaths();
+  }
+  
+  get density(){
+      let n_vertices = this.getNumVertices();
+      let n_dense = n_vertices*(n_vertices-1)/2;
+      let n_edges = this.getAllEdges().length;
+
+      return n_edges/n_dense;
+  }
 
   /**
    * @param {GraphVertex} newVertex
