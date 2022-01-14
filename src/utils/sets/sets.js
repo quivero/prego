@@ -37,10 +37,14 @@ export const symmetricDifference = (setA, setB) => {
     return _difference;
 }
 
-export const _difference = (setA, setB) => {
+export const difference = (setA, setB) => {
     var _difference = new Set(setA);
     for (var elem of setB) {
         _difference.delete(elem);
     }
     return _difference;
 }
+
+export const copy = (obj) => {
+    return [...obj]
+} 
