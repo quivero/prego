@@ -607,6 +607,7 @@ export default class Graph {
   }
   
   /**
+   * @abstract: WIP
    * @return {Array[Array]} paths
    */
   #allPaths(){
