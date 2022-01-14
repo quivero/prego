@@ -121,6 +121,7 @@ export default class Graph {
       let loose_nodes = [];
       let adjList = this.getAdjacencyList();
       let n_vertices = this.getNumVertices();
+      let indices_to_vertices = this.getIndicesToVertices();
       
       for(let i=0; i<n_vertices; i++){
           if(adjList[i].length==0){
@@ -290,9 +291,15 @@ export default class Graph {
    */
    getIndicesToVertices() {
     const vertices_indices = this.getVerticesIndices();
-
-    return Object.fromEntries([Object.values(vertices_indices), 
-                               Object.keys(vertices_indices)]);
+    let values = Object.values(vertices_indices);
+    let keys = Object.keys(vertices_indices);
+    let indices_vertices = {};
+    
+    for(let i=0; i<this.getNumVertices(); i++){
+      indices_vertices[values[i]] = keys[i];
+    }
+    
+    return indices_vertices;
   }
 
   /**
