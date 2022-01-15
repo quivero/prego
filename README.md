@@ -12,7 +12,7 @@ For a beginner, a graph is a bunch of dots connected by either undirected lines 
 You may utilize some cloud service to host the app, like AWS, Azure or GCloud, but in this case you might run locally.
 You must follow the instructions below
 
-1) Clone the repository typing on terminal `git clone git@github.com:brunolnetto/path_finder.git`;
+1) Clone the repository typing on terminal `git clone git@github.com:brunolnetto/node-link.git`;
 3) Run the command `npm install` to install local dependencies;
 3) Run the command `npm start` to run the server locally;
 4) Open a browser;
