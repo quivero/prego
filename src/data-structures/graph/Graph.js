@@ -87,33 +87,32 @@ export default class Graph {
    * @returns {Object}
    */
    getAdjacencyList(){
-    let adjList = {};
-    let vertices_index = this.getVerticesIndices();
-    let vertex_keys = Object.keys(vertices_index);
-    let vertex_values = Object.values(vertices_index);
-    let n_vertices = this.getNumVertices();
+      let adjList = {};
+      let vertices_index = this.getVerticesIndices();
+      let vertex_keys = Object.keys(vertices_index);
+      let vertex_values = Object.values(vertices_index);
+      let n_vertices = this.getNumVertices();
 
-    // Initialization
-    for(let i=0; i<n_vertices; i++){
-        adjList[vertex_values[i]] = []      
-    }
+      // Initialization
+      for(let i=0; i<n_vertices; i++){
+          adjList[vertex_values[i]] = []      
+      }
 
-    for(let i=0; i<n_vertices; i++){  
-        let vertex_i = vertex_keys[i];
-        
-        for(let j=0; j<n_vertices; j++){
-            let neighbors_i = this.getNeighbors(this.getVertexByKey(vertex_i));
-            let neighbors_index = [];
+      for(let i=0; i<n_vertices; i++){  
+          let vertex_i = this.getVertexByKey(vertex_keys[i]);
+          let neighbors_i = this.getNeighbors(vertex_i);
+          
+          let neighbors_index = [];
 
-            neighbors_i.forEach((vertex) => {
+          neighbors_i.forEach((vertex) => {
               neighbors_index.push(vertices_index[vertex.getKey()])
-            });
-            
-            adjList[i] = neighbors_index;
-        }
-    }
-    
-    return adjList;
+          });
+          
+          adjList[i] = neighbors_index;
+          
+      }
+      
+      return adjList;
   }
   
   /**
