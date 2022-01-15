@@ -28,9 +28,6 @@
     "start": "nodemon ./src/server.js",
     "test": "jest",
     "coverage": "npm run test -- --coverage",
-    "lint": "eslint .",
-    "ci": "npm run lint && npm run coverage",
-    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",
