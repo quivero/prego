@@ -1,5 +1,6 @@
 {
   "name": "@brunolnetto/node-link",
+  "type": "module",
   "version": "1.0.1",
   "description": "Package to handle node-link based structures",
   "main": "index.js",
@@ -20,14 +21,14 @@
     "express": "^4.17.1",
     "find-cycle": "^1.0.0",
     "fs": "^0.0.1-security",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "np": "^7.6.0"
   },
-  "type": "module",
   "scripts": {
     "start": "nodemon ./src/server.js",
     "test": "jest",
     "coverage": "npm run test -- --coverage",
-    "lint": "eslint ./src/**",
+    "lint": "eslint .",
     "ci": "npm run lint && npm run coverage",
     "prepare": "husky install"
   },
@@ -37,10 +38,10 @@
     "@types/jest": "27.0.2",
     "babel-eslint": "^10.1.0",
     "canvas": "2.8.0",
-    "eslint": "8.0.1",
+    "eslint": "^8.0.1",
+    "eslint-config-adpyke-es6": "^1.4.13",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-jest": "^25.2.2",
-    "husky": "7.0.2",
     "jest": "27.3.0"
   },
   "engines": {
