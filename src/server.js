@@ -2,11 +2,15 @@
 
 // [START app]
 import express from 'express'
+import { createRequire } from "module";
+import fs from 'fs'
+
 import Graph from './data-structures/graph/Graph.js'
 import GraphVertex from './data-structures/graph/GraphVertex.js'
 import GraphEdge from './data-structures/graph/GraphEdge.js'
-import depthFirstSearch from './algorithms/depth-first-search/depthFirstSearch.js'
+import { parseBlueprintToGraph } from './utils/workflow/parsers.js'
 
+const require = createRequire(import.meta.url);
 const app = express();
 
 // [START enable_parser]
@@ -24,32 +28,23 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program
   // Create a sample graph
-  // const graph = req.blueprint.nodes;
   
-  // A directed graph
-  let graph_ = new Graph(true);
+  // let parseBlueprintToGraph();
+  let bps_root = './src/samples/blueprints/';
+  let blueprints_fnames = fs.readdirSync(bps_root);
+  let graphs = []
+  let descriptions = []
 
-  // Nodes
-  let A = new GraphVertex('A');
-  let B = new GraphVertex('B');
-  let C = new GraphVertex('C');
-  let D = new GraphVertex('D');
-  let E = new GraphVertex('E');
-  let F = new GraphVertex('F');
+  for(let i=0; i<blueprints_fnames.length; i++){
+      let fname = './samples/blueprints/'+blueprints_fnames[i];
+      let blueprint_i = require(fname);
+      
+      let graph_i = parseBlueprintToGraph(blueprint_i);
+      
+      graphs.push(graph_i);
+      descriptions.push(graph_i.describe());
+  }
 
-  // Vertices
-  let AB = new GraphEdge(A, B);
-  let BC = new GraphEdge(B, C);
-  let CD = new GraphEdge(C, D);
-  let CE = new GraphEdge(C, E);
-  let EB = new GraphEdge(E, B);
-  let CF = new GraphEdge(C, F);
-  let FB = new GraphEdge(F, B);
-
-  // Add edges
-  graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
-
-  res.send(graph_.describe());
+  res.send(descriptions);
 });
 // [END app]
-
