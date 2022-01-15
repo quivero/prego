@@ -27,7 +27,7 @@
   "scripts": {
     "start": "nodemon ./src/server.js",
     "test": "jest",
-    "coverage": "npm run test -- --coverage",
+    "coverage": "npm run test -- --coverage"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",
