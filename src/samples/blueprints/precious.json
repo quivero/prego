@@ -1,0 +1,502 @@
+{
+  "name": "PRECIOUS",
+  "description": "BP para testar outras BPs",
+  "blueprint_spec": {
+    "lanes": [
+      {
+        "id": "1",
+        "name": "theOnlyLane",
+        "rule": [
+          "fn",
+          [
+            "&",
+            "args"
+          ],
+          true
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "1",
+        "name": "start PRECIOUS",
+        "next": "CONFIG",
+        "type": "Start",
+        "lane_id": "1",
+        "parameters": {
+          "input_schema": {}
+        }
+      },
+      {
+        "id": "CONFIG",
+        "name": "bag creatorId",
+        "next": "TOKEN",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "setToBag",
+        "parameters": {
+          "input": {
+            "bpName": "PRECIOUS-TEST-SAMPLE",
+            "expectedNode": "",
+            "expectedEnd": "finished",
+            "submittedInfo": "",
+            "expectedHistory": [
+              "1",
+              "1",
+              "GENERATE-NUMBER",
+              "CHECK-NUMBER",
+              "ALERT-USER-BIG-NUMBER",
+              "WAIT-10",
+              "TEST-COINGECKO-API",
+              "CHECK-COINGECKO-API-RESPONSE",
+              "COINGECKO-OK",
+              "END-SUCCESS-COINGECKO"
+            ]
+          }
+        }
+      },
+      {
+        "id": "TOKEN",
+        "name": "get token",
+        "next": "TOKEN-RESPONSE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "HTTP",
+        "parameters": {
+          "input": {},
+          "request": {
+            "url": "http://localhost:3000/token",
+            "verb": "POST",
+            "headers": {}
+          }
+        }
+      },
+      {
+        "id": "TOKEN-RESPONSE",
+        "name": "check token response",
+        "next": {
+          "200": "TOKEN-BAG",
+          "default": "TOKEN-RESPONSE-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$ref": "result.status"
+            }
+          }
+        }
+      },
+      {
+        "id": "TOKEN-BAG",
+        "name": "bag token",
+        "next": "PROCESS",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "SetToBag",
+        "parameters": {
+          "input": {
+            "token": {
+              "$ref": "result.data.jwtToken"
+            }
+          }
+        }
+      },
+      {
+        "id": "PROCESS",
+        "name": "start process by workflow name\"",
+        "next": "PROCESS-RESPONSE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "HTTP",
+        "parameters": {
+          "input": {},
+          "request": {
+            "url": {
+              "$mustache": "http://localhost:3000/workflows/name/{{bag.bpName}}/start"
+            },
+            "verb": "POST",
+            "headers": {
+              "Authorization": {
+                "$mustache": "Bearer {{bag.token}}"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "PROCESS-RESPONSE",
+        "name": "check process response",
+        "next": {
+          "201": "PROCESS-ID-BAG",
+          "default": "PROCESS-RESPONSE-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$ref": "result.status"
+            }
+          }
+        }
+      },
+      {
+        "id": "PROCESS-ID-BAG",
+        "name": "bag process id",
+        "next": "CURRENT-STATE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "SetToBag",
+        "parameters": {
+          "input": {
+            "processId": {
+              "$ref": "result.data.process_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "CURRENT-STATE",
+        "name": "get current state of workflow process",
+        "next": "CURRENT-STATE-RESPONSE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "HTTP",
+        "parameters": {
+          "input": {},
+          "request": {
+            "url": {
+              "$mustache": "http://localhost:3000/processes/{{bag.processId}}/state"
+            },
+            "verb": "GET",
+            "headers": {
+              "Authorization": {
+                "$mustache": "Bearer {{bag.token}}"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "CURRENT-STATE-RESPONSE",
+        "name": "check current state response",
+        "next": {
+          "200": "CURRENT-STATE-CHECK",
+          "default": "CURRENT-STATE-RESPONSE-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$ref": "result.status"
+            }
+          }
+        }
+      },
+      {
+        "id": "CURRENT-STATE-CHECK",
+        "name": "check current state",
+        "next": {
+          "finished": "CURRENT-STATE-EXPECTED",
+          "expired": "CURRENT-STATE-EXPECTED",
+          "error": "CURRENT-STATE-CHECK-END-ERROR",
+          "waiting": "NODE-EXPECTED",
+          "running": "CURRENT-STATE-WAIT",
+          "pending": "CURRENT-STATE-WAIT",
+          "default": "CURRENT-STATE-CHECK-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$ref": "result.data.state.status"
+            }
+          }
+        }
+      },
+      {
+        "id": "CURRENT-STATE-EXPECTED",
+        "name": "check if current state is expected",
+        "next": {
+          "true": "HISTORY",
+          "default": "CURRENT-STATE-EXPECTED-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$js": "({bag, result}) => {if (bag.expectedEnd == result.data.state.status) {return true;} else { return false;}}"
+            }
+          }
+        }
+      },
+      {
+        "id": "HISTORY",
+        "name": "get history of workflow process",
+        "next": "HISTORY-RESPONSE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "HTTP",
+        "parameters": {
+          "input": {},
+          "request": {
+            "url": {
+              "$mustache": "http://localhost:3000/processes/{{bag.processId}}/history"
+            },
+            "verb": "GET",
+            "headers": {
+              "Authorization": {
+                "$mustache": "Bearer {{bag.token}}"
+              }
+            },
+            "max_content_length": 50000
+          }
+        }
+      },
+      {
+        "id": "HISTORY-RESPONSE",
+        "name": "check history response",
+        "next": {
+          "200": "HISTORY-BAG",
+          "default": "HISTORY-RESPONSE-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$ref": "result.status"
+            }
+          }
+        }
+      },
+      {
+        "id": "HISTORY-BAG",
+        "name": "bag history",
+        "next": "HISTORY-EXPECTED",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "setToBag",
+        "parameters": {
+          "input": {
+            "processHistory": {
+              "$js": "({ result }) => {\n                  let history = result.data.map(item => {\n                    return item.node_id;\n                  });\n                  return history.reverse();\n                }"
+            }
+          }
+        }
+      },
+      {
+        "id": "HISTORY-EXPECTED",
+        "name": "check expected history",
+        "next": {
+          "true": "HISTORY-EXPECTED-END-SUCCESS",
+          "default": "HISTORY-EXPECTED-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$js": "({bag}) => { if (bag.expectedHistory.length != bag.processHistory.length) {return false;};  for(i = 0; i < bag.expectedHistory.length; i++) {if (bag.expectedHistory[i] != bag.processHistory[i]) { return false;}}  return true;}"
+            }
+          }
+        }
+      },
+      {
+        "id": "CURRENT-STATE-WAIT",
+        "type": "SystemTask",
+        "category": "timer",
+        "name": "wait 5 seconds to proceed",
+        "parameters": {
+          "input": {},
+          "timeout": 5
+        },
+        "next": "CURRENT-STATE",
+        "lane_id": "1"
+      },
+      {
+        "id": "NODE-EXPECTED",
+        "name": "check expected history",
+        "next": {
+          "true": "ACTIVITY-MANAGER",
+          "default": "NODE-EXPECTED-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$js": "({bag, result}) => {if (bag.expectedNode == result.data.state.node_id) {return true;} else { return false;}}"
+            }
+          }
+        }
+      },
+      {
+        "id": "ACTIVITY-MANAGER",
+        "name": "get activity manager of current node",
+        "next": "ACTIVITY-MANAGER-RESPONSE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "HTTP",
+        "parameters": {
+          "input": {},
+          "request": {
+            "url": {
+              "$mustache": "http://localhost:3000/processes/{{bag.processId}}/activity"
+            },
+            "verb": "GET",
+            "headers": {
+              "Authorization": {
+                "$mustache": "Bearer {{bag.token}}"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "ACTIVITY-MANAGER-RESPONSE",
+        "name": "check activity manager response",
+        "next": {
+          "200": "SUBMIT",
+          "204": "CURRENT-STATE-WAIT",
+          "default": "ACTIVITY-MANAGER-RESPONSE-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$ref": "result.status"
+            }
+          }
+        }
+      },
+      {
+        "id": "SUBMIT",
+        "name": "submit info to current node",
+        "next": "SUBMIT-RESPONSE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "HTTP",
+        "parameters": {
+          "input": {},
+          "request": {
+            "url": {
+              "$mustache": "http://localhost:3000/activity_manager/{{result.data.id}}/submit"
+            },
+            "verb": "GET",
+            "headers": {
+              "Authorization": {
+                "$mustache": "Bearer {{bag.token}}"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "SUBMIT-RESPONSE",
+        "name": "check submit response",
+        "next": {
+          "200": "CURRENT-STATE",
+          "default": "SUBMIT-RESPONSE-END-ERROR"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "status": {
+              "$ref": "result.status"
+            }
+          }
+        }
+      },
+      {
+        "id": "TOKEN-RESPONSE-END-ERROR",
+        "name": "end from token response",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "PROCESS-RESPONSE-END-ERROR",
+        "name": "end from process response",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "CURRENT-STATE-RESPONSE-END-ERROR",
+        "name": "end from current state response",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "HISTORY-RESPONSE-END-ERROR",
+        "name": "end from history response",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "CURRENT-STATE-CHECK-END-ERROR",
+        "name": "end from current state check",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "NODE-EXPECTED-END-ERROR",
+        "name": "end from expected node",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "HISTORY-EXPECTED-END-ERROR",
+        "name": "end from history expected",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "SUBMIT-RESPONSE-END-ERROR",
+        "name": "end from submit response",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "CURRENT-STATE-EXPECTED-END-ERROR",
+        "name": "end from current state expected",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "ACTIVITY-MANAGER-RESPONSE-END-ERROR",
+        "name": "end from token response",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "HISTORY-EXPECTED-END-SUCCESS",
+        "name": "end from history expected",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      }
+    ],
+    "prepare": [],
+    "environment": {},
+    "requirements": [
+      "core"
+    ]
+  }
+}
