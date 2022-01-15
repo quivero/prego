@@ -24,7 +24,9 @@ export default class Graph {
       let n_dense = n_vertices*(n_vertices-1)/2;
       let n_edges = this.getAllEdges().length;
 
-      return n_edges/n_dense;
+      this.#density = n_edges/n_dense;
+
+      return this.#density
   }
 
   /**
@@ -121,7 +123,6 @@ export default class Graph {
       let loose_nodes = [];
       let adjList = this.getAdjacencyList();
       let n_vertices = this.getNumVertices();
-      let indices_to_vertices = this.getIndicesToVertices();
       
       for(let i=0; i<n_vertices; i++){
           if(adjList[i].length==0){
@@ -179,22 +180,13 @@ export default class Graph {
       endVertex = this.getVertexByKey(edge.endVertex.getKey());
     }
 
-    // Add start and end vertices if needed
-    if (!!this.vertices[edge.startVertex.getKey()]) {
-        this.addVertex(edge.startVertex);
-    }
-
-    if (!!this.vertices[edge.endVertex.getKey()]) {
-        this.addVertex(edge.endVertex);
-    }
-
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
-      throw new Error('Edge has already been added before. Please, choose other key!');
+        throw new Error('Edge has already been added before. Please, choose other key!');
     } else {
-      this.edges[edge.getKey()] = edge;
+        this.edges[edge.getKey()] = edge;
     }
-
+    
     // Add edge to the vertices.
     if (this.isDirected) {
       // If graph IS directed then add the edge only to start vertex.
