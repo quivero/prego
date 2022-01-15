@@ -32,19 +32,33 @@ app.get('/', (req, res) => {
   // let parseBlueprintToGraph();
   let bps_root = './src/samples/blueprints/';
   let blueprints_fnames = fs.readdirSync(bps_root);
+  
+  let READ_ALL_BPS = false;
+  let blueprint_fname = 'precious.json'
+
   let graphs = []
   let descriptions = []
 
-  for(let i=0; i<blueprints_fnames.length; i++){
-      let fname = './samples/blueprints/'+blueprints_fnames[i];
+  if(READ_ALL_BPS){
+      for(let i=0; i<blueprints_fnames.length; i++){
+          let fname = './samples/blueprints/'+blueprints_fnames[i];
+          let blueprint_i = require(fname);
+          
+          let graph_i = parseBlueprintToGraph(blueprint_i);
+          
+          graphs.push(graph_i);
+          descriptions.push(graph_i.describe());
+      }
+
+      res.send(descriptions);
+
+  } else {
+      let fname = './samples/blueprints/'+blueprint_fname;
       let blueprint_i = require(fname);
       
-      let graph_i = parseBlueprintToGraph(blueprint_i);
-      
-      graphs.push(graph_i);
-      descriptions.push(graph_i.describe());
+      let graph = parseBlueprintToGraph(blueprint_i);
+    
+      res.send(graph.describe());
   }
-
-  res.send(descriptions);
 });
 // [END app]
