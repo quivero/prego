@@ -2,6 +2,7 @@
     "root": true,
     "parser": "babel-eslint",
     "plugins": ["jest"],
+    "extends": "adpyke-es6",
     "env": {
         "jest/globals": true
     },
