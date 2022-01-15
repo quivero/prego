@@ -27,16 +27,13 @@
   "scripts": {
     "start": "nodemon ./src/server.js",
     "test": "jest",
+    "lint": "eslint .",
     "coverage": "npm run test -- --coverage"
   },
   "devDependencies": {
-    "@babel/cli": "7.15.7",
-    "@babel/preset-env": "7.15.8",
     "@types/jest": "27.0.2",
     "babel-eslint": "^10.1.0",
     "canvas": "2.8.0",
-    "eslint": "^8.0.1",
-    "eslint-config-adpyke-es6": "^1.4.13",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-jest": "^25.2.2",
     "jest": "27.3.0"

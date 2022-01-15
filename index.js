@@ -1,5 +1,3 @@
-'use strict';
-
 // [START app]
 import express from 'express'
 import { createRequire } from "module";
