@@ -1,7 +1,7 @@
 {
   "name": "@brunolnetto/node-link",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Package to handle node-link based structures",
   "main": "index.js",
   "repository": {
