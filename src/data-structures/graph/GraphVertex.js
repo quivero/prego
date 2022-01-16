@@ -38,10 +38,32 @@ export default class GraphVertex {
   }
 
   /**
+   * @param {GraphEdge} edges
+   * @returns {GraphVertex}
+   */
+  addEdges(edges) {
+    edges.forEach((edge) => {
+        this.edges.append(edge);
+    })
+
+    return this;
+  }
+
+  /**
    * @param {GraphEdge} edge
    */
   deleteEdge(edge) {
     this.edges.delete(edge);
+  }
+
+  /**
+   * @param {GraphEdge} edge
+   */
+  deleteEdges(edges) {
+    edges.forEach((edge) => {
+      this.edges.delete(edge);
+    })
+    
   }
 
   /**
@@ -123,8 +145,7 @@ export default class GraphVertex {
    * @return {GraphVertex}
    */
   deleteAllEdges() {
-    this.getEdges().forEach((edge) => this.deleteEdge(edge));
-
+    this.deleteEdges(this.getEdges());
     return this;
   }
 
@@ -135,4 +156,15 @@ export default class GraphVertex {
   toString(callback) {
     return callback ? callback(this.value) : `${this.value}`;
   }
+}
+
+export const createVertices = (labels) => {
+  let vertices = []
+  
+  labels.forEach(label => {
+      let vertex = new GraphVertex(label);
+      vertices.push(vertex);
+  });
+
+  return vertices;
 }

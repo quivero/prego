@@ -38,3 +38,14 @@ export default class GraphEdge {
     return this.getKey();
   }
 }
+
+export const createEdges = (vertices_tuples) => {
+  let edges = []
+  
+  vertices_tuples.forEach(vertices_tuple => {
+      let edge = new GraphEdge(vertices_tuple[0], vertices_tuple[1]);
+      edges.push(edge);
+  });
+  
+  return edges;
+}

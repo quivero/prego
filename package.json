@@ -21,6 +21,7 @@
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.8",
     "@ungap/structured-clone": "^0.3.4",
+    "es-iter": "^1.1.2",
     "express": "^4.17.1",
     "find-cycle": "^1.0.0",
     "fs": "^0.0.1-security",

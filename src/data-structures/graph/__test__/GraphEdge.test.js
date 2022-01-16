@@ -1,10 +1,10 @@
 import GraphEdge from '../GraphEdge.js';
-import GraphVertex from '../GraphVertex.js';
+
+import { createVertices } from '../GraphVertex'
 
 describe('GraphEdge', () => {
   it('should create graph edge with default weight', () => {
-    const startVertex = new GraphVertex('A');
-    const endVertex = new GraphVertex('B');
+    const [startVertex, endVertex] = createVertices(['A', 'B']);
     const edge = new GraphEdge(startVertex, endVertex);
 
     expect(edge.getKey()).toBe('A_B');
@@ -15,8 +15,7 @@ describe('GraphEdge', () => {
   });
 
   it('should create graph edge with predefined weight', () => {
-    const startVertex = new GraphVertex('A');
-    const endVertex = new GraphVertex('B');
+    const [startVertex, endVertex] = createVertices(['A', 'B']);
     const edge = new GraphEdge(startVertex, endVertex, 10);
 
     expect(edge.startVertex).toEqual(startVertex);
@@ -25,8 +24,7 @@ describe('GraphEdge', () => {
   });
 
   it('should be possible to do edge reverse', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
+    const [vertexA, vertexB] = createVertices(['A', 'B']);
     const edge = new GraphEdge(vertexA, vertexB, 10);
 
     expect(edge.startVertex).toEqual(vertexA);

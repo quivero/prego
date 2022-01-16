@@ -1,4 +1,5 @@
-import { isCyclicEqual, getAllIndexes } from '../../utils/arrays/arrays.js'
+import { getAllIndexes } from '../../utils/arrays/arrays.js'
+import structuredClone from '@ungap/structured-clone';
 
 export default class Graph {
   #cycles;
@@ -15,10 +16,17 @@ export default class Graph {
     this.#density = 0;
   }
 
+  /**
+   * @returns {Array} Graph cycles
+   */
   get cycles(){
       return this.cyclicPaths();
   }
   
+  /**
+   * @returns {} Graph density defined by number
+   * of edges divided by number of possible edges
+   */
   get density(){
       let n_vertices = this.getNumVertices();
       let n_dense = n_vertices*(n_vertices-1)/2;
@@ -164,6 +172,10 @@ export default class Graph {
    */
   addEdge(edge) {
     // Try to find and end start vertices.
+    if(typeof(edge.startVertex)===undefined) {
+        console.log(edge.toString())
+    }
+
     let startVertex = this.getVertexByKey(edge.startVertex.getKey());
     let endVertex = this.getVertexByKey(edge.endVertex.getKey());
 
@@ -204,7 +216,9 @@ export default class Graph {
    * @returns {}
    */
    addEdges(edges){
-      edges.forEach((edge) => this.addEdge(edge));
+      edges.forEach((edge) => {
+          this.addEdge(edge)
+      });
    }
 
   /**
@@ -338,9 +352,9 @@ export default class Graph {
    * @returns {Graph} clone of this graph, but undirected 
    */
   retrieveUndirected(){
-    let undirected_graph = new Graph(false);
+    let undirected_graph = new Graph();
     let edges = this.getAllEdges();
-
+    
     undirected_graph.addEdges(edges);
 
     return undirected_graph;
@@ -408,26 +422,25 @@ export default class Graph {
     // visited[] --> keeps track of visited vertices
     // disc[] --> Stores discovery times of visited vertices
     // parent[] --> Stores parent vertices in DFS tree
-    #bridgesUtil(u, visited, disc, low, parent, bridges){
+    #bridgesUtil(graph_, u, times, visited, disc, low, parent, bridges){
         // Mark the current node as visited
         visited[u] = true;
    
         // Initialize discovery time and low value
-        disc[u] = low[u] = ++this.time;
+        disc[u] = low[u] = ++times;
    
         // Go through all vertices adjacent to this
          
-        for(let i of this.adj[u])
-        {
-            let v = i;  // v is current adjacent of u
-   
+        for(let i of graph_.getAdjacencyList()[u]){
+            // v is current adjacent of u
+            let v = i;
+
             // If v is not visited yet, then make it a child
             // of u in DFS tree and recur for it.
             // If v is not visited yet, then recur for it
-            if (!visited[v])
-            {
+            if (!visited[v]){
                 parent[v] = u;
-                this.#bridgesUtil(v, visited, disc, low, parent);
+                graph_.#bridgesUtil(graph_, v, times, visited, disc, low, parent);
    
                 // Check if the subtree rooted with v has a
                 // connection to one of the ancestors of u
@@ -436,43 +449,46 @@ export default class Graph {
                 // If the lowest vertex reachable from subtree
                 // under v is below u in DFS tree, then u-v is
                 // a bridge
-                if (low[v] > disc[u])
+                if (low[v] > disc[u]){
                     bridges.push([u, v]);
+                }
             }
    
             // Update low value of u for parent function calls.
-            else if (v != parent[u])
+            else if (v != parent[u]){
                 low[u]  = Math.min(low[u], disc[v]);
+            }
         }
     }
 
     // DFS based function to find all bridges. It uses recursive
     // function bridgeUtil()
     bridges(){
-        if(this.isDirected){
-            console.warn('Currently available only for undirected graphs.');
-            return []
-        }
+        let graph_ = this.isDirected ? structuredClone(this).retrieveUndirected() : 
+                                       structuredClone(this);
 
         // Mark all the vertices as not visited
-        let visited = new Array(this.V);
-        let disc = new Array(this.V);
-        let low = new Array(this.V);
-        let parent = new Array(this.V);
-        let bridges = [];
-   
-        // Initialize parent and visited, and ap(articulation point)
-        // arrays
-        for (let i = 0; i < this.V; i++){
-            parent[i] = this.NIL;
+        let n_vertices = graph_.getNumVertices()
+        let visited = new Array(n_vertices);
+        let disc = new Array(n_vertices);
+        let low = new Array(n_vertices);
+        let parent = new Array(n_vertices);
+        let bridges = new Array(n_vertices);
+        let times = 0;
+
+        // Initialize parent and visited, and ap(articulation point) arrays
+        for (let i = 0; i < n_vertices; i++){
+            parent[i] = -1;
             visited[i] = false;
         }
    
         // Call the recursive helper function to find Bridges
         // in DFS tree rooted with vertex 'i'
-        for (let i = 0; i < this.V; i++)
+        for (let i = 0; i < n_vertices; i++)
             if (visited[i] == false)
-                this.#bridgesUtil(i, visited, disc, low, parent, bridges);
+                this.#bridgesUtil(graph_, i, times, visited, disc, low, parent, bridges);
+        
+        return bridges;
     }
 
   /**
@@ -699,3 +715,4 @@ export default class Graph {
     return Object.keys(this.vertices).toString();
   }
 }
+

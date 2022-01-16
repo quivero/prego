@@ -2,45 +2,43 @@ import Graph from '../Graph.js';
 import GraphVertex from '../GraphVertex.js';
 import GraphEdge from '../GraphEdge.js';
 
+import { createVertices } from '../GraphVertex'
+import { createEdges } from '../GraphEdge'
+
 console.warn = jest.fn();
 
 beforeEach(() => {
   console.warn.mockClear();
 });
 
-
 describe('Graph', () => {
   it('should add vertices to graph', () => {
     const graph = new Graph();
 
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
+    const [A, B] = createVertices(['A', 'B']);
 
-    graph
-      .addVertex(vertexA)
-      .addVertex(vertexB);
+    graph.addVertices([A, B]);
 
     expect(graph.toString()).toBe('A,B');
-    expect(graph.getVertexByKey(vertexA.getKey())).toEqual(vertexA);
-    expect(graph.getVertexByKey(vertexB.getKey())).toEqual(vertexB);
+    expect(graph.getVertexByKey(A.getKey())).toEqual(A);
+    expect(graph.getVertexByKey(B.getKey())).toEqual(B);
   });
 
   it('should add edges to undirected graph', () => {
     const graph = new Graph();
 
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
+    const [A, B] = createVertices(['A', 'B']);
 
-    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAB = new GraphEdge(A, B);
 
     graph.addEdge(edgeAB);
 
     expect(graph.getAllVertices().length).toBe(2);
-    expect(graph.getAllVertices()[0]).toEqual(vertexA);
-    expect(graph.getAllVertices()[1]).toEqual(vertexB);
+    expect(graph.getAllVertices()[0]).toEqual(A);
+    expect(graph.getAllVertices()[1]).toEqual(B);
 
-    const graphVertexA = graph.getVertexByKey(vertexA.getKey());
-    const graphVertexB = graph.getVertexByKey(vertexB.getKey());
+    const graphVertexA = graph.getVertexByKey(A.getKey());
+    const graphVertexB = graph.getVertexByKey(B.getKey());
 
     expect(graph.toString()).toBe('A,B');
     expect(graphVertexA).toBeDefined();
@@ -49,19 +47,18 @@ describe('Graph', () => {
     expect(graph.getVertexByKey('not existing')).toBeUndefined();
 
     expect(graphVertexA.getNeighbors().length).toBe(1);
-    expect(graphVertexA.getNeighbors()[0]).toEqual(vertexB);
+    expect(graphVertexA.getNeighbors()[0]).toEqual(B);
     expect(graphVertexA.getNeighbors()[0]).toEqual(graphVertexB);
 
     expect(graphVertexB.getNeighbors().length).toBe(1);
-    expect(graphVertexB.getNeighbors()[0]).toEqual(vertexA);
+    expect(graphVertexB.getNeighbors()[0]).toEqual(A);
     expect(graphVertexB.getNeighbors()[0]).toEqual(graphVertexA);
   });
 
   it('should add edges to directed graph', () => {
     const graph = new Graph(true);
 
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
+    const [vertexA, vertexB] = createVertices(['A', 'B']);
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
 
@@ -81,26 +78,35 @@ describe('Graph', () => {
     expect(graphVertexB.getNeighbors().length).toBe(0);
   });
 
-  it('should copy graph vertices and edges but undirected', () => {
+  it('should copy directed graph but undirected', () => {
     // A directed graph
     let graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    const [A, B] = createVertices(['A', 'B']);
 
     // Vertices
     let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
+
+    graph_.addEdge(AB);
+    
+    // Add edges
+    let graph_undirected = graph_.retrieveUndirected();
+
+    expect(graph_undirected.isDirected).toEqual(false);
+  });
+
+  it('should copy undirected graph', () => {
+    // A directed graph
+    let graph_ = new Graph(false);
+
+    // Nodes
+    const [A, B] = createVertices(['A', 'B']);
+
+    // Vertices
+    let AB = new GraphEdge(A, B);
+
+    graph_.addEdge(AB);
     
     // Add edges
     let graph_undirected = graph_.retrieveUndirected();
@@ -112,25 +118,27 @@ describe('Graph', () => {
     // A directed graph
     let graph = new Graph(true);
 
-    // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    // Vertices
+    const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
+
+    // Edges
+    const [AB, BC, CD, CE, EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]]);
+    
+    // Add edges
+    graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+    
+    expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
+  })
+
+  it('Cycles in a finite graph must be finite', () => {
+    // A directed graph
+    let graph = new Graph(true);
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
-    
-    // Add vertices
-    graph.addVertices([A, B, C, D, E, F]);
+    const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
+
+    // Edges
+    const [AB, BC, CD, CE, EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]]);
 
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
@@ -138,7 +146,7 @@ describe('Graph', () => {
     expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   })
 
-  it('Cycles in a finite graph must be finite', () => {
+  it('Bridges in graph', () => {
     // A directed graph
     let graph = new Graph(true);
 
@@ -172,14 +180,11 @@ describe('Graph', () => {
     // A directed graph
     let graph = new Graph(true);
 
-    // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
+
+    // Edges
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
         
     // Add edges
     graph.addEdges([AB, BC]);
@@ -294,9 +299,7 @@ describe('Graph', () => {
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
 
-    graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC);
+    graph.addEdges([edgeAB, edgeBC]);
 
     const edges = graph.getAllEdges();
 
@@ -561,6 +564,35 @@ describe('Graph', () => {
     });
   });
 
+  it('should return acyclic paths', () => {
+    const graph_ = new Graph(true);
+
+    // Nodes
+    let A = new GraphVertex('A');
+    let B = new GraphVertex('B');
+    let C = new GraphVertex('C');
+    let D = new GraphVertex('D');
+    let E = new GraphVertex('E');
+    let F = new GraphVertex('F');
+
+    // Vertices
+    let AB = new GraphEdge(A, B);
+    let BC = new GraphEdge(B, C);
+    let CD = new GraphEdge(C, D);
+    let CE = new GraphEdge(C, E);
+    let EB = new GraphEdge(E, B);
+    let CF = new GraphEdge(C, F);
+    let FB = new GraphEdge(F, B);
+
+    // Add edges
+    graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+
+    expect(graph_.getCycleIndices()).toEqual({
+      0: [1, 2, 4],
+      1: [1, 2, 5]
+    });
+  });
+
   it('should return loose nodes', () => {
     const graph_ = new Graph(true);
 
@@ -643,7 +675,7 @@ describe('Graph', () => {
     expect(graph.getNeighbors(vertexD)[0].getKey()).toBe(vertexC.getKey());
   });
 
-  it('should warn about reversing a graph', () => {
+  it('should warn about reversing a undirected graph', () => {
     const graph = new Graph(false);
 
     const vertexA = new GraphVertex('A');
