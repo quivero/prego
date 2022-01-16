@@ -1,7 +1,6 @@
 import {getAllIndexes, 
         cyclicSort,
         isCyclicEqual,
-        uniqueIndices,
         getUniques} from '../arrays.js';
 
 console.error = jest.fn();

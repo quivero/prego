@@ -1,4 +1,4 @@
-import { cyclicSort, getAllIndexes } from '../../utils/arrays/arrays.js'
+import { isCyclicEqual, getAllIndexes } from '../../utils/arrays/arrays.js'
 
 export default class Graph {
   #cycles;
@@ -251,30 +251,6 @@ export default class Graph {
   }
 
   /**
-   * Reverse all the edges in directed graph.
-   * @return {Graph}
-   */
-  reverse() {
-    if(this.isDirected){
-      /** @param {GraphEdge} edge */
-      this.getAllEdges().forEach((edge) => {
-      // Delete straight edge from graph and from vertices.
-      this.deleteEdge(edge);
-
-      // Reverse the edge.
-      edge.reverse();
-
-      // Add reversed edge back to the graph and its vertices.
-      this.addEdge(edge);
-      });
-    } else{
-        console.warn('Warning: This is an UNDIRECTED graph!');;
-    }
-
-    return this;
-  }
-
-  /**
    * @return {object}
    */
   getVerticesIndices() {
@@ -335,6 +311,42 @@ export default class Graph {
   }
 
   /**
+   * Reverse all the edges in directed graph.
+   * @return {Graph}
+   */
+  reverse() {
+    if(this.isDirected){
+      /** @param {GraphEdge} edge */
+      this.getAllEdges().forEach((edge) => {
+      // Delete straight edge from graph and from vertices.
+      this.deleteEdge(edge);
+
+      // Reverse the edge.
+      edge.reverse();
+
+      // Add reversed edge back to the graph and its vertices.
+      this.addEdge(edge);
+      });
+    } else{
+        console.warn('Warning: This is an UNDIRECTED graph!');;
+    }
+
+    return this;
+  }
+
+  /**
+   * @returns {Graph} clone of this graph, but undirected 
+   */
+  retrieveUndirected(){
+    let undirected_graph = new Graph(false);
+    let edges = this.getAllEdges();
+
+    undirected_graph.addEdges(edges);
+
+    return undirected_graph;
+  }
+
+  /**
    * @return {*[][]}
    */  
   #isCyclicUtil(index, visited, recStack){
@@ -389,6 +401,79 @@ export default class Graph {
 
       return false;
   }
+
+  // A recursive function that finds and prints bridges
+    // using DFS traversal
+    // u --> The vertex to be visited next
+    // visited[] --> keeps track of visited vertices
+    // disc[] --> Stores discovery times of visited vertices
+    // parent[] --> Stores parent vertices in DFS tree
+    #bridgesUtil(u, visited, disc, low, parent, bridges){
+        // Mark the current node as visited
+        visited[u] = true;
+   
+        // Initialize discovery time and low value
+        disc[u] = low[u] = ++this.time;
+   
+        // Go through all vertices adjacent to this
+         
+        for(let i of this.adj[u])
+        {
+            let v = i;  // v is current adjacent of u
+   
+            // If v is not visited yet, then make it a child
+            // of u in DFS tree and recur for it.
+            // If v is not visited yet, then recur for it
+            if (!visited[v])
+            {
+                parent[v] = u;
+                this.#bridgesUtil(v, visited, disc, low, parent);
+   
+                // Check if the subtree rooted with v has a
+                // connection to one of the ancestors of u
+                low[u]  = Math.min(low[u], low[v]);
+   
+                // If the lowest vertex reachable from subtree
+                // under v is below u in DFS tree, then u-v is
+                // a bridge
+                if (low[v] > disc[u])
+                    bridges.push([u, v]);
+            }
+   
+            // Update low value of u for parent function calls.
+            else if (v != parent[u])
+                low[u]  = Math.min(low[u], disc[v]);
+        }
+    }
+
+    // DFS based function to find all bridges. It uses recursive
+    // function bridgeUtil()
+    bridges(){
+        if(this.isDirected){
+            console.warn('Currently available only for undirected graphs.');
+            return []
+        }
+
+        // Mark all the vertices as not visited
+        let visited = new Array(this.V);
+        let disc = new Array(this.V);
+        let low = new Array(this.V);
+        let parent = new Array(this.V);
+        let bridges = [];
+   
+        // Initialize parent and visited, and ap(articulation point)
+        // arrays
+        for (let i = 0; i < this.V; i++){
+            parent[i] = this.NIL;
+            visited[i] = false;
+        }
+   
+        // Call the recursive helper function to find Bridges
+        // in DFS tree rooted with vertex 'i'
+        for (let i = 0; i < this.V; i++)
+            if (visited[i] == false)
+                this.#bridgesUtil(i, visited, disc, low, parent, bridges);
+    }
 
   /**
    * @abstract Tarjan method for cycles enumeration

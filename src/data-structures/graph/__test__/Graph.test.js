@@ -81,7 +81,7 @@ describe('Graph', () => {
     expect(graphVertexB.getNeighbors().length).toBe(0);
   });
 
-  it('should return graph cycles', () => {
+  it('should copy graph vertices and edges but undirected', () => {
     // A directed graph
     let graph_ = new Graph(true);
 
@@ -103,9 +103,9 @@ describe('Graph', () => {
     let FB = new GraphEdge(F, B);
     
     // Add edges
-    graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+    let graph_undirected = graph_.retrieveUndirected();
 
-    expect(graph_.cycles).toEqual([[1, 2, 4], [1, 2, 5]]);
+    expect(graph_undirected.isDirected).toEqual(false);
   });
 
   it('Cycles in a finite graph must be finite', () => {
@@ -136,7 +136,7 @@ describe('Graph', () => {
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
-  })  
+  })
 
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
