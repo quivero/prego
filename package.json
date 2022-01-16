@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/brunolnetto/node-link#readme",
   "dependencies": {
+    "@babel/preset-env": "^7.16.8",
     "express": "^4.17.1",
     "find-cycle": "^1.0.0",
     "fs": "^0.0.1-security",
@@ -36,7 +37,7 @@
     "canvas": "2.8.0",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-jest": "^25.2.2",
-    "jest": "27.3.0"
+    "jest": "^27.3.0"
   },
   "engines": {
     "node": " >=16.0.0",
