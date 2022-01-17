@@ -1,4 +1,4 @@
-import { getAllIndexes } from '../../utils/arrays/arrays.js'
+import { clone } from '../../utils/class/class.js'
 import structuredClone from '@ungap/structured-clone';
 import Iter from 'es-iter';
 import _ from 'lodash';
