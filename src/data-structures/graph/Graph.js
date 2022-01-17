@@ -605,7 +605,7 @@ export default class Graph {
       is_visited[from_index] = true;
 
       // Recur for all the vertices adjacent to current vertex u
-      for (let i of Iter.range(adj_len)) {
+      for(let i of Iter.range(adj_len)) {
           let neighbor_i = adj_list[from_index][i];
           let ith_was_visited = is_visited[neighbor_i];
 
@@ -679,7 +679,7 @@ export default class Graph {
     for(let i of Iter.range(cyclic_nodes.length)){
       let j = cyclic_nodes[i];
       
-      for(let k of Iter.range(cyclic_nodes.length)){
+      for(let k of Iter.range(cycles.length)){
         if(cycles[k].includes(j)) {
           nodes_to_cycles[j].push(cycles[k]);
         }
