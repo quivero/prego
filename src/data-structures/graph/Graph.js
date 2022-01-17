@@ -480,49 +480,66 @@ export default class Graph {
    * @return {Array[Array]} cycle
    */
   #tarjanCycleMethod(origin_index, curr_index, f, points, cycles, marked_stack, marked, is_finish){
-    let adjList = this.getAdjacencyList();
-    let n_vertices = this.getNumVertices();
+      let adjList = this.getAdjacencyList();
+      let n_vertices = this.getNumVertices();
 
-    points.push(curr_index)
-    marked_stack.push(curr_index)
-    marked[curr_index] = true
-    
-    let w;
-    for(let i=0; i<n_vertices; i++){
-        let w = adjList[curr_index][i];
+      points.push(curr_index)
+      marked_stack.push(curr_index)
+      marked[curr_index] = true
+      
+      let w;
+      for(let i=0; i<n_vertices; i++){
+          w = adjList[curr_index][i];
 
-        if(w < origin_index){
-            adjList[curr_index].pop(adjList[curr_index][w])
-        } else {
-            // Cycle (!): Next node is equal do origin
-            if(w == origin_index) {
-                this.#cycles.push([...points]);
-                f = true
-            } else { 
-                // 
-                if(marked[w] == false){
-                    this.#tarjanCycleMethod(origin_index, w, is_finish, 
-                                            points, cycles, 
-                                            marked_stack, marked, is_finish);
-                }
-            }
-        }
-    }
+          if(w < origin_index){
+              adjList[curr_index].pop(adjList[curr_index][w])
+          } else {
+              // Cycle (!): Next node is equal do origin
+              if(w == origin_index) {
+                  let candidate = [...points];
+                  
+                  // Add cycle candidates if list is empty or 
+                  // it is not in the list already
+                  if(this.#cycles.length == 0){
+                    this.#cycles.push(candidate);
+                  } else { 
+                      candidate = [...points];  
 
-    is_finish = f;
-    if(f = true){
-        // Index v is now deleted from mark stacked, and has been called u unmark v  
-        let u = marked_stack.pop()
+                      let contains_candidate = false;
+                      for(let cycle of this.#cycles) {
+                          if(_.isEqual(candidate, cycle)){
+                              contains_candidate = true;
+                          }
+                      }
 
-        while (u != curr_index){
-            marked[u] = false
-            u = marked_stack.pop();
-        }
+                      if(!contains_candidate) this.#cycles.push(candidate);
+                  }
 
-        marked[u] = false
-    }
-    
-    points.pop(points[curr_index])
+                  f = true
+              } else { 
+                  // 
+                  if(marked[w] == false){
+                      this.#tarjanCycleMethod(origin_index, w, is_finish, points, 
+                                              cycles, marked_stack, marked, is_finish);
+                  }
+              }
+          }
+      }
+
+      is_finish = f;
+      if(f = true){
+          // Index v is now deleted from mark stacked, and has been called u unmark v  
+          let u = marked_stack.pop()
+
+          while (u != curr_index){
+              marked[u] = false
+              u = marked_stack.pop();
+          }
+
+          marked[u] = false
+      }
+      
+      points.pop(points[curr_index])
   }
 
   /**
@@ -530,31 +547,31 @@ export default class Graph {
    * @return {Array[Array]} cycle
    */
   cyclicPaths(){
-    if(!this.isCyclic()){
-        return []
-    }
-    
-    let marked = [];
-    let marked_stack = [];
-    this.#cycles = [];
-    let n_vertices = this.getNumVertices();
+      if(!this.isCyclic()){
+          return []
+      }
+      
+      let marked = [];
+      let marked_stack = [];
+      this.#cycles = [];
+      let n_vertices = this.getNumVertices();
 
-    for(let i=0; i<n_vertices; i++){
-        marked.push(false);
-    }
+      for(let i=0; i<n_vertices; i++){
+          marked.push(false);
+      }
 
-    let cycles = [];
-    for(let i=0; i<n_vertices; i++){
-        let points = []
-        this.#tarjanCycleMethod(i, i, false, points, cycles, marked_stack, marked);
-        
-        while (marked_stack.length > 0){
-            u = marked_stack.pop()
-            marked[u] = false
-        }
-    }
-            
-    return this.#cycles;
+      let cycles = [];
+      for(let i=0; i<n_vertices; i++){
+          let points = []
+          this.#tarjanCycleMethod(i, i, false, points, cycles, marked_stack, marked);
+          
+          while (marked_stack.length > 0){
+              u = marked_stack.pop()
+              marked[u] = false
+          }
+      }
+              
+      return this.#cycles 
   }
 
   /**
