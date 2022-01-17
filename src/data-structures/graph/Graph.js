@@ -359,10 +359,8 @@ export default class Graph {
     let edges_ = [];
 
     for(let edge of this.getAllEdges()) {
-        edges_.push(_.cloneDeep(edge));
+        undirected_graph.addEdge(_.cloneDeep(edge));
     }
-    
-    undirected_graph.addEdges(edges_);
     
     return undirected_graph;
   }
