@@ -21,7 +21,7 @@ You must follow the instructions below
 
 ## How to install as a package
 
-The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link) of the library use case.
+The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link-use-case) of the library use case.
 
 1) Go to your project path (for example, NodeJS or React); 
 2) Install the library with the command ```npm install --save '@brunolnetto/node-link'```;
