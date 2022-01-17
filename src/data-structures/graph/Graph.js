@@ -489,7 +489,7 @@ export default class Graph {
       marked[curr_index] = true
       
       let w;
-      for(let i=0; i<n_vertices; i++){
+      for(let i of Iter.range(n_vertices)){
           w = adjList[curr_index][i];
 
           if(w < origin_index){
@@ -557,12 +557,12 @@ export default class Graph {
       this.#cycles = [];
       let n_vertices = this.getNumVertices();
 
-      for(let i=0; i<n_vertices; i++){
+      for(let i of Iter.range(n_vertices)){
           marked.push(false);
       }
 
       let cycles = [];
-      for(let i=0; i<n_vertices; i++){
+      for(let i of Iter.range(n_vertices)){
           let points = []
           this.#tarjanCycleMethod(i, i, false, points, cycles, marked_stack, marked);
           
@@ -582,7 +582,7 @@ export default class Graph {
       const cycles_indices = {};
       let cycles = this.cyclicPaths();
       
-      for(let i=0; i<cycles.length; i++){
+      for(let i of Iter.range(cycles.length)){
           cycles_indices[i] = cycles[i];
       }
 
@@ -605,7 +605,7 @@ export default class Graph {
       is_visited[from_index] = true;
 
       // Recur for all the vertices adjacent to current vertex u
-      for (let i=0; i<adj_len; i++) {
+      for (let i of Iter.range(adj_len)) {
           let neighbor_i = adj_list[from_index][i];
           let ith_was_visited = is_visited[neighbor_i];
 
@@ -638,7 +638,7 @@ export default class Graph {
     let n_vertices = this.getNumVertices();
 
     let is_visited = new Array(this.v);
-    for(let i=0; i<n_vertices; i++) {
+    for(let i of Iter.range(n_vertices)) {
       is_visited[i]=false;
     }
     
@@ -665,23 +665,22 @@ export default class Graph {
     let cycles = this.cyclicPaths();
     let nodes_to_cycles = {};
 
-    for(let i = 0; i<n_vertices; i++){
+    for(let i of Iter.range(n_vertices)){
         nodes_to_cycles[i] = [];
     }
 
     let cnodes_temp = [];
-    for(let i = 0; i<cycles.length; i++){  
+    for(let i of Iter.range(cycles.length)){  
       cnodes_temp = cnodes_temp.concat(cycles[i]);
     }
 
     let cyclic_nodes = Array.from(new Set(...[cnodes_temp]));
 
-    for(let i=0; i<cyclic_nodes.length; i++){
+    for(let i of Iter.range(cyclic_nodes.length)){
       let j = cyclic_nodes[i];
       
-      for(let k=0; k<cycles.length; k++){
+      for(let k of Iter.range(cyclic_nodes.length)){
         if(cycles[k].includes(j)) {
-          let indexes = getAllIndexes(cycles[k], j);
           nodes_to_cycles[j].push(cycles[k]);
         }
       }
