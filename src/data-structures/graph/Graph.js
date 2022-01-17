@@ -1,5 +1,7 @@
 import { getAllIndexes } from '../../utils/arrays/arrays.js'
 import structuredClone from '@ungap/structured-clone';
+import Iter from 'es-iter';
+import _ from 'lodash';
 
 export default class Graph {
   #cycles;
@@ -416,78 +418,57 @@ export default class Graph {
       return false;
   }
 
-  // A recursive function that finds and prints bridges
-    // using DFS traversal
-    // u --> The vertex to be visited next
-    // visited[] --> keeps track of visited vertices
-    // disc[] --> Stores discovery times of visited vertices
-    // parent[] --> Stores parent vertices in DFS tree
-    #bridgesUtil(graph_, u, times, visited, disc, low, parent, bridges){
-        // Mark the current node as visited
-        visited[u] = true;
-   
-        // Initialize discovery time and low value
-        disc[u] = low[u] = ++times;
-   
-        // Go through all vertices adjacent to this
-         
-        for(let i of graph_.getAdjacencyList()[u]){
-            // v is current adjacent of u
-            let v = i;
+  // A recursive function that finds and prints bridges using DFS traversal
+  // u --> The original vertex
+  // u --> The vertex to be visited next
+  // pre[v]: order in which dfs examines v
+  // low[v]: lowest preorder of any vertex connected to v
+  // parent[] --> Stores parent vertices in DFS tree
+  #bridgesUtil(u, v, preorder, low, counter, bridges){
+      let adjList = this.getAdjacencyList();
+      
+      preorder[v] = counter++;
+      low[v] = preorder[v];
 
-            // If v is not visited yet, then make it a child
-            // of u in DFS tree and recur for it.
-            // If v is not visited yet, then recur for it
-            if (!visited[v]){
-                parent[v] = u;
-                graph_.#bridgesUtil(graph_, v, times, visited, disc, low, parent);
-   
-                // Check if the subtree rooted with v has a
-                // connection to one of the ancestors of u
-                low[u]  = Math.min(low[u], low[v]);
-   
-                // If the lowest vertex reachable from subtree
-                // under v is below u in DFS tree, then u-v is
-                // a bridge
-                if (low[v] > disc[u]){
-                    bridges.push([u, v]);
-                }
-            }
-   
-            // Update low value of u for parent function calls.
-            else if (v != parent[u]){
-                low[u]  = Math.min(low[u], disc[v]);
-            }
-        }
-    }
+      for (let w of adjList[v]) {
+          if (preorder[w] == -1) {
+              this.#bridgesUtil(v, w, preorder, low, counter, bridges);
+              
+              low[v] = Math.min(low[v], low[w]);
+              
+              if (low[w] == preorder[w]) {
+                  bridges.push([v, w]);
+              }
+          }
+
+          // update low number - ignore reverse of edge leading to v
+          else if (w != u)
+              low[v] = Math.min(low[v], preorder[w]);
+      }
+    
+  }
 
     // DFS based function to find all bridges. It uses recursive
     // function bridgeUtil()
     bridges(){
-        let graph_ = this.isDirected ? structuredClone(this).retrieveUndirected() : 
-                                       structuredClone(this);
+        let graph_ = this.isDirected ? this.retrieveUndirected() : structuredClone(this);
 
         // Mark all the vertices as not visited
         let n_vertices = graph_.getNumVertices()
-        let visited = new Array(n_vertices);
-        let disc = new Array(n_vertices);
-        let low = new Array(n_vertices);
-        let parent = new Array(n_vertices);
-        let bridges = new Array(n_vertices);
-        let times = 0;
-
-        // Initialize parent and visited, and ap(articulation point) arrays
-        for (let i = 0; i < n_vertices; i++){
-            parent[i] = -1;
-            visited[i] = false;
-        }
-   
-        // Call the recursive helper function to find Bridges
-        // in DFS tree rooted with vertex 'i'
-        for (let i = 0; i < n_vertices; i++)
-            if (visited[i] == false)
-                this.#bridgesUtil(graph_, i, times, visited, disc, low, parent, bridges);
+        let bridges = [];
+        let counter = 0;
         
+        // pre[v]: order in which dfs examines v
+        // low[v]: lowest preorder of any vertex connected to v
+        let preorder = Iter.repeat(-1, n_vertices).toArray()
+        let low = Iter.repeat(-1, n_vertices).toArray()
+
+        for (let v of Iter.range(n_vertices)){
+            if (preorder[v] == -1){
+                this.#bridgesUtil(v, v, preorder, low, counter, bridges)  
+            }
+        }
+
         return bridges;
     }
 
@@ -703,6 +684,7 @@ export default class Graph {
       'adjacency_list': this.getAdjacencyList(),
       'loose_nodes': this.looseNodes(),
       'orphan_nodes': this.orphanNodes(),
+      'bridges': this.bridges(),
       'is_cyclic': is_cyclic,
       ...is_cyclic && {'all_cycles': this.cyclicPaths()}
     }
