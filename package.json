@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "@types/jest": "27.0.2",
-    "babel-eslint": "^10.1.0",
     "canvas": "2.8.0",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-jest": "^25.2.2",
