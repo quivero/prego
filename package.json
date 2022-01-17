@@ -1,5 +1,5 @@
 {
-  "name": "@brunolnetto/node-link",
+  "name": "dot-quiver",
   "type": "module",
   "version": "2.0.0",
   "description": "Package to handle node-link based structures",
