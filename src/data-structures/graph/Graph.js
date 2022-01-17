@@ -105,10 +105,10 @@ export default class Graph {
 
       // Initialization
       for(let i=0; i<n_vertices; i++){
-          adjList[vertex_values[i]] = []      
+          adjList[vertex_values[i]] = []
       }
 
-      for(let i=0; i<n_vertices; i++){  
+      for(let i of Iter.range(n_vertices)){  
           let vertex_i = this.getVertexByKey(vertex_keys[i]);
           let neighbors_i = this.getNeighbors(vertex_i);
           
@@ -133,7 +133,7 @@ export default class Graph {
       let adjList = this.getAdjacencyList();
       let n_vertices = this.getNumVertices();
       
-      for(let i=0; i<n_vertices; i++){
+      for(let i of Iter.range(n_vertices)){
           if(adjList[i].length==0){
               loose_nodes.push(i);
           }
@@ -146,13 +146,13 @@ export default class Graph {
     let orphan_nodes = [];
     let adjList = this.getAdjacencyList();
     let n_vertices = this.getNumVertices();
-    let indices_to_vertices = this.getIndicesToVertices();
 
     let to_vertices = new Set();
     
-    for(let i=0; i<n_vertices; i++){
+    for(let i of Iter.range(n_vertices)){
+      
       let neighbors = adjList[i];
-      for(let j=0; j<neighbors.length; j++){
+      for(let j of Iter.range(neighbors.length)){
           to_vertices.add(neighbors[j]);
       }
     }
@@ -285,9 +285,10 @@ export default class Graph {
     const vertices_indices = this.getVerticesIndices();
     let values = Object.values(vertices_indices);
     let keys = Object.keys(vertices_indices);
+    let n_vertices = this.getNumVertices();
     let indices_vertices = {};
-    
-    for(let i=0; i<this.getNumVertices(); i++){
+        
+    for(let i of Iter.range(n_vertices)){
       indices_vertices[values[i]] = keys[i];
     }
     
@@ -381,7 +382,7 @@ export default class Graph {
     
     let children = adjList[index];
     
-    for (let c=0;c< children.length;c++){
+    for (let c of Iter.range(children.length)){
         if (this.#isCyclicUtil(children[c], visited, recStack)){
             return true;
         }
@@ -402,14 +403,14 @@ export default class Graph {
       let visited = new Array(n_vertices);
       let recStack = new Array(n_vertices);
 
-      for(let i=0; i<n_vertices; i++){
+      for (let i of Iter.range(n_vertices)){
           visited[i]=false;
           recStack[i]=false;
       }
       
       // Call the recursive helper function to
       // detect cycle in different DFS trees
-      for (let i = 0; i<n_vertices;  i++){
+      for (let i of Iter.range(n_vertices)){
         if (this.#isCyclicUtil(i, visited, recStack)){
             return true;
         }
