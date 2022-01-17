@@ -355,11 +355,15 @@ export default class Graph {
    * @returns {Graph} clone of this graph, but undirected 
    */
   retrieveUndirected(){
-    let undirected_graph = new Graph();
-    let edges = this.getAllEdges();
-    
-    undirected_graph.addEdges(edges);
+    let undirected_graph = new Graph(false);
+    let edges_ = [];
 
+    for(let edge of this.getAllEdges()) {
+        edges_.push(_.cloneDeep(edge));
+    }
+    
+    undirected_graph.addEdges(edges_);
+    
     return undirected_graph;
   }
 
