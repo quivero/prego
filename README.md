@@ -12,7 +12,7 @@ The package allows to be used as a library. [Here is an example](https://github.
 
 1) Go to your project path (for example, NodeJS or React); 
 2) Install the library with the command ```npm install --save dot-quiver```;
-3) Import in your project with the paths from ```src``` folder. For example, '```import Graph from '@brunolnetto/dot-quiver/data-structures/graph/Graph.js''```
+3) Import in your project with the paths from ```src``` folder. For example, '```import Graph from 'dot-quiver/src/data-structures/graph/Graph.js''```
 
 ## How to run as a service
 
