@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
   // Create a sample graph
   
   // let parseBlueprintToGraph();
-  let bps_root = './src/samples/blueprints/';
+  let bps_root = './samples/blueprints/';
   let blueprints_fnames = fs.readdirSync(bps_root);
   
   let READ_ALL_BPS = false;
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 
   if(READ_ALL_BPS){
       for(let i=0; i<blueprints_fnames.length; i++){
-          let fname = './samples/blueprints/'+blueprints_fnames[i];
+          let fname = bps_root+blueprints_fnames[i];
           let blueprint_i = require(fname);
           
           let graph_i = parseBlueprintToGraph(blueprint_i);
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
       res.send(descriptions);
 
   } else {
-      let fname = './samples/blueprints/'+blueprint_fname;
+      let fname = bps_root+blueprint_fname;
       let blueprint_i = require(fname);
       
       let graph = parseBlueprintToGraph(blueprint_i);

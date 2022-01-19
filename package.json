@@ -30,7 +30,7 @@
     "np": "^7.6.0"
   },
   "scripts": {
-    "start": "nodemon ./src/server.js",
+    "start": "nodemon ./server.js",
     "test": "jest",
     "lint": "eslint .",
     "update": "npm i -g npm-check-updates && ncu -u && npm update",
