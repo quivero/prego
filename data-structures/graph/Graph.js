@@ -582,7 +582,11 @@ export default class Graph {
      */
   getCycleIndices() {
       const cycles_indices = {};
-      let cycles = this.cyclicPaths();
+      let cycles = [];
+
+      if(this.#cycles.length==0) {
+          cycles = this.cyclicPaths()
+      }
       
       for(let i of Iter.range(cycles.length)){
           cycles_indices[i] = cycles[i];
