@@ -124,8 +124,9 @@ export default class Graph {
       
       return adjList;
   }
-  
+
   /**
+   * @abstract looseNodes are vertices without to-nodes
    * @returns {GraphEdge[]}
    */
   looseNodes(){
@@ -142,6 +143,10 @@ export default class Graph {
       return loose_nodes;
   }
 
+  /**
+   * @abstract orphanNodes are vertices without from-nodes
+   * @returns {GraphEdge[]}
+   */
   orphanNodes(){
     let orphan_nodes = [];
     let adjList = this.getAdjacencyList();
@@ -150,11 +155,10 @@ export default class Graph {
     let to_vertices = new Set();
     
     for(let i of Iter.range(n_vertices)){
-      
-      let neighbors = adjList[i];
-      for(let j of Iter.range(neighbors.length)){
-          to_vertices.add(neighbors[j]);
-      }
+        let neighbors = adjList[i];
+        for(let j of Iter.range(neighbors.length)){
+            to_vertices.add(neighbors[j]);
+        }
     }
 
     this.getAllVertices().forEach((vertex)=>{
@@ -281,26 +285,26 @@ export default class Graph {
   /**
    * @return {object}
    */
-   getIndicesToVertices() {
-    const vertices_indices = this.getVerticesIndices();
-    let values = Object.values(vertices_indices);
-    let keys = Object.keys(vertices_indices);
-    let n_vertices = this.getNumVertices();
-    let indices_vertices = {};
-        
-    for(let i of Iter.range(n_vertices)){
-      indices_vertices[values[i]] = keys[i];
-    }
-    
-    return indices_vertices;
+  getIndicesToVertices() {
+      const vertices_indices = this.getVerticesIndices();
+      let values = Object.values(vertices_indices);
+      let keys = Object.keys(vertices_indices);
+      let n_vertices = this.getNumVertices();
+      let indices_vertices = {};
+          
+      for(let i of Iter.range(n_vertices)){
+        indices_vertices[values[i]] = keys[i];
+      }
+      
+      return indices_vertices;
   }
 
   /**
    * @return {GraphVertex}
    */
-   getVertexIndex(vertex) {
-    const verticesIndices = this.getVerticesIndices();
-    return verticesIndices[vertex.getKey()];
+   getVertexIndex(vertex) { 
+      const verticesIndices = this.getVerticesIndices();
+      return verticesIndices[vertex.getKey()];
   }
 
   /**
@@ -639,8 +643,13 @@ export default class Graph {
    * @return {Array[Integer]} paths
    */
   acyclicPaths(from, to){
-    let from_index = this.getVertexIndex(from);
-    let to_index = this.getVertexIndex(to);
+    console.log(from)
+    console.log(to)
+
+    const verticesIndices = this.getVerticesIndices();
+
+    let from_index = verticesIndices[from];
+    let to_index = verticesIndices[to];
     let n_vertices = this.getNumVertices();
 
     let is_visited = new Array(this.v);

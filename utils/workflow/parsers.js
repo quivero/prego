@@ -1,7 +1,9 @@
+import _ from 'lodash';
+
 import Graph from '../../data-structures/graph/Graph.js'
 import GraphVertex from '../../data-structures/graph/GraphVertex.js'
 import GraphEdge from '../../data-structures/graph/GraphEdge.js'
-import { getUniques } from '../arrays/arrays.js'
+import { getUniques, getAllIndexes } from '../arrays/arrays.js'
 
 export const parseBlueprintToGraph = (blueprint) => {
     let nodes = blueprint.blueprint_spec.nodes;
@@ -39,6 +41,31 @@ export const parseBlueprintToGraph = (blueprint) => {
     graph.addEdges(edges);
 
     return graph;
+}
+
+export const startToFinishPaths = (blueprint, start_key, finish_key) => {
+    let bp_graph = parseBlueprintToGraph(blueprint);
+    
+    let looseNodes = bp_graph.looseNodes();
+    let orphanNodes = bp_graph.orphanNodes();
+    let vertices_keys_to_indices = bp_graph.getVerticesIndices();
+    
+    let start_id = vertices_keys_to_indices[start_key];
+    let finish_id = vertices_keys_to_indices[finish_key];
+    
+    if(getAllIndexes(orphanNodes, start_id).length==0){
+        console.warn('Vertex id '+start_id+' is not a start node! Detected start nodes: '+orphanNodes);
+        
+        return [];
+    }
+    
+    if(getAllIndexes(looseNodes, finish_id).length==0){
+        console.warn('Vertex id '+finish_id+' is not a finish node! Detected finish nodes: '+looseNodes);
+        
+        return [];
+    }
+
+    return bp_graph.acyclicPaths(start_key, finish_key)
 }
 
 export const parseWorkflowXMLToGraph = () => {
