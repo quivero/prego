@@ -43,7 +43,7 @@ export const parseBlueprintToGraph = (blueprint) => {
     return graph;
 }
 
-export const startToFinishPaths = (blueprint, start_key, finish_key) => {
+export const startToFinishAcyclicPaths = (blueprint, start_key, finish_key) => {
     let bp_graph = parseBlueprintToGraph(blueprint);
     
     let looseNodes = bp_graph.looseNodes();
