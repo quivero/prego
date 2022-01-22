@@ -1,7 +1,7 @@
-import GraphVertex from '../../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../../data-structures/graph/GraphEdge';
-import Graph from '../../../../data-structures/graph/Graph';
-import eulerianPath from '../eulerianPath';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import Graph from '../../../data-structures/graph/Graph.js';
+import eulerianPath from '../eulerianPath.js';
 
 describe('eulerianPath', () => {
   it('should throw an error when graph is not Eulerian', () => {

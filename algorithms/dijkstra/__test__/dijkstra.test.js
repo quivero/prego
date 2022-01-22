@@ -1,7 +1,7 @@
-import GraphVertex from '../../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../../data-structures/graph/GraphEdge';
-import Graph from '../../../../data-structures/graph/Graph';
-import dijkstra from '../dijkstra';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import Graph from '../../../data-structures/graph/Graph.js';
+import dijkstra from '../dijkstra.js';
 
 describe('dijkstra', () => {
   it('should find minimum paths to all vertices for undirected graph', () => {
@@ -30,18 +30,9 @@ describe('dijkstra', () => {
     const graph = new Graph();
     graph
       .addVertex(vertexH)
-      .addEdge(edgeAB)
-      .addEdge(edgeAE)
-      .addEdge(edgeAC)
-      .addEdge(edgeBC)
-      .addEdge(edgeBD)
-      .addEdge(edgeEC)
-      .addEdge(edgeED)
-      .addEdge(edgeDC)
-      .addEdge(edgeDG)
-      .addEdge(edgeDF)
-      .addEdge(edgeFG)
-      .addEdge(edgeEG);
+      .addEdges([edgeAB, edgeAE, edgeAC, edgeBC, edgeBD,
+                 edgeEC, edgeED, edgeDC, edgeDG, edgeDF,
+                 edgeFG, edgeEG]);
 
     const { distances, previousVertices } = dijkstra(graph, vertexA);
 
@@ -86,14 +77,8 @@ describe('dijkstra', () => {
     const graph = new Graph(true);
     graph
       .addVertex(vertexH)
-      .addEdge(edgeSE)
-      .addEdge(edgeSA)
-      .addEdge(edgeED)
-      .addEdge(edgeDA)
-      .addEdge(edgeDC)
-      .addEdge(edgeAC)
-      .addEdge(edgeCB)
-      .addEdge(edgeBA);
+      .addEdges([edgeSE, edgeSA, edgeED, edgeDA, 
+                 edgeDC, edgeAC, edgeCB, edgeBA]);
 
     const { distances, previousVertices } = dijkstra(graph, vertexS);
 

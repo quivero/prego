@@ -1,7 +1,7 @@
-import GraphVertex from '../../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../../data-structures/graph/GraphEdge';
-import Graph from '../../../../data-structures/graph/Graph';
-import bfTravellingSalesman from '../bfTravellingSalesman';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import Graph from '../../../data-structures/graph/Graph.js';
+import bfTravellingSalesman from '../bfTravellingSalesman.js';
 
 describe('bfTravellingSalesman', () => {
   it('should solve problem for simple graph', () => {
@@ -26,19 +26,10 @@ describe('bfTravellingSalesman', () => {
 
     const graph = new Graph(true);
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBD)
-      .addEdge(edgeDC)
-      .addEdge(edgeCA)
-      .addEdge(edgeBA)
-      .addEdge(edgeDB)
-      .addEdge(edgeCD)
-      .addEdge(edgeAC)
-      .addEdge(edgeAD)
-      .addEdge(edgeDA)
-      .addEdge(edgeBC)
-      .addEdge(edgeCB);
-
+      .addEdges([edgeAB, edgeBD, edgeDC, edgeCA, 
+                 edgeBA, edgeDB, edgeCD, edgeAC,
+                 edgeAD, edgeDA, edgeBC, edgeCB]);
+    
     const salesmanPath = bfTravellingSalesman(graph);
 
     expect(salesmanPath.length).toBe(4);

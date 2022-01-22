@@ -1,7 +1,7 @@
-import GraphVertex from '../../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../../data-structures/graph/GraphEdge';
-import Graph from '../../../../data-structures/graph/Graph';
-import floydWarshall from '../floydWarshall';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import Graph from '../../../data-structures/graph/Graph.js';
+import floydWarshall from '../floydWarshall.js';
 
 describe('floydWarshall', () => {
   it('should find minimum paths to all vertices for undirected graph', () => {

@@ -642,16 +642,14 @@ export default class Graph {
           let ith_was_visited = is_visited[neighbor_i];
 
           if(!ith_was_visited) {
-              let neighbor_i_index = this.getVertexByIndex(neighbor_i);
-
               // store current node in path[]
-              local_path_list.push(neighbor_i_index);
+              local_path_list.push(neighbor_i);
 
               this.#recurAcyclicPaths(neighbor_i, to_index, is_visited, 
-                                 local_path_list, paths);
+                                      local_path_list, paths);
               
               // remove current node  in path[]
-              let idx = local_path_list.indexOf(neighbor_i_index);
+              let idx = local_path_list.indexOf(neighbor_i);
               local_path_list.splice(idx, 1);
 
           } 

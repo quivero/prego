@@ -1,7 +1,7 @@
-import Graph from '../../../data-structures/graph/Graph';
-import GraphVertex from '../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../data-structures/graph/GraphEdge';
-import depthFirstSearch from '../depthFirstSearch';
+import Graph from '../../../data-structures/graph/Graph.js';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import depthFirstSearch from '../depthFirstSearch.js';
 
 describe('depthFirstSearch', () => {
   it('should perform DFS operation on graph', () => {

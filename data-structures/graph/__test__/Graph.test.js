@@ -502,7 +502,7 @@ describe('Graph', () => {
     expect(graph_.acyclicPaths(A, F)).toEqual([[0, 1, 2, 5]]);
   });
 
-  it('should return acyclic paths', () => {
+  it('should return cycles of vertices', () => {
     const graph_ = new Graph(true);
 
     // Nodes
@@ -535,36 +535,7 @@ describe('Graph', () => {
     });
   });
 
-  it('should return acyclic paths', () => {
-    const graph_ = new Graph(true);
-
-    // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
-
-    // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
-
-    // Add edges
-    graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
-
-    expect(graph_.getCycleIndices()).toEqual({
-      0: [1, 2, 4],
-      1: [1, 2, 5]
-    });
-  });
-
-  it('should return acyclic paths', () => {
+  it('should return cycle indices', () => {
     const graph_ = new Graph(true);
 
     // Nodes

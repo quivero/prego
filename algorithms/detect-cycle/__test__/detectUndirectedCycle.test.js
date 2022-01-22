@@ -21,11 +21,7 @@ describe('detectUndirectedCycle', () => {
 
     const graph = new Graph();
     graph
-      .addEdge(edgeAF)
-      .addEdge(edgeAB)
-      .addEdge(edgeBE)
-      .addEdge(edgeBC)
-      .addEdge(edgeCD);
+      .addEdges([edgeAF, edgeAB, edgeBE, edgeBC, edgeCD]);
 
     expect(detectUndirectedCycle(graph)).toBeNull();
 

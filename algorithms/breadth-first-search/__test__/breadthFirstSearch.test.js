@@ -1,6 +1,6 @@
-import Graph from '../../../data-structures/graph/Graph';
-import GraphVertex from '../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../data-structures/graph/GraphEdge';
+import Graph from '../../../data-structures/graph/Graph.js';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
 import breadthFirstSearch from '../breadthFirstSearch';
 
 describe('breadthFirstSearch', () => {

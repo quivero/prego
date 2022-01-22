@@ -1,7 +1,7 @@
-import GraphVertex from '../../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../../data-structures/graph/GraphEdge';
-import Graph from '../../../../data-structures/graph/Graph';
-import stronglyConnectedComponents from '../stronglyConnectedComponents';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import Graph from '../../../data-structures/graph/Graph.js';
+import stronglyConnectedComponents from '../stronglyConnectedComponents.js';
 
 describe('stronglyConnectedComponents', () => {
   it('should detect strongly connected components in simple graph', () => {
