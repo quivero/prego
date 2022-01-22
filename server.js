@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
   let bps_root = './samples/blueprints/';
   let blueprints_fnames = fs.readdirSync(bps_root);
   
-  let READ_ALL_BPS = false;
+  let READ_ALL_BPS = true;
   let blueprint_fname = 'DemandasEspontaneas.json'
 
   let graphs = []
@@ -41,10 +41,9 @@ app.get('/', (req, res) => {
           let fname = bps_root+blueprints_fnames[i];
           let blueprint_i = require(fname);
           
-          let graph_i = parseBlueprintToGraph(blueprint_i);
-          
-          graphs.push(graph_i);
-          descriptions.push(graph_i.describe());
+          //let graph_i = parseBlueprintToGraph(blueprint_i);
+          descriptions.push(fromStartToFinishCombsAcyclicPaths(blueprint_i));
+
       }
 
       res.send(descriptions);
