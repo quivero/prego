@@ -480,7 +480,7 @@ export default class Graph {
     // DFS based function to find all bridges. It uses recursive
     // function bridgeUtil()
     bridges(){
-        let graph_ = this.isDirected ? this.retrieveUndirected() : structuredClone(this);
+        let graph_ = this.isDirected ? this.retrieveUndirected() : _.cloneDeep(this);
 
         // Mark all the vertices as not visited
         let n_vertices = graph_.getNumVertices()
