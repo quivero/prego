@@ -43,7 +43,7 @@ export const parseBlueprintToGraph = (blueprint) => {
     return graph;
 }
 
-export const startToFinishAcyclicPaths = (blueprint, start_key, finish_key) => {
+export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) => {
     let bp_graph = parseBlueprintToGraph(blueprint);
     
     let looseNodes = bp_graph.looseNodes();
@@ -65,7 +65,35 @@ export const startToFinishAcyclicPaths = (blueprint, start_key, finish_key) => {
         return [];
     }
 
-    return bp_graph.acyclicPaths(start_key, finish_key)
+    let routes = bp_graph.acyclicPaths(start_key, finish_key);
+    let route_describe = {length: routes.length, routes: routes}
+
+    return route_describe
+}
+
+export const fromStartToFinishCombsAcyclicPaths = (blueprint) => {
+    let nodes = blueprint.blueprint_spec.nodes;
+    let finishNodes = [];
+    let startNodes = [];  
+
+    for(let node of nodes) {
+        if(node.type.toLowerCase() === 'start'){
+            startNodes.push(node.id);
+        }
+
+        if(node.type.toLowerCase() === 'finish'){
+            finishNodes.push(node.id);
+        }
+    }
+
+    let acyclic_paths = {};
+    for(let startNode of startNodes){
+        for(let finishNode of finishNodes){
+            acyclic_paths[startNode+'_'+finishNode] = fromStartToFinishAcyclicPaths(blueprint, startNode, finishNode);
+        }
+    }
+    
+    return acyclic_paths;
 }
 
 export const parseWorkflowXMLToGraph = () => {

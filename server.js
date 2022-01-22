@@ -3,7 +3,9 @@ import express from 'express'
 import { createRequire } from "module";
 import fs from 'fs'
 
-import { parseBlueprintToGraph, startToFinishAcyclicPaths } from './utils/workflow/parsers.js'
+import { parseBlueprintToGraph, 
+         fromStartToFinishAcyclicPaths, 
+         fromStartToFinishCombsAcyclicPaths } from './utils/workflow/parsers.js'
 
 const require = createRequire(import.meta.url);
 const app = express();
@@ -52,10 +54,9 @@ app.get('/', (req, res) => {
       let blueprint_i = require(fname);
       
       let graph = parseBlueprintToGraph(blueprint_i);
-      let routes = startToFinishAcyclicPaths(blueprint_i, "1", "91");
-      let route_describe = {length: routes.length, routes: routes};
+      let route_describe = fromStartToFinishAcyclicPaths(blueprint_i, "1", "91");
 
-      res.send(route_describe);
+      res.send(fromStartToFinishCombsAcyclicPaths(blueprint_i));
   }
 });
 // [END app]
