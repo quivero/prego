@@ -78,6 +78,15 @@ export default class Graph {
   }
 
   /**
+   * @param {integer} vertexIndex
+   * @returns GraphVertex
+   */
+  getVertexByIndex(vertexIndex) {
+      let Indices_to_vertices = this.getIndicesToVertices();
+      return Indices_to_vertices[vertexIndex];
+  }
+
+  /**
    * @param {GraphVertex} vertex
    * @returns {GraphVertex[]}
    */
