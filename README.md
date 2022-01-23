@@ -12,7 +12,7 @@ The package allows to be used as a library. [Here is an example](https://github.
 
 1) Go to your project path (for example, NodeJS or React);
 2) Install the library with the command ```npm install --save dot-quiver```;
-3) Import in your project with the paths from ```src``` folder. For example, '```import Graph from 'dot-quiver/src/data-structures/graph/Graph.js''```
+3) Import in your project folder from project root folder, for example, '```import Graph from 'dot-quiver/data-structures/graph/Graph.js''```
 
 ## How to run as a service
 
@@ -21,7 +21,9 @@ You may utilize some cloud service to host the app, like AWS, Azure or GCloud, b
 You must follow the instructions below
 
 1) Clone the repository typing on terminal `git clone git@github.com:brunolnetto/dot-quiver.git`;
-3) Run the command `npm install` to install local dependencies;
-3) Run the command `npm start` to run the server locally;
-4) Open a browser;
-5) Type `localhost:8080` on the URL field;
+2) Run the commands:
+    2.1. `pip install pre-commit && pre-commit install`: install pre-commit git hooks;
+    2.2. `npm install`: install local dependencies;
+    2.3. `npm start`: run the server locally;
+3) Open a browser;
+4) Type `localhost:8080` on the URL field;
