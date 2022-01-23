@@ -10,7 +10,7 @@ For a beginner, a graph is a bunch of dots connected by either undirected lines 
 
 The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link-use-case) of the library use case.
 
-1) Go to your project path (for example, NodeJS or React); 
+1) Go to your project path (for example, NodeJS or React);
 2) Install the library with the command ```npm install --save dot-quiver```;
 3) Import in your project with the paths from ```src``` folder. For example, '```import Graph from 'dot-quiver/src/data-structures/graph/Graph.js''```
 
@@ -25,5 +25,3 @@ You must follow the instructions below
 3) Run the command `npm start` to run the server locally;
 4) Open a browser;
 5) Type `localhost:8080` on the URL field;
-
- 
