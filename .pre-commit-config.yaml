@@ -1,0 +1,37 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+    -   id: check-case-conflict
+    -   id: check-docstring-first
+    -   id: check-json
+    -   id: pretty-format-json
+    -   id: check-merge-conflict
+    -   id: detect-private-key
+-   repo: https://github.com/pre-commit/mirrors-eslint
+    rev: 'v8.7.0'  # Use the sha / tag you want to point at
+    hooks:
+    -   id: eslint
+        files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
+        types: [file]
+        additional_dependencies:
+        -   eslint@4.15.0
+        -   eslint-config-google@0.7.1
+        -   eslint-loader@1.6.1
+        -   eslint-plugin-react@6.10.3
+        -   babel-eslint@6.1.2
+-   repo: https://github.com/pre-commit/mirrors-fixmyjs
+    rev: 'v2.0.0'  # Use the sha / tag you want to point at
+    hooks:
+    -   id: fixmyjs
+        args: ['-l', '-c', '.jshintrc']
+-   repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.10
+    hooks:
+    -   id: remove-crlf
