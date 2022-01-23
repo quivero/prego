@@ -1,6 +1,8 @@
 # A structure, many possibilities
 
-Hi, this may be interpreted as an app service or a library. Its main funcionality is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
+Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
+
+Its main funcionality is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
 
 ## Preamble
 
@@ -27,3 +29,10 @@ You must follow the instructions below
     2.3. `npm start`: run the server locally;
 3) Open a browser;
 4) Type `localhost:8080` on the URL field;
+
+## Backlog
+
+```dot-quiver``` as a service
+
+1. Add router to handle multiple use cases;
+2. Add a docker-compose.yaml to ```up``` application
