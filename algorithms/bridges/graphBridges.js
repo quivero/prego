@@ -83,9 +83,7 @@ export default function graphBridges(graph) {
         bridges[bridge.getKey()] = bridge;
       }
     },
-    allowTraversal: ({ nextVertex }) => {
-      return !visitedSet[nextVertex.getKey()];
-    },
+    allowTraversal: ({ nextVertex }) => !visitedSet[nextVertex.getKey()],
   };
 
   // Do Depth First Search traversal over submitted graph.

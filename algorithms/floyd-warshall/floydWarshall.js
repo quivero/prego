@@ -8,15 +8,11 @@ export default function floydWarshall(graph) {
 
   // Init previous vertices matrix with nulls meaning that there are no
   // previous vertices exist that will give us shortest path.
-  const nextVertices = Array(vertices.length).fill(null).map(() => {
-    return Array(vertices.length).fill(null);
-  });
+  const nextVertices = Array(vertices.length).fill(null).map(() => Array(vertices.length).fill(null));
 
   // Init distances matrix with Infinities meaning there are no paths
   // between vertices exist so far.
-  const distances = Array(vertices.length).fill(null).map(() => {
-    return Array(vertices.length).fill(Infinity);
-  });
+  const distances = Array(vertices.length).fill(null).map(() => Array(vertices.length).fill(Infinity));
 
   // Init distance matrix with the distance we already now (from existing edges).
   // And also init previous vertices from the edges.

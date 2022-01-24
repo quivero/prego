@@ -23,9 +23,7 @@ export default class RadixSort extends Sort {
         : this.placeElementsInCharacterBuckets(sortedArray, currentIndex, numPasses);
 
       // Flatten buckets into sortedArray, and repeat at next index
-      sortedArray = buckets.reduce((acc, val) => {
-        return [...acc, ...val];
-      }, []);
+      sortedArray = buckets.reduce((acc, val) => [...acc, ...val], []);
     }
 
     return sortedArray;
@@ -116,9 +114,7 @@ export default class RadixSort extends Sort {
       return Math.floor(Math.log10(Math.max(...array))) + 1;
     }
 
-    return array.reduce((acc, val) => {
-      return val.length > acc ? val.length : acc;
-    }, -Infinity);
+    return array.reduce((acc, val) => (val.length > acc ? val.length : acc), -Infinity);
   }
 
   /**

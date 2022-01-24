@@ -1,4 +1,4 @@
-import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
+import depthFirstSearch from '../depth-first-search/depthFirstSearch';
 
 /**
  * Detect cycle in directed graph using Depth First Search.
@@ -45,9 +45,9 @@ export default function detectDirectedCycle(graph) {
         let previousCycleVertex = previousVertex;
 
         while (previousCycleVertex.getKey() !== currentVertex.getKey()) {
-          let curr_key = currentCycleVertex.getKey();
-          let prev_key = previousCycleVertex.getKey();
-          
+          const curr_key = currentCycleVertex.getKey();
+          const prev_key = previousCycleVertex.getKey();
+
           cycle[curr_key] = previousCycleVertex;
           currentCycleVertex = previousCycleVertex;
           previousCycleVertex = dfsParentMap[prev_key];

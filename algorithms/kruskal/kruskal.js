@@ -1,6 +1,6 @@
-import Graph from '../../data-structures/graph/Graph.js';
-import QuickSort from '../sorting/quick-sort/QuickSort.js';
-import DisjointSet from '../../data-structures/disjoint-set/DisjointSet.js';
+import Graph from '../../data-structures/graph/Graph';
+import QuickSort from '../sorting/quick-sort/QuickSort';
+import DisjointSet from '../../data-structures/disjoint-set/DisjointSet';
 
 /**
  * @param {Graph} graph

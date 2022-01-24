@@ -1,5 +1,5 @@
-import Graph from '../../data-structures/graph/Graph.js';
-import PriorityQueue from '../../data-structures/priority-queue/PriorityQueue.js';
+import Graph from '../../data-structures/graph/Graph';
+import PriorityQueue from '../../data-structures/priority-queue/PriorityQueue';
 
 /**
  * @param {Graph} graph

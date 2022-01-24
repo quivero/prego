@@ -1,5 +1,5 @@
-import Stack from '../../data-structures/stack/Stack.js';
-import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
+import Stack from '../../data-structures/stack/Stack';
+import depthFirstSearch from '../depth-first-search/depthFirstSearch';
 
 /**
  * @param {Graph} graph
@@ -29,9 +29,7 @@ export default function topologicalSort(graph) {
       // If the vertex has been totally explored then we may push it to stack.
       sortedStack.push(currentVertex);
     },
-    allowTraversal: ({ nextVertex }) => {
-      return !visitedSet[nextVertex.getKey()];
-    },
+    allowTraversal: ({ nextVertex }) => !visitedSet[nextVertex.getKey()],
   };
 
   // Let's go and do DFS for all unvisited nodes.

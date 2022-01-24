@@ -20,9 +20,7 @@ function findAllPaths(startVertex, paths = [], path = []) {
   }, {});
 
   // Get all unvisited neighbors of startVertex.
-  const unvisitedNeighbors = startVertex.getNeighbors().filter((neighbor) => {
-    return !visitedSet[neighbor.getKey()];
-  });
+  const unvisitedNeighbors = startVertex.getNeighbors().filter((neighbor) => !visitedSet[neighbor.getKey()]);
 
   // If there no unvisited neighbors then treat current path as complete and save it.
   if (!unvisitedNeighbors.length) {
