@@ -1,18 +1,20 @@
 // [START app]
-import express from 'express'
-import { createRequire } from "module";
-import fs from 'fs'
+import express from 'express';
+import { createRequire } from 'module';
+import fs from 'fs';
 
-import { parseBlueprintToGraph, 
-         fromStartToFinishAcyclicPaths, 
-         fromStartToFinishCombsAcyclicPaths } from './utils/workflow/parsers.js'
+import {
+  parseBlueprintToGraph,
+  fromStartToFinishAcyclicPaths,
+  fromStartToFinishCombsAcyclicPaths,
+} from './utils/workflow/parsers';
 
 const require = createRequire(import.meta.url);
 const app = express();
 
 // [START enable_parser]
 // This middleware is available in Express v4.16.0 onwards
-app.use(express.json({extended: true}));
+app.use(express.json({ extended: true }));
 // [END enable_parser]
 
 // Listen to the App Engine-specified port, or 8080 otherwise
@@ -25,37 +27,35 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program
   // Create a sample graph
-  
+
   // let parseBlueprintToGraph();
-  let bps_root = './samples/blueprints/';
-  let blueprints_fnames = fs.readdirSync(bps_root);
-  
-  let READ_ALL_BPS = true;
-  let blueprint_fname = 'DemandasEspontaneas.json'
+  const bps_root = './samples/blueprints/';
+  const blueprints_fnames = fs.readdirSync(bps_root);
 
-  let graphs = []
-  let descriptions = []
+  const READ_ALL_BPS = true;
+  const blueprint_fname = 'DemandasEspontaneas.json';
 
-  if(READ_ALL_BPS){
-      for(let i=0; i<blueprints_fnames.length; i++){
-          let fname = bps_root+blueprints_fnames[i];
-          let blueprint_i = require(fname);
-          
-          //let graph_i = parseBlueprintToGraph(blueprint_i);
-          descriptions.push(fromStartToFinishCombsAcyclicPaths(blueprint_i));
+  const graphs = [];
+  const descriptions = [];
 
-      }
+  if (READ_ALL_BPS) {
+    for (let i = 0; i < blueprints_fnames.length; i++) {
+      const fname = bps_root + blueprints_fnames[i];
+      const blueprint_i = require(fname);
 
-      res.send(descriptions);
+      // let graph_i = parseBlueprintToGraph(blueprint_i);
+      descriptions.push(fromStartToFinishCombsAcyclicPaths(blueprint_i));
+    }
 
+    res.send(descriptions);
   } else {
-      let fname = bps_root+blueprint_fname;
-      let blueprint_i = require(fname);
-      
-      let graph = parseBlueprintToGraph(blueprint_i);
-      let route_describe = fromStartToFinishAcyclicPaths(blueprint_i, "1", "91");
+    const fname = bps_root + blueprint_fname;
+    const blueprint_i = require(fname);
 
-      res.send(fromStartToFinishCombsAcyclicPaths(blueprint_i));
+    const graph = parseBlueprintToGraph(blueprint_i);
+    const route_describe = fromStartToFinishAcyclicPaths(blueprint_i, '1', '91');
+
+    res.send(fromStartToFinishCombsAcyclicPaths(blueprint_i));
   }
 });
 // [END app]
