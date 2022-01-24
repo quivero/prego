@@ -80,4 +80,3 @@ export default class Comparator {
     this.compare = (a, b) => compareOriginal(b, a);
   }
 }
-
