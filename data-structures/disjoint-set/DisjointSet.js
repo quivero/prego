@@ -1,4 +1,4 @@
-import DisjointSetItem from './DisjointSetItem'
+import DisjointSetItem from './DisjointSetItem';
 
 export default class DisjointSet {
   /**

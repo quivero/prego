@@ -169,13 +169,11 @@ export default class Heap {
 
         // If there is no parent or parent is in correct order with the node
         // we're going to delete then heapify down. Otherwise heapify up.
-        if (
-          this.hasLeftChild(indexToRemove)
-          && (
-            !parentItem
-            || this.pairIsInCorrectOrder(parentItem, this.heapContainer[indexToRemove])
-          )
-        ) {
+        const heap_cont = this.heapContainer[indexToRemove];
+        const cond1 = !parentItem || this.pairIsInCorrectOrder(parentItem, heap_cont);
+        const cond2 = this.hasLeftChild(indexToRemove);
+
+        if (cond1 && cond2) {
           this.heapifyDown(indexToRemove);
         } else {
           this.heapifyUp(indexToRemove);

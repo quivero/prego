@@ -1,4 +1,4 @@
-import LinkedList from '../linked-list/LinkedList.js'
+import LinkedList from '../linked-list/LinkedList';
 
 export default class GraphVertex {
   /**
@@ -43,8 +43,8 @@ export default class GraphVertex {
    */
   addEdges(edges) {
     edges.forEach((edge) => {
-        this.edges.append(edge);
-    })
+      this.edges.append(edge);
+    });
 
     return this;
   }
@@ -62,8 +62,7 @@ export default class GraphVertex {
   deleteEdges(edges) {
     edges.forEach((edge) => {
       this.edges.delete(edge);
-    })
-    
+    });
   }
 
   /**
@@ -73,9 +72,7 @@ export default class GraphVertex {
     const edges = this.edges.toArray();
 
     /** @param {LinkedListNode} node */
-    const neighborsConverter = (node) => {
-      return node.value.startVertex === this ? node.value.endVertex : node.value.startVertex;
-    };
+    const neighborsConverter = (node) => (node.value.startVertex === this ? node.value.endVertex : node.value.startVertex);
 
     // Return either start or end vertex.
     // For undirected graphs it is possible that current vertex will be the end one.
@@ -125,9 +122,7 @@ export default class GraphVertex {
    * @returns {(GraphEdge|null)}
    */
   findEdge(vertex) {
-    const edgeFinder = (edge) => {
-      return edge.startVertex === vertex || edge.endVertex === vertex;
-    };
+    const edgeFinder = (edge) => edge.startVertex === vertex || edge.endVertex === vertex;
 
     const edge = this.edges.find({ callback: edgeFinder });
 
@@ -159,12 +154,12 @@ export default class GraphVertex {
 }
 
 export const createVertices = (labels) => {
-  let vertices = []
-  
-  labels.forEach(label => {
-      let vertex = new GraphVertex(label);
-      vertices.push(vertex);
+  const vertices = [];
+
+  labels.forEach((label) => {
+    const vertex = new GraphVertex(label);
+    vertices.push(vertex);
   });
 
   return vertices;
-}
+};
