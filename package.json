@@ -2,11 +2,11 @@
   "name": "dot-quiver",
   "type": "module",
   "version": "4.4.0",
-  "description": "Package to handle node-link based structures",
+  "description": "Package to handle dot-quiver based structures",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunolnetto/node-link.git"
+    "url": "git+https://github.com/brunolnetto/dot-quiver.git"
   },
   "keywords": [
     "graphs"
@@ -14,15 +14,15 @@
   "author": "brunolnetto",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brunolnetto/node-link/issues"
+    "url": "https://github.com/brunolnetto/dot-quiver/issues"
   },
-  "homepage": "https://github.com/brunolnetto/node-link#readme",
+  "homepage": "https://github.com/brunolnetto/dot-quiver#readme",
   "dependencies": {
     "@babel/eslint-parser": "^7.16.5",
-    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
     "@ungap/structured-clone": "^0.3.4",
     "es-iter": "^1.1.2",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "find-cycle": "^1.0.0",
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
@@ -37,11 +37,11 @@
     "coverage": "npm run test -- --coverage"
   },
   "devDependencies": {
-    "@types/jest": "27.0.2",
-    "canvas": "2.8.0",
-    "eslint-plugin-import": "2.25.2",
-    "eslint-plugin-jest": "^25.2.2",
-    "jest": "^27.3.0"
+    "@types/jest": "27.4.0",
+    "canvas": "2.9.0",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-jest": "^26.0.0",
+    "jest": "^27.4.7"
   },
   "engines": {
     "node": " >=16.0.0",
