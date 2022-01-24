@@ -1,7 +1,7 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
-import Graph from '../../../data-structures/graph/Graph.js';
-import detectDirectedCycle from '../detectDirectedCycle.js';
+import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import GraphEdge from '../../../data-structures/graph/GraphEdge';
+import Graph from '../../../data-structures/graph/Graph';
+import detectDirectedCycle from '../detectDirectedCycle';
 
 describe('detectDirectedCycle', () => {
   it('should detect directed cycle', () => {

@@ -1,8 +1,8 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
-import Graph from '../../../data-structures/graph/Graph.js';
+import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import GraphEdge from '../../../data-structures/graph/GraphEdge';
+import Graph from '../../../data-structures/graph/Graph';
 
-import topologicalSort from '../topologicalSort.js';
+import topologicalSort from '../topologicalSort';
 
 describe('topologicalSort', () => {
   it('should do topological sorting on graph', () => {
@@ -28,7 +28,7 @@ describe('topologicalSort', () => {
 
     graph
       .addEdges([edgeAC, edgeBC, edgeBD, edgeCE,
-                 edgeDF, edgeEF, edgeEH, edgeFG]);
+        edgeDF, edgeEF, edgeEH, edgeFG]);
 
     const sortedVertices = topologicalSort(graph);
 

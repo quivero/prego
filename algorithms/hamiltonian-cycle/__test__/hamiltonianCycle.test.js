@@ -1,7 +1,7 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '.../../../data-structures/graph/GraphEdge.js';
-import Graph from '../../../data-structures/graph/Graph.js';
-import hamiltonianCycle from '../hamiltonianCycle.js';
+import GraphEdge from '.../../../data-structures/graph/GraphEdge';
+import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import Graph from '../../../data-structures/graph/Graph';
+import hamiltonianCycle from '../hamiltonianCycle';
 
 describe('hamiltonianCycle', () => {
   it('should find hamiltonian paths in graph', () => {

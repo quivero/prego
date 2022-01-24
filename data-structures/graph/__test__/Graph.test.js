@@ -1,9 +1,6 @@
-import Graph from '../Graph.js';
-import GraphVertex from '../GraphVertex.js';
-import GraphEdge from '../GraphEdge.js';
-
-import { createVertices } from '../GraphVertex'
-import { createEdges } from '../GraphEdge'
+import Graph from '../Graph';
+import GraphVertex, { createVertices } from '../GraphVertex';
+import GraphEdge, { createEdges } from '../GraphEdge';
 
 console.warn = jest.fn();
 
@@ -80,93 +77,97 @@ describe('Graph', () => {
 
   it('should copy directed graph but undirected', () => {
     // A directed graph
-    let graph_ = new Graph(true);
+    const graph_ = new Graph(true);
 
     // Nodes
     const [A, B] = createVertices(['A', 'B']);
 
     // Vertices
-    let AB = new GraphEdge(A, B);
+    const AB = new GraphEdge(A, B);
 
     graph_.addEdge(AB);
-    
+
     // Add edges
-    let graph_undirected = graph_.retrieveUndirected();
+    const graph_undirected = graph_.retrieveUndirected();
 
     expect(graph_undirected.isDirected).toEqual(false);
   });
 
   it('should copy undirected graph', () => {
     // A directed graph
-    let graph_ = new Graph(false);
+    const graph_ = new Graph(false);
 
     // Nodes
     const [A, B] = createVertices(['A', 'B']);
 
     // Vertices
-    let AB = new GraphEdge(A, B);
+    const AB = new GraphEdge(A, B);
 
     graph_.addEdge(AB);
-    
+
     // Add edges
-    let graph_undirected = graph_.retrieveUndirected();
+    const graph_undirected = graph_.retrieveUndirected();
 
     expect(graph_undirected.isDirected).toEqual(false);
   });
 
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
-    let graph = new Graph(true);
+    const graph = new Graph(true);
 
     // Vertices
     const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
 
     // Edges
-    const [AB, BC, CD, CE, EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]]);
-    
+    const [AB, BC, CD, CE,
+           EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
+                                      [E, B], [C, F], [F, B]]);
+
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
-    
+
     expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
-  })
+  });
 
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
-    let graph = new Graph(true);
+    const graph = new Graph(true);
 
     // Vertices
     const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
 
     // Edges
-    const [AB, BC, CD, CE, EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]]);
+    const [AB, BC, CD, CE,
+           EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
+                                      [E, B], [C, F], [F, B]]);
 
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
-  })
+  });
 
   it('Bridges in graph', () => {
     // A directed graph
-    let graph = new Graph(true);
+    const graph = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
-    
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
+
     // Add vertices
     graph.addVertices([A, B, C, D, E, F]);
 
@@ -174,23 +175,23 @@ describe('Graph', () => {
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
-  })
+  });
 
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
-    let graph = new Graph(true);
+    const graph = new Graph(true);
 
     // Vertices
     const [A, B, C] = createVertices(['A', 'B', 'C']);
 
     // Edges
     const [AB, BC] = createEdges([[A, B], [B, C]]);
-        
+
     // Add edges
     graph.addEdges([AB, BC]);
 
     expect(graph.cyclicPaths()).toEqual([]);
-  })
+  });
 
   it('should find edge by vertices in undirected graph', () => {
     const graph = new Graph();
@@ -269,9 +270,9 @@ describe('Graph', () => {
 
     graph.addEdges([edgeAB, edgeAC]);
 
-    let density = graph.density;
+    const { density } = graph;
 
-    expect(density).toEqual(2/3);
+    expect(density).toEqual(2 / 3);
   });
 
   it('should throw an error when trying to add edge twice', () => {
@@ -351,12 +352,12 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
 
-    graph.addVertices([vertexA, vertexB, vertexC])
+    graph.addVertices([vertexA, vertexB, vertexC]);
 
     expect(graph.getVerticesIndices()).toEqual({
       A: 0,
       B: 1,
-      C: 2  
+      C: 2,
     });
   });
 
@@ -367,12 +368,12 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
 
-    graph.addVertices([vertexA, vertexB, vertexC])
+    graph.addVertices([vertexA, vertexB, vertexC]);
 
     expect(graph.getIndicesToVertices()).toEqual({
       0: 'A',
       1: 'B',
-      2: 'C'  
+      2: 'C',
     });
   });
 
@@ -383,7 +384,7 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
 
-    graph.addVertices([vertexA, vertexB, vertexC])
+    graph.addVertices([vertexA, vertexB, vertexC]);
 
     expect(graph.getVertexIndex(vertexA)).toEqual(0);
     expect(graph.getVertexIndex(vertexC)).toEqual(2);
@@ -392,24 +393,24 @@ describe('Graph', () => {
 
   it('should prove if a graph is cyclic', () => {
     // A directed graph
-    let graph_ = new Graph(true);
+    const graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
 
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
@@ -419,16 +420,16 @@ describe('Graph', () => {
 
   it('should prove if a graph is acyclic', () => {
     // A directed graph
-    let graph_ = new Graph(true);
+    const graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
 
     // Add edges
     graph_.addEdges([AB, BC]);
@@ -480,21 +481,21 @@ describe('Graph', () => {
     const graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
 
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
@@ -506,21 +507,21 @@ describe('Graph', () => {
     const graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
 
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
@@ -531,7 +532,7 @@ describe('Graph', () => {
       2: [[1, 2, 4], [1, 2, 5]],
       3: [],
       4: [[1, 2, 4]],
-      5: [[1, 2, 5]]
+      5: [[1, 2, 5]],
     });
   });
 
@@ -539,28 +540,28 @@ describe('Graph', () => {
     const graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
 
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     expect(graph_.getCycleIndices()).toEqual({
       0: [1, 2, 4],
-      1: [1, 2, 5]
+      1: [1, 2, 5],
     });
   });
 
@@ -568,21 +569,21 @@ describe('Graph', () => {
     const graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    let E = new GraphVertex('E');
-    let F = new GraphVertex('F');
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
 
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let CD = new GraphEdge(C, D);
-    let CE = new GraphEdge(C, E);
-    let EB = new GraphEdge(E, B);
-    let CF = new GraphEdge(C, F);
-    let FB = new GraphEdge(F, B);
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
 
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
@@ -594,16 +595,16 @@ describe('Graph', () => {
     const graph_ = new Graph(true);
 
     // Nodes
-    let A = new GraphVertex('A');
-    let B = new GraphVertex('B');
-    let C = new GraphVertex('C');
-    let D = new GraphVertex('D');
-    
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+
     // Vertices
-    let AB = new GraphEdge(A, B);
-    let BC = new GraphEdge(B, C);
-    let DB = new GraphEdge(D, B);
-    
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const DB = new GraphEdge(D, B);
+
     // Add edges
     graph_.addEdges([AB, BC, DB]);
 
@@ -718,7 +719,7 @@ describe('Graph', () => {
     const edgeBD = new GraphEdge(vertexB, vertexD, 7);
 
     const graph = new Graph(true);
-    graph.addEdges([edgeAB, edgeBC, edgeCD, edgeBD ]);
+    graph.addEdges([edgeAB, edgeBC, edgeCD, edgeBD]);
 
     const adjacencyMatrix = graph.getAdjacencyMatrix();
     expect(adjacencyMatrix).toEqual([

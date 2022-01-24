@@ -1,6 +1,6 @@
-import Graph from '../../../data-structures/graph/Graph.js';
-import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
+import Graph from '../../../data-structures/graph/Graph';
+import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import GraphEdge from '../../../data-structures/graph/GraphEdge';
 import breadthFirstSearch from '../breadthFirstSearch';
 
 describe('breadthFirstSearch', () => {
@@ -102,7 +102,7 @@ describe('breadthFirstSearch', () => {
     const edgeDH = new GraphEdge(vertexD, vertexH);
     const edgeGH = new GraphEdge(vertexG, vertexH);
 
-    graph.addEdges([edgeAB, edgeBC, edgeCG, edgeAD, edgeAE, edgeEF, edgeFD, edgeDH, edgeGH]);;
+    graph.addEdges([edgeAB, edgeBC, edgeCG, edgeAD, edgeAE, edgeEF, edgeFD, edgeDH, edgeGH]);
 
     expect(graph.toString()).toBe('A,B,C,G,D,E,F,H');
 
@@ -113,9 +113,9 @@ describe('breadthFirstSearch', () => {
     breadthFirstSearch(graph, vertexA, {
       enterVertex: enterVertexCallback,
       leaveVertex: leaveVertexCallback,
-      allowTraversal: ({ currentVertex, nextVertex }) => {
-        return !(currentVertex === vertexA && nextVertex === vertexB);
-      },
+      allowTraversal: (
+        { currentVertex, nextVertex }) =>
+          !(currentVertex === vertexA && nextVertex === vertexB),
     });
 
     expect(enterVertexCallback).toHaveBeenCalledTimes(7);

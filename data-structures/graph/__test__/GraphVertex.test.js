@@ -1,8 +1,5 @@
-import GraphVertex from '../GraphVertex.js';
-import GraphEdge from '../GraphEdge.js';
-
-import { createVertices } from '../GraphVertex'
-import { createEdges } from '../GraphEdge'
+import GraphVertex, { createVertices } from '../GraphVertex';
+import GraphEdge, { createEdges } from '../GraphEdge';
 
 describe('GraphVertex', () => {
   it('should throw an error when trying to create vertex without value', () => {
@@ -30,23 +27,19 @@ describe('GraphVertex', () => {
   it('should add edges to vertex and check if it exists', () => {
     const [A, B] = createVertices(['A', 'B']);
     const edgeAB = new GraphEdge(A, B);
-    
+
     A.addEdge(edgeAB);
 
     expect(A.hasEdge(edgeAB)).toBe(true);
     expect(B.hasEdge(edgeAB)).toBe(false);
-    
+
     expect(A.getEdges().length).toBe(1);
     expect(A.getEdges()[0].toString()).toBe('A_B');
   });
 
   it('should delete edges from vertex', () => {
     const [A, B, C] = createVertices(['A', 'B', 'C']);
-
-    const edgeAB = new GraphEdge(A, B);
-    const edgeAC = new GraphEdge(A, C);
-
-    let [AB, AC] = createEdges([[A, B], [A, C]]);
+    const [AB, AC] = createEdges([[A, B], [A, C]]);
 
     A.addEdges([AB, AC]);
 
@@ -76,8 +69,8 @@ describe('GraphVertex', () => {
   it('should delete all edges from vertex', () => {
     const [A, B, C] = createVertices(['A', 'B', 'C']);
 
-    let [AB, AC] = createEdges([[A, B], [A, C]]);
-    
+    const [AB, AC] = createEdges([[A, B], [A, C]]);
+
     A.addEdges([AB, AC]);
 
     expect(A.hasEdge(AB)).toBe(true);
@@ -103,7 +96,7 @@ describe('GraphVertex', () => {
     const [A, B, C] = createVertices(['A', 'B', 'C']);
 
     const [edgeAB, edgeAC] = createEdges([[A, B], [A, C]]);
-    
+
     A.addEdges([edgeAB, edgeAC]);
 
     expect(B.getNeighbors()).toEqual([]);
@@ -117,7 +110,7 @@ describe('GraphVertex', () => {
 
   it('should return vertex neighbors in case if current node is end one', () => {
     const [A, B, C] = createVertices(['A', 'B', 'C']);
-    
+
     const [edgeBA, edgeCA] = createEdges([[B, A], [C, A]]);
 
     A.addEdges([edgeBA, edgeCA]);
@@ -133,9 +126,9 @@ describe('GraphVertex', () => {
 
   it('should check if vertex has specific neighbor', () => {
     const [A, B, C] = createVertices(['A', 'B', 'C']);
-    
+
     const edgeAB = new GraphEdge(A, B);
-    
+
     A.addEdge(edgeAB);
 
     expect(A.hasNeighbor(B)).toBe(true);

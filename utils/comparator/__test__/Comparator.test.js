@@ -1,4 +1,4 @@
-import Comparator from '../Comparator.js';
+import Comparator from '../Comparator';
 
 describe('Comparator', () => {
   it('should compare with default comparator function', () => {

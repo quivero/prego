@@ -1,7 +1,7 @@
-import Graph from '../../../data-structures/graph/Graph.js';
-import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
-import depthFirstSearch from '../depthFirstSearch.js';
+import Graph from '../../../data-structures/graph/Graph';
+import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import GraphEdge from '../../../data-structures/graph/GraphEdge';
+import depthFirstSearch from '../depthFirstSearch';
 
 describe('depthFirstSearch', () => {
   it('should perform DFS operation on graph', () => {
@@ -122,9 +122,7 @@ describe('depthFirstSearch', () => {
     depthFirstSearch(graph, vertexA, {
       enterVertex: enterVertexCallback,
       leaveVertex: leaveVertexCallback,
-      allowTraversal: ({ currentVertex, nextVertex }) => {
-        return !(currentVertex === vertexA && nextVertex === vertexB);
-      },
+      allowTraversal: ({ currentVertex, nextVertex }) => !(currentVertex === vertexA && nextVertex === vertexB),
     });
 
     expect(enterVertexCallback).toHaveBeenCalledTimes(7);

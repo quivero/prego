@@ -1,4 +1,4 @@
-import DisjointSet from '../DisjointSet.js';
+import DisjointSet from '../DisjointSet';
 
 describe('DisjointSet', () => {
   it('should throw error when trying to union and check not existing sets', () => {

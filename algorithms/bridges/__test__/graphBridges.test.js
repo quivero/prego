@@ -1,7 +1,7 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '../../../data-structures/graph/GraphEdge.js';
-import Graph from '../../../data-structures/graph/Graph.js';
-import graphBridges from '../graphBridges.js';
+import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import GraphEdge from '../../../data-structures/graph/GraphEdge';
+import Graph from '../../../data-structures/graph/Graph';
+import graphBridges from '../graphBridges';
 
 describe('graphBridges', () => {
   it('should find bridges in simple graph', () => {
@@ -73,8 +73,8 @@ describe('graphBridges', () => {
     const graph = new Graph();
 
     graph
-      .addEdges([edgeAB, edgeBC, edgeAC, edgeCD, edgeFH, 
-                    edgeDE, edgeEG, edgeEF, edgeGF, ]);
+      .addEdges([edgeAB, edgeBC, edgeAC, edgeCD, edgeFH,
+        edgeDE, edgeEG, edgeEF, edgeGF]);
 
     const bridges = Object.values(graphBridges(graph));
 
@@ -107,8 +107,8 @@ describe('graphBridges', () => {
     const graph = new Graph();
 
     graph
-      .addEdges([edgeDE, edgeAB, edgeBC, edgeAC, edgeCD,  
-                 edgeEG, edgeEF, edgeGF, edgeFH]);
+      .addEdges([edgeDE, edgeAB, edgeBC, edgeAC, edgeCD,
+        edgeEG, edgeEF, edgeGF, edgeFH]);
 
     const bridges = Object.values(graphBridges(graph));
 
@@ -164,7 +164,7 @@ describe('graphBridges', () => {
 
     graph
       .addEdges([edgeAB, edgeAC, edgeBC, edgeCD,
-                 edgeCE, edgeCF, edgeEG, edgeFG]);
+        edgeCE, edgeCF, edgeEG, edgeFG]);
 
     const bridges = Object.values(graphBridges(graph));
 

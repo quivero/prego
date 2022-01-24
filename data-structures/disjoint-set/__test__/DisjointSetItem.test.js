@@ -1,4 +1,4 @@
-import DisjointSetItem from '../DisjointSetItem.js';
+import DisjointSetItem from '../DisjointSetItem';
 
 describe('DisjointSetItem', () => {
   it('should do basic manipulation with disjoint set item', () => {
@@ -56,9 +56,7 @@ describe('DisjointSetItem', () => {
   });
 
   it('should do basic manipulation with disjoint set item with custom key extractor', () => {
-    const keyExtractor = (value) => {
-      return value.key;
-    };
+    const keyExtractor = (value) => value.key;
 
     const itemA = new DisjointSetItem({ key: 'A', value: 1 }, keyExtractor);
     const itemB = new DisjointSetItem({ key: 'B', value: 2 }, keyExtractor);
