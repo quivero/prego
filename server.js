@@ -4,10 +4,12 @@ import { createRequire } from 'module';
 import fs from 'fs';
 
 import {
+  startAndFinishNodes,
+  nodeToLane,
   parseBlueprintToGraph,
   fromStartToFinishAcyclicPaths,
   fromStartToFinishCombsAcyclicPaths,
-} from './utils/workflow/parsers';
+} from './utils/workflow/parsers.js';
 
 const require = createRequire(import.meta.url);
 const app = express();
@@ -48,6 +50,7 @@ app.get('/', (req, res) => {
     }
 
     res.send(descriptions);
+
   } else {
     const fname = bps_root + blueprint_fname;
     const blueprint_i = require(fname);

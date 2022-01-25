@@ -1,8 +1,9 @@
 import Iter from 'es-iter';
-import Graph from '../../data-structures/graph/Graph';
-import GraphVertex from '../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../data-structures/graph/GraphEdge';
-import { getUniques, getAllIndexes } from '../arrays/arrays';
+
+import Graph from '../../data-structures/graph/Graph.js';
+import GraphVertex from '../../data-structures/graph/GraphVertex.js';
+import GraphEdge from '../../data-structures/graph/GraphEdge.js';
+import { getUniques, getAllIndexes } from '../arrays/arrays.js';
 
 export const parseBlueprintToGraph = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
@@ -46,8 +47,62 @@ export const parseBlueprintToGraph = (blueprint) => {
   return graph;
 };
 
+export const startAndFinishNodes = (blueprint) => {
+  const { nodes } = blueprint.blueprint_spec;
+  const startNodes = [];
+  const finishNodes = [];
+
+  for (const node of nodes) {
+    if (node.type.toLowerCase() === 'start') {
+      startNodes.push(node.id);
+    }
+
+    if (node.type.toLowerCase() === 'finish') {
+      finishNodes.push(node.id);
+    }
+  }
+
+  return {'start_nodes': [...startNodes], 'finish_nodes': [...finishNodes]}
+}
+
+export const nodeToLane = (blueprint) => {
+  const { nodes } = blueprint.blueprint_spec;
+  const node_to_lane = {};
+
+  for (const node of nodes) {
+    node_to_lane[node.id] = node.lane_id
+  }
+
+  return node_to_lane
+}
+
+export const nodeRouteToLaneRoute = (node_route,
+                                     indexes_to_vertices,
+                                     node_id_to_lane) => {
+  let lane_route = [];
+
+  for(let vertex_j of node_route){
+    let lane_vertex_j = node_id_to_lane[indexes_to_vertices[vertex_j]];
+
+    if(lane_route.length==0){
+      lane_route.push(lane_vertex_j);
+
+    } else {
+      if(lane_route[lane_route.length-1] !== lane_vertex_j) {
+        lane_route.push(lane_vertex_j);
+      } else {
+        continue;
+      }
+    }
+  }
+
+  return lane_route;
+}
+
 export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
+  let indexes_to_vertices = bp_graph.getIndicesToVertices();
+  let node_id_to_lane = nodeToLane(blueprint);
 
   const looseNodes = bp_graph.looseNodes();
   const orphanNodes = bp_graph.orphanNodes();
@@ -69,34 +124,35 @@ export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) 
   }
 
   const routes = bp_graph.acyclicPaths(start_key, finish_key);
-  const route_describe = { length: routes.length, routes };
+  const route_describe = { 'length': routes.length,
+                           'routes': []};
+  let lane_route_i = []
+
+  for(const i of Iter.range(routes.length)) {
+    lane_route_i = nodeRouteToLaneRoute(routes[i], indexes_to_vertices, node_id_to_lane);
+
+    route_describe.routes.push(
+      {
+        'nodes_path': routes[i],
+        'lanes_path': lane_route_i,
+      }
+    );
+  }
 
   return route_describe;
 };
 
 export const fromStartToFinishCombsAcyclicPaths = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
-  const finishNodes = [];
-  const startNodes = [];
-
-  for (const node of nodes) {
-    if (node.type.toLowerCase() === 'start') {
-      startNodes.push(node.id);
-    }
-
-    if (node.type.toLowerCase() === 'finish') {
-      finishNodes.push(node.id);
-    }
-  }
+  const sf_nodes = startAndFinishNodes(blueprint);
 
   const acyclic_paths = {};
   let startNode;
   let finishNode;
 
-  for (const i of Iter.range(startNodes.length)) {
-    startNode = startNode[i];
-    for (const j of Iter.range(finishNodes.length)) {
-      finishNode = finishNodes[j];
+  for (const i of Iter.range(sf_nodes.start_nodes.length)) {
+    startNode = sf_nodes.start_nodes[i];
+    for (const j of Iter.range(sf_nodes.finish_nodes.length)) {
+      finishNode = sf_nodes.finish_nodes[j];
 
       const label = `${startNode}_${finishNode}`;
       acyclic_paths[label] = fromStartToFinishAcyclicPaths(blueprint, startNode, finishNode);
