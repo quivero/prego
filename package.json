@@ -1,7 +1,7 @@
 {
   "name": "dot-quiver",
   "type": "module",
-  "version": "4.4.0",
+  "version": "5.0.0",
   "description": "Package to handle dot-quiver based structures",
   "main": "index.js",
   "repository": {
