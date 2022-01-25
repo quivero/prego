@@ -25,7 +25,7 @@
     "eslint-nibble": "^8.0.1",
     "express": "^4.17.2",
     "find-cycle": "^1.0.0",
-    "fs": "^0.0.1-security",
+    "fs": "^0.0.2",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.15",
     "np": "^7.6.0"
