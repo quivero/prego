@@ -32,7 +32,7 @@ export default class Graph {
    */
   get density() {
     const n_vertices = this.getNumVertices();
-    const n_dense = n_vertices * (n_vertices - 1) / 2;
+    const n_dense = (n_vertices / 2) * (n_vertices - 1);
     const n_edges = this.getAllEdges().length;
 
     this.#density = n_edges / n_dense;
@@ -186,11 +186,6 @@ export default class Graph {
    * @returns {Graph}
    */
   addEdge(edge) {
-    // Try to find and end start vertices.
-    if (typeof (edge.startVertex) === undefined) {
-      console.log(edge.toString());
-    }
-
     let startVertex = this.getVertexByKey(edge.startVertex.getKey());
     let endVertex = this.getVertexByKey(edge.endVertex.getKey());
 
@@ -324,7 +319,7 @@ export default class Graph {
     // Init matrix with infinities meaning that there is no ways of
     // getting from one vertex to another yet.
     const adjacencyMatrix = Array(vertices.length).fill(null).map(
-          () => Array(vertices.length).fill(Infinity)
+      () => Array(vertices.length).fill(Infinity),
     );
 
     // Fill the columns.

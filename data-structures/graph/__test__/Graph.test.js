@@ -120,8 +120,8 @@ describe('Graph', () => {
 
     // Edges
     const [AB, BC, CD, CE,
-           EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
-                                      [E, B], [C, F], [F, B]]);
+      EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
+      [E, B], [C, F], [F, B]]);
 
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
@@ -138,8 +138,8 @@ describe('Graph', () => {
 
     // Edges
     const [AB, BC, CD, CE,
-           EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
-                                      [E, B], [C, F], [F, B]]);
+      EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
+      [E, B], [C, F], [F, B]]);
 
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);

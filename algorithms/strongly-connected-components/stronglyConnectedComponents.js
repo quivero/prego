@@ -30,14 +30,15 @@ function getVerticesSortedByDfsFinishTime(graph) {
       // Delete current vertex from not visited set.
       delete notVisitedVerticesSet[currentVertex.getKey()];
     },
+
+    // Push vertex to the stack when leaving it.
+    // This will make stack to be ordered by finish time in decreasing order.
     leaveVertex: ({ currentVertex }) => {
-      // Push vertex to the stack when leaving it.
-      // This will make stack to be ordered by finish time in decreasing order.
       verticesByDfsFinishTime.push(currentVertex);
     },
-    allowTraversal: ({ nextVertex }) =>
-      // Don't allow to traverse the nodes that have been already visited.
-      !visitedVerticesSet[nextVertex.getKey()],
+
+    // Don't allow to traverse the nodes that have been already visited.
+    allowTraversal: ({ nextVertex }) => !visitedVerticesSet[nextVertex.getKey()],
   };
 
   // Do FIRST DFS PASS traversal for all graph vertices to fill the verticesByFinishTime stack.
@@ -77,18 +78,19 @@ function getSCCSets(graph, verticesByFinishTime) {
       // Add current vertex to visited set.
       visitedVerticesSet[currentVertex.getKey()] = currentVertex;
     },
+
+    // Once DFS traversal is finished push the set of found strongly connected
+    // components during current DFS round to overall strongly connected components set.
+    // The sign that traversal is about to be finished is that we came back to start vertex
+    // which doesn't have parent.
     leaveVertex: ({ previousVertex }) => {
-      // Once DFS traversal is finished push the set of found strongly connected
-      // components during current DFS round to overall strongly connected components set.
-      // The sign that traversal is about to be finished is that we came back to start vertex
-      // which doesn't have parent.
       if (previousVertex === null) {
         stronglyConnectedComponentsSets.push([...stronglyConnectedComponentsSet]);
       }
     },
-    allowTraversal: ({ nextVertex }) =>
-      // Don't allow traversal of already visited vertices.
-      !visitedVerticesSet[nextVertex.getKey()],
+
+    // Don't allow traversal of already visited vertices.
+    allowTraversal: ({ nextVertex }) => !visitedVerticesSet[nextVertex.getKey()],
   };
 
   while (!verticesByFinishTime.isEmpty()) {

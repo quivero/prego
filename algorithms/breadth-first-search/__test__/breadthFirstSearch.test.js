@@ -114,8 +114,8 @@ describe('breadthFirstSearch', () => {
       enterVertex: enterVertexCallback,
       leaveVertex: leaveVertexCallback,
       allowTraversal: (
-        { currentVertex, nextVertex }) =>
-          !(currentVertex === vertexA && nextVertex === vertexB),
+        { currentVertex, nextVertex },
+      ) => !(currentVertex === vertexA && nextVertex === vertexB),
     });
 
     expect(enterVertexCallback).toHaveBeenCalledTimes(7);

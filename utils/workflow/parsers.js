@@ -1,3 +1,4 @@
+import Iter from 'es-iter';
 import Graph from '../../data-structures/graph/Graph';
 import GraphVertex from '../../data-structures/graph/GraphVertex';
 import GraphEdge from '../../data-structures/graph/GraphEdge';
@@ -89,9 +90,16 @@ export const fromStartToFinishCombsAcyclicPaths = (blueprint) => {
   }
 
   const acyclic_paths = {};
-  for (const startNode of startNodes) {
-    for (const finishNode of finishNodes) {
-      acyclic_paths[`${startNode}_${finishNode}`] = fromStartToFinishAcyclicPaths(blueprint, startNode, finishNode);
+  let startNode;
+  let finishNode;
+
+  for (const i of Iter.range(startNodes.length)) {
+    startNode = startNode[i];
+    for (const j of Iter.range(finishNodes.length)) {
+      finishNode = finishNodes[j];
+
+      const label = `${startNode}_${finishNode}`;
+      acyclic_paths[label] = fromStartToFinishAcyclicPaths(blueprint, startNode, finishNode);
     }
   }
 
