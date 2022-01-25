@@ -114,7 +114,7 @@ export default class Graph {
     const n_vertices = this.getNumVertices();
 
     // Initialization
-    for (let i = 0; i < n_vertices; i++) {
+    for (let i = 0; i < n_vertices; i += 1) {
       adjList[vertex_values[i]] = [];
     }
 

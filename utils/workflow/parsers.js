@@ -10,20 +10,20 @@ export const parseBlueprintToGraph = (blueprint) => {
   const graph = new Graph(true);
   const vertices_dict = {};
 
-  for (let i = 0; i < nodes.length; i++) {
+  for (let i = 0; i < nodes.length; i += 1) {
     vertices_dict[nodes[i].id] = new GraphVertex(nodes[i].id);
   }
 
   const edges = [];
 
   // Iterate along array elements
-  for (let i = 0; i < nodes.length; i++) {
+  for (let i = 0; i < nodes.length; i += 1) {
     if (nodes[i].next != null) {
       // Flow case
       if (typeof (nodes[i].next) === 'object') {
         const next_values = getUniques(Object.values(nodes[i].next));
 
-        for (let j = 0; j < next_values.length; j++) {
+        for (let j = 0; j < next_values.length; j += 1) {
           const edge = new GraphEdge(
             vertices_dict[nodes[i].id],
             vertices_dict[next_values[j]],
@@ -62,47 +62,46 @@ export const startAndFinishNodes = (blueprint) => {
     }
   }
 
-  return {'start_nodes': [...startNodes], 'finish_nodes': [...finishNodes]}
-}
+  return { start_nodes: [...startNodes], finish_nodes: [...finishNodes] };
+};
 
 export const nodeToLane = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const node_to_lane = {};
 
   for (const node of nodes) {
-    node_to_lane[node.id] = node.lane_id
+    node_to_lane[node.id] = node.lane_id;
   }
 
-  return node_to_lane
-}
+  return node_to_lane;
+};
 
-export const nodeRouteToLaneRoute = (node_route,
-                                     indexes_to_vertices,
-                                     node_id_to_lane) => {
-  let lane_route = [];
+export const nodeRouteToLaneRoute = (
+  node_route,
+  indexes_to_vertices,
+  node_id_to_lane,
+) => {
+  const lane_route = [];
 
-  for(let vertex_j of node_route){
-    let lane_vertex_j = node_id_to_lane[indexes_to_vertices[vertex_j]];
+  for (const vertex_j of node_route) {
+    const lane_vertex_j = node_id_to_lane[indexes_to_vertices[vertex_j]];
 
-    if(lane_route.length==0){
+    if (lane_route.length == 0) {
       lane_route.push(lane_vertex_j);
-
+    } else if (lane_route[lane_route.length - 1] !== lane_vertex_j) {
+      lane_route.push(lane_vertex_j);
     } else {
-      if(lane_route[lane_route.length-1] !== lane_vertex_j) {
-        lane_route.push(lane_vertex_j);
-      } else {
-        continue;
-      }
+      continue;
     }
   }
 
   return lane_route;
-}
+};
 
 export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
-  let indexes_to_vertices = bp_graph.getIndicesToVertices();
-  let node_id_to_lane = nodeToLane(blueprint);
+  const indexes_to_vertices = bp_graph.getIndicesToVertices();
+  const node_id_to_lane = nodeToLane(blueprint);
 
   const looseNodes = bp_graph.looseNodes();
   const orphanNodes = bp_graph.orphanNodes();
@@ -124,18 +123,20 @@ export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) 
   }
 
   const routes = bp_graph.acyclicPaths(start_key, finish_key);
-  const route_describe = { 'length': routes.length,
-                           'routes': []};
-  let lane_route_i = []
+  const route_describe = {
+    length: routes.length,
+    routes: [],
+  };
+  let lane_route_i = [];
 
-  for(const i of Iter.range(routes.length)) {
+  for (const i of Iter.range(routes.length)) {
     lane_route_i = nodeRouteToLaneRoute(routes[i], indexes_to_vertices, node_id_to_lane);
 
     route_describe.routes.push(
       {
-        'nodes_path': routes[i],
-        'lanes_path': lane_route_i,
-      }
+        nodes_path: routes[i],
+        lanes_path: lane_route_i,
+      },
     );
   }
 

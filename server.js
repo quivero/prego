@@ -50,7 +50,6 @@ app.get('/', (req, res) => {
     }
 
     res.send(descriptions);
-
   } else {
     const fname = bps_root + blueprint_fname;
     const blueprint_i = require(fname);

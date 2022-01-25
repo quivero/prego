@@ -5,7 +5,7 @@ export const getAllIndexes = (arr, val) => {
   const indexes = [];
   let i;
 
-  for (i = 0; i < arr.length; i++) {
+  for (i = 0; i < arr.length; i += 1) {
     if (arr[i] === val) {
       indexes.push(i);
     }
@@ -34,7 +34,7 @@ export const isCyclicEqual = (control_, treatment_) => {
     return false;
   }
 
-  for (let i = 0; i < treatment_.length; i++) {
+  for (let i = 0; i < treatment_.length; i += 1) {
     if (cyclicSort(treatment_, i) === control_) {
       return true;
     }
