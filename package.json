@@ -31,8 +31,9 @@
   "scripts": {
     "start": "nodemon ./server.js",
     "test": "jest",
-    "lint": "npx eslint .",
+    "lint": "npx eslint --fix .",
     "nibble": "npx eslint-nibble .",
+    "fixable-nibble": "npx eslint-nibble --fixable-only .",
     "update": "npm i -g npm-check-updates && ncu -u && npm update",
     "coverage": "npm run test -- --coverage"
   },
