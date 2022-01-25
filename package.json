@@ -20,11 +20,9 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.11",
-    "@ungap/structured-clone": "^0.3.4",
-    "es-iter": "^1.1.2",
     "eslint-nibble": "^8.0.1",
+    "es-iter": "^1.1.2",
     "express": "^4.17.2",
-    "find-cycle": "^1.0.0",
     "fs": "^0.0.2",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.15",
@@ -50,7 +48,8 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.0.0",
     "eslint-scope": "^7.1.0",
-    "jest": "^27.4.7"
+    "jest": "^27.4.7",
+    "npm-check-engine": "^1.0.0"
   },
   "engines": {
     "node": " >=16.0.0",
