@@ -34,13 +34,14 @@
     "start": "nodemon ./server.js",
     "test": "jest",
     "lint": "npx eslint .",
+    "nibble": "npx eslint-nibble .",
     "update": "npm i -g npm-check-updates && ncu -u && npm update",
     "coverage": "npm run test -- --coverage"
   },
   "devDependencies": {
     "@types/jest": "27.4.0",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
     "babel-eslint": "^10.1.0",
     "canvas": "2.9.0",
     "eslint": "^8.7.0",
