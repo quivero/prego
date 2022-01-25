@@ -1,7 +1,7 @@
 import Iter from 'es-iter';
 import _ from 'lodash';
-import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch';
-import VisitMetadata from './VisitMetadata';
+import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
+import VisitMetadata from './VisitMetadata.js';
 
 export default class Graph {
   #cycles;

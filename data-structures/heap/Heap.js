@@ -1,4 +1,4 @@
-import Comparator from '../../utils/comparator/Comparator';
+import Comparator from '../../utils/comparator/Comparator.js';
 
 /**
  * Parent class for Min and Max Heaps.

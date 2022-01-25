@@ -1,4 +1,4 @@
-import LinkedList from '../linked-list/LinkedList';
+import LinkedList from '../linked-list/LinkedList.js';
 
 export default class GraphVertex {
   /**
