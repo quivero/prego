@@ -13,5 +13,8 @@ module.exports = {
   },
   rules: {
       camelcase: "off",
+      nounderscoredangle: "off",
+      nounusedvars: "off",
+      importextensions: "off",
   },
 };
