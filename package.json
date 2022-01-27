@@ -20,8 +20,8 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.11",
-    "eslint-nibble": "^8.0.1",
     "es-iter": "^1.1.2",
+    "eslint-nibble": "^8.0.1",
     "express": "^4.17.2",
     "fs": "^0.0.2",
     "lodash": "^4.17.21",
