@@ -26,7 +26,9 @@ You must follow the instructions below
 2) Run the commands:
 
     2.1. `pip install pre-commit && pre-commit install`: install pre-commit git hooks;
+    
     2.2. `npm install`: install local dependencies;
+    
     2.3. `npm start`: run the server locally;
 
 3) Open a browser;
