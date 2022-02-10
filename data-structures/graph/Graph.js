@@ -428,6 +428,128 @@ export default class Graph {
     return false;
   }
 
+  // A function used by DFS
+  DFSUtil(v, visited){
+    const adjList = this.getAdjacencyList();
+
+    // Mark the current node as visited
+    visited[v] = true;
+
+    // Recur for all the vertices adjacent to this vertex       
+    for(let i of adjList[v]){
+        let n = i;
+        if (!visited[n])
+            this.DFSUtil(n, visited);
+    }
+  }
+
+  getEulerianPath() {
+    const eulerian_paths = eulerianPath(this);
+
+    const verticesIndices = this.getVerticesIndices();
+
+    let epaths_by_index=[];
+    let epath_by_index=[];
+
+    for(let epath of eulerian_paths){
+      epath_by_index=[];
+      for(let vertex of epath){
+        epath_by_index.push(verticesIndices[vertex.value]);
+      }
+      
+      epaths_by_index.push(epath_by_index);
+    }
+
+    return epaths_by_index;
+  }
+
+  getStronglyConnectedComponents() {
+    let SC_sets = stronglyConnectedComponents(this);
+    
+    const verticesIndices = this.getVerticesIndices();
+
+    let SC_set_by_index=[];
+    let SC_sets_by_index=[];
+
+    for(let SC_set of SC_sets){
+      SC_set_by_index=[];
+      for(let vertex of SC_set){
+        SC_set_by_index.push(verticesIndices[vertex.value]);
+      }
+      
+      SC_sets_by_index.push(SC_set_by_index);
+    }
+
+    return SC_sets_by_index;
+  }
+
+  // Method to check if all non-zero degree vertices are
+  // connected. It mainly does DFS traversal starting from
+  isConnected(){
+    const n_vertices = this.getNumVertices();
+    const adjList = this.getAdjacencyList();
+
+    // Mark all the vertices as not visited
+    let visited = new Array(n_vertices);
+    let i;
+    for (i = 0; i < n_vertices; i++){
+      visited[i] = false;
+    }
+    
+    // Find a vertex with non-zero degree
+    for (i = 0; i < n_vertices; i++) {
+      if (adjList[i].length != 0) {
+        break;
+      }
+    }
+    
+    // If there are no edges in the graph, return true
+    if (i == n_vertices)
+        return true;
+
+    // Start DFS traversal from a vertex with non-zero degree
+    this.DFSUtil(i, visited);
+
+    // Check if all non-zero degree vertices are visited
+    for (i = 0; i < n_vertices; i++)
+        if (visited[i] == false && adjList[i].length > 0)
+            return false;
+
+    return true;
+  }
+
+  /* The function returns one of the following values
+    0 --> If graph is not Eulerian
+    1 --> If graph has an Euler path (Semi-Eulerian)
+    2 --> If graph has an Euler Circuit (Eulerian)  
+  */
+  isEulerian(){
+    const n_vertices = this.getNumVertices();
+    const adjList = this.getAdjacencyList();
+
+    // Check if all non-zero degree vertices are connected
+    if (this.isConnected() == false)
+        return 0;
+
+    // Count vertices with odd degree
+    let odd = 0;
+    for (let i = 0; i < n_vertices; i++)
+        if (adjList.length%2!=0)
+            odd++;
+
+    // If count is more than 2, then graph is not Eulerian
+    if (odd > 2) {
+        return 0;
+    }
+
+    // If odd count is 2, then semi-eulerian.
+    // If odd count is 0, then eulerian
+    // Note that odd count can never be 1 for undirected graph
+    return (odd==2)? 1 : 2;
+  }
+
+
+
   // A recursive function that finds and prints bridges using DFS traversal
   // u --> The original vertex
   // u --> The vertex to be visited next
@@ -822,6 +944,8 @@ export default class Graph {
    */
   describe() {
     let is_cyclic = this.isCyclic();
+    let is_eulerian = this.isEulerian()
+    
     return {
       vertices: Object.keys(this.vertices).toString(),
       edges: Object.keys(this.edges).toString(),
