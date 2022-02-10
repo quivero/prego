@@ -103,15 +103,8 @@ describe('eulerianPath', () => {
     const graph = new Graph();
 
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeAC)
-      .addEdge(edgeBD)
-      .addEdge(edgeDC)
-      .addEdge(edgeCE)
-      .addEdge(edgeEF)
-      .addEdge(edgeFH)
-      .addEdge(edgeFG)
-      .addEdge(edgeHG);
+      .addEdges([edgeAB, edgeAC, edgeBD, edgeDC, edgeHG,
+                 edgeCE, edgeEF, edgeFH, edgeFG]);
 
     const graphEdgesCount = graph.getAllEdges().length;
 
