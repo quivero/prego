@@ -110,6 +110,21 @@ export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) 
   const start_id = vertices_keys_to_indices[start_key];
   const finish_id = vertices_keys_to_indices[finish_key];
 
+  let is_undefined=false;
+  if (start_id === undefined) {
+    console.warn(`Warning: Claimed start vertex id ${start_key} is not available within nodes`);
+    is_undefined=true;
+  }
+  
+  if (finish_id === undefined) {
+    console.warn(`Warning: Claimed finish vertex id ${finish_key} is not available within nodes`);
+    is_undefined=true;
+  }
+
+  if(is_undefined){
+    return [];
+  }
+
   if (getAllIndexes(orphanNodes, start_id).length === 0) {
     console.warn(`Vertex id ${start_id} is not a start node! Detected start nodes: ${orphanNodes}`);
 

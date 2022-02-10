@@ -513,7 +513,7 @@ describe('Graph', () => {
     const D = new GraphVertex('D');
     const E = new GraphVertex('E');
     const F = new GraphVertex('F');
-
+    
     // Vertices
     const AB = new GraphEdge(A, B);
     const BC = new GraphEdge(B, C);

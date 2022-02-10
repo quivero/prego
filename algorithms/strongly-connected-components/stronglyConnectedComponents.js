@@ -1,5 +1,5 @@
-import Stack from '../../data-structures/stack/Stack';
-import depthFirstSearch from '../depth-first-search/depthFirstSearch';
+import Stack from '../../data-structures/stack/Stack.js';
+import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
 
 /**
  * @param {Graph} graph
@@ -8,7 +8,7 @@ import depthFirstSearch from '../depth-first-search/depthFirstSearch';
 function getVerticesSortedByDfsFinishTime(graph) {
   // Set of all visited vertices during DFS pass.
   const visitedVerticesSet = {};
-
+  
   // Stack of vertices by finish time.
   // All vertices in this stack are ordered by finished time in decreasing order.
   // Vertex that has been finished first will be at the bottom of the stack and

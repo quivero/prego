@@ -63,37 +63,29 @@ export const extendedVenn = (sets) => {
           Set.prototype.has,
           new Set(acc),
         ));
-
+      
       // No intersection means no exclusive value
       if (comb_sets_inter.length === 0) {
         break;
       }
 
-      const ev_keys_i_to_n = [];
-      Object
-        .keys(extended_venn)
-        .forEach(
-          (key) => {
-            if (key.split(',').length >= i) {
-              ev_keys_i_to_n.push(key);
-            }
-          },
-        );
+      const ev_keys_i_to_n = Object.keys(extended_venn);
 
       // Intersection of elements
-      comb_sets_union = ev_keys_i_to_n.length === 0 ? []
-        : ev_keys_i_to_n.reduce((acc, key) => [
-          ...new Set(
-            [
-              ...acc,
-              ...extended_venn[key],
-            ],
-          )], []);
+      comb_sets_union = 
+        ev_keys_i_to_n.length === 0 ? []
+          : ev_keys_i_to_n.reduce((acc, key) => [
+            ...new Set(
+              [
+                ...acc,
+                ...extended_venn[key],
+              ],
+            )], []);
 
       // Exclusive combination set elements
       comb_sets_excl = _.difference(comb_sets_inter, comb_sets_union);
-
-      if (comb_sets_inter.length !== 0) {
+      
+      if (comb_sets_excl.length !== 0) {
         extended_venn[comb_keys.toString()] = comb_sets_excl;
       }
     }

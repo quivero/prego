@@ -1,5 +1,8 @@
 import Iter from 'es-iter';
 import _ from 'lodash';
+
+import stronglyConnectedComponents from '../../algorithms/strongly-connected-components/stronglyConnectedComponents.js';
+import eulerianPath from '../../algorithms/eulerian-path/eulerianPath.js';
 import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
 import VisitMetadata from './VisitMetadata.js';
 
@@ -438,7 +441,7 @@ export default class Graph {
     low[v] = preorder[v];
 
     for (let i = 0; i < adjList[v].length; i += 1) {
-      w = adjList[v][i];
+      let w = adjList[v][i];
       if (preorder[w] === -1) {
         this.#bridgesUtil(v, w, preorder, low, counter, bridges);
 
@@ -826,9 +829,13 @@ export default class Graph {
       adjacency_list: this.getAdjacencyList(),
       loose_nodes: this.looseNodes(),
       orphan_nodes: this.orphanNodes(),
+      articulation_nodes: this.articulationVertices(),
       bridges: this.bridges(),
       is_cyclic,
       ...is_cyclic && { all_cycles: this.cyclicPaths() },
+      is_eulerian: is_eulerian,
+      ...is_eulerian && { eulerian_path: this.getEulerianPath() },
+      is_connected: this.isConnected(),
     };
   }
 
