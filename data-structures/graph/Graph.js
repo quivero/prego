@@ -508,18 +508,16 @@ export default class Graph {
         break;
       }
     }
-    
-    // If there are no edges in the graph, return true
-    if (i == n_vertices)
-        return true;
 
     // Start DFS traversal from a vertex with non-zero degree
     this.DFSUtil(i, visited);
 
     // Check if all non-zero degree vertices are visited
-    for (i = 0; i < n_vertices; i++)
-        if (visited[i] == false && adjList[i].length > 0)
-            return false;
+    for (i = 0; i < n_vertices; i++){
+      if (visited[i] == false && adjList[i].length > 0){
+        return false;
+      }
+    } 
 
     return true;
   }
