@@ -488,6 +488,12 @@ export default class Graph {
   isConnected(){
     const n_vertices = this.getNumVertices();
     const adjList = this.getAdjacencyList();
+    const edges = this.getAllEdges();
+
+    // If there are no edges in the graph, return true
+    if (edges.length == 0){
+      return true;
+    }
 
     // Mark all the vertices as not visited
     let visited = new Array(n_vertices);
