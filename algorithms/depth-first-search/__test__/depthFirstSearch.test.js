@@ -25,16 +25,10 @@ describe('depthFirstSearch', () => {
     const edgeDG = new GraphEdge(vertexD, vertexG);
 
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC)
-      .addEdge(edgeCG)
-      .addEdge(edgeAD)
-      .addEdge(edgeAE)
-      .addEdge(edgeEF)
-      .addEdge(edgeFD)
-      .addEdge(edgeDG);
-
-    expect(graph.toString()).toBe('A,B,C,G,D,E,F');
+      .addEdges([edgeAB, edgeBC, edgeCG, edgeAD,
+        edgeAE, edgeEF, edgeFD, edgeDG]);
+    
+    expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G');
 
     const enterVertexCallback = jest.fn();
     const leaveVertexCallback = jest.fn();
@@ -105,16 +99,10 @@ describe('depthFirstSearch', () => {
     const edgeDG = new GraphEdge(vertexD, vertexG);
 
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC)
-      .addEdge(edgeCG)
-      .addEdge(edgeAD)
-      .addEdge(edgeAE)
-      .addEdge(edgeEF)
-      .addEdge(edgeFD)
-      .addEdge(edgeDG);
+      .addEdges([edgeAB, edgeBC, edgeCG, edgeAD, 
+                edgeAE, edgeEF, edgeFD, edgeDG]);
 
-    expect(graph.toString()).toBe('A,B,C,G,D,E,F');
+    expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G');
 
     const enterVertexCallback = jest.fn();
     const leaveVertexCallback = jest.fn();

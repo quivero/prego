@@ -16,7 +16,7 @@ describe('Graph', () => {
 
     graph.addVertices([A, B]);
 
-    expect(graph.toString()).toBe('A,B');
+    expect(graph.toString()).toBe('');
     expect(graph.getVertexByKey(A.getKey())).toEqual(A);
     expect(graph.getVertexByKey(B.getKey())).toEqual(B);
   });
@@ -37,7 +37,7 @@ describe('Graph', () => {
     const graphVertexA = graph.getVertexByKey(A.getKey());
     const graphVertexB = graph.getVertexByKey(B.getKey());
 
-    expect(graph.toString()).toBe('A,B');
+    expect(graph.toString()).toBe('A_B');
     expect(graphVertexA).toBeDefined();
     expect(graphVertexB).toBeDefined();
 
@@ -64,7 +64,7 @@ describe('Graph', () => {
     const graphVertexA = graph.getVertexByKey(vertexA.getKey());
     const graphVertexB = graph.getVertexByKey(vertexB.getKey());
 
-    expect(graph.toString()).toBe('A,B');
+    expect(graph.toString()).toBe('A_B');
     expect(graphVertexA).toBeDefined();
     expect(graphVertexB).toBeDefined();
 
@@ -175,6 +175,36 @@ describe('Graph', () => {
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
+  });
+
+  it('Bridges in graph', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
+
+    // Add vertices
+    graph.addVertices([A, B, C, D, E, F]);
+
+    // Add edges
+    graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+
+    expect(graph.getVertexByIndex(0)).toStrictEqual('A');
   });
 
   it('Cycles in a finite graph must be finite', () => {
@@ -477,6 +507,119 @@ describe('Graph', () => {
     expect(deleteNotExistingEdge).toThrowError();
   });
 
+  it('should return cycles from private property', () => {
+    const graph_ = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
+
+    // Add edges
+    graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+    
+    expect(graph_.cycles).toEqual([[1, 2, 4], [1, 2, 5]]);
+  });
+
+  it('should return true for connected graph', () => {
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
+
+    // Add edges
+    graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+    
+    expect(graph.isConnected()).toEqual(true);
+  });
+
+  it('should return true for graph without edges', () => {
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    graph.addVertices([A, B, C, D, E, F])
+
+    expect(graph.isConnected()).toEqual(true);
+  });
+
+  it('should return empty for non-eulerian graph', () => {
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const DE = new GraphEdge(D, E);
+    const EF = new GraphEdge(E, F);
+    const BE = new GraphEdge(B, E);
+
+    graph.addEdges([AB, BC, CD, DE, EF, BE])
+
+    expect(graph.getEulerianPath()).toEqual([]);
+  });
+
+  it('should return paths for eulerian graph', () => {
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const DE = new GraphEdge(D, E);
+    const EF = new GraphEdge(E, F);
+
+    graph.addEdges([AB, BC, CD, DE, EF])
+    
+    expect(graph.getEulerianPath()).toEqual([]);
+  });
+
   it('should return acyclic paths', () => {
     const graph_ = new Graph(true);
 
@@ -624,7 +767,7 @@ describe('Graph', () => {
     const graph = new Graph(true);
     graph.addEdges([edgeAB, edgeAC, edgeCD]);
 
-    expect(graph.toString()).toBe('A,B,C,D');
+    expect(graph.toString()).toBe('A_B,A_C,C_D');
     expect(graph.getAllEdges().length).toBe(3);
     expect(graph.getNeighbors(vertexA).length).toBe(2);
     expect(graph.getNeighbors(vertexA)[0].getKey()).toBe(vertexB.getKey());
@@ -636,7 +779,7 @@ describe('Graph', () => {
 
     graph.reverse();
 
-    expect(graph.toString()).toBe('A,B,C,D');
+    expect(graph.toString()).toBe('B_A,C_A,D_C');
     expect(graph.getAllEdges().length).toBe(3);
     expect(graph.getNeighbors(vertexA).length).toBe(0);
     expect(graph.getNeighbors(vertexB).length).toBe(1);

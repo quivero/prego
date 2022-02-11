@@ -37,17 +37,9 @@ describe('prim', () => {
     const graph = new Graph();
 
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeAD)
-      .addEdge(edgeAC)
-      .addEdge(edgeBC)
-      .addEdge(edgeBE)
-      .addEdge(edgeDF)
-      .addEdge(edgeEC)
-      .addEdge(edgeEF)
-      .addEdge(edgeFC)
-      .addEdge(edgeFG);
-
+      .addEdges([edgeAB, edgeAD, edgeAC, edgeBC, edgeBE,
+                 edgeDF, edgeEC, edgeEF, edgeFC, edgeFG]);
+    
     expect(graph.getWeight()).toEqual(46);
 
     const minimumSpanningTree = prim(graph);
@@ -55,7 +47,7 @@ describe('prim', () => {
     expect(minimumSpanningTree.getWeight()).toBe(24);
     expect(minimumSpanningTree.getAllVertices().length).toBe(graph.getAllVertices().length);
     expect(minimumSpanningTree.getAllEdges().length).toBe(graph.getAllVertices().length - 1);
-    expect(minimumSpanningTree.toString()).toBe('A,B,C,E,D,F,G');
+    expect(minimumSpanningTree.toString()).toBe('A_B,A_C,E_C,A_D,F_C,F_G');
   });
 
   it('should find minimum spanning tree for simple graph', () => {
@@ -73,11 +65,7 @@ describe('prim', () => {
     const graph = new Graph();
 
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeAD)
-      .addEdge(edgeBC)
-      .addEdge(edgeBD)
-      .addEdge(edgeCD);
+      .addEdges([edgeAB, edgeAD, edgeBC, edgeBD, edgeCD]);
 
     expect(graph.getWeight()).toEqual(9);
 
@@ -86,6 +74,6 @@ describe('prim', () => {
     expect(minimumSpanningTree.getWeight()).toBe(3);
     expect(minimumSpanningTree.getAllVertices().length).toBe(graph.getAllVertices().length);
     expect(minimumSpanningTree.getAllEdges().length).toBe(graph.getAllVertices().length - 1);
-    expect(minimumSpanningTree.toString()).toBe('A,B,C,D');
+    expect(minimumSpanningTree.toString()).toBe('A_B,B_C,C_D');
   });
 });
