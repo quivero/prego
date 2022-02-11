@@ -75,6 +75,21 @@ describe('Graph', () => {
     expect(graphVertexB.getNeighbors().length).toBe(0);
   });
 
+  it('should check if vertex and edge exist', () => {
+    const graph = new Graph();
+
+    const [A, B] = createVertices(['A', 'B']);
+
+    graph.addVertices([A, B]);
+
+    // Edges
+    const [AB] = createEdges([[A, B]]);
+    graph.addEdge(AB);
+
+    expect(graph.hasVertex(A.getKey())).toBe(true);
+    expect(graph.hasEdge(AB.getKey())).toBe(true);
+  });
+
   it('should copy directed graph but undirected', () => {
     // A directed graph
     const graph_ = new Graph(true);

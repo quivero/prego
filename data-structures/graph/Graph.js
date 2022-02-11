@@ -53,6 +53,14 @@ export default class Graph {
   }
 
   /**
+   * @param {GraphVertex} seekVertex
+   * @returns {boolean}
+   */
+  hasVertex(seekVertexKey) {
+    return this.vertices[seekVertexKey] !== undefined;
+  }
+
+  /**
    * @param {GraphVertex[]} vertices
    * @returns {Graph}
    */
@@ -246,6 +254,14 @@ export default class Graph {
     }
 
     return this;
+  }
+
+  /**
+   * @param {GraphEdge} seekEdge
+   * @returns {boolean}
+   */
+  hasEdge(seekEdgeKey) {
+    return this.edges[seekEdgeKey] !== undefined;
   }
 
   /**
