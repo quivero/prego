@@ -74,7 +74,7 @@ export default class Graph {
    */
   getVertexByIndex(vertexIndex) {
     let indices_to_vertices = this.getIndicesToVertices();
-    return Indices_to_vertices[vertexIndex];
+    return indices_to_vertices[vertexIndex];
   }
 
   /**
