@@ -109,29 +109,53 @@ export default class Graph {
   /**
    * @returns {Object}
    */
-  getAdjacencyList() {
+  getAdjacencyList(type=0) {
     const adjList = {};
     const vertices_index = this.getVerticesIndices();
     const vertex_keys = Object.keys(vertices_index);
     const vertex_values = Object.values(vertices_index);
     const n_vertices = this.getNumVertices();
-
-    // Initialization
+    
+    // Initialize
     for (let i = 0; i < n_vertices; i = i + 1) {
       adjList[vertex_values[i]] = [];
     }
 
-    for (let i = 0; i < n_vertices; i = i + 1) {
-      const vertex_i = this.getVertexByKey(vertex_keys[i]);
-      const neighbors_i = this.getNeighbors(vertex_i);
+    if(type==0){
+    // to-adjacency dictionary
+    
+      // Populate 
+      for (let i = 0; i < n_vertices; i = i + 1) {
+        const vertex_i = this.getVertexByKey(vertex_keys[i]);
+        const neighbors_i = this.getNeighbors(vertex_i);
 
-      const neighbors_index = [];
+        const neighbors_index = [];
 
-      neighbors_i.forEach((vertex) => {
-        neighbors_index.push(vertices_index[vertex.getKey()]);
-      });
+        neighbors_i.forEach((vertex) => {
+          neighbors_index.push(vertices_index[vertex.getKey()]);
+        });
 
-      adjList[i] = neighbors_index;
+        adjList[i] = neighbors_index;
+      }
+
+    } else {
+      // to-adjacency dictionary
+      let toAdjList = this.getAdjacencyList(0);
+
+      let vertex_i=-1;
+      let vertex_ij=-1;
+      let toAdjList_i=[];
+
+      for (let i = 0; i < n_vertices; i = i + 1) {
+        vertex_i=vertex_values[i];
+        toAdjList_i=toAdjList[vertex_i]
+        
+        for(let j = 0; j < toAdjList_i.length; j = j + 1){
+          vertex_ij=toAdjList_i[j];
+          
+          adjList[vertex_ij].push(vertex_i)
+        }
+      }
     }
 
     return adjList;
@@ -444,23 +468,17 @@ export default class Graph {
   }
 
   getEulerianPath() {
-    const eulerian_paths = eulerianPath(this);
-
+    const eulerian_path = eulerianPath(this);
     const verticesIndices = this.getVerticesIndices();
 
-    let epaths_by_index=[];
-    let epath_by_index=[];
-
-    for(let epath of eulerian_paths){
-      epath_by_index=[];
-      for(let vertex of epath){
-        epath_by_index.push(verticesIndices[vertex.value]);
-      }
-      
-      epaths_by_index.push(epath_by_index);
+    let epath=[];
+    
+    for(let i=0; i<eulerian_path.length;i++){
+      let vertex=eulerian_path[i];
+      epath.push(verticesIndices[vertex.value]);
     }
 
-    return epaths_by_index;
+    return epath;
   }
 
   getStronglyConnectedComponents() {
@@ -471,9 +489,13 @@ export default class Graph {
     let SC_set_by_index=[];
     let SC_sets_by_index=[];
 
-    for(let SC_set of SC_sets){
+    for(let i=0; i<SC_sets.length;i++){ 
+      let SC_set=SC_sets[i];
+
       SC_set_by_index=[];
-      for(let vertex of SC_set){
+      for(let j=0; j<SC_set.length; j++){ 
+        let vertex=SC_set[j];
+
         SC_set_by_index.push(verticesIndices[vertex.value]);
       }
       
