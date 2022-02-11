@@ -381,23 +381,62 @@ export default class Graph {
    * @return {Graph}
    */
   reverse() {
+    const n_vertices = this.getNumVertices();
+
+    let is_reversed={}
+    for(let edge of this.getAllEdges()) {
+      is_reversed[edge.getKey()]=false;
+    }
+
     if (this.isDirected) {
       /** @param {GraphEdge} edge */
       this.getAllEdges().forEach((edge) => {
-        // Delete straight edge from graph and from vertices.
-        this.deleteEdge(edge);
+        let edge_key = edge.getKey()
 
-        // Reverse the edge.
-        edge.reverse();
+        if(!is_reversed[edge_key]){
+          // Delete straight edge from graph and from vertices.
+          this.deleteEdge(edge);
+          
+          // Reverse the edge.
+          edge.reverse();
 
-        // Add reversed edge back to the graph and its vertices.
-        this.addEdge(edge);
+          let reversed_edge_key=edge.getKey();
+
+          if(this.edges[reversed_edge_key] !== undefined){
+            let edge_twin = this.edges[reversed_edge_key]
+            
+            // Delete edge twin from graph and from vertices.
+            this.deleteEdge(edge_twin);
+
+            // Reverse edge twin
+            edge_twin.reverse();
+
+            // Add edge twin
+            this.addEdge(edge_twin);
+                        
+            is_reversed[reversed_edge_key]=true;
+          }
+
+          // Add reversed edge back to the graph and its vertices.
+          this.addEdge(edge);
+        
+          is_reversed[edge_key]=true;
+        }
+        
       });
     } else {
       console.warn('Warning: This is an UNDIRECTED graph!');
     }
 
     return this;
+  }
+
+  /**
+   * Copy graph
+   * @return {Graph}
+   */
+  copy() {
+    return _.cloneDeep(this);
   }
 
   /**
@@ -580,7 +619,7 @@ export default class Graph {
             return false;
 
     // Step 3: Create a reversed graph
-    let gr = this.getTranspose();
+    let gr = this.copy().reverse();
 
     // Step 4: Mark all the vertices as not visited (For second DFS)
     for (let i = 0; i < n_vertices; i++)

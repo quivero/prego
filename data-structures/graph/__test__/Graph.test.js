@@ -293,6 +293,27 @@ describe('Graph', () => {
     });
   });
 
+  it('should return true for strongly connected graph', () => {
+    const vertex0 = new GraphVertex('0');
+    const vertex1 = new GraphVertex('1');
+    const vertex2 = new GraphVertex('2');
+    const vertex3 = new GraphVertex('3');
+    const vertex4 = new GraphVertex('4');
+
+    const edge01 = new GraphEdge(vertex0, vertex1);
+    const edge12 = new GraphEdge(vertex1, vertex2);
+    const edge24 = new GraphEdge(vertex2, vertex4);
+    const edge42 = new GraphEdge(vertex4, vertex2);
+    const edge23= new GraphEdge(vertex2, vertex3);
+    const edge30= new GraphEdge(vertex3, vertex0);
+
+    const graph = new Graph(true);
+
+    graph.addEdges([edge01, edge12, edge24, edge42, edge23, edge30]);
+    
+    expect(graph.isStronglyConnected()).toEqual(true);
+  });
+
   it('Bridges in graph', () => {
     // A directed graph
     const graph = new Graph(true);
