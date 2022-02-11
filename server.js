@@ -56,7 +56,7 @@ app.get('/', (req, res) => {
     const graph = parseBlueprintToGraph(blueprint_i);
     const route_describe = fromStartToFinishCombsAcyclicPaths(blueprint_i);
     
-    res.send(graph.getEulerianPath());
+    res.send(graph.describe());
   }
 });
 // [END app]
