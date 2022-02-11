@@ -544,37 +544,93 @@ export default class Graph {
     return true;
   }
 
+  // The main function that returns true if graph is strongly
+  // connected
+  isStronglyConnected(){
+    const n_vertices = this.getNumVertices();
+
+    // Step 1: Mark all the vertices as not visited (For
+    // first DFS)
+    let visited = new Array(this.V);
+    for (let i = 0; i < n_vertices; i++)
+        visited[i] = false;
+
+    // Step 2: Do DFS traversal starting from the first vertex.
+    this.DFSUtil(0, visited);
+
+    // If DFS traversal doesn't visit all vertices, then return false.
+    for (let i = 0; i < n_vertices; i++)
+        if (visited[i] == false)
+            return false;
+
+    // Step 3: Create a reversed graph
+    let gr = this.getTranspose();
+
+    // Step 4: Mark all the vertices as not visited (For second DFS)
+    for (let i = 0; i < n_vertices; i++)
+        visited[i] = false;
+
+    // Step 5: Do DFS for reversed graph starting from first vertex.
+    // Starting Vertex must be same starting point of first DFS
+    gr.DFSUtil(0, visited);
+
+    // If all vertices are not visited in second DFS, then
+    // return false
+    for (let i = 0; i < n_vertices; i++)
+        if (visited[i] == false)
+            return false;
+
+    return true;
+  }
+
   /* The function returns one of the following values
     0 --> If graph is not Eulerian
     1 --> If graph has an Euler path (Semi-Eulerian)
     2 --> If graph has an Euler Circuit (Eulerian)  
   */
   isEulerian(){
-    const n_vertices = this.getNumVertices();
     const adjList = this.getAdjacencyList();
+    const n_vertices = this.getNumVertices();
 
     // Check if all non-zero degree vertices are connected
-    if (this.isConnected() == false)
-        return 0;
+    if(this.isDirected){
+      if (this.isStronglyConnected() == false){
+        return false;
+      }
 
-    // Count vertices with odd degree
-    let odd = 0;
-    for (let i = 0; i < n_vertices; i++)
-        if (adjList.length%2!=0)
-            odd++;
+      // Check if in degree and out degree of every vertex is same
+      for (let i = 0; i < this.V; i++){
+        if (this.adj[i].length != this.in[i]){
+          return false;
+        }
+      }
 
-    // If count is more than 2, then graph is not Eulerian
-    if (odd > 2) {
+      return true;
+    
+    } else {
+      // Check if all non-zero degree vertices are connected
+      if (this.isConnected() == false)
         return 0;
+      
+      // Count vertices with odd degree
+      let odd = 0;
+      for (let i = 0; i < n_vertices; i++){
+        if (adjList[i].length%2!=0){
+          odd++;
+        }
+      }
+      
+      // If count is more than 2, then graph is not Eulerian
+      if (odd > 2){
+        return 0;
+      }
+
+      // If odd count is 2, then semi-eulerian.
+      // If odd count is 0, then eulerian
+      // Note: An odd count can never be 1 for undirected graph
+      return (odd==2)? 1 : 2;
     }
-
-    // If odd count is 2, then semi-eulerian.
-    // If odd count is 0, then eulerian
-    // Note that odd count can never be 1 for undirected graph
-    return (odd==2)? 1 : 2;
   }
-
-
 
   // A recursive function that finds and prints bridges using DFS traversal
   // u --> The original vertex

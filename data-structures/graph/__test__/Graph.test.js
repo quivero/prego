@@ -147,6 +147,137 @@ describe('Graph', () => {
     expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
+  it('should find Eulerian Circuit in graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+    const edgeEF = new GraphEdge(vertexE, vertexF);
+    const edgeBE= new GraphEdge(vertexB, vertexE);
+
+    const graph = new Graph();
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD, edgeDE, edgeEF]);
+    
+    expect(graph.getEulerianPath()).toStrictEqual([0, 1, 2, 3, 4, 5]);
+  });
+
+  it('should return 0 for an eulerian path', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexB, vertexD);
+
+    const graph = new Graph();
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD]);
+    
+    expect(graph.isEulerian()).toStrictEqual(0);
+  });
+
+  it('should return 0 for non-eulerian graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexB, vertexD);
+
+    const graph = new Graph();
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD]);
+    
+    expect(graph.isEulerian()).toStrictEqual(0);
+  });
+
+  it('should return 1 for an eulerian path of directed graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+    const edgeEF = new GraphEdge(vertexE, vertexF);
+    const edgeBE= new GraphEdge(vertexB, vertexE);
+
+    const graph = new Graph();
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD, edgeDE, edgeEF]);
+    
+    expect(graph.isEulerian()).toStrictEqual(1);
+  });
+
+  it('should return 2 for an eulerian cycle of directed graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+    const edgeEF = new GraphEdge(vertexE, vertexF);
+    const edgeFA= new GraphEdge(vertexF, vertexA);
+
+    const graph = new Graph();
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD, 
+                    edgeDE, edgeEF, edgeFA]);
+    
+    expect(graph.isEulerian()).toStrictEqual(2);
+  });
+
+  it('should return reverse star representation of a graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+    const edgeEF = new GraphEdge(vertexE, vertexF);
+    const edgeFA= new GraphEdge(vertexF, vertexA);
+    
+    const graph = new Graph(true);
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD, 
+                    edgeDE, edgeEF, edgeFA]);
+    
+    expect(graph.getAdjacencyList(1)).toEqual({
+      0: [5],
+      1: [0],
+      2: [1],
+      3: [2],
+      4: [3],
+      5: [4],
+    });
+  });
+
   it('Bridges in graph', () => {
     // A directed graph
     const graph = new Graph(true);
