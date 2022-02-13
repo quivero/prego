@@ -827,8 +827,6 @@ describe('Graph', () => {
     // Add edges
     graph_.addEdges(createEdges(edge_vertices));
     
-    console.log(graph_.allPaths(A, D))
-
     expect(graph_.allPaths(A, D)).toStrictEqual([
       [0, 1, 2, 3],
       [0, 1, 2, 4, 1, 2, 3],
