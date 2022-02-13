@@ -215,7 +215,59 @@ describe('Graph', () => {
     expect(graph.getEulerianPath()).toStrictEqual([0, 1, 2, 3, 4, 5]);
   });
 
-  it('should return 0 for an eulerian path', () => {
+  it('should return false for a non-eulerian directed graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexB, vertexD);
+
+    const graph = new Graph(true);
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD]);
+    
+    expect(graph.isEulerian()).toStrictEqual(false);
+  });
+
+  it('should return true for an eulerian directed graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDA = new GraphEdge(vertexD, vertexA);
+
+    const graph = new Graph(true);
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD, edgeDA]);
+    
+    expect(graph.isEulerian()).toStrictEqual(true);
+  });
+
+  it('should return false for an directed graph with different in and out edge flow', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+
+    const graph = new Graph(true);
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD]);
+    
+    expect(graph.isEulerian()).toStrictEqual(false);
+  });
+
+  it('should return 0 for an eulerian undirected graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
@@ -228,6 +280,18 @@ describe('Graph', () => {
     const graph = new Graph();
 
     graph.addEdges([edgeAB, edgeBC, edgeCD]);
+    
+    expect(graph.isEulerian()).toStrictEqual(0);
+  });
+
+  it('should return 0 for an eulerian undirected graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+
+    const graph = new Graph();
+
+    graph.addVertices([vertexA, vertexB, vertexC]);
     
     expect(graph.isEulerian()).toStrictEqual(0);
   });
@@ -345,7 +409,7 @@ describe('Graph', () => {
     expect(graph.isStronglyConnected()).toEqual(true);
   });
 
-  it('Bridges in graph', () => {
+  it('should return bridges in a graph', () => {
     // A directed graph
     const graph = new Graph(true);
 
@@ -373,6 +437,38 @@ describe('Graph', () => {
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     expect(graph.cyclicCircuits()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
+  });
+
+  it('should return articulation points in a graph', () => {
+    // A directed graph
+    const graph = new Graph(false);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+    const G = new GraphVertex('G');
+    const H = new GraphVertex('H');
+    
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const AC = new GraphEdge(A, C);
+    const BD = new GraphEdge(B, D);
+    const CD = new GraphEdge(C, D);
+    const DE = new GraphEdge(D, E);
+    const EF = new GraphEdge(E, F);
+    const EG = new GraphEdge(E, G);
+    const FH = new GraphEdge(F, H);
+    const GH = new GraphEdge(G, H);
+
+    // Add edges
+    graph.addEdges([AB, AC, BD, CD, DE, 
+                    EF, EG, FH, GH]);
+    
+    expect(graph.articulationPoints()).toStrictEqual([4, 3]);
   });
 
   it('should return true for strongly connected graph', () => {

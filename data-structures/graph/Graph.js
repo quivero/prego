@@ -715,6 +715,7 @@ export default class Graph {
     */
   isEulerian(){
     const adjList = this.getAdjacencyList();
+    const reverseStart = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
 
     // Check if all non-zero degree vertices are connected
@@ -724,8 +725,8 @@ export default class Graph {
       }
 
       // Check if in degree and out degree of every vertex is same
-      for (let i = 0; i < this.V; i++){
-        if (this.adj[i].length != this.in[i]){
+      for (let i = 0; i < n_vertices; i++){
+        if (adjList[i].length != reverseStart[i].length){
           return false;
         }
       }
@@ -810,107 +811,112 @@ export default class Graph {
     return bridges;
   }
 
+
  /**
   * Tarjan's algorithm for finding articulation points in graph.
   *
   * @return {Object}
   */
-  articulationVertices() {
+ articulationPoints() {
+  let vertex_key_to_index=this.getVerticesIndices()
+
   // Set of vertices we've already visited during DFS.
-    const visitedSet = {};
+  const visitedSet = {};
 
-    // Object of articulation points.
-    const articulationPointsSet = {};
+  // Set of articulation points.
+  const articulationPointsSet = new Set();
 
-    // Set of articulation points
-    const articulation_vertices = new Set([]);
+  // Time needed to discover to the current vertex.
+  let discoveryTime = 0;
 
-    // Time needed to discover to the current vertex.
-    let discoveryTime = 0;
+  // Peek the start vertex for DFS traversal.
+  const startVertex = this.getAllVertices()[0];
 
-    // Peek the start vertex for DFS traversal.
-    const startVertex = this.getAllVertices()[0];
+  const dfsCallbacks = {
+    /**
+     * @param {GraphVertex} currentVertex
+     * @param {GraphVertex} previousVertex
+     */
+    enterVertex: ({ currentVertex, previousVertex }) => {
+      // Tick discovery time.
+      discoveryTime += 1;
 
-    const dfsCallbacks = {
-      /**
-       * @param {GraphVertex} currentVertex
-       * @param {GraphVertex} previousVertex
-       */
-      enterVertex: ({ currentVertex, previousVertex }) => {
-        // Tick discovery time.
-        discoveryTime += 1;
+      // Put current vertex to visited set.
+      visitedSet[currentVertex.getKey()] = new VisitMetadata({
+        discoveryTime,
+        lowDiscoveryTime: discoveryTime,
+      });
 
-        // Put current vertex to visited set.
-        visitedSet[currentVertex.getKey()] = new VisitMetadata({
-          discoveryTime,
-          lowDiscoveryTime: discoveryTime,
-        });
+      if (previousVertex) {
+        // Update children counter for previous vertex.
+        visitedSet[previousVertex.getKey()].independentChildrenCount += 1;
+      }
+    },
+    /**
+     * @param {GraphVertex} currentVertex
+     * @param {GraphVertex} previousVertex
+     */
+    leaveVertex: ({ currentVertex, previousVertex }) => {
+      if (previousVertex === null) {
+        // Don't do anything for the root vertex if it is already current (not previous one)
+        return;
+      }
 
-        if (previousVertex) {
-          // Update children counter for previous vertex.
-          visitedSet[previousVertex.getKey()].independentChildrenCount += 1;
-        }
-      },
-      /**
-       * @param {GraphVertex} currentVertex
-       * @param {GraphVertex} previousVertex
-       */
-      leaveVertex: ({ currentVertex, previousVertex }) => {
-        if (previousVertex === null) {
-          // Don't do anything for the root vertex if it is already current (not previous one)
-          return;
-        }
-
-        // Update the low time with the smallest time of adjacent vertices.
-        // Get minimum low discovery time from all neighbors.
-        /** @param {GraphVertex} neighbor */
-        visitedSet[currentVertex.getKey()].lowDiscoveryTime = currentVertex.getNeighbors()
-          .filter((earlyNeighbor) => earlyNeighbor.getKey() !== previousVertex.getKey())
+      // Update the low time with the smallest time of adjacent vertices.
+      // Get minimum low discovery time from all neighbors.
+      /** @param {GraphVertex} neighbor */
+      visitedSet[currentVertex.getKey()].lowDiscoveryTime = currentVertex.getNeighbors()
+        .filter((earlyNeighbor) => earlyNeighbor.getKey() !== previousVertex.getKey())
         /**
-           * @param {number} lowestDiscoveryTime
-           * @param {GraphVertex} neighbor
-           */
-          .reduce(
-            (lowestDiscoveryTime, neighbor) => {
-              const neighborLowTime = visitedSet[neighbor.getKey()].lowDiscoveryTime;
-              return neighborLowTime < lowestDiscoveryTime ? neighborLowTime : lowestDiscoveryTime;
-            },
-            visitedSet[currentVertex.getKey()].lowDiscoveryTime,
-          );
+         * @param {number} lowestDiscoveryTime
+         * @param {GraphVertex} neighbor
+         */
+        .reduce(
+          (lowestDiscoveryTime, neighbor) => {
+            const neighborLowTime = visitedSet[neighbor.getKey()].lowDiscoveryTime;
+            return neighborLowTime < lowestDiscoveryTime ? neighborLowTime : lowestDiscoveryTime;
+          },
+          visitedSet[currentVertex.getKey()].lowDiscoveryTime,
+        );
 
-        // Detect whether previous vertex is articulation point or not.
-        // To do so we need to check two [OR] conditions:
-        // 1. Is it a root vertex with at least two independent children.
-        // 2. If its visited time is <= low time of adjacent vertex.
-        if (previousVertex === startVertex) {
-          // Check that root vertex has at least two independent children.
-          if (visitedSet[previousVertex.getKey()].independentChildrenCount >= 2) {
-            articulationPointsSet[previousVertex.getKey()] = previousVertex;
-            articulation_vertices.add(previousVertex.getKey());
-          }
-        } else {
-          // Get current vertex low discovery time.
-          let currentLowDiscoveryTime = visitedSet[currentVertex.getKey()].lowDiscoveryTime;
-
-          // Compare current vertex low discovery time with parent discovery time. Check if there
-          // are any short path (back edge) exists. If we can't get to current vertex other then
-          // via parent then the parent vertex is articulation point for current one.
-          const parentDiscoveryTime = visitedSet[previousVertex.getKey()].discoveryTime;
-          if (parentDiscoveryTime <= currentLowDiscoveryTime) {
-            articulationPointsSet[previousVertex.getKey()] = previousVertex;
-            articulation_vertices.add(previousVertex.getKey());
-          }
+      // Detect whether previous vertex is articulation point or not.
+      // To do so we need to check two [OR] conditions:
+      // 1. Is it a root vertex with at least two independent children.
+      // 2. If its visited time is <= low time of adjacent vertex.
+      if (previousVertex === startVertex) {
+        // Check that root vertex has at least two independent children.
+        if (visitedSet[previousVertex.getKey()].independentChildrenCount >= 2) {
+          let a_point = previousVertex.getKey()
+          
+          articulationPointsSet.add(a_point);
         }
-      },
+      } else {
+        // Get current vertex low discovery time.
+        const currentLowDiscoveryTime = visitedSet[currentVertex.getKey()].lowDiscoveryTime;
 
-      allowTraversal: ({ nextVertex }) => !visitedSet[nextVertex.getKey()],
-    };
+        // Compare current vertex low discovery time with parent discovery time. Check if there
+        // are any short path (back edge) exists. If we can't get to current vertex other then
+        // via parent then the parent vertex is articulation point for current one.
+        const parentDiscoveryTime = visitedSet[previousVertex.getKey()].discoveryTime;
+        if (parentDiscoveryTime <= currentLowDiscoveryTime) {
+          let a_point = previousVertex.getKey()
 
-    // Do Depth First Search traversal over submitted graph.
-    depthFirstSearch(this, startVertex, dfsCallbacks);
+          articulationPointsSet.add(a_point);
+        }
+      }
+    },
+    allowTraversal: ({ nextVertex }) => {
+      return !visitedSet[nextVertex.getKey()];
+    },
+  };
 
-    return [...articulation_vertices];
-  }
+  // Do Depth First Search traversal over submitted graph.
+  depthFirstSearch(this, startVertex, dfsCallbacks);
+  
+  return [...articulationPointsSet].map((elem) => {
+    return vertex_key_to_index[elem]
+  });
+}
 
   /**
    * @abstract Tarjan method for cycles enumeration
@@ -1261,7 +1267,7 @@ export default class Graph {
       adjacency_list: this.getAdjacencyList(),
       loose_nodes: this.looseNodes(),
       orphan_nodes: this.orphanNodes(),
-      articulation_nodes: this.articulationVertices(),
+      articulation_nodes: this.articulationPoints(),
       bridges: this.bridges(),
       is_cyclic,
       ...is_cyclic && { all_cycles: this.cyclicCircuits() },
