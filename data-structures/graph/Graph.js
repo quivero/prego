@@ -82,7 +82,7 @@ export default class Graph {
    * @param {integer} vertexIndex
    * @returns GraphVertex
    */
-   getVertexByIndex(vertexIndex) {
+  getVertexByIndex(vertexIndex) {
     let adjList=this.getAdjacencyList();
     return this.vertices[adjList[vertexIndex]];
   }
@@ -123,6 +123,29 @@ export default class Graph {
    */
   getAllEdges() {
     return Object.values(this.edges);
+  }
+
+  /**
+   * @param {integer} vertexIndex
+   * @returns GraphVertex
+   */
+  getEdgesByVertexKeys(vertexKeys) {
+    let edges_from_keys=[]
+    let edges=this.getAllEdges();
+    
+    for(let i=0; i<edges.length; i = i + 1){
+      let edge=edges[i]
+
+      let startVertexKey = edge.startVertex.getKey();
+      let endVertexKey = edge.endVertex.getKey();
+      
+      if(vertexKeys.includes(startVertexKey) && 
+         vertexKeys.includes(endVertexKey)){
+          edges_from_keys.push(_.cloneDeep(edge));
+        }
+    }
+
+    return edges_from_keys;
   }
 
   /**
@@ -324,6 +347,26 @@ export default class Graph {
    */
   getWeight() {
     return this.getAllEdges().reduce((weight, graphEdge) => weight + graphEdge.weight, 0);
+  }
+
+  getForwardDegrees() {
+    const adjList = this.getAdjacencyList();
+
+    return Object
+            .values(adjList)
+            .map((to_neighbours) => {
+                return to_neighbours.length
+            })
+  }
+  
+  getReverseDegrees() {
+    const adjList = this.getAdjacencyList(1);
+
+    return Object
+            .values(adjList)
+            .map((to_neighbours) => {
+                return to_neighbours.length
+            })
   }
 
   /**
@@ -577,33 +620,43 @@ export default class Graph {
     const n_vertices = this.getNumVertices();
     const adjList = this.getAdjacencyList();
     const edges = this.getAllEdges();
-
-    // If there are no edges in the graph, return true
+    
+    // If there are no edges in the graph, return false
     if (edges.length == 0){
-      return true;
+      return false;
     }
 
     // Mark all the vertices as not visited
     let visited = new Array(n_vertices);
-    let i;
-    for (i = 0; i < n_vertices; i++){
+    for (let i = 0; i < n_vertices; i++){
       visited[i] = false;
     }
-    
-    // Find a vertex with non-zero degree
-    for (i = 0; i < n_vertices; i++) {
-      if (adjList[i].length != 0) {
-        break;
-      }
+
+    let forward_degrees = this.getForwardDegrees();
+    let reverse_degrees = this.getReverseDegrees();
+
+    let summedDegrees=[]
+    for(let i=0; i<n_vertices; i = i + 1) {
+      summedDegrees[i]=reverse_degrees[i]+forward_degrees[i]
     }
 
-    // Start DFS traversal from a vertex with non-zero degree
-    this.DFSUtil(i, visited);
+    let zero_summed_degrees=summedDegrees.filter((summedDegree) => summedDegree==0)
+    
+    if(zero_summed_degrees.length!=0)
+      return false
 
-    // Check if all non-zero degree vertices are visited
-    for (i = 0; i < n_vertices; i++){
-      if (visited[i] == false && adjList[i].length > 0){
-        return false;
+    // Find a vertex with non-zero degree
+    for (let i=0; i<n_vertices; i = i + 1) {      
+      if(adjList[i].length!=0) {
+        // Start DFS traversal from a vertex with non-zero degree
+        this.DFSUtil(i, visited);
+
+        // Check if all non-zero degree vertices are visited
+        for (let j = 0; j < n_vertices; j=j+1){
+          if (visited[j] == false && adjList[i].length > 0){
+            return false;
+          }
+        }
       }
     } 
 
@@ -1117,6 +1170,10 @@ export default class Graph {
   }
 
   allPaths(from, to) {
+    if(!this.isCyclic){
+      return this.acyclicPaths();
+    }
+
     let cycles_venn = this.getCyclesVenn();
     let cycle_indices = this.getCycleIndices();
     

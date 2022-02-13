@@ -21,6 +21,37 @@ describe('Graph', () => {
     expect(graph.getVertexByKey(B.getKey())).toEqual(B);
   });
 
+  it('should get vertex by its index', () => {
+    const graph = new Graph();
+
+    const [A, B] = createVertices(['A', 'B']);
+
+    graph.addVertices([A, B]);
+
+    let vertex = graph.getVertexByIndex(0)
+
+    expect(vertex.getKey()).toEqual('A');
+  });
+
+  it('should get edges by vertex keys', () => {
+    const graph = new Graph();
+    let keys = ['A', 'B', 'C'];
+    
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+
+    graph.addEdges([AB, BC]);
+    
+    let edges = graph.getEdgesByVertexKeys(keys)
+
+    let edge_keys=[] 
+    edges.forEach((edge) => {
+      edge_keys.push(edge.getKey())
+    })
+
+    expect(edge_keys).toEqual(['A_B', 'B_C']);
+  });
+  
   it('should add edges to undirected graph', () => {
     const graph = new Graph();
 
@@ -344,6 +375,26 @@ describe('Graph', () => {
     expect(graph.cyclicCircuits()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
+  it('should return true for strongly connected graph', () => {
+    let vertex_keys=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+
+    const [A, B, C, D, E, F, G, H] = createVertices(vertex_keys);
+
+    let [AB, AC, CD, BD, 
+         EF, EG, FH, GH, 
+         DE]=createEdges([[A, B], [B, C], [C, D], [D, A], 
+                          [E, F], [F, G], [G, H], [H, E], 
+                          [D, E]])
+    
+    const graph = new Graph(true);
+    
+    graph.addEdges([AB, AC, CD, BD, EF, EG, FH, GH, DE]);
+    
+    let SCComponents = graph.getStronglyConnectedComponents();
+    
+    expect(SCComponents).toEqual([[0, 3, 2, 1], [4, 7, 6, 5]]);
+  });
+
   it('Bridges in graph', () => {
     // A directed graph
     const graph = new Graph(true);
@@ -593,22 +644,13 @@ describe('Graph', () => {
     const graph_ = new Graph(true);
 
     // Nodes
-    const A = new GraphVertex('A');
-    const B = new GraphVertex('B');
-    const C = new GraphVertex('C');
-    const D = new GraphVertex('D');
-    const E = new GraphVertex('E');
-    const F = new GraphVertex('F');
+    let [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F'])
 
     // Vertices
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
-    const CE = new GraphEdge(C, E);
-    const EB = new GraphEdge(E, B);
-    const CF = new GraphEdge(C, F);
-    const FB = new GraphEdge(F, B);
-
+    const [AB, BC, CD, CE, 
+           EB, CF, FB] = new createEdges([[A, B], [B, C], [C, D], [C, E], 
+                                          [E, B], [C, F], [F, B]]);
+    
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
@@ -726,7 +768,47 @@ describe('Graph', () => {
     expect(graph.isConnected()).toEqual(true);
   });
 
-  it('should return true for graph without edges', () => {
+  it('should return false for not-connected graph', () => {
+    const graph = new Graph(true);
+
+    // Nodes
+    let [A, B, C] = createVertices(['A', 'B', 'C']);
+    let [AB] = createEdges([[A, B]]);
+
+    // Add edges
+    graph.addVertices([A, B, C]);
+    graph.addEdges([AB]);
+    
+    expect(graph.isConnected()).toEqual(false);
+  });
+
+  it('should return true for connected graph', () => {
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
+
+    // Add edges
+    graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+    
+    expect(graph.isConnected()).toEqual(true);
+  });
+
+  it('should return false for graph without edges', () => {
     const graph = new Graph(true);
 
     // Nodes
@@ -739,7 +821,7 @@ describe('Graph', () => {
 
     graph.addVertices([A, B, C, D, E, F])
 
-    expect(graph.isConnected()).toEqual(true);
+    expect(graph.isConnected()).toEqual(false);
   });
 
   it('should return empty for non-eulerian graph', () => {
