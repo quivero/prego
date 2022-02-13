@@ -371,7 +371,7 @@ describe('Graph', () => {
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
-    expect(graph.getVertexByIndex(0)).toStrictEqual('A');
+    expect(graph.getVertexByIndex(0)).toStrictEqual(A);
   });
 
   it('Cycles in a finite graph must be finite', () => {
@@ -806,7 +806,7 @@ describe('Graph', () => {
     const EB = new GraphEdge(E, B);
     const CF = new GraphEdge(C, F);
     const FB = new GraphEdge(F, B);
-
+    
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
