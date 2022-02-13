@@ -820,7 +820,7 @@ describe('Graph', () => {
     // Nodes
     const node_labels = ['A', 'B', 'C', 'D', 'E', 'F'];
     const [A, B, C, D, E, F] = createVertices(node_labels);
-
+    
     // Vertices
     const edge_vertices = [[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]];
     

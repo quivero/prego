@@ -8,6 +8,8 @@ import {
   fromStartToFinishCombsAcyclicPaths,
 } from './utils/workflow/parsers.js';
 
+import { cartesianProduct } from './utils/arrays/arrays.js'
+
 const require = createRequire(import.meta.url);
 const app = express();
 
@@ -53,7 +55,19 @@ app.get('/', (req, res) => {
     const graph = parseBlueprintToGraph(blueprint_i);
     const route_describe = fromStartToFinishCombsAcyclicPaths(blueprint_i);
     
-    res.send(graph.allPaths());
+    let start_nodes_indexes=graph.orphanNodes();
+    let finish_nodes_indexes=graph.looseNodes();
+    
+    let paths = [];
+    for(let [start_node_index, 
+             finish_node_index] of cartesianProduct(start_nodes_indexes, finish_nodes_indexes)){
+      let start_node = graph.getVertexByIndex(start_node_index)
+      let finish_node = graph.getVertexByIndex(finish_node_index)
+      
+      paths.push(graph.allPaths(start_node, finish_node))
+    }
+
+    res.send(paths);
   }
 
 });

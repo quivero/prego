@@ -5,7 +5,9 @@ import stronglyConnectedComponents from '../../algorithms/strongly-connected-com
 import eulerianPath from '../../algorithms/eulerian-path/eulerianPath.js';
 import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
 import VisitMetadata from './VisitMetadata.js';
-import { arraysEqual, extendedVenn, removeArrayDuplicates } from '../../utils/arrays/arrays.js'
+import { cartesianProduct, 
+         extendedVenn, 
+         removeArrayDuplicates } from '../../utils/arrays/arrays.js'
 
 export default class Graph {
   #cycles;
@@ -91,7 +93,7 @@ export default class Graph {
    */
   getVertexByIndex(vertexIndex) {
     let indices_to_vertices = this.getIndicesToVertices();
-    return indices_to_vertices[vertexIndex];
+    return this.vertices[indices_to_vertices[vertexIndex]];
   }
 
   /**
@@ -1042,7 +1044,6 @@ export default class Graph {
    **/
   acyclicPaths(from, to) {
     const verticesIndices = this.getVerticesIndices();
-
     const from_index = verticesIndices[from];
     const to_index = verticesIndices[to];
 
@@ -1073,12 +1074,7 @@ export default class Graph {
     let outflow_nodes=[];
     let new_routes=[];
     let only_cycle_nodes=_.difference(cycle_nodes, acyclic_path);
-    let all_nodes=_.union(cycle_nodes, acyclic_path);
     
-    // Cartesian product of arrays
-    let f = (a, b) => [].concat(...a.map(a => b.map(b => [].concat(a, b))));
-    let cartesian = (a, b, ...c) => b ? cartesian(f(a, b), ...c) : a;
-
     // Cycles intercept the main path
     for(let intersect_node of intersect_nodes){
       if(_.intersection(forward_star[intersect_node], only_cycle_nodes).length!=0){
@@ -1092,7 +1088,7 @@ export default class Graph {
 
     // New routes comes from outflow-inflow cycles
     let new_route=[]
-    for(let combination of cartesian(outflow_nodes, inflow_nodes)){
+    for(let combination of cartesianProduct(outflow_nodes, inflow_nodes)){
       let start_node_id=combination[0];
       let finish_node_id=combination[1];
 

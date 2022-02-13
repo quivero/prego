@@ -59,12 +59,19 @@ export const arraysEqual = (a, b) => {
   return true;
 }
 
+// Cartesian product of arrays
+export const cartesianProduct = (a, b, ...c) => {
+  let f = (a, b) => [].concat(...a.map(a => b.map(b => [].concat(a, b))));
+
+  return b ? cartesianProduct(f(a, b), ...c) : a;
+}
+
 export const removeArrayDuplicates = (list) => {  
   let unique = [];  
   
   list.forEach((item) => {  
     let has_item=false 
-    
+
     unique.forEach((unique_item) => {
       has_item=has_item || arraysEqual(item, unique_item)
     })
