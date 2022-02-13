@@ -43,6 +43,40 @@ export const isCyclicEqual = (control_, treatment_) => {
   return false;
 };
 
+export const arraysEqual = (a, b) => {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
+export const removeArrayDuplicates = (list) => {  
+  let unique = [];  
+  
+  list.forEach((item) => {  
+    let has_item=false 
+    
+    unique.forEach((unique_item) => {
+      has_item=has_item || arraysEqual(item, unique_item)
+    })
+    
+    if(!has_item){
+        unique.push(item);
+    }  
+  });
+
+  return unique
+}
+
 export const getUniques = (vec) => Array.from(new Set(vec));
 
 export const extendedVenn = (sets) => {

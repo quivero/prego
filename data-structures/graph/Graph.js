@@ -5,10 +5,10 @@ import stronglyConnectedComponents from '../../algorithms/strongly-connected-com
 import eulerianPath from '../../algorithms/eulerian-path/eulerianPath.js';
 import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
 import VisitMetadata from './VisitMetadata.js';
+import { arraysEqual, extendedVenn, removeArrayDuplicates } from '../../utils/arrays/arrays.js'
 
 export default class Graph {
   #cycles;
-
   #density;
 
   /**
@@ -26,7 +26,7 @@ export default class Graph {
    * @returns {Array} Graph cycles
    */
   get cycles() {
-    return this.cyclicPaths();
+    return this.cyclicCircuits();
   }
 
   /**
@@ -74,6 +74,15 @@ export default class Graph {
    */
   getVertexByKey(vertexKey) {
     return this.vertices[vertexKey];
+  }
+
+  /**
+   * @param {integer} vertexIndex
+   * @returns GraphVertex
+   */
+   getVertexByIndex(vertexIndex) {
+    let adjList=this.getAdjacencyList();
+    return this.vertices[adjList[vertexIndex]];
   }
 
   /**
@@ -235,7 +244,7 @@ export default class Graph {
       this.addVertex(edge.endVertex);
       endVertex = this.getVertexByKey(edge.endVertex.getKey());
     }
-
+    
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
       throw new Error('Edge has already been added before. Please, choose other key!');
@@ -620,15 +629,15 @@ export default class Graph {
 
     // Step 3: Create a reversed graph
     let gr = this.copy().reverse();
-
+    
     // Step 4: Mark all the vertices as not visited (For second DFS)
     for (let i = 0; i < n_vertices; i++)
         visited[i] = false;
-
+    
     // Step 5: Do DFS for reversed graph starting from first vertex.
     // Starting Vertex must be same starting point of first DFS
     gr.DFSUtil(0, visited);
-
+    
     // If all vertices are not visited in second DFS, then
     // return false
     for (let i = 0; i < n_vertices; i++)
@@ -638,11 +647,17 @@ export default class Graph {
     return true;
   }
 
-  /* The function returns one of the following values
-    0 --> If graph is not Eulerian
-    1 --> If graph has an Euler path (Semi-Eulerian)
-    2 --> If graph has an Euler Circuit (Eulerian)  
-  */
+  /* 
+    The function returns one of the following values
+    If the graph is directed:
+      0 --> If graph is not Eulerian
+      1 --> If graph has an Euler path (Semi-Eulerian)
+      2 --> If graph has an Euler Circuit (Eulerian)  
+
+    If the graph is undirected:
+      false --> If graph is not Eulerian
+      true  --> If graph has an Euler Circuit (Eulerian)  
+    */
   isEulerian(){
     const adjList = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
@@ -717,8 +732,7 @@ export default class Graph {
     }
   }
 
-  // DFS based function to find all bridges. It uses recursive
-  // function bridgeUtil()
+  // DFS based function to find all bridges. It uses recursive function bridgeUtil()
   bridges() {
     const graph_ = this.isDirected ? this.retrieveUndirected() : _.cloneDeep(this);
 
@@ -741,183 +755,13 @@ export default class Graph {
     return bridges;
   }
 
-  /**
-   * @abstract Tarjan method for cycles enumeration
-   * Extracted from: https://stackoverflow.com/questions/25898100/enumerating-cycles-in-a-graph-using-tarjans-algorithm
-   * @param {Integer} from_index
-   * @param {GraphVertex} to_index
-   * @return {Array[Array]} cycle
-   */
-  #tarjanCycleMethod(origin_index, curr_index, f, points, cycles, marked_stack, marked, is_finish) {
-    const adjList = this.getAdjacencyList();
-    const n_vertices = this.getNumVertices();
-
-    points.push(curr_index);
-    marked_stack.push(curr_index);
-    marked[curr_index] = true;
-
-    let w;
-    for (let i = 0; i < n_vertices; i += 1) {
-      w = adjList[curr_index][i];
-
-      if (w < origin_index) {
-        adjList[curr_index].pop(adjList[curr_index][w]);
-      } else {
-        // Cycle (!): Next node is equal do origin
-        if (w === origin_index) {
-          let candidate = [...points];
-
-          // Add cycle candidates if list is empty or
-          // it is not in the list already
-          if (this.#cycles.length === 0) {
-            this.#cycles.push(candidate);
-          } else {
-            candidate = [...points];
-
-            let contains_candidate = false;
-            for (let i = 0; i < this.#cycles.length; i += 1) {
-              if (_.isEqual(candidate, this.#cycles[i])) {
-                contains_candidate = true;
-              }
-            }
-
-            if (!contains_candidate) this.#cycles.push(candidate);
-          }
-
-          f = true;
-        } else {
-          //
-          if (marked[w] === false) {
-            this.#tarjanCycleMethod(
-              origin_index,
-              w,
-              is_finish,
-              points,
-              cycles,
-              marked_stack,
-              marked,
-              is_finish,
-            );
-          }
-        }
-      }
-    }
-
-    is_finish = f;
-    if (is_finish) {
-      // Index v is now deleted from mark stacked, and has been called u unmark v
-      let u = marked_stack.pop();
-
-      while (u !== curr_index) {
-        marked[u] = false;
-        u = marked_stack.pop();
-      }
-
-      marked[u] = false;
-    }
-
-    points.pop(points[curr_index]);
-  }
-
-  /**
-   * @abstract Returns all cycles within a graph
-   * @return {Array[Array]} cycle
-   */
-  cyclicPaths() {
-    if (!this.isCyclic()) {
-      return [];
-    }
-
-    const marked = [];
-    const marked_stack = [];
-    this.#cycles = [];
-    const n_vertices = this.getNumVertices();
-
-    for (let i = 0; i < n_vertices; i += 1) {
-      marked.push(false);
-    }
-
-    let cycles = [];
-    for (let i = 0; i < n_vertices; i += 1) {
-      const points = [];
-      this.#tarjanCycleMethod(i, i, false, points, cycles, marked_stack, marked);
-
-      while (marked_stack.length > 0) {
-        const u = marked_stack.pop();
-        marked[u] = false;
-      }
-    }
-
-    return this.#cycles;
-  }
-
-  /**
-     * @return {object}
-     */
-  getCycleIndices() {
-    let cycles_indices = {};
-    let cycles = [];
-
-    if (this.#cycles.length === 0) {
-      cycles = this.cyclicPaths();
-    }
-
-    for (let i = 0; i < cycles.length; i += 1) {
-      cycles_indices[i] = cycles[i];
-    }
-
-    return cycles_indices;
-  }
-
-  #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
-    const adj_list = this.getAdjacencyList();
-    const adj_len = adj_list[from_index].length;
-
-    if (from_index === to_index) {
-      // Push the discoverred path
-      paths.push([...local_path_list]);
-
-      // if match found then no need to traverse more till depth
-      return;
-    }
-
-    // Mark the current node as visited
-    is_visited[from_index] = true;
-
-    // Recur for all the vertices adjacent to current vertex u
-    for (let i = 0; i < adj_len; i += 1) {
-      const neighbor_i = adj_list[from_index][i];
-      let ith_was_visited = is_visited[neighbor_i];
-
-      if (!ith_was_visited) {
-        // store current node in path[]
-        local_path_list.push(neighbor_i);
-
-        this.#recurAcyclicPaths(
-          neighbor_i,
-          to_index,
-          is_visited,
-          local_path_list,
-          paths,
-        );
-
-        // remove current node  in path[]
-        let idx = local_path_list.indexOf(neighbor_i);
-        local_path_list.splice(idx, 1);
-      }
-    }
-
-    // Mark the current node as unvisited
-    is_visited[from_index] = false;
-  }
-
-  /**
-   * Tarjan's algorithm for finding articulation points in graph.
-   *
-   * @return {Object}
-   */
+ /**
+  * Tarjan's algorithm for finding articulation points in graph.
+  *
+  * @return {Object}
+  */
   articulationVertices() {
-    // Set of vertices we've already visited during DFS.
+  // Set of vertices we've already visited during DFS.
     const visitedSet = {};
 
     // Object of articulation points.
@@ -1014,15 +858,194 @@ export default class Graph {
   }
 
   /**
+   * @abstract Tarjan method for cycles enumeration
+   * Extracted from: https://stackoverflow.com/questions/25898100/enumerating-cycles-in-a-graph-using-tarjans-algorithm
+   * @param {Integer} from_index
+   * @param {GraphVertex} to_index
+   * @return {Array[Array]} cycle
+   */
+  #tarjanCycleMethod(origin_index, curr_index, f, points, marked_stack, marked, is_finish) {
+    const adjList = this.getAdjacencyList();
+    const n_vertices = this.getNumVertices();
+
+    points.push(curr_index);
+    marked_stack.push(curr_index);
+    marked[curr_index] = true;
+
+    let w;
+    for (let i = 0; i < n_vertices; i += 1) {
+      w = adjList[curr_index][i];
+
+      if (w < origin_index) {
+        adjList[curr_index].pop(adjList[curr_index][w]);
+      } else {
+        // Cycle (!): Next node is equal do origin
+        if (w === origin_index) {
+          let candidate = [...points];
+
+          // Add cycle candidates if list is empty or
+          // it is not in the list already
+          if (this.#cycles.length === 0) {
+            this.#cycles.push(candidate);
+          } else {
+            candidate = [...points];
+
+            let contains_candidate = false;
+            for (let i = 0; i < this.#cycles.length; i += 1) {
+              if (_.isEqual(candidate, this.#cycles[i])) {
+                contains_candidate = true;
+              }
+            }
+
+            if (!contains_candidate) this.#cycles.push(candidate);
+          }
+
+          f = true;
+        } else {
+          //
+          if (marked[w] === false) {
+            this.#tarjanCycleMethod(
+              origin_index,
+              w,
+              is_finish,
+              points,
+              marked_stack,
+              marked,
+              is_finish,
+            );
+          }
+        }
+      }
+    }
+
+    is_finish = f;
+    if (is_finish) {
+      // Index v is now deleted from mark stacked, and has been called u unmark v
+      let u = marked_stack.pop();
+
+      while (u !== curr_index) {
+        marked[u] = false;
+        u = marked_stack.pop();
+      }
+
+      marked[u] = false;
+    }
+
+    points.pop(points[curr_index]);
+  }
+
+  /**
+   * @abstract Returns all cycles within a graph
+   * @return {Array[Array]} cycle
+   */
+  cyclicCircuits() {
+    if (!this.isCyclic()) {
+      return [];
+    }
+
+    const marked = [];
+    const marked_stack = [];
+    this.#cycles = [];
+    const n_vertices = this.getNumVertices();
+
+    for (let i = 0; i < n_vertices; i += 1) {
+      marked.push(false);
+    }
+
+    let cycles = [];
+    for (let i = 0; i < n_vertices; i += 1) {
+      const points = [];
+      this.#tarjanCycleMethod(i, i, false, points,  marked_stack, marked);
+
+      while (marked_stack.length > 0) {
+        const u = marked_stack.pop();
+        marked[u] = false;
+      }
+    }
+
+    return this.#cycles;
+  }
+
+  /**
+     * @return {object}
+     */
+  getCycleIndices(recalculate=false) {
+    let cycles_indices = {};
+    let cycles = [];
+    
+    if (this.#cycles.length === 0 || recalculate) {
+      cycles = this.cyclicCircuits();
+    }
+    
+    cycles=this.#cycles
+
+    for (let i = 0; i < cycles.length; i += 1) {
+      cycles_indices[i] = cycles[i];
+    }
+    
+    return cycles_indices;
+  }
+
+  /**
+   * @return {object}
+   */
+  getCyclesVenn() {
+    return extendedVenn(this.getCycleIndices())
+  }
+
+  #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
+    const adj_list = this.getAdjacencyList();
+    const adj_len = adj_list[from_index].length;
+
+    if (from_index === to_index) {
+      // Push the discoverred path
+      paths.push([...local_path_list]);
+
+      // if match found then no need to traverse more till depth
+      return;
+    }
+
+    // Mark the current node as visited
+    is_visited[from_index] = true;
+
+    // Recur for all the vertices adjacent to current vertex u
+    for (let i = 0; i < adj_len; i += 1) {
+      const neighbor_i = adj_list[from_index][i];
+      let ith_was_visited = is_visited[neighbor_i];
+
+      if (!ith_was_visited) {
+        // store current node in path[]
+        local_path_list.push(neighbor_i);
+
+        this.#recurAcyclicPaths(
+          neighbor_i,
+          to_index,
+          is_visited,
+          local_path_list,
+          paths,
+        );
+
+        // remove current node  in path[]
+        let idx = local_path_list.indexOf(neighbor_i);
+        local_path_list.splice(idx, 1);
+      }
+    }
+
+    // Mark the current node as unvisited
+    is_visited[from_index] = false;
+  }
+
+  /**
    * @param {GraphVertex} from
    * @param {GraphVertex} to
    * @return {Array[Integer]} paths
-   */
+   **/
   acyclicPaths(from, to) {
     const verticesIndices = this.getVerticesIndices();
 
     const from_index = verticesIndices[from];
     const to_index = verticesIndices[to];
+
     const n_vertices = this.getNumVertices();
 
     let is_visited = new Array(this.v);
@@ -1042,6 +1065,101 @@ export default class Graph {
     return paths;
   }
 
+  #allPathsUtil(acyclic_path, cycle_nodes){
+    let intersect_nodes=_.intersection(acyclic_path, cycle_nodes);
+    let forward_star=this.getAdjacencyList(0);
+    let reverse_star=this.getAdjacencyList(1);
+    let inflow_nodes=[];
+    let outflow_nodes=[];
+    let new_routes=[];
+    let only_cycle_nodes=_.difference(cycle_nodes, acyclic_path);
+    let all_nodes=_.union(cycle_nodes, acyclic_path);
+    
+    // Cartesian product of arrays
+    let f = (a, b) => [].concat(...a.map(a => b.map(b => [].concat(a, b))));
+    let cartesian = (a, b, ...c) => b ? cartesian(f(a, b), ...c) : a;
+
+    // Cycles intercept the main path
+    for(let intersect_node of intersect_nodes){
+      if(_.intersection(forward_star[intersect_node], only_cycle_nodes).length!=0){
+        outflow_nodes.push(intersect_node);
+      }
+      
+      if(_.intersection(reverse_star[intersect_node], only_cycle_nodes).length!=0){
+        inflow_nodes.push(intersect_node);
+      }
+    }
+
+    // New routes comes from outflow-inflow cycles
+    let new_route=[]
+    for(let combination of cartesian(outflow_nodes, inflow_nodes)){
+      let start_node_id=combination[0];
+      let finish_node_id=combination[1];
+
+      let startVertex=this.getVertexByIndex(start_node_id)
+      let finishVertex=this.getVertexByIndex(finish_node_id)
+      
+      for(let out_inflow of this.acyclicPaths(startVertex, finishVertex)){
+        // Nodes of outgoing route MUST only belong to cycle_nodes
+        if(out_inflow.length===_.intersection(out_inflow, cycle_nodes).length) {
+          let start_node_index = acyclic_path.indexOf(start_node_id);
+          let finish_node_index = acyclic_path.indexOf(finish_node_id);
+          
+          if(_.intersection(acyclic_path, out_inflow).length===2 && 
+            start_node_index >= finish_node_index){
+            new_route = [].concat(acyclic_path.slice(0, start_node_index+1),
+                                  out_inflow.slice(1, -1),
+                                  acyclic_path.slice(finish_node_index))
+            
+            new_routes.push(new_route);
+          }
+        }
+      }
+    }
+
+    return new_routes
+  }
+
+  allPaths(from, to) {
+    let cycles_venn = this.getCyclesVenn();
+    let cycle_indices = this.getCycleIndices();
+    
+    let acyclic_paths = this.acyclicPaths(from, to);
+    let cyclic_paths = [];
+    let cycles_connections = Object.keys(cycles_venn);
+    let cycle_nodes_arr=[]
+    let connected_cycles_indexes=[];
+
+    // For each acyclic path, it finds if a cyclic connection 
+    // brings new paths
+    for(let acyclic_path of acyclic_paths){
+      for(let cycles_connection of cycles_connections) {
+        connected_cycles_indexes = _.split(cycles_connection, ',');
+        
+        let cycle_nodes=new Set();
+        
+        connected_cycles_indexes.forEach((cycle_index) => {
+          cycle_index=Number(cycle_index)
+          
+          cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes)
+        });
+
+        cycle_nodes_arr=[...cycle_nodes];
+        
+        let cyclic_paths_i=[];
+        if(_.intersection(acyclic_path, cycle_nodes_arr).length!=0){
+          cyclic_paths_i=this.#allPathsUtil(acyclic_path, cycle_nodes_arr)
+          
+          cyclic_paths=cyclic_paths.concat(cyclic_paths_i);
+        }
+      }
+    }
+    
+    cyclic_paths=removeArrayDuplicates(cyclic_paths)
+
+    return acyclic_paths.concat(cyclic_paths);
+  }
+
   /**
    * @param {GraphVertex} from
    * @param {GraphVertex} to
@@ -1049,7 +1167,7 @@ export default class Graph {
    */
   getVertexCycles() {
     const n_vertices = this.getNumVertices();
-    let cycles = this.cyclicPaths();
+    let cycles = this.cyclicCircuits();
     const nodes_to_cycles = {};
 
     for (let i = 0; i < n_vertices; i += 1) {
@@ -1093,7 +1211,7 @@ export default class Graph {
       articulation_nodes: this.articulationVertices(),
       bridges: this.bridges(),
       is_cyclic,
-      ...is_cyclic && { all_cycles: this.cyclicPaths() },
+      ...is_cyclic && { all_cycles: this.cyclicCircuits() },
       is_eulerian: is_eulerian,
       ...is_eulerian && { eulerian_path: this.getEulerianPath() },
       is_connected: this.isConnected(),

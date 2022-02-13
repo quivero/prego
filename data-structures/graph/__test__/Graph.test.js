@@ -141,7 +141,7 @@ describe('Graph', () => {
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
-    expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
+    expect(graph.cyclicCircuits()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
   it('Cycles in a finite graph must be finite', () => {
@@ -159,7 +159,7 @@ describe('Graph', () => {
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
-    expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
+    expect(graph.cyclicCircuits()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
   it('should find Eulerian Circuit in graph', () => {
@@ -277,7 +277,7 @@ describe('Graph', () => {
     const edgeDE = new GraphEdge(vertexD, vertexE);
     const edgeEF = new GraphEdge(vertexE, vertexF);
     const edgeFA= new GraphEdge(vertexF, vertexA);
-    
+
     const graph = new Graph(true);
 
     graph.addEdges([edgeAB, edgeBC, edgeCD, 
@@ -341,7 +341,7 @@ describe('Graph', () => {
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
-    expect(graph.cyclicPaths()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
+    expect(graph.cyclicCircuits()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
   it('Bridges in graph', () => {
@@ -387,7 +387,7 @@ describe('Graph', () => {
     // Add edges
     graph.addEdges([AB, BC]);
 
-    expect(graph.cyclicPaths()).toEqual([]);
+    expect(graph.cyclicCircuits()).toEqual([]);
   });
 
   it('should find edge by vertices in undirected graph', () => {
@@ -813,6 +813,29 @@ describe('Graph', () => {
     expect(graph_.acyclicPaths(A, F)).toEqual([[0, 1, 2, 5]]);
   });
 
+  it('should return all paths from from_key to to_key', () => {
+    // A directed graph
+    const graph_ = new Graph(true);
+
+    // Nodes
+    const node_labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const [A, B, C, D, E, F] = createVertices(node_labels);
+
+    // Vertices
+    const edge_vertices = [[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]];
+    
+    // Add edges
+    graph_.addEdges(createEdges(edge_vertices));
+    
+    console.log(graph_.allPaths(A, D))
+
+    expect(graph_.allPaths(A, D)).toStrictEqual([
+      [0, 1, 2, 3],
+      [0, 1, 2, 4, 1, 2, 3],
+      [0, 1, 2, 5, 1, 2, 3]
+    ]);
+  });
+  
   it('should return cycles of vertices', () => {
     const graph_ = new Graph(true);
 

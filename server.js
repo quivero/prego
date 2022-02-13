@@ -4,10 +4,7 @@ import { createRequire } from 'module';
 import fs from 'fs';
 
 import {
-  startAndFinishNodes,
-  nodeToLane,
   parseBlueprintToGraph,
-  fromStartToFinishAcyclicPaths,
   fromStartToFinishCombsAcyclicPaths,
 } from './utils/workflow/parsers.js';
 
@@ -34,11 +31,11 @@ app.get('/', (req, res) => {
   const blueprints_fnames = fs.readdirSync(bps_root);
 
   const READ_ALL_BPS = false;
+  const TEST_USE_CASE = true;
   const blueprint_fname = 'precious.json';
-
-  const graphs = [];
+  
   const descriptions = [];
-
+  
   if (READ_ALL_BPS) {
     for (let i = 0; i < blueprints_fnames.length; i++) {
       const fname = bps_root + blueprints_fnames[i];
@@ -56,7 +53,8 @@ app.get('/', (req, res) => {
     const graph = parseBlueprintToGraph(blueprint_i);
     const route_describe = fromStartToFinishCombsAcyclicPaths(blueprint_i);
     
-    res.send(graph.describe());
+    res.send(graph.allPaths());
   }
+
 });
 // [END app]
