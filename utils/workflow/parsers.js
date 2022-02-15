@@ -11,7 +11,7 @@ export const describeBlueprint = (blueprint) => {
   
   let types=['start', 'finish', 'systemtask', 'subprocess', 
               'scripttask', 'flow', 'usertask']
-
+  
   for(let type of types) {
     node_ids_per_type[type]=[]
 
@@ -25,7 +25,7 @@ export const describeBlueprint = (blueprint) => {
   return {
     'name' : blueprint.name,
     'description' : blueprint.description,
-    'node_ids_per_category': node_ids_per_type,
+    'node_ids_per_type': node_ids_per_type,
     'graph': bp_graph.describe()
   }
 }
@@ -144,6 +144,11 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const orphanNodes = bp_graph.orphanNodes();
   const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
   const vertices_indices_to_keys = bp_graph.getVerticesIndicestoKeys();
+  
+  console.log(vertices_keys_to_indices)
+  
+  console.log(start_key)
+  console.log(finish_key)
 
   const start_index = vertices_keys_to_indices[start_key];
   const finish_index = vertices_keys_to_indices[finish_key];
