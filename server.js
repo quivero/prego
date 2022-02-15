@@ -5,7 +5,7 @@ import fs from 'fs';
 
 import {
   parseBlueprintToGraph,
-  fromStartToFinishCombsAcyclicPaths,
+  fromStartToFinishCombsAllPaths,
 } from './utils/workflow/parsers.js';
 
 import { cartesianProduct } from './utils/arrays/arrays.js'
@@ -46,14 +46,14 @@ app.get('/', (req, res) => {
       // let graph_i = parseBlueprintToGraph(blueprint_i);
       descriptions.push(fromStartToFinishCombsAcyclicPaths(blueprint_i));
     }
-
+    
     res.send(descriptions);
   } else {
     const fname = bps_root + blueprint_fname;
     const blueprint_i = require(fname);
-    
+    console.log(blueprint_i['blueprint_spec']['lanes'])
     const graph = parseBlueprintToGraph(blueprint_i);
-    const route_describe = fromStartToFinishCombsAcyclicPaths(blueprint_i);
+    const route_describe = fromStartToFinishCombsAllPaths(blueprint_i);
     
     let start_nodes_indexes=graph.orphanNodes();
     let finish_nodes_indexes=graph.looseNodes();
@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
       paths.push(graph.allPaths(start_node, finish_node))
     }
 
-    res.send(paths);
+    res.send(route_describe);
   }
 
 });

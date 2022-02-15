@@ -78,13 +78,13 @@ export const nodeToLane = (blueprint) => {
 
 export const nodeRouteToLaneRoute = (
   node_route,
-  indexes_to_vertices,
+  vertices_indices_to_keys,
   node_id_to_lane,
 ) => {
   const lane_route = [];
 
   for (const vertex_j of node_route) {
-    const lane_vertex_j = node_id_to_lane[indexes_to_vertices[vertex_j]];
+    const lane_vertex_j = node_id_to_lane[vertices_indices_to_keys[vertex_j]];
 
     if (lane_route.length == 0) {
       lane_route.push(lane_vertex_j);
@@ -98,26 +98,26 @@ export const nodeRouteToLaneRoute = (
   return lane_route;
 };
 
-export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) => {
+export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
-  const indexes_to_vertices = bp_graph.getIndicesToVertices();
   const node_id_to_lane = nodeToLane(blueprint);
-
+  
   const looseNodes = bp_graph.looseNodes();
   const orphanNodes = bp_graph.orphanNodes();
-  const vertices_keys_to_indices = bp_graph.getVerticesIndices();
+  const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
+  const vertices_indices_to_keys = bp_graph.getVerticesIndicestoKeys();
 
-  const start_id = vertices_keys_to_indices[start_key];
-  const finish_id = vertices_keys_to_indices[finish_key];
+  const start_index = vertices_keys_to_indices[start_key];
+  const finish_index = vertices_keys_to_indices[finish_key];
 
   let is_undefined=false;
-  if (start_id === undefined) {
-    console.warn(`Warning: Claimed start vertex id ${start_key} is not available within nodes`);
+  if (start_index === undefined) {
+    console.warn(`Warning: Claimed start vertex key ${start_key} is not available within nodes`);
     is_undefined=true;
   }
   
-  if (finish_id === undefined) {
-    console.warn(`Warning: Claimed finish vertex id ${finish_key} is not available within nodes`);
+  if (finish_index === undefined) {
+    console.warn(`Warning: Claimed finish vertex key ${finish_key} is not available within nodes`);
     is_undefined=true;
   }
 
@@ -125,19 +125,19 @@ export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) 
     return [];
   }
 
-  if (getAllIndexes(orphanNodes, start_id).length === 0) {
-    console.warn(`Vertex id ${start_id} is not a start node! Detected start nodes: ${orphanNodes}`);
+  if (getAllIndexes(orphanNodes, start_index).length === 0) {
+    console.warn(`Vertex id ${start_index} is not a start node! Detected start nodes: ${orphanNodes}`);
 
     return [];
   }
 
-  if (getAllIndexes(looseNodes, finish_id).length === 0) {
-    console.warn(`Vertex id ${finish_id} is not a finish node! Detected finish nodes: ${looseNodes}`);
+  if (getAllIndexes(looseNodes, finish_index).length === 0) {
+    console.warn(`Vertex id ${finish_index} is not a finish node! Detected finish nodes: ${looseNodes}`);
 
     return [];
   }
 
-  const routes = bp_graph.acyclicPaths(start_key, finish_key);
+  const routes = bp_graph.allPaths(start_key, finish_key);
   const route_describe = {
     length: routes.length,
     routes: [],
@@ -145,8 +145,8 @@ export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) 
   let lane_route_i = [];
 
   for (const i of Iter.range(routes.length)) {
-    lane_route_i = nodeRouteToLaneRoute(routes[i], indexes_to_vertices, node_id_to_lane);
-
+    lane_route_i = nodeRouteToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
+    
     route_describe.routes.push(
       {
         nodes_path: routes[i],
@@ -158,7 +158,7 @@ export const fromStartToFinishAcyclicPaths = (blueprint, start_key, finish_key) 
   return route_describe;
 };
 
-export const fromStartToFinishCombsAcyclicPaths = (blueprint) => {
+export const fromStartToFinishCombsAllPaths = (blueprint) => {
   const sf_nodes = startAndFinishNodes(blueprint);
 
   const acyclic_paths = {};
@@ -171,7 +171,7 @@ export const fromStartToFinishCombsAcyclicPaths = (blueprint) => {
       finishNode = sf_nodes.finish_nodes[j];
 
       const label = `${startNode}_${finishNode}`;
-      acyclic_paths[label] = fromStartToFinishAcyclicPaths(blueprint, startNode, finishNode);
+      acyclic_paths[label] = fromStartToFinishAllPaths(blueprint, startNode, finishNode);
     }
   }
 

@@ -1,4 +1,4 @@
-import Iter, { cycle } from 'es-iter';
+import Iter from 'es-iter';
 import _ from 'lodash';
 
 import stronglyConnectedComponents from '../../algorithms/strongly-connected-components/stronglyConnectedComponents.js';
@@ -205,7 +205,7 @@ export default class Graph {
     
     return vertexKeys
   }
-  
+
   /**
    * @param {string} vertexKey
    * @returns GraphVertex
@@ -1215,8 +1215,8 @@ export default class Graph {
   acyclicPaths(from, to) {
     const verticesKeystoIndices = this.getVerticesKeystoIndices();
     
-    const from_index = verticesKeystoIndices[from.getKey()];
-    const to_index = verticesKeystoIndices[to.getKey()];
+    const from_index = verticesKeystoIndices[from];
+    const to_index = verticesKeystoIndices[to];
 
     const n_vertices = this.getNumVertices();
 
@@ -1301,10 +1301,8 @@ export default class Graph {
         let can_increment_route=_.intersection(acyclic_path_keys, out_in_keys).length===2 && 
                                 start_node_index >= finish_node_index
         if(can_increment_route){
-          console.log(out_in_keys)
           out_in_flow=this.convertVerticesKeystoIndexes(out_in_keys)
-          console.log(out_in_flow)
-
+          
           new_route = [].concat(acyclic_path_indexes.slice(0, start_node_index+1),
                                 out_in_flow.slice(1, -1),
                                 acyclic_path_indexes.slice(finish_node_index))
