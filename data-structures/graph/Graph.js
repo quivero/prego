@@ -205,17 +205,17 @@ export default class Graph {
     
     return vertexKeys
   }
-
+  
   /**
    * @param {string} vertexKey
    * @returns GraphVertex
    */
   convertVerticesKeystoIndexes(vertexKeys) {
     let vertexIndexes=[];
-    let vertices_keys_to_indexes=this.getVerticesKeysToIndices()
+    let vertices_keys_to_indexes=this.getVerticesKeystoIndices()
     
-    vertexKeys.forEach((vertexIndex) => {
-      vertexKeys.push(vertices_keys_to_indexes[vertexIndex])
+    vertexKeys.forEach((vertexKey) => {
+      vertexIndexes.push(vertices_keys_to_indexes[vertexKey])
     })
     
     return vertexIndexes
@@ -984,7 +984,7 @@ export default class Graph {
       return !visitedSet[nextVertex.getKey()];
     },
   };
-  
+
   // Do Depth First Search traversal over submitted graph.
   depthFirstSearch(this, startVertex, dfsCallbacks);
 
@@ -1242,6 +1242,7 @@ export default class Graph {
     
     let forward_star=this.getAdjacencyList(0);
     let reverse_star=this.getAdjacencyList(1);
+    let vertex_keys_to_indexes = this.getVerticesKeystoIndices()
     
     let inflow_nodes=[];
     let outflow_nodes=[];
@@ -1262,16 +1263,15 @@ export default class Graph {
 
     // Construct the cycle appendix anew
     let cycle_subgraph=this.buildSubgraph(cycle_nodes_indexes)
-    
+
     let subgraph_edges=cycle_subgraph.getAllEdges()
     
     subgraph_edges.forEach(
       (subgraph_edge) => {
-        let vertex_key_to_index = this.getVerticesIndicestoKeys()
         
         let edge_vertex_indexes = [
-          vertex_key_to_index[subgraph_edge.startVertex.getKey()],
-          vertex_key_to_index[subgraph_edge.endVertex.getKey()]
+          vertex_keys_to_indexes[subgraph_edge.startVertex.getKey()],
+          vertex_keys_to_indexes[subgraph_edge.endVertex.getKey()]
         ]
         
         if(_.intersection(only_cycle_nodes_indexes, edge_vertex_indexes).length===0) {
@@ -1279,7 +1279,6 @@ export default class Graph {
         }
       }
     );
-    
     
     let acyclic_path_keys=this.convertVerticesIndexestoKeys(acyclic_path_indexes);
 
@@ -1299,18 +1298,13 @@ export default class Graph {
         start_node_index = acyclic_path_indexes.indexOf(start_node_index);
         finish_node_index = acyclic_path_indexes.indexOf(finish_node_index);
         
-        // New route are possible only if:
-        //   # Intersection with outin_flow is equal to 2
-        //   and
-        //   # outin_flow is a feedback route
-        
-        // console.log('acyclic keys: '+acyclic_path)
-        // console.log('out in keys: '+out_in_flow)
-        
         let can_increment_route=_.intersection(acyclic_path_keys, out_in_keys).length===2 && 
                                 start_node_index >= finish_node_index
         if(can_increment_route){
-          // console.log('Outflow: '+out_in_flow)
+          console.log(out_in_keys)
+          out_in_flow=this.convertVerticesKeystoIndexes(out_in_keys)
+          console.log(out_in_flow)
+
           new_route = [].concat(acyclic_path_indexes.slice(0, start_node_index+1),
                                 out_in_flow.slice(1, -1),
                                 acyclic_path_indexes.slice(finish_node_index))
