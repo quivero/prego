@@ -40,18 +40,18 @@ function findAllPaths(startVertex, paths = [], path = []) {
 
 /**
  * @param {number[][]} adjacencyMatrix
- * @param {object} verticesIndices
+ * @param {object} verticesKeystoIndices
  * @param {GraphVertex[]} cycle
  * @return {number}
  */
-function getCycleWeight(adjacencyMatrix, verticesIndices, cycle) {
+function getCycleWeight(adjacencyMatrix, verticesKeystoIndices, cycle) {
   let weight = 0;
 
   for (let cycleIndex = 1; cycleIndex < cycle.length; cycleIndex += 1) {
     const fromVertex = cycle[cycleIndex - 1];
     const toVertex = cycle[cycleIndex];
-    const fromVertexIndex = verticesIndices[fromVertex.getKey()];
-    const toVertexIndex = verticesIndices[toVertex.getKey()];
+    const fromVertexIndex = verticesKeystoIndices[fromVertex.getKey()];
+    const toVertexIndex = verticesKeystoIndices[toVertex.getKey()];
     weight += adjacencyMatrix[fromVertexIndex][toVertexIndex];
   }
 
@@ -83,12 +83,12 @@ export default function bfTravellingSalesman(graph) {
 
   // Go through all possible cycles and pick the one with minimum overall tour weight.
   const adjacencyMatrix = graph.getAdjacencyMatrix();
-  const verticesIndices = graph.getVerticesIndices();
+  const verticesKeystoIndices = graph.getVerticesKeystoIndices();
   let salesmanPath = [];
   let salesmanPathWeight = null;
   for (let cycleIndex = 0; cycleIndex < allPossibleCycles.length; cycleIndex += 1) {
     const currentCycle = allPossibleCycles[cycleIndex];
-    const currentCycleWeight = getCycleWeight(adjacencyMatrix, verticesIndices, currentCycle);
+    const currentCycleWeight = getCycleWeight(adjacencyMatrix, verticesKeystoIndices, currentCycle);
 
     // If current cycle weight is smaller then previous ones treat current cycle as most optimal.
     if (salesmanPathWeight === null || currentCycleWeight < salesmanPathWeight) {

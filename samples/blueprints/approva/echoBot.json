@@ -1,0 +1,83 @@
+{
+    "name": "echoBot",
+    "description": "Subprocess to get client info",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "1",
+                "name": "the_only_lane",
+                "rule": [
+                    "fn",
+                    [
+                        "&",
+                        "args"
+                    ],
+                    true
+                ]
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start node",
+                "next": "CAPTURE",
+                "type": "Start",
+                "lane_id": "1",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "CAPTURE",
+                "name": "User Task",
+                "next": "FLOW",
+                "type": "UserTask",
+                "lane_id": "1",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$js": "({result}) => result.activities ? result.activities[0].data.message.chat_id : null"
+                        },
+                        "messages": [
+                            {
+                                "$js": "({result}) => result.activities ? result.activities[0].data.message.content : ({text: 'Primeira mensagem'})"
+                            }
+                        ],
+                        "author_id": "c7e8da38-b926-4a6a-bf9f-82bd90604920"
+                    },
+                    "action": "SUBMIT_USING_DEFAULT_HANDLER"
+                }
+            },
+            {
+                "id": "FLOW",
+                "name": "Flow node",
+                "next": {
+                    "true": "FINISH",
+                    "default": "CAPTURE"
+                },
+                "type": "Flow",
+                "lane_id": "1",
+                "parameters": {
+                    "input": {
+                        "keyword": {
+                            "$js": "({result}) => result.activities ? result.activities[0].data.message.content.text === '#end#' : false"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "FINISH",
+                "name": "Finish node",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "1"
+            }
+        ],
+        "prepare": [],
+        "environment": {},
+        "requirements": [
+            "core",
+            "test_workflow_package"
+        ]
+    }
+}

@@ -1,0 +1,975 @@
+{
+    "name": "userCRUD",
+    "description": "Workflow para CRUD de Usuarios",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "B",
+                "name": "Backoffice",
+                "rule": {
+                    "$js": "({actor_data}) => actor_data.claims.includes('adminUsers')"
+                }
+            },
+            {
+                "id": "B-LATCHED",
+                "name": "Backoffice-LATCHED",
+                "rule": {
+                    "$js": "({actor_data, bag}) => actor_data.claims.includes('adminUsers') && bag.actor_id === actor_data.actor_id"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "S",
+                "name": "Start Workflow",
+                "next": "ST1",
+                "type": "Start",
+                "lane_id": "B",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Get users",
+                "next": "SB1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/list/backoffice"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB1",
+                "name": "Set users to Bag",
+                "next": "ST2",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "users": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST2",
+                "name": "Get account settings",
+                "next": "SB2",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/accounts"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB2",
+                "name": "Save default claims to bag",
+                "next": "ST3",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "account_id": {
+                            "$ref": "result.data[0].id"
+                        },
+                        "default_claims": {
+                            "$ref": "result.data[0].settings.default_user_claims"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Get claims",
+                "next": "SB7",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.WORKFLOW_API}}}/claims"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB7",
+                "name": "Set claims to bag",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "totalClaims": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U1",
+                "name": "User selects what wanna to do",
+                "next": "SB3",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "users": {
+                            "$ref": "bag.users"
+                        },
+                        "claims": {
+                            "$ref": "bag.totalClaims"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "action": {
+                                    "type": "string"
+                                },
+                                "mobile_phone": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CHOOSE_ACTION_USERS_CRUD"
+                }
+            },
+            {
+                "id": "SB3",
+                "name": "Set activity information to bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.activities[0].data.id"
+                        },
+                        "name": {
+                            "$ref": "result.activities[0].data.name"
+                        },
+                        "actor": {
+                            "$ref": "result.activities[0].data.mobile_phone"
+                        },
+                        "email": {
+                            "$ref": "result.activities[0].data.email"
+                        },
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        },
+                        "claims": {
+                            "$ref": "result.activities[0].data.claims"
+                        },
+                        "option": {
+                            "$ref": "result.activities[0].data.option"
+                        },
+                        "actor_id": {
+                            "$ref": "actor_data.actor_id"
+                        },
+                        "password": {
+                            "$ref": "result.activities[0].data.password"
+                        },
+                        "mobile_phone": {
+                            "$ref": "result.activities[0].data.mobile_phone"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F1",
+                "name": "Check action",
+                "next": {
+                    "LIST": "ST1",
+                    "CREATE": "ST8",
+                    "DELETE": "F4",
+                    "UPDATE": "F3",
+                    "DETAILS": "ST11",
+                    "default": "E",
+                    "CHANGE_PASSWORD": "F7",
+                    "UPDATE_NEW_PHONE": "ST9",
+                    "UPDATE_PHONE_PASSWORD": "ST1",
+                    "VERIFICATION_NUMBER_PHONE": "ST1"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST8",
+                "name": "Verification number phone",
+                "next": "F5",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/verify/{{bag.mobile_phone}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F5",
+                "name": "Check number phone verification",
+                "next": {
+                    "true": "F2",
+                    "default": "U2"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST9",
+                "name": "Verification number phone update realtor",
+                "next": "F6",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/verify/{{bag.mobile_phone}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F6",
+                "name": "Check number phone verification update realtor",
+                "next": {
+                    "true": "F3",
+                    "default": "U2"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U2",
+                "name": "Open cellular number duplication modal",
+                "next": "SB4",
+                "type": "UserTask",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "users": {
+                            "$ref": "bag.users"
+                        },
+                        "toggleModal": true,
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "action": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CHOOSE_ACTION_USERS_VERIFICATION_PHONE"
+                }
+            },
+            {
+                "id": "SB4",
+                "name": "Save action bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F2",
+                "name": "Check payload to create",
+                "next": {
+                    "return": "ST1",
+                    "default": "ST10"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST10",
+                "name": "Create actor on workflow",
+                "next": "ST5",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.actor"
+                        },
+                        "claims": {
+                            "$ref": "bag.claims"
+                        },
+                        "password": {
+                            "$ref": "bag.password"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.WORKFLOW_API}}}/actor"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST5",
+                "name": "Create profile",
+                "next": "CREATE-PARTY",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "role": "BACKOFFICE",
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "actor_id": {
+                            "$ref": "result.data.id"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/create"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "CREATE-PARTY",
+                "name": "Create party on CHAT Service.",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "role": "BACKOFFICE",
+                        "actor": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_chat:3000/rpc/chat/create-party-by-actor"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST11",
+                "name": "Get user details",
+                "next": "SB5",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/details/{{bag.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB5",
+                "name": "Set user to Bag",
+                "next": "ST12",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "user": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST12",
+                "name": "Get claims user",
+                "next": "U3",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.WORKFLOW_API}}}/claims/{{bag.user.mobile_phone}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "U3",
+                "name": "User select details",
+                "next": "SB6",
+                "type": "UserTask",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "user": {
+                            "$ref": "bag.user"
+                        },
+                        "claims": {
+                            "$ref": "bag.totalClaims"
+                        },
+                        "claimsUser": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "action": {
+                                    "type": "string"
+                                },
+                                "mobile_phone": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CHOOSE_ACTION_USER_DETAIL"
+                }
+            },
+            {
+                "id": "SB6",
+                "name": "Set to bag action",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.activities[0].data.id"
+                        },
+                        "name": {
+                            "$ref": "result.activities[0].data.name"
+                        },
+                        "actor": {
+                            "$ref": "result.activities[0].data.mobile_phone"
+                        },
+                        "email": {
+                            "$ref": "result.activities[0].data.email"
+                        },
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        },
+                        "claims": {
+                            "$ref": "result.activities[0].data.claims"
+                        },
+                        "password": {
+                            "$ref": "result.activities[0].data.password"
+                        },
+                        "mobile_phone": {
+                            "$ref": "result.activities[0].data.mobile_phone"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F3",
+                "name": "Check option to update",
+                "next": {
+                    "return": "ST1",
+                    "default": "ST6"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F7",
+                "name": "Check option to update",
+                "next": {
+                    "return": "ST1",
+                    "default": "ST14"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST14",
+                "name": "update password",
+                "next": "ST6",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "ChangePasswordTask",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.actor"
+                        },
+                        "new_password": {
+                            "$ref": "bag.password"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST6",
+                "name": "update profile",
+                "next": "ST13",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/{{bag.id}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST13",
+                "name": "update actor",
+                "next": "UPDATE-PARTY",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.actor"
+                        },
+                        "claims": {
+                            "$ref": "bag.claims"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.WORKFLOW_API}}}/actor/update/{{bag.user.actor_id}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "UPDATE-PARTY",
+                "name": "Update Party on CHAT Service.",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.user.mobile_phone"
+                        },
+                        "new_actor": {
+                            "$ref": "bag.actor"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_chat:3000/rpc/chat/update-party-by-actor"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F4",
+                "name": "Check option to inactivate",
+                "next": {
+                    "return": "ST1",
+                    "default": "ST7"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST7",
+                "name": "inactivate profile",
+                "next": "ST15",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/disable/{{bag.id}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST15",
+                "name": "inactivate actor",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.actor"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.WORKFLOW_API}}}/actor/inactive/{{bag.actor}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "CONFIRMATION-MESSAGE",
+                "name": "Request made message",
+                "next": "SET-ACTION-TO-BAG",
+                "type": "UserTask",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "bag.action"
+                        },
+                        "confirm_message": true
+                    },
+                    "action": "CONFIRMATION_MESSAGE_TO_USER_ON_USER_CRUD",
+                    "activity_schema": {
+                        "type": "object",
+                        "properties": {
+                            "action": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                }
+            },
+            {
+                "id": "SET-ACTION-TO-BAG",
+                "name": "Set action information to bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "E",
+                "name": "Finish",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "B"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "POSTGREST": "POSTGREST",
+            "SERVICE_API": "SERVICE_API",
+            "WORKFLOW_API": "WORKFLOW_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

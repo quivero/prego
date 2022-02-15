@@ -1,0 +1,825 @@
+{
+    "name": "chatMetaCRUD",
+    "description": "Fluxo para cadastro genérico no repositorio de chat",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "GENERAL",
+                "name": "General access",
+                "rule": {
+                    "$js": "({actor_data, bag}) => ((actor_data.claims).includes('admin') || (actor_data.claims).includes('create') || (actor_data.claims).includes('list') || (actor_data.claims).includes('read') || (actor_data.claims).includes('update') || (actor_data.claims).includes('delete'))"
+                }
+            },
+            {
+                "id": "LIST",
+                "name": "List",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (((actor_data.claims).includes('admin') || (actor_data.claims).includes('list')) && actor_data.actor_id == bag.actor_id)"
+                }
+            },
+            {
+                "id": "CREATE",
+                "name": "Create",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (((actor_data.claims).includes('admin') || (actor_data.claims).includes('create')) && actor_data.actor_id == bag.actor_id)"
+                }
+            },
+            {
+                "id": "READ",
+                "name": "Read",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (((actor_data.claims).includes('admin') || (actor_data.claims).includes('read')) && actor_data.actor_id == bag.actor_id)"
+                }
+            },
+            {
+                "id": "UPDATE",
+                "name": "Update",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (((actor_data.claims).includes('admin') || (actor_data.claims).includes('update')) && actor_data.actor_id == bag.actor_id)"
+                }
+            },
+            {
+                "id": "DELETE",
+                "name": "Delete",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (((actor_data.claims).includes('admin') || (actor_data.claims).includes('delete')) && actor_data.actor_id == bag.actor_id)"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start meta CRUD",
+                "next": "GET-DEV-CONTRACTS",
+                "type": "Start",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input_schema": {
+                        "type": "object",
+                        "required": [
+                            "intent",
+                            "key"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "key": {
+                                "type": "string"
+                            },
+                            "intent": {
+                                "type": "string"
+                            },
+                            "env_api": {
+                                "type": "string"
+                            },
+                            "filters": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-DEV-CONTRACTS",
+                "name": "Get dev_contracts",
+                "next": "SET-DEV-CONTRACTS-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/dev_contracts?key=eq.{{bag.key}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-DEV-CONTRACTS-TO-BAG",
+                "name": "Set dev_contracts object to bag",
+                "next": "VALIDATE-INPUT",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "data": {
+                            "$js": "({bag}) => bag.data ? bag.data : {}"
+                        },
+                        "schema": {
+                            "$ref": "result.data[0].value"
+                        },
+                        "filters": {
+                            "$js": "({bag}) => bag.filters ? bag.filters : {}"
+                        },
+                        "key_url": {
+                            "$js": "({bag}) => {return (bag.key).substring(9,(bag.key.length))}"
+                        },
+                        "actor_id": {
+                            "$ref": "actor_data.actor_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATE-INPUT",
+                "name": "Validate input",
+                "next": "CHECK-INPUT",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        },
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "data": {
+                            "$ref": "bag.data"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        },
+                        "filters": {
+                            "$ref": "bag.filters"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/validate/meta_crud"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "CHECK-INPUT",
+                "name": "Check input",
+                "next": {
+                    "VALID": "SET-QUERYS-TO-BAG",
+                    "default": "FINISH-DEV-CONTRACTS"
+                },
+                "type": "Flow",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data.status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-QUERYS-TO-BAG",
+                "name": "Set url to bag",
+                "next": "CHECK-QUERYS",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "query_id": {
+                            "key": {
+                                "$js": "({bag}) => bag.key_url == 'properties_projects' ? 'construction_companies' : bag.key_url == 'typologies' ? 'properties_projects' : bag.key_url == 'simulators_params' ? 'properties_projects' : bag.key_url == 'proposals' ? 'units' : null"
+                            }
+                        },
+                        "query_column": {
+                            "key": {
+                                "$js": "({bag}) => bag.key_url == 'properties_projects' ? 'company_name' : bag.key_url == 'typologies' ? 'title' : bag.key_url == 'simulators_params' ? 'title' : bag.key_url == 'proposals' ? 'unit_code' : null"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-QUERYS",
+                "name": "Check query_id and column",
+                "next": {
+                    "true": "GET-IDS",
+                    "default": "CHECK-INTENT"
+                },
+                "type": "Flow",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !!bag.query_id.key && !!bag.query_column.key"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-IDS",
+                "name": "Get ids",
+                "next": "SET-IDS-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/{{bag.query_id.key}}?select=id,{{bag.query_column.key}}&order=created_at.asc"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-IDS-TO-BAG",
+                "name": "Set ids to bag",
+                "next": "CHECK-INTENT",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "type": {
+                            "$js": "({bag}) => bag.key_url == 'properties_projects' ? 'string' : bag.key_url == 'typologies' ? 'string' : bag.key_url == 'simulators_params' ? 'string' : bag.key_url == 'proposals' ? 'string' : null"
+                        },
+                        "title": {
+                            "$js": "({bag}) => bag.key_url == 'properties_projects' ? 'Nome do Incorporador' : bag.key_url == 'typologies' ? 'Código do Empreendimento' : bag.key_url == 'simulators_params' ? 'Código do Empreendimento' : bag.key_url == 'proposals' ? 'Código da Unidade' : null"
+                        },
+                        "query_id": {
+                            "$js": "({bag, result}) => { const d = {...bag.query_id, ids: (result.data).map(obj => obj.id)}; d.ids.push(''); return d; }"
+                        },
+                        "object_name": {
+                            "$js": "({bag}) => bag.key_url == 'properties_projects' ? 'construction_company_id' : bag.key_url == 'typologies' ? 'properties_projects_id' : bag.key_url == 'simulators_params' ? 'properties_projects_id' : bag.key_url == 'proposals' ? 'unit_id' : null"
+                        },
+                        "query_column": {
+                            "$js": "({bag,result}) => { const d = {...bag.query_column, column_data: (result.data).map(obj => obj[bag.query_column.key])}; d.column_data.push(''); return d; }"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-INTENT",
+                "name": "Check intent",
+                "next": {
+                    "LIST": "GET-DATA-TO-LIST",
+                    "READ": "READ",
+                    "CREATE": "CREATE",
+                    "DELETE": "DELETE",
+                    "UPDATE": "GET-DATA-TO-UPDATE",
+                    "default": "NOTIFY-INTENT-NOT-FOUND"
+                },
+                "type": "Flow",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.intent"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-DATA-TO-LIST",
+                "name": "List",
+                "next": "SHOW-DATA-TO-LIST",
+                "type": "SystemTask",
+                "lane_id": "LIST",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        },
+                        "filters": {
+                            "$ref": "bag.filters"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/meta_crud"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SHOW-DATA-TO-LIST",
+                "name": "Send data to list",
+                "next": "CHECK-TIMEOUT-LIST",
+                "type": "UserTask",
+                "lane_id": "LIST",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        },
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "list": {
+                            "$js": "({result}) => result.data?.result ? result.data.result : []"
+                        },
+                        "limit": {
+                            "$ref": "bag.filters.limit"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        },
+                        "offset": {
+                            "$ref": "bag.filters.offset"
+                        },
+                        "total_items": {
+                            "$js": "({result}) => result.data?.count ? result.data.count : 0"
+                        },
+                        "activity_schema": {
+                            "$ref": "bag.schema.LIST"
+                        }
+                    },
+                    "action": "LIST",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "CHECK-TIMEOUT-LIST",
+                "name": "Check timeout",
+                "next": {
+                    "true": "FINISH-LIST",
+                    "default": "SET-OFFSET-LIMIT-TO-BAG"
+                },
+                "type": "Flow",
+                "lane_id": "LIST",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-OFFSET-LIMIT-TO-BAG",
+                "name": "Set value offset and limit to bag",
+                "next": "GET-DATA-TO-LIST",
+                "type": "SystemTask",
+                "lane_id": "LIST",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "filters": {
+                            "$js": "({result}) => result.activities[0]?.data?.filters ? result.activities[0].data.filters : {}"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CREATE",
+                "name": "Create",
+                "next": "SUBMIT-CREATE",
+                "type": "UserTask",
+                "lane_id": "CREATE",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        },
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        },
+                        "form_data": {
+                            "$ref": "bag.schema.CREATE.form_data"
+                        },
+                        "ui_schema": {
+                            "$ref": "bag.schema.CREATE.ui_schema"
+                        },
+                        "activity_schema": {
+                            "$js": "({bag}) => (bag.object_name ? {...bag.schema?.CREATE?.activity_schema, properties: {...bag.schema?.CREATE?.activity_schema?.properties, [bag.object_name]: {enum: bag.query_id.ids, enumNames: bag.query_column.column_data, title: bag.title, type: bag.type}}} : bag.schema?.CREATE?.activity_schema)"
+                        }
+                    },
+                    "action": "CREATE",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "SUBMIT-CREATE",
+                "name": "Create",
+                "next": "NOTIFY-CREATE",
+                "type": "SystemTask",
+                "lane_id": "CREATE",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "data": {
+                            "$ref": "result.activities[0].data.form_data"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/meta_crud"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-CREATE",
+                "name": "Notify create",
+                "next": "FINISH-CREATE",
+                "type": "UserTask",
+                "lane_id": "CREATE",
+                "parameters": {
+                    "input": {
+                        "message": "{{bag.key_url}} created.",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_CREATE",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "READ",
+                "name": "Read",
+                "next": "SEND-DATA-TO-READ",
+                "type": "SystemTask",
+                "lane_id": "READ",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        },
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/meta_crud"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SEND-DATA-TO-READ",
+                "name": "Send data to read",
+                "next": "FINISH-READ",
+                "type": "UserTask",
+                "lane_id": "READ",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        },
+                        "form_data": {
+                            "$ref": "result.data"
+                        },
+                        "ui_schema": {
+                            "$ref": "bag.schema.READ.ui_schema"
+                        },
+                        "activity_schema": {
+                            "$js": "({bag}) => (bag.object_name ? {...bag.schema?.READ?.activity_schema, properties: {...bag.schema?.READ?.activity_schema.properties, [bag.object_name]: {enum: bag.query_id.ids, enumNames: bag.query_column.column_data, title: bag.title, type: bag.type}}} : bag.schema?.READ?.activity_schema)"
+                        }
+                    },
+                    "action": "READ",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "GET-DATA-TO-UPDATE",
+                "name": "Get data to update",
+                "next": "SEND-DATA-TO-UPDATE",
+                "type": "SystemTask",
+                "lane_id": "UPDATE",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_POSTGREST}}}/{{bag.key_url}}?id=eq.{{bag.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SEND-DATA-TO-UPDATE",
+                "name": "Send data to update",
+                "next": "CHECK-TIMEOUT-UPDATE",
+                "type": "UserTask",
+                "lane_id": "UPDATE",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        },
+                        "form_data": {
+                            "$ref": "result.data[0]"
+                        },
+                        "ui_schema": {
+                            "$ref": "bag.schema.UPDATE.ui_schema"
+                        },
+                        "activity_schema": {
+                            "$js": "({bag}) => (bag.object_name ? {...bag.schema?.UPDATE?.activity_schema, properties: {...bag.schema?.UPDATE?.activity_schema?.properties, [bag.object_name]: {enum: bag.query_id.ids, enumNames: bag.query_column.column_data, title: bag.title, type: bag.type}}} : bag.schema?.UPDATE?.activity_schema)"
+                        }
+                    },
+                    "action": "UPDATE",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "CHECK-TIMEOUT-UPDATE",
+                "name": "Check timeout",
+                "next": {
+                    "true": "FINISH-UPDATE",
+                    "default": "UPDATE"
+                },
+                "type": "Flow",
+                "lane_id": "UPDATE",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "UPDATE",
+                "name": "Update",
+                "next": "NOTIFY-UPDATE",
+                "type": "SystemTask",
+                "lane_id": "UPDATE",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        },
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "data": {
+                            "$ref": "result.activities[0].data.form_data"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/meta_crud"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-UPDATE",
+                "name": "Notify update",
+                "next": "FINISH-UPDATE",
+                "type": "UserTask",
+                "lane_id": "UPDATE",
+                "parameters": {
+                    "input": {
+                        "message": "{{bag.key_url}} updated.",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_UPDATE",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "DELETE",
+                "name": "Delete",
+                "next": "NOTIFY-DELETE",
+                "type": "SystemTask",
+                "lane_id": "DELETE",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        },
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "intent": {
+                            "$ref": "bag.intent"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/meta_crud"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-DELETE",
+                "name": "Notify delete",
+                "next": "FINISH-DELETE",
+                "type": "UserTask",
+                "lane_id": "DELETE",
+                "parameters": {
+                    "input": {
+                        "message": {
+                            "$ref": "{{bag.key_url}} deleted."
+                        },
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_DELETE",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "NOTIFY-INTENT-NOT-FOUND",
+                "name": "Notify intent not found",
+                "next": "FINISH-INTENT-NOT-FOUND",
+                "type": "UserTask",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "message": "{{bag.key_url}} intent not found.",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY-INTENT-NOT-FOUND",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "FINISH-LIST",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "LIST"
+            },
+            {
+                "id": "FINISH-CREATE",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "CREATE"
+            },
+            {
+                "id": "FINISH-UPDATE",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "UPDATE"
+            },
+            {
+                "id": "FINISH-NO-LOCK",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "UPDATE"
+            },
+            {
+                "id": "FINISH-DELETE",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "DELETE"
+            },
+            {
+                "id": "FINISH-READ",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "READ"
+            },
+            {
+                "id": "FINISH-DEV-CONTRACTS",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "GENERAL"
+            },
+            {
+                "id": "FINISH-INTENT-NOT-FOUND",
+                "name": "Finish metaCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "GENERAL"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "CHAT_API": "CHAT_API",
+            "POSTGREST": "POSTGREST",
+            "CHAT_POSTGREST": "CHAT_POSTGREST"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

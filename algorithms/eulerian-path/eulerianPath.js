@@ -20,7 +20,7 @@ export default function eulerianPath(graph) {
   graph.getAllEdges().forEach((vertex) => {
     notVisitedEdges[vertex.getKey()] = vertex;
   });
-
+  
   // Detect whether graph contains Eulerian Circuit or Eulerian Path or none of them.
   /** @params {GraphVertex} vertex */
   graph.getAllVertices().forEach((vertex) => {

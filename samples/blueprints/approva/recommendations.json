@@ -1,0 +1,300 @@
+{
+    "name": "recommendations",
+    "description": "Workflow para recomendação",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "B",
+                "name": "Backoffice",
+                "rule": [
+                    "fn",
+                    [
+                        "actor_data",
+                        "bag"
+                    ],
+                    [
+                        "eval",
+                        [
+                            "apply",
+                            "or",
+                            [
+                                "map",
+                                [
+                                    "fn",
+                                    [
+                                        "v"
+                                    ],
+                                    [
+                                        "=",
+                                        "v",
+                                        [
+                                            "`",
+                                            "adminRecommendations"
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "get",
+                                    "actor_data",
+                                    [
+                                        "`",
+                                        "claims"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "nodes": [
+            {
+                "id": "S",
+                "name": "Start Workflow",
+                "next": "ST1",
+                "type": "Start",
+                "lane_id": "B",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Request to Mock API to GET Request",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": "https://5fdca9a048321c001701201d.mockapi.io/Request",
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U1",
+                "name": "List requests to user to select one",
+                "next": "F1",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "requests": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "action": {
+                                    "type": "string"
+                                },
+                                "profile_id": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CHOOSE_ACTION_REQUEST"
+                }
+            },
+            {
+                "id": "F1",
+                "name": "Check action",
+                "next": {
+                    "return": "E",
+                    "default": "SB1"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SB1",
+                "name": "Set profile id to bag",
+                "next": "ST2",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "profile_id": {
+                            "$ref": "result.activities[0].data.profile_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST2",
+                "name": "Get User Properties",
+                "next": "SB2",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/properties_projects?list_type=home&limit=10&offset=0&profile_id={{bag.profile_id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB2",
+                "name": "Set Properties Projects to Bag",
+                "next": "U2",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "properties_projects": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U2",
+                "name": "List Property Projects",
+                "next": "F2",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "properties": {
+                                "action": {
+                                    "type": "string"
+                                },
+                                "buyer_id": {
+                                    "type": "string"
+                                },
+                                "estate_agent_id": {
+                                    "type": "string"
+                                },
+                                "properties_projects_id": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "PROPERTIES_PROJECTS_LIST"
+                }
+            },
+            {
+                "id": "F2",
+                "name": "Check action",
+                "next": {
+                    "return": "E",
+                    "default": "SB3"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SB3",
+                "name": "Set data to bag",
+                "next": "ST3",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "buyer_id": {
+                            "$ref": "result.activities[0].data.buyer_id"
+                        },
+                        "estate_agent_id": {
+                            "$ref": "result.activities[0].data.estate_agent_id"
+                        },
+                        "properties_projects_id": {
+                            "$ref": "result.activities[0].data.properties_projects_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Recommend to user",
+                "next": "E",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "buyer_id": {
+                            "$ref": "bag.buyer_id"
+                        },
+                        "estate_agent_id": {
+                            "$ref": "bag.estate_agent_id"
+                        },
+                        "properties_projects_id": {
+                            "$ref": "bag.properties_projects_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/recommend"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "E",
+                "name": "Finish",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "B"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

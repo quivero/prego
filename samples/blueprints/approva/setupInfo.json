@@ -1,0 +1,1939 @@
+{
+    "name": "setupInfo",
+    "description": "Fluxo para capturar ou criar actor/profile/request/chat de um cliente.",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "REQUESTBOT",
+                "name": "Buyer",
+                "rule": {
+                    "$js": "({actor_data}) => actor_data.claims.includes('requestBot')"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start checkUserInfo",
+                "next": "CAPTURE-FIRST-MESSAGE",
+                "type": "Start",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input_schema": {
+                        "type": "object",
+                        "required": [
+                            "party_number"
+                        ],
+                        "properties": {
+                            "chat_id": {
+                                "type": "string"
+                            },
+                            "party_number": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CAPTURE-FIRST-MESSAGE",
+                "name": "Capturing message content",
+                "next": "BAG-FIRST-MESSAGE",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "order": {
+                                            "type": "number"
+                                        },
+                                        "chat_id": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "content": {
+                                            "type": "object"
+                                        },
+                                        "author_id": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        }
+                                    }
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "SUBMIT_MESSAGE"
+                }
+            },
+            {
+                "id": "BAG-FIRST-MESSAGE",
+                "name": "Set message to bag",
+                "next": "CHECK-FIRST-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "message": {
+                            "$ref": "result.activities[0].data.message"
+                        },
+                        "author_id": {
+                            "$ref": "environment.XPTO"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-FIRST-MESSAGE",
+                "name": "Verify link first message",
+                "next": {
+                    "true": "SET-REALTOR-NUMBER-LINK-MESSAGE",
+                    "default": "VALIDATE-PARTY-NUMBER"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.message.content.text.length === 61"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-REALTOR-NUMBER-LINK-MESSAGE",
+                "name": "Set whatsapp validated party number to bag",
+                "next": "VALIDATE-PARTY-NUMBER",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "realtor_number": {
+                            "$js": "({bag}) => bag.message.content.text.slice(17,30)"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATE-PARTY-NUMBER",
+                "name": "Set whatsapp validated party number to bag",
+                "next": "GET-PROFILE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "party_number": {
+                            "$js": "({bag}) => bag.party_number.length === 12 ? bag.party_number.substring(0,4) + '9' + bag.party_number.substring(4,12) : bag.party_number"
+                        },
+                        "profile_type": "main"
+                    }
+                }
+            },
+            {
+                "id": "GET-PROFILE",
+                "name": "Get or create Profile",
+                "next": "PROFILE-EXIST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/{{bag.party_number}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "PROFILE-EXIST",
+                "name": "Verify if profile exist on database.",
+                "next": {
+                    "true": "BAG-PROFILE",
+                    "default": "GET-ACCOUNT"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.status && result.status === 200"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-ACCOUNT",
+                "name": "Get account settings",
+                "next": "BAG-CLAIMS",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/accounts"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "BAG-CLAIMS",
+                "name": "Set default claims to bag, account_id and files phrases",
+                "next": "GET-ACTOR",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "account_id": {
+                            "$ref": "result.data[0].id"
+                        },
+                        "default_claims": {
+                            "$ref": "result.data[0].settings.default_user_claims"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-ACTOR",
+                "name": "Get actor",
+                "next": "ACTOR-EXIST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "GetActorTask",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.party_number"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACTOR-EXIST",
+                "name": "Verify if actor exist on database.",
+                "next": {
+                    "true": "BAG-ACTOR",
+                    "default": "CREATE-ACTOR"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.is_active"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CREATE-ACTOR",
+                "name": "Create actor",
+                "next": "BAG-ACTOR",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "CreateActorTask",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.party_number"
+                        },
+                        "claims": {
+                            "$ref": "bag.default_claims"
+                        },
+                        "account_id": {
+                            "$ref": "bag.account_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "BAG-ACTOR",
+                "name": "Set actor to bag",
+                "next": "CREATE-PROFILE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "result.actor"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CREATE-PROFILE",
+                "name": "Create profile",
+                "next": "BAG-PROFILE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "role": "CLIENT",
+                        "actor_id": {
+                            "$ref": "bag.actor.id"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.party_number"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/create"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "BAG-PROFILE",
+                "name": "Set profile to bag",
+                "next": "CHECK-PROFILE-ROLE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "buyer_profile": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-PROFILE-ROLE",
+                "name": "Check if profile is client or realtor",
+                "next": {
+                    "CLIENT": "HAS-REQUEST-ID",
+                    "default": "VALIDATE-MESSAGE-CONTENT"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.buyer_profile.role"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATE-MESSAGE-CONTENT",
+                "name": "Validate IF MESSAGE IS A PHONE NUMBER",
+                "next": "IS-PHONE-NUMBER",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/chat/{{bag.message.content.text}}/phone-number-validator"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "IS-PHONE-NUMBER",
+                "name": "Verify if message is a phone number sent from the realtor",
+                "next": {
+                    "true": "BAG-REALTOR-NUMBER",
+                    "default": "NOTIFY-REALTOR-INVALID-PHONE-NUMBER"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data.is_valid"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "BAG-REALTOR-NUMBER",
+                "name": "Set request to bag",
+                "next": "CREATE-OR-SETUP-PARTY-NUMBER-CHAT",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "party_number": {
+                            "$mustache": "55{{bag.message.content.text}}"
+                        },
+                        "realtor_number": {
+                            "$ref": "bag.party_number"
+                        },
+                        "realtor_profile": {
+                            "$ref": "bag.buyer_profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CREATE-OR-SETUP-PARTY-NUMBER-CHAT",
+                "name": "Create or setup party number chat",
+                "next": "BAG-CREATED-SETUP-CHAT-ID-FROM-BUYER",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "buyer_phone_number": {
+                            "$ref": "bag.party_number"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/create-setup-chat"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "BAG-CREATED-SETUP-CHAT-ID-FROM-BUYER",
+                "name": "Set request to bag",
+                "next": "INACTIVATE-REALTOR-CHAT-ID",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "result.data.id"
+                        },
+                        "message": {},
+                        "realtor_chat_id": {
+                            "$ref": "bag.chat_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID",
+                "name": "Inactivate realtor chat id",
+                "next": "VALIDATE-BUYER-PARTY-NUMBER",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "VALIDATE-BUYER-PARTY-NUMBER",
+                "name": "Set whatsapp validated party number to bag",
+                "next": "GET-BUYER-PROFILE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "party_number": {
+                            "$js": "({bag}) => bag.party_number.length === 12 ? bag.party_number.substring(0,4) + '9' + bag.party_number.substring(4,12) : bag.party_number"
+                        },
+                        "profile_type": "main"
+                    }
+                }
+            },
+            {
+                "id": "GET-BUYER-PROFILE",
+                "name": "Get or create buyer Profile",
+                "next": "BUYER-PROFILE-EXIST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/{{bag.party_number}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "BUYER-PROFILE-EXIST",
+                "name": "Verify if profile exist on database.",
+                "next": {
+                    "true": "BAG-PROFILE",
+                    "default": "GET-ACCOUNT"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.status && result.status === 200"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "BAG-BUYER-PROFILE",
+                "name": "Set profile to bag",
+                "next": "HAS-CURRENT-REQUEST-ID",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "buyer_profile": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "HAS-REQUEST-ID",
+                "name": "Verify if client has older request order",
+                "next": "CHECK-HAS-LAST-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/requests?buyer_id=eq.{{bag.buyer_profile.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "CHECK-HAS-LAST-REQUEST",
+                "name": "Verify if request exist on database.",
+                "next": {
+                    "true": "SET-LAST-REQUEST-ID-TO-BAG",
+                    "default": "CREATE-REQUEST"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result?.data?.length"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-LAST-REQUEST-ID-TO-BAG",
+                "name": "Set profile to bag",
+                "next": "GET-REALTOR-ON-LAST-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "last_request": {
+                            "$ref": "result.data[0]"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-REALTOR-ON-LAST-REQUEST",
+                "name": "Set realtor info on bag",
+                "next": "SET-LAST-REALTOR-DATA-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/profiles?id=eq.{{bag.last_request.realtor}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-LAST-REALTOR-DATA-TO-BAG",
+                "name": "Add realtor info on request object",
+                "next": "CREATE-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "realtor_number": {
+                            "$ref": "result.data[0].mobile_phone"
+                        },
+                        "realtor_profile": {
+                            "id": {
+                                "$ref": "result.data[0].id"
+                            },
+                            "name": {
+                                "$ref": "result.data[0].name"
+                            },
+                            "email": {
+                                "$ref": "result.data[0].email"
+                            },
+                            "actor_id": {
+                                "$ref": "result.data[0].actor_id"
+                            },
+                            "username": {
+                                "$ref": "result.data[0].username"
+                            },
+                            "mobile_phone": {
+                                "$ref": "result.data[0].mobile_phone"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "HAS-CURRENT-REQUEST-ID",
+                "name": "Verify if client has current request id",
+                "next": {
+                    "true": "GET-REQUEST",
+                    "default": "CREATE-REQUEST"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !!bag.buyer_profile.current_request_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CREATE-REQUEST",
+                "name": "Create Request",
+                "next": "REQUEST-BAG",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "buyer_profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/requests"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "REQUEST-BAG",
+                "name": "Set request to bag",
+                "next": "SET-CHAT-TO-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-CHAT-TO-REQUEST",
+                "name": "Set chat to Request",
+                "next": "HAS-REALTOR-ON-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/set-request-on-chat"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "HAS-REALTOR-ON-REQUEST",
+                "name": "Verify if request has realtor",
+                "next": {
+                    "true": "ASSIGN-REALTOR",
+                    "default": "ASSIGN-RANDOM-REALTOR"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !!bag.realtor_number ? true : false"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ASSIGN-RANDOM-REALTOR",
+                "name": "Assign Realtor to Request",
+                "next": "GET-REALTOR-BY-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        },
+                        "realtor_number": null
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/requests/assign"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "GET-REALTOR-BY-REQUEST",
+                "name": "get realtor by request id",
+                "next": "SET-REALTOR-PROFILE-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/requests/{{bag.request.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-REALTOR-PROFILE-TO-BAG",
+                "name": "Set realtor profile to bag",
+                "next": "ADD-REALTOR-INFO-ON-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "realtor_number": {
+                            "$ref": "result.data.realtor.mobile_phone"
+                        },
+                        "realtor_profile": {
+                            "$ref": "result.data.realtor"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ASSIGN-REALTOR",
+                "name": "Assign Realtor to Request",
+                "next": "GET-REALTOR-BY-LINK-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        },
+                        "realtor_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/requests/assign"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "GET-REALTOR-BY-LINK-MESSAGE",
+                "name": "get realtor by mobile phone",
+                "next": "SET-REALTOR-BY-LINK-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/profiles?mobile_phone=eq.{{bag.realtor_number}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-REALTOR-BY-LINK-MESSAGE",
+                "name": "Add realtor info on request object",
+                "next": "ADD-REALTOR-INFO-ON-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "realtor_profile": {
+                            "id": {
+                                "$ref": "result.data[0].id"
+                            },
+                            "name": {
+                                "$ref": "result.data[0].name"
+                            },
+                            "email": {
+                                "$ref": "result.data[0].email"
+                            },
+                            "actor_id": {
+                                "$ref": "result.data[0].actor_id"
+                            },
+                            "username": {
+                                "$ref": "result.data[0].username"
+                            },
+                            "mobile_phone": {
+                                "$ref": "result.data[0].mobile_phone"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ADD-REALTOR-INFO-ON-REQUEST",
+                "name": "Add realtor info on request object",
+                "next": "NOTIFY-REALTOR-PROCESS-STARTED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$js": "({bag}) => { return { ...bag.request, realtor: bag.realtor_profile } }"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-REQUEST",
+                "name": "Get request",
+                "next": "BAG-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/requests?id=eq.{{bag.buyer_profile.current_request_id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204,
+                        400
+                    ]
+                }
+            },
+            {
+                "id": "BAG-REQUEST",
+                "name": "Set request to bag",
+                "next": "VERIFY-STATUS-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "result.data[0]"
+                        },
+                        "request_status": {
+                            "$ref": "result.data[0].status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VERIFY-STATUS-REQUEST",
+                "name": "Check request status",
+                "next": {
+                    "CLOSED": "HAS-REALTOR-NUMBER",
+                    "default": "EXIST-REALTOR-NUMBER",
+                    "APPROVED": "HAS-REALTOR-NUMBER",
+                    "RECOVERY": "HAS-REALTOR-NUMBER",
+                    "REPROVED": "HAS-REALTOR-NUMBER",
+                    "NO_CONSENT": "HAS-REALTOR-NUMBER",
+                    "AWAITING_CONSENT": "HAS-REALTOR-NUMBER",
+                    "AWAITING_ANALYSIS": "HAS-REALTOR-NUMBER",
+                    "AWAITING_DOCUMENTS": "HAS-REALTOR-NUMBER",
+                    "DOCUMENTS_RECEIVED": "HAS-REALTOR-NUMBER"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.request.status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIST-REALTOR-NUMBER",
+                "name": "Check if bag has realtor number",
+                "next": {
+                    "default": "NOTIFY-REALTOR-PROCESS-RUNNING",
+                    "undefined": "NOTIFY-CLIENT-PROCESS-RUNNING"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "HAS-REALTOR-NUMBER",
+                "name": "Check if bag has realtor number",
+                "next": {
+                    "true": "SAME-REALTOR",
+                    "default": "INACTIVATE-CLIENT-CHAT-ID-IF-PROCESS-RUNNING"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !!bag.realtor_number"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SAME-REALTOR",
+                "name": "Check if bag has realtor number",
+                "next": {
+                    "true": "NOTIFY-REALTOR-FEEDBACK",
+                    "default": "NOTIFY-REALTOR-UNMATCHED"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => (!!bag.realtor_number && !bag.buyer_profile.current_request_id) || (!!bag.realtor_number && bag.request.realtor === bag.realtor_profile.id)"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-FEEDBACK",
+                "name": "Check request status",
+                "next": {
+                    "default": "EXIST-REALTOR-NUMBER",
+                    "APPROVED": "NOTIFY-REALTOR-CLIENT-APPROVED",
+                    "RECOVERY": "NOTIFY-REALTOR-CLIENT-RECOVERY",
+                    "NO_CONSENT": "NOTIFY-REALTOR-CLIENT-NO-CONSENT",
+                    "AWAITING_CONSENT": "NOTIFY-REALTOR-CLIENT-SEND-DOCS",
+                    "AWAITING_ANALYSIS": "NOTIFY-REALTOR-CLIENT-AWAITING-ANALYSIS",
+                    "AWAITING_DOCUMENTS": "NOTIFY-REALTOR-CLIENT-SEND-DOCS",
+                    "DOCUMENTS_RECEIVED": "NOTIFY-REALTOR-CLIENT-DOCS-RECEIVED"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.request_status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-CLIENT-RECOVERY",
+                "name": "Send message notifying client recovery",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-RECOVERY",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Corretor, o seu cliente não finalizou a análise de pedido e acabou entrando em fase de recuperação."
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_REALTOR_CLIENT_RECOVERY",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-RECOVERY",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-REALTOR-CLIENT-RECOVERY",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-CLIENT-NO-CONSENT",
+                "name": "Send message notifying client refuse consent",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-NO-CONSENT",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Corretor, o seu cliente não deu consentimento para iniciar uma análise."
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_REALTOR_CLIENT_NO_CONSENT",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-NO-CONSENT",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-REALTOR-CLIENT-NO-CONSENT",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-CLIENT-APPROVED",
+                "name": "Send message notifying client approved",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-APPROVED",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Corretor, o seu cliente já possui um pedido aprovado. Fale com um de nossos analistas!"
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_REALTOR_CLIENT_APPROVED",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-APPROVED",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-REALTOR-CLIENT-APPROVED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-CLIENT-AWAITING-ANALYSIS",
+                "name": "Send message notifying client awaiting analysis",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-AWAITING-ANALYSIS",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Corretor, o seu cliente ja possui um pedido em análise!"
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_REALTOR_CLIENT_AWAITING_ANALYSIS",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-AWAITING-ANALYSIS",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-REALTOR-CLIENT-AWAITING-ANALYSIS",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-CLIENT-DOCS-RECEIVED",
+                "name": "Send message notifying client docs received",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-DOCS-RECEIVED",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Corretor, o seu cliente já possui um pedido em análise!"
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_REALTOR_CLIENT_DOCS_RECEIVED",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-DOCS-RECEIVED",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-REALTOR-CLIENT-DOC-RECEIVED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-CLIENT-SEND-DOCS",
+                "name": "Send message notifying client send docs",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-SENDING-DOCS",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Corretor, o seu cliente está com um pedido em andamento!"
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_REALTOR_CLIENT_SEND_DOCS",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-CLIENT-SENDING-DOCS",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-REALTOR-CLIENT-SEND-DOCS",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-UNMATCHED",
+                "name": "Send message notifying request exit",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-UNMATCHED",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Você não é o corretor deste cliente."
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_INVALID_REALTOR",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-UNMATCHED",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-REALTOR-UNMATCHED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-INVALID-PHONE-NUMBER",
+                "name": "Send message notifying request exit",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-INVALID-PHONE-NUMBER",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": "Bela: Corretor, envie um número de telefone válido."
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.party_number"
+                        }
+                    },
+                    "action": "NOTIFY_REALTOR_INVALID_PHONE_NUMBER",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-INVALID-PHONE-NUMBER",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-INVALID-PHONE-NUMBER",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-PROCESS-RUNNING",
+                "name": "Send message notifying request exit",
+                "next": "INACTIVATE-REALTOR-CHAT-ID-IF-PROCESS-RUNNING",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Corretor, o cliente informado já possui um pedido em andamento.."
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_PROCESS_RUNNING",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-REALTOR-CHAT-ID-IF-PROCESS-RUNNING",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-PROCESS-RUNNING",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-CLIENT-PROCESS-RUNNING",
+                "name": "Send message notifying request exit",
+                "next": "INACTIVATE-CLIENT-CHAT-ID-IF-PROCESS-RUNNING",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Você já possui um pedido em andamento."
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.party_number"
+                        }
+                    },
+                    "action": "NOTIFY_PROCESS_RUNNING",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "INACTIVATE-CLIENT-CHAT-ID-IF-PROCESS-RUNNING",
+                "name": "Inactivate realtor chat id",
+                "next": "EXIT-PROCESS-RUNNING",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/inactivate-by-chat-id"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        201,
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-REALTOR-PROCESS-STARTED",
+                "name": "Send message notifying request exit",
+                "next": "START-REQUEST",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.realtor_chat_id"
+                        },
+                        "messages": [
+                            {
+                                "text": {
+                                    "$mustache": "Bela: Lead cadastrado com sucesso!"
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "action": "NOTIFY_PROCESS_STARTED",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "START-REQUEST",
+                "name": "Start process to client submit documentation",
+                "next": "EXIT-PROCESS-STARTED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "startProcess",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "request": {
+                            "$ref": "bag.request"
+                        },
+                        "party_number": {
+                            "$ref": "bag.party_number"
+                        },
+                        "realtor_number": {
+                            "$ref": "bag.realtor_number"
+                        }
+                    },
+                    "actor_data": {
+                        "claims": {
+                            "$ref": "actor_data.claims"
+                        },
+                        "actor_id": {
+                            "$ref": "bag.actor.id"
+                        },
+                        "account_id": {
+                            "$ref": "bag.actor.account_id"
+                        },
+                        "profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        },
+                        "session_id": {
+                            "$ref": "actor_data.session_id"
+                        }
+                    },
+                    "workflow_name": "requestV3"
+                }
+            },
+            {
+                "id": "EXIT-INVALID-PHONE-NUMBER",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-PROCESS-RUNNING",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-REALTOR-UNMATCHED",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-REALTOR-CLIENT-DOC-RECEIVED",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-REALTOR-CLIENT-AWAITING-ANALYSIS",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-REALTOR-CLIENT-SEND-DOCS",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-REALTOR-CLIENT-NO-CONSENT",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-REALTOR-CLIENT-RECOVERY",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-REALTOR-CLIENT-APPROVED",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "EXIT-PROCESS-STARTED",
+                "name": "Finish getUserInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "XPTO": "BOTAUTHOR",
+            "JWT_KEY": "JWT_KEY_BP",
+            "CHAT_API": "CHAT_API",
+            "POSTGREST": "POSTGREST",
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

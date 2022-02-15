@@ -1,0 +1,1091 @@
+{
+    "name": "request",
+    "description": "Fluxo único de request",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "A",
+                "name": "Anonymous",
+                "rule": [
+                    "fn",
+                    [
+                        "actor_data",
+                        "bag"
+                    ],
+                    [
+                        "eval",
+                        [
+                            "apply",
+                            "or",
+                            [
+                                "map",
+                                [
+                                    "fn",
+                                    [
+                                        "v"
+                                    ],
+                                    [
+                                        "=",
+                                        "v",
+                                        [
+                                            "`",
+                                            "anonymous"
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "get",
+                                    "actor_data",
+                                    [
+                                        "`",
+                                        "claims"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            },
+            {
+                "id": "B",
+                "name": "BackOffice",
+                "rule": [
+                    "fn",
+                    [
+                        "actor_data",
+                        "bag"
+                    ],
+                    [
+                        "eval",
+                        [
+                            "apply",
+                            "or",
+                            [
+                                "map",
+                                [
+                                    "fn",
+                                    [
+                                        "v"
+                                    ],
+                                    [
+                                        "=",
+                                        "v",
+                                        [
+                                            "`",
+                                            "adminRequests"
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "get",
+                                    "actor_data",
+                                    [
+                                        "`",
+                                        "claims"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "nodes": [
+            {
+                "id": "SA",
+                "name": "Start Request Workflow",
+                "next": "U1",
+                "type": "Start",
+                "lane_id": "A",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "U1",
+                "name": "Realtor or buyer started?",
+                "next": "SB1",
+                "type": "UserTask",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "option"
+                            ],
+                            "properties": {
+                                "option": {
+                                    "type": "string"
+                                },
+                                "actor_number": {
+                                    "type": "string"
+                                },
+                                "realtor_number": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "CHOOSE_START_WAY"
+                }
+            },
+            {
+                "id": "SB1",
+                "name": "Set actor_number to bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "mobile_phone": {
+                            "$ref": "result.activities[0].data.actor_number"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F1",
+                "name": "Default Flow",
+                "next": {
+                    "default": "ST1",
+                    "realtor": "U2"
+                },
+                "type": "Flow",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Get profile",
+                "next": "SB2",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/profiles?mobile_phone=eq.{{bag.mobile_phone}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB2",
+                "name": "Set buyer profile to bag",
+                "next": "ST2",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "buyer_profile": {
+                            "$ref": "result.data[0]"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST2",
+                "name": "Create Request",
+                "next": "SB5",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "buyer_profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/requests"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB5",
+                "name": "Set request to bag",
+                "next": "ST14",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST14",
+                "name": "Assign Realtor to Request",
+                "next": "ST6",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/requests/assign"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST6",
+                "name": "Set Active Request",
+                "next": "SB6",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        },
+                        "new_request_id": {
+                            "$ref": "bag.request.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/requests/active"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB6",
+                "name": "Set buyer profile with new current_request to bag",
+                "next": "ST16",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "buyer_profile": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST16",
+                "name": "Create Chat",
+                "next": "SB9",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "chat_type": "BOT",
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/chat"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB9",
+                "name": "Set chat_id to bag",
+                "next": "ST17",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "result.data.id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST17",
+                "name": "Get number of uploaded documentation",
+                "next": "F3",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/proofs?request_id=eq.{{bag.request.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F3",
+                "name": "User still uploading documents?",
+                "next": {
+                    "true": "U3",
+                    "default": "U9"
+                },
+                "type": "Flow",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => (result.data.length < 6) ? true :  false"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U3",
+                "name": "User uploading documents",
+                "next": "ST7",
+                "type": "UserTask",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "chat_id": {
+                                "$ref": "bag.chat_id"
+                            },
+                            "properties": {
+                                "external_id": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "number_of_uploaded_documents": {
+                            "$ref": "result.data.length"
+                        }
+                    },
+                    "action": "USER_UPLOADING_DOCUMENTS"
+                }
+            },
+            {
+                "id": "U9",
+                "name": "Notify that all documents were received",
+                "next": "ST8",
+                "type": "UserTask",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {},
+                    "action": "NOTIFY_DOCUMENTS_RECEIVED",
+                    "timeout": 60
+                }
+            },
+            {
+                "id": "ST8",
+                "name": "Update request status",
+                "next": "ST9-B",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "status": "DOCUMENTS_RECEIVED"
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/requests?id=eq.{{ bag.request.id }}"
+                        },
+                        "verb": "PATCH",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST9-B",
+                "name": "Get request details",
+                "next": "SB7-B",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/requests/{{bag.request.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB7-B",
+                "name": "Set request details to bag",
+                "next": "U4-B",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "request_details": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U4-B",
+                "name": "Backoffice request analysis",
+                "next": "F4-B",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "action": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "credit_limit": {
+                                    "type": "string"
+                                },
+                                "proof_status": {
+                                    "type": "string"
+                                },
+                                "attachment_id": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "client_mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "action": "REQUEST_ANALYSIS"
+                }
+            },
+            {
+                "id": "F4-B",
+                "name": "Check Backoffcie action",
+                "next": {
+                    "default": "ST12-B",
+                    "approve_request": "ST11-B",
+                    "classify_documents": "SB8-B"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U7-B",
+                "name": "Backoffice rejects request,and set message",
+                "next": "ST12-B",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "bag.request_details"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "client_mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "action": "REJECT_REQUEST"
+                }
+            },
+            {
+                "id": "ST12-B",
+                "name": "Reject Request",
+                "next": "E",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "message": {
+                            "$ref": "result.activities[0].data.message"
+                        },
+                        "profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/requests/reject"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "U6-B",
+                "name": "Backoffice approves request,set credit_limits and message",
+                "next": "ST11-B",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "bag.request_details"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "credit_limit",
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                },
+                                "credit_limit": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "client_mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "action": "APPROVE_REQUEST"
+                }
+            },
+            {
+                "id": "ST11-B",
+                "name": "Approve Request",
+                "next": "E",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "message": {
+                            "$ref": "result.activities[0].data.message"
+                        },
+                        "profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        },
+                        "credit_limit": {
+                            "$ref": "result.activities[0].data.credit_limit"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/requests/approve"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "U5-B",
+                "name": "Backoffice classify documents",
+                "next": "SB8-B",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "bag.request_details"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "attachment_id",
+                                "proof_status"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "proof_status": {
+                                    "type": "string"
+                                },
+                                "attachment_id": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "client_mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "action": "CLASSIFY_DOCUMENTS"
+                }
+            },
+            {
+                "id": "SB8-B",
+                "name": "Set attachment_id and type to bag",
+                "next": "ST10-B",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "type": {
+                            "$ref": "result.activities[0].data.type"
+                        },
+                        "proof_status": {
+                            "$ref": "result.activities[0].data.proof_status"
+                        },
+                        "attachment_id": {
+                            "$ref": "result.activities[0].data.attachment_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST10-B",
+                "name": "Update attachments",
+                "next": "ST13-B",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "type": {
+                            "$ref": "bag.type"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/attachments?id=eq.{{bag.attachment_id}}"
+                        },
+                        "verb": "PATCH",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST13-B",
+                "name": "Update proofs",
+                "next": "ST9-B",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "status": {
+                            "$ref": "bag.proof_status"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/proofs?attachment_id=eq.{{bag.attachment_id}}"
+                        },
+                        "verb": "PATCH",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST7",
+                "name": "Create Proofs and Attachments",
+                "next": "ST17",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "profile_id": {
+                            "$ref": "bag.buyer_profile.id"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request.id"
+                        },
+                        "external_id": {
+                            "$ref": "result.activities[0].data.external_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/proofs"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "U2",
+                "name": "User has given consent?",
+                "next": "F2",
+                "type": "UserTask",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "consent"
+                            ],
+                            "properties": {
+                                "consent": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CONSENT"
+                }
+            },
+            {
+                "id": "F2",
+                "name": "Check Consent",
+                "next": {
+                    "true": "ST3",
+                    "default": "E"
+                },
+                "type": "Flow",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.consent"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Get account settings",
+                "next": "SB3",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/accounts"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB3",
+                "name": "Save default claims to bag",
+                "next": "ST15",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "account_id": {
+                            "$ref": "result.data[0].id"
+                        },
+                        "default_claims": {
+                            "$ref": "result.data[0].settings.default_user_claims"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST15",
+                "name": "Get User information",
+                "next": "F6",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/profiles/{{ bag.mobile_phone }}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F6",
+                "name": "User aleready exists?",
+                "next": {
+                    "true": "SB4",
+                    "default": "ST4"
+                },
+                "type": "Flow",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => (result.data.id) ? true :  false"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST4",
+                "name": "Create actor",
+                "next": "ST5",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "CreateActorTask",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.mobile_phone"
+                        },
+                        "claims": {
+                            "$ref": "bag.default_claims"
+                        },
+                        "account_id": {
+                            "$ref": "bag.account_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST5",
+                "name": "Create profile",
+                "next": "SB4",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "actor_id": {
+                            "$ref": "result.actor.id"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/profiles/create"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB4",
+                "name": "Set buyer profile to bag",
+                "next": "ST2",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "buyer_profile": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "E",
+                "name": "Finish node",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "A"
+            }
+        ],
+        "prepare": [],
+        "environment": {},
+        "requirements": [
+            "core"
+        ]
+    }
+}

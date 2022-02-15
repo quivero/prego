@@ -1,0 +1,327 @@
+{
+    "name": "botMessage",
+    "description": "Workflow para mensagens do bot",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "BACKOFFICE",
+                "name": "Backoffice",
+                "rule": {
+                    "$js": "({actor_data}) => actor_data.claims.includes('backoffice')"
+                }
+            },
+            {
+                "id": "BACKOFFICE-LATCHED",
+                "name": "Backoffice Latched",
+                "rule": {
+                    "$js": "({actor_data, bag}) => actor_data.claims.includes('backoffice') && actor_data.actor_id === bag.actor_id"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "S",
+                "name": "Start Workflow",
+                "next": "VERIFY-INPUT",
+                "type": "Start",
+                "lane_id": "BACKOFFICE",
+                "parameters": {
+                    "timeout": 7200,
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "SB1",
+                "name": "Set ActorId To Bag",
+                "next": "VERIFY-INPUT",
+                "type": "SystemTask",
+                "lane_id": "BACKOFFICE",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "actor_id": {
+                            "$ref": "actor_data.actor_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VERIFY-INPUT",
+                "name": "Verify input to create message",
+                "next": {
+                    "true": "GET-MESSAGE-TO-UPDATE",
+                    "default": "GET-MESSAGE"
+                },
+                "type": "Flow",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-MESSAGE",
+                "name": "Get messages",
+                "next": "LIST-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/dev_contracts?select=id,key&order=key.asc&schema=not.is.null"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "LIST-MESSAGE",
+                "name": "List messages",
+                "next": "VERIFY-TIMEOUT",
+                "type": "UserTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "message": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "id"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "key": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "CHOOSE_MESSAGE_BOT",
+                    "activity_manager": "commit"
+                }
+            },
+            {
+                "id": "VERIFY-TIMEOUT",
+                "name": "Check if timeout is expired",
+                "next": {
+                    "true": "TIMEOUT-EXIT",
+                    "default": "GET-MESSAGE-TO-UPDATE"
+                },
+                "type": "Flow",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => result.is_continuous === true"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-MESSAGE-TO-UPDATE",
+                "name": "Get messages to update",
+                "next": "USER-SUBMIT-MESSAGE-TO-CREATE",
+                "type": "SystemTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/dev_contracts?id=eq.{{result.activities.0.data.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "USER-SUBMIT-MESSAGE-TO-CREATE",
+                "name": "User submit message info to create",
+                "next": "VERIFY-ACTION",
+                "type": "UserTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.data[0].id"
+                        },
+                        "value": {
+                            "$ref": "result.data[0].value"
+                        },
+                        "ui_schema": {
+                            "$ref": "result.data[0].value.ui_schema"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "value"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "$ref": "result.data[0].schema"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "SUBMIT_MESSAGE_BOT",
+                    "activity_manager": "commit"
+                }
+            },
+            {
+                "id": "VERIFY-ACTION",
+                "name": "Check user",
+                "next": {
+                    "default": "REQUEST-TO-SUBMIT-MESSAGE",
+                    "RETURN_LIST": "GET-MESSAGE"
+                },
+                "type": "Flow",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "REQUEST-TO-SUBMIT-MESSAGE",
+                "name": "Request to submit message",
+                "next": "VERIFY-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.activities[0].data.id"
+                        },
+                        "value": {
+                            "$ref": "result.activities[0].data.value"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/dev_contracts?id=eq.{{result.activities.0.data.id}}"
+                        },
+                        "verb": "PATCH",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "VERIFY-REQUEST",
+                "name": "Check request status",
+                "next": {
+                    "204": "CONFIRM-REQUEST",
+                    "default": "ERROR-MESSAGE"
+                },
+                "type": "Flow",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => result.status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "TIMEOUT-EXIT",
+                "name": "Notify timeout",
+                "next": "FINISH",
+                "type": "UserTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "message": "Tempo expirado!",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_TIMEOUT"
+                }
+            },
+            {
+                "id": "ERROR-MESSAGE",
+                "name": "Notify error",
+                "next": "FINISH",
+                "type": "UserTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "message": "Erro!",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_ERROR_MESSAGE_BOT",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "CONFIRM-REQUEST",
+                "name": "Notify success",
+                "next": "FINISH",
+                "type": "UserTask",
+                "lane_id": "BACKOFFICE-LATCHED",
+                "parameters": {
+                    "input": {
+                        "message": "Requisicao realizada com sucesso!",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_SUCCESS_MESSAGE_BOT",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "FINISH",
+                "name": "Finish",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "BACKOFFICE-LATCHED"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

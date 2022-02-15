@@ -1,0 +1,238 @@
+{
+    "name": "remindClient",
+    "description": "Sub process to remind client to finish his request.",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "BOT_X_BACKOFFICE",
+                "name": "BOT_X_BACKOFFICE",
+                "rule": [
+                    "fn",
+                    [
+                        "actor_data",
+                        "bag"
+                    ],
+                    [
+                        "or",
+                        [
+                            "eval",
+                            [
+                                "apply",
+                                "or",
+                                [
+                                    "map",
+                                    [
+                                        "fn",
+                                        [
+                                            "v"
+                                        ],
+                                        [
+                                            "or",
+                                            [
+                                                "=",
+                                                "v",
+                                                [
+                                                    "`",
+                                                    "adminRequests"
+                                                ]
+                                            ],
+                                            [
+                                                "=",
+                                                "v",
+                                                [
+                                                    "`",
+                                                    "botGeneral"
+                                                ]
+                                            ],
+                                            [
+                                                "=",
+                                                "v",
+                                                [
+                                                    "`",
+                                                    "botRealtor"
+                                                ]
+                                            ],
+                                            [
+                                                "=",
+                                                "v",
+                                                [
+                                                    "`",
+                                                    "botLead"
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    [
+                                        "get",
+                                        "actor_data",
+                                        [
+                                            "`",
+                                            "claims"
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start node",
+                "next": "REMIND-CLIENT-1",
+                "type": "Start",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "parameters": {
+                    "input_schema": {
+                        "type": "object",
+                        "required": [
+                            "reply_count",
+                            "party_number"
+                        ],
+                        "properties": {
+                            "reply_count": {
+                                "type": "number"
+                            },
+                            "party_number": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                }
+            },
+            {
+                "id": "REMIND-CLIENT-1",
+                "name": "Check if reply_count reach five to end new_request process because client doesn't answer",
+                "next": {
+                    "true": "REMIND-CLIENT-3",
+                    "default": "REMIND-CLIENT-2"
+                },
+                "type": "Flow",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.reply_count === 6"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "REMIND-CLIENT-2",
+                "name": "Notify client to continue his request",
+                "next": "EXIT",
+                "type": "UserTask",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "parameters": {
+                    "input": {
+                        "message": "Bela: Olá, tudo bem? Só vim te lembrar para continuar o seu processo de aprovação de crédito e conquistar o grande sonho da casa própria.",
+                        "party_number": {
+                            "$ref": "bag.party_number"
+                        }
+                    },
+                    "action": "NOTIFY_CLIENT_FINISH_REQUEST",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "REMIND-CLIENT-3",
+                "name": "Notify client to continue request.",
+                "next": "REMIND-CLIENT-4",
+                "type": "UserTask",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "parameters": {
+                    "input": {
+                        "message": {
+                            "$mustache": "Bela: Oi, tudo bem? Notei que você não prosseguiu com o envio dos seus dados.\nVocê deseja continuar com o processo de aprovação de crédito?\n1 - Sim, quero continuar. \n2 - Não, desejo encerrar.\n(digite 1 ou 2 para prosseguir)."
+                        },
+                        "party_number": {
+                            "$ref": "bag.party_number"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "CAPTURING_WILL_TO_PROCEED",
+                    "timeout": 60
+                }
+            },
+            {
+                "id": "REMIND-CLIENT-4",
+                "name": "Set user consent to bag",
+                "next": "REMIND-CLIENT-5",
+                "type": "SystemTask",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "consent": {
+                            "$js": "({result}) => result.is_continue ? '2' : result.activities[0].data.message"
+                        },
+                        "is_continue": {
+                            "$js": "({result}) => result.is_continue ? true : false"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "REMIND-CLIENT-5",
+                "name": "Check user consent",
+                "next": {
+                    "1": "EXIT",
+                    "2": "EXIT-REQUEST",
+                    "default": "REMIND-CLIENT-3"
+                },
+                "type": "Flow",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.consent"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT",
+                "name": "Finish remindClient",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "parameters": {
+                    "input": {
+                        "request_continue": true
+                    }
+                }
+            },
+            {
+                "id": "EXIT-REQUEST",
+                "name": "Finish remindClient",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "BOT_X_BACKOFFICE",
+                "parameters": {
+                    "input": {
+                        "request_continue": false
+                    }
+                }
+            }
+        ],
+        "prepare": [],
+        "environment": {},
+        "requirements": [
+            "core"
+        ]
+    }
+}

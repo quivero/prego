@@ -1,0 +1,236 @@
+{
+    "name": "editProfile",
+    "description": "Fluxo único para alteração de perfil do usuário",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "B",
+                "name": "Backoffice",
+                "rule": [
+                    "fn",
+                    [
+                        "actor_data",
+                        "bag"
+                    ],
+                    [
+                        "eval",
+                        [
+                            "apply",
+                            "or",
+                            [
+                                "map",
+                                [
+                                    "fn",
+                                    [
+                                        "v"
+                                    ],
+                                    [
+                                        "=",
+                                        "v",
+                                        [
+                                            "`",
+                                            "adminProfiles"
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "get",
+                                    "actor_data",
+                                    [
+                                        "`",
+                                        "claims"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "nodes": [
+            {
+                "id": "SA",
+                "name": "Start workflow to change profile",
+                "next": "ST1",
+                "type": "Start",
+                "lane_id": "B",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Get all profiles",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/profiles"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "U1",
+                "name": "User inserts information to change profile or back navigation",
+                "next": "F1",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "profiles": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "option": {
+                                    "type": "string"
+                                },
+                                "status": {
+                                    "type": "string"
+                                },
+                                "credit_limit": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "PROFILES_LIST"
+                }
+            },
+            {
+                "id": "F1",
+                "name": "Check if user wants to back",
+                "next": {
+                    "return": "E",
+                    "default": "SB1"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SB1",
+                "name": "Set profile changes to Bag",
+                "next": "U2",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.activities[0].data.id"
+                        },
+                        "new_data": {
+                            "$ref": "result.activities[0].data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U2",
+                "name": "Confirm if user wanna update profile",
+                "next": "F2",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "ack": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "ACK_MODAL"
+                }
+            },
+            {
+                "id": "F2",
+                "name": "Check if user wanna confirm the change",
+                "next": {
+                    "false": "U1",
+                    "default": "ST3"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.ack"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Make a request to UPDATE profile information",
+                "next": "E",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "data": {
+                            "$ref": "bag.new_data"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/{{ bag.id }}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "E",
+                "name": "Finish workflow to change profile",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "B"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "POSTGREST": "POSTGREST",
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

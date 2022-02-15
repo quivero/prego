@@ -7,13 +7,13 @@ import GraphVertex from '../../data-structures/graph/GraphVertex';
  * @param {GraphVertex} vertexCandidate
  * @return {boolean}
  */
-function isSafe(adjacencyMatrix, verticesIndices, cycle, vertexCandidate) {
+function isSafe(adjacencyMatrix, verticesKeystoIndices, cycle, vertexCandidate) {
   const endVertex = cycle[cycle.length - 1];
 
   // Get end and candidate vertices indices in adjacency matrix.
-  const candidateVertexAdjacencyIndex = verticesIndices[vertexCandidate.getKey()];
-  const endVertexAdjacencyIndex = verticesIndices[endVertex.getKey()];
-
+  const candidateVertexAdjacencyIndex = verticesKeystoIndices[vertexCandidate.getKey()];
+  const endVertexAdjacencyIndex = verticesKeystoIndices[endVertex.getKey()];
+  
   // Check if last vertex in the path and candidate vertex are adjacent.
   if (adjacencyMatrix[endVertexAdjacencyIndex][candidateVertexAdjacencyIndex] === Infinity) {
     return false;
@@ -31,7 +31,7 @@ function isSafe(adjacencyMatrix, verticesIndices, cycle, vertexCandidate) {
  * @param {GraphVertex[]} cycle
  * @return {boolean}
  */
-function isCycle(adjacencyMatrix, verticesIndices, cycle) {
+function isCycle(adjacencyMatrix, verticesKeystoIndices, cycle) {
   // Check if first and last vertices in hamiltonian path are adjacent.
 
   // Get start and end vertices from the path.
@@ -39,9 +39,9 @@ function isCycle(adjacencyMatrix, verticesIndices, cycle) {
   const endVertex = cycle[cycle.length - 1];
 
   // Get start/end vertices indices in adjacency matrix.
-  const startVertexAdjacencyIndex = verticesIndices[startVertex.getKey()];
-  const endVertexAdjacencyIndex = verticesIndices[endVertex.getKey()];
-
+  const startVertexAdjacencyIndex = verticesKeystoIndices[startVertex.getKey()];
+  const endVertexAdjacencyIndex = verticesKeystoIndices[endVertex.getKey()];
+  
   // Check if we can go from end vertex to the start one.
   return adjacencyMatrix[endVertexAdjacencyIndex][startVertexAdjacencyIndex] !== Infinity;
 }
@@ -56,7 +56,7 @@ function isCycle(adjacencyMatrix, verticesIndices, cycle) {
 function hamiltonianCycleRecursive({
   adjacencyMatrix,
   vertices,
-  verticesIndices,
+  verticesKeystoIndices,
   cycles,
   cycle,
 }) {
@@ -66,7 +66,7 @@ function hamiltonianCycleRecursive({
   if (vertices.length === currentCycle.length) {
     // Hamiltonian path is found.
     // Now we need to check if it is cycle or not.
-    if (isCycle(adjacencyMatrix, verticesIndices, currentCycle)) {
+    if (isCycle(adjacencyMatrix, verticesKeystoIndices, currentCycle)) {
       // Another solution has been found. Save it.
       cycles.push(currentCycle);
     }
@@ -78,7 +78,7 @@ function hamiltonianCycleRecursive({
     const vertexCandidate = vertices[vertexIndex];
 
     // Check if it is safe to put vertex candidate to cycle.
-    if (isSafe(adjacencyMatrix, verticesIndices, currentCycle, vertexCandidate)) {
+    if (isSafe(adjacencyMatrix, verticesKeystoIndices, currentCycle, vertexCandidate)) {
       // Add candidate vertex to cycle path.
       currentCycle.push(vertexCandidate);
 
@@ -86,7 +86,7 @@ function hamiltonianCycleRecursive({
       hamiltonianCycleRecursive({
         adjacencyMatrix,
         vertices,
-        verticesIndices,
+        verticesKeystoIndices,
         cycles,
         cycle: currentCycle,
       });
@@ -105,10 +105,10 @@ function hamiltonianCycleRecursive({
 export default function hamiltonianCycle(graph) {
   // Gather some information about the graph that we will need to during
   // the problem solving.
-  const verticesIndices = graph.getVerticesIndices();
+  const verticesKeystoIndices = graph.getVerticesKeystoIndices();
   const adjacencyMatrix = graph.getAdjacencyMatrix();
   const vertices = graph.getAllVertices();
-
+  
   // Define start vertex. We will always pick the first one
   // this it doesn't matter which vertex to pick in a cycle.
   // Every vertex is in a cycle so we can start from any of them.
@@ -124,7 +124,7 @@ export default function hamiltonianCycle(graph) {
   hamiltonianCycleRecursive({
     adjacencyMatrix,
     vertices,
-    verticesIndices,
+    verticesKeystoIndices,
     cycles,
     cycle,
   });

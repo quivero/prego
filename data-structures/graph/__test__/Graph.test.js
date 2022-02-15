@@ -471,6 +471,206 @@ describe('Graph', () => {
     expect(graph.articulationPoints()).toStrictEqual([4, 3]);
   });
 
+  it('should find articulation points in simple graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeAB, edgeBC, edgeCD]);
+
+    const articulationPointsSet = Object.values(graph.articulationPoints());
+    let vertices_indices = graph.getVerticesKeystoIndices();
+
+    expect(articulationPointsSet.length).toBe(2);
+    expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
+    expect(articulationPointsSet[1]).toBe(vertices_indices[vertexB.getKey()]);
+  });
+
+  it('should find articulation points in simple graph with back edge', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeAB, edgeAC, edgeBC, edgeCD]);
+
+    const articulationPointsSet = graph.articulationPoints();
+    let vertices_indices = graph.getVerticesKeystoIndices();
+
+    expect(articulationPointsSet.length).toBe(1);
+    expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
+  });
+
+  it('should find articulation points in simple graph with back edge #2', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeAE = new GraphEdge(vertexA, vertexE);
+    const edgeCE = new GraphEdge(vertexC, vertexE);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeAB, edgeAE, edgeCE, edgeBC, edgeCD]);
+
+    const articulationPointsSet = Object.values(graph.articulationPoints());
+    let vertices_indices = graph.getVerticesKeystoIndices();
+
+    expect(articulationPointsSet.length).toBe(1);
+    expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
+  });
+
+  it('should find articulation points in graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+    const vertexG = new GraphVertex('G');
+    const vertexH = new GraphVertex('H');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+    const edgeEG = new GraphEdge(vertexE, vertexG);
+    const edgeEF = new GraphEdge(vertexE, vertexF);
+    const edgeGF = new GraphEdge(vertexG, vertexF);
+    const edgeFH = new GraphEdge(vertexF, vertexH);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeAB, edgeBC, edgeAC, edgeCD,
+                 edgeDE, edgeEG, edgeEF, edgeGF, edgeFH]);
+
+    const articulationPointsSet = Object.values(graph.articulationPoints());
+    let vertices_indices = graph.getVerticesKeystoIndices();
+
+    expect(articulationPointsSet.length).toBe(4);
+    expect(articulationPointsSet[0]).toBe(vertices_indices[vertexF.getKey()]);
+    expect(articulationPointsSet[1]).toBe(vertices_indices[vertexE.getKey()]);
+    expect(articulationPointsSet[2]).toBe(vertices_indices[vertexD.getKey()]);
+    expect(articulationPointsSet[3]).toBe(vertices_indices[vertexC.getKey()]);
+  });
+
+  it('should find articulation points in graph starting with articulation root vertex', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+    const vertexG = new GraphVertex('G');
+    const vertexH = new GraphVertex('H');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+    const edgeEG = new GraphEdge(vertexE, vertexG);
+    const edgeEF = new GraphEdge(vertexE, vertexF);
+    const edgeGF = new GraphEdge(vertexG, vertexF);
+    const edgeFH = new GraphEdge(vertexF, vertexH);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeDE, edgeAB, edgeBC, edgeAC,
+                edgeCD, edgeEG, edgeEF, edgeGF, edgeFH]);
+
+    const articulationPointsSet = Object.values(graph.articulationPoints());
+    let vertices_indices = graph.getVerticesKeystoIndices();
+
+    expect(articulationPointsSet.length).toBe(4);
+    expect(articulationPointsSet[0]).toBe(vertices_indices[vertexF.getKey()]);
+    expect(articulationPointsSet[1]).toBe(vertices_indices[vertexE.getKey()]);
+    expect(articulationPointsSet[2]).toBe(vertices_indices[vertexC.getKey()]);
+    expect(articulationPointsSet[3]).toBe(vertices_indices[vertexD.getKey()]);
+  });
+
+  it('should find articulation points in yet another graph #1', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeAB, edgeAC, edgeBC, edgeCD, edgeDE]);
+
+    const articulationPointsSet = Object.values(graph.articulationPoints());
+    let vertices_indices = graph.getVerticesKeystoIndices();
+
+    expect(articulationPointsSet.length).toBe(2);
+    expect(articulationPointsSet[0]).toBe(vertices_indices[vertexD.getKey()]);
+    expect(articulationPointsSet[1]).toBe(vertices_indices[vertexC.getKey()]);
+  });
+
+  it('should find articulation points in yet another graph #2', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+    const vertexG = new GraphVertex('G');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeCE = new GraphEdge(vertexC, vertexE);
+    const edgeCF = new GraphEdge(vertexC, vertexF);
+    const edgeEG = new GraphEdge(vertexE, vertexG);
+    const edgeFG = new GraphEdge(vertexF, vertexG);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeAB, edgeAC, edgeBC, edgeCD, 
+                edgeCE, edgeCF, edgeEG, edgeFG]);
+
+    const articulationPointsSet = Object.values(graph.articulationPoints());
+    let vertices_indices = graph.getVerticesKeystoIndices();
+    
+    expect(articulationPointsSet.length).toBe(1);
+    expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
+  });
+
   it('should return true for strongly connected graph', () => {
     let vertex_keys=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
@@ -535,7 +735,7 @@ describe('Graph', () => {
     graph.addEdges([AB, BC]);
 
     expect(graph.cyclicCircuits()).toEqual([]);
-  });
+  });  
 
   it('should find edge by vertices in undirected graph', () => {
     const graph = new Graph();
@@ -620,18 +820,16 @@ describe('Graph', () => {
   });
 
   it('should throw an error when trying to add edge twice', () => {
-    function addSameEdgeTwice() {
-      const graph = new Graph(true);
+    const graph = new Graph(true);
 
-      const vertexA = new GraphVertex('A');
-      const vertexB = new GraphVertex('B');
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
 
-      const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAB = new GraphEdge(vertexA, vertexB);
 
-      graph.addEdges([edgeAB, edgeAB]);
-    }
+    graph.addEdges([edgeAB, edgeAB]);
 
-    expect(addSameEdgeTwice).toThrow();
+    expect(console.warn).toBeCalledTimes(1);
   });
 
   it('should return the list of all added edges', () => {
@@ -698,7 +896,7 @@ describe('Graph', () => {
 
     graph.addVertices([vertexA, vertexB, vertexC]);
 
-    expect(graph.getVerticesIndices()).toEqual({
+    expect(graph.getVerticesKeystoIndices()).toEqual({
       A: 0,
       B: 1,
       C: 2,
@@ -713,8 +911,8 @@ describe('Graph', () => {
     const vertexC = new GraphVertex('C');
 
     graph.addVertices([vertexA, vertexB, vertexC]);
-
-    expect(graph.getIndicesToVertices()).toEqual({
+    
+    expect(graph.getVerticesIndicestoKeys()).toEqual({
       0: 'A',
       1: 'B',
       2: 'C',
@@ -1184,7 +1382,7 @@ describe('Graph', () => {
     const graph = new Graph();
     graph.addEdges([edgeAB, edgeBC, edgeCD, edgeBD]);
 
-    const verticesIndices = graph.getVerticesIndices();
+    const verticesIndices = graph.getVerticesKeystoIndices();
     expect(verticesIndices).toEqual({
       A: 0,
       B: 1,
@@ -1229,7 +1427,7 @@ describe('Graph', () => {
 
     const graph = new Graph(true);
     graph.addEdges([edgeAB, edgeBC, edgeCD, edgeBD]);
-
+    
     const adjacencyMatrix = graph.getAdjacencyMatrix();
     expect(adjacencyMatrix).toEqual([
       [Infinity, 2, Infinity, Infinity],
