@@ -833,6 +833,25 @@ export default class Graph {
     }
   }
 
+  isEulerianCycle() {
+    let num_vertices=this.getNumVertices();
+    let forward_star=this.getAdjacencyList(0);
+    let reverse_star=this.getAdjacencyList(1);
+
+    // Check if all non-zero degree vertices are connected
+    if (!this.isStronglyConnected())
+      return false;
+
+    // Check if in degree and out degree of every vertex is same
+    for (let i = 0; i < num_vertices; i = i + 1){
+      if (forward_star[i].length != reverse_star[i].length){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // A recursive function that finds and prints bridges using DFS traversal
   // u --> The original vertex
   // u --> The vertex to be visited next
@@ -1298,8 +1317,12 @@ export default class Graph {
         start_node_index = acyclic_path_indexes.indexOf(start_node_index);
         finish_node_index = acyclic_path_indexes.indexOf(finish_node_index);
         
-        let can_increment_route=_.intersection(acyclic_path_keys, out_in_keys).length===2 && 
-                                start_node_index >= finish_node_index
+        let intersec_len = start_node_index==finish_node_index ? 1 : 2;
+        let intersection_clause=_.intersection(acyclic_path_keys, out_in_keys).length===intersec_len
+        let finish_precede_start_clause=start_node_index >= finish_node_index
+
+        let can_increment_route= intersection_clause && finish_precede_start_clause
+                                
         if(can_increment_route){
           out_in_flow=this.convertVerticesKeystoIndexes(out_in_keys)
           
@@ -1319,11 +1342,23 @@ export default class Graph {
       return this.acyclicPaths(from, to);
     }
     
+    let acyclic_paths = [];
+    if(from==to){
+      if(this.isEulerian()){
+        let eulerian_paths = this.getEulerianPath();
+        return [eulerian_paths]
+      } else {
+        acyclic_paths=[]
+      }
+    } else {
+      acyclic_paths = this.acyclicPaths(from, to);
+    }
+
     let cycles_venn = this.getCyclesVenn();
     let cycle_indices = this.getCycleIndices();
-    
-    let acyclic_paths = this.acyclicPaths(from, to);
+
     let cyclic_paths = [];
+
     let cycles_connections = Object.keys(cycles_venn);
     let cycle_nodes_arr=[]
     let connected_cycles_indexes=[];
