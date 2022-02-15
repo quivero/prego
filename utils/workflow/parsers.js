@@ -5,6 +5,44 @@ import GraphVertex from '../../data-structures/graph/GraphVertex.js';
 import GraphEdge from '../../data-structures/graph/GraphEdge.js';
 import { getUniques, getAllIndexes } from '../arrays/arrays.js';
 
+export const describeBlueprint = (blueprint) => {
+  let bp_graph = parseBlueprintToGraph(blueprint);
+  let node_ids_per_type={}
+  
+  let types=['start', 'finish', 'systemtask', 'subprocess', 
+              'scripttask', 'flow', 'usertask']
+
+  for(let type of types) {
+    node_ids_per_type[type]=[]
+
+    getBlueprintNodesByType(blueprint, type).forEach(
+      (node) => {
+        node_ids_per_type[type].push(node.id)
+      }
+    )
+  }
+  
+  return {
+    'name' : blueprint.name,
+    'description' : blueprint.description,
+    'node_ids_per_category': node_ids_per_type,
+    'graph': bp_graph.describe()
+  }
+}
+
+export const getBlueprintNodesByType = (blueprint, type) => {
+  const { nodes } = blueprint.blueprint_spec;
+  let nodes_per_type=[]
+
+  for (let node of nodes) {
+    if(node.type.toLowerCase() === type){
+      nodes_per_type.push(node)
+    }
+  }
+
+  return nodes_per_type
+}
+
 export const parseBlueprintToGraph = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const graph = new Graph(true);

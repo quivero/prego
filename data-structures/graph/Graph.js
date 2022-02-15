@@ -1401,7 +1401,7 @@ export default class Graph {
     return {
       vertices: Object.keys(this.vertices).toString(),
       edges: Object.keys(this.edges).toString(),
-      vertices_to_indices: this.getVerticesIndicestoKeys(),
+      vertices_keys_to_indices: this.getVerticesKeystoIndices(),
       adjacency_list: this.getAdjacencyList(),
       loose_nodes: this.looseNodes(),
       orphan_nodes: this.orphanNodes(),
