@@ -26,32 +26,29 @@ app.listen(PORT, () => {
 });
 
 app.get('/', (req, res) => {
-  // Driver program
-  // Create a sample graph
+  // Driver program - Create a sample graph
 
-  const bps_root = './samples/blueprints/';
+  const bps_root = './samples/blueprints/approva/';
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = false;
-  const TEST_USE_CASE = true;
+  const READ_ALL_BPS = true;
   const blueprint_fname = 'precious.json';
   
-  const descriptions = [];
-  
   if (READ_ALL_BPS) {
+    let paths = [];
     for (let i = 0; i < blueprints_fnames.length; i++) {
       const fname = bps_root + blueprints_fnames[i];
       const blueprint_i = require(fname);
       
       // let graph_i = parseBlueprintToGraph(blueprint_i);
-      descriptions.push(fromStartToFinishCombsAcyclicPaths(blueprint_i));
+      paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
     }
-    
-    res.send(descriptions);
+
+    res.send(paths);
   } else {
     const fname = bps_root + blueprint_fname;
     const blueprint_i = require(fname);
-    console.log(blueprint_i['blueprint_spec']['lanes'])
+
     const graph = parseBlueprintToGraph(blueprint_i);
     const route_describe = fromStartToFinishCombsAllPaths(blueprint_i);
     
