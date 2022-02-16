@@ -1,6 +1,7 @@
 import Iter from 'es-iter';
 import _ from 'lodash';
 
+import Queue from '../queue/Queue.js'
 import stronglyConnectedComponents from '../../algorithms/strongly-connected-components/stronglyConnectedComponents.js';
 import eulerianPath from '../../algorithms/eulerian-path/eulerianPath.js';
 import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
@@ -105,8 +106,8 @@ export default class Graph {
   }
 
   /**
-     * @return {Array[string]}
-     */
+   * @return {Array[string]}
+   */
    getAllVerticesKeys() {
     return Object.keys(this.vertices);
   }
@@ -132,10 +133,16 @@ export default class Graph {
     return Object.keys(this.edges);
   }
 
+  /**
+   * @return {*[string]}
+   */
   getVerticesKeys() {
     return Object.keys(this.vertices)
   }
 
+  /**
+   * @return {GraphVertex[]}
+   */
   getVerticesByKeys(vertex_keys) {
     return vertex_keys.map(
       (vertex_key) => {
@@ -143,6 +150,9 @@ export default class Graph {
     })
   }
   
+  /**
+   * @return {GraphVertex[]}
+   */
   getVerticesByIndexes(vertex_indexes) {
     let index_to_key=this.getVerticesIndicestoKeys()
     
@@ -790,7 +800,7 @@ export default class Graph {
     */
   isEulerian(){
     const adjList = this.getAdjacencyList();
-    const reverseStart = this.getAdjacencyList(1);
+    const reverse_star = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
 
     // Check if all non-zero degree vertices are connected
@@ -801,7 +811,7 @@ export default class Graph {
 
       // Check if in degree and out degree of every vertex is same
       for (let i = 0; i < n_vertices; i++){
-        if (adjList[i].length != reverseStart[i].length){
+        if (adjList[i].length != reverse_star[i].length){
           return false;
         }
       }
@@ -858,7 +868,7 @@ export default class Graph {
   // pre[v]: order in which dfs examines v
   // low[v]: lowest preorder of any vertex connected to v
   // parent[] --> Stores parent vertices in DFS tree
-  #bridgesUtil(u, v, preorder, low, counter, bridges) {
+  bridgesUtil(u, v, preorder, low, counter, bridges) {
     const adjList = this.getAdjacencyList();
 
     preorder[v] = counter++;
@@ -867,7 +877,7 @@ export default class Graph {
     for (let i = 0; i < adjList[v].length; i += 1) {
       let w = adjList[v][i];
       if (preorder[w] === -1) {
-        this.#bridgesUtil(v, w, preorder, low, counter, bridges);
+        this.bridgesUtil(v, w, preorder, low, counter, bridges);
 
         low[v] = Math.min(low[v], low[w]);
 
@@ -884,10 +894,10 @@ export default class Graph {
 
   // DFS based function to find all bridges. It uses recursive function bridgeUtil()
   bridges() {
-    const graph_ = this.isDirected ? this.retrieveUndirected() : _.cloneDeep(this);
+    // const graph_ = this.isDirected ? this.retrieveUndirected() : _.cloneDeep(this);
 
     // Mark all the vertices as not visited
-    const n_vertices = graph_.getNumVertices();
+    const n_vertices = this.getNumVertices();
     const bridges = [];
     let counter = 0;
 
@@ -898,7 +908,7 @@ export default class Graph {
 
     for (const v of Iter.range(n_vertices)) {
       if (preorder[v] === -1) {
-        this.#bridgesUtil(v, v, preorder, low, counter, bridges);
+        this.bridgesUtil(v, v, preorder, low, counter, bridges);
       }
     }
 
@@ -1181,6 +1191,84 @@ export default class Graph {
     subgraph.addEdges(new_edges)
 
     return subgraph
+  }
+
+  // Returns count of not reachable nodes from
+  // vertex v.
+  // It uses recursive DFSUtil()
+  countNotReach(from_vertex_index){
+    let num_vertices=this.getNumVertices();
+
+    // Mark all the vertices as not visited
+    let visited = new Array(num_vertices);
+
+    for(let i = 0; i < num_vertices; i++)
+        visited[i] = false;
+
+    // Call the recursive helper function
+    // to print DFS traversal
+    this.DFSUtil(from_vertex_index, visited);
+
+    // Return count of not visited nodes
+    let count = 0;
+    for(let i = 0; i < num_vertices; i++){
+        if (visited[i] == false)
+            count++;
+    }
+
+    return count;
+  }
+
+  #reachUtil(src, visited){
+    let adjList = this.getAdjacencyList()
+
+    // Mark all the vertices as not visited
+    // Create a queue for BFS
+    // a =  visited
+    let queue_ = new Queue()
+    
+    queue_.enqueue(src)
+    
+    // Assign Component Number
+    visited[src] = 1
+    
+    // Vector to store all the reachable
+    // nodes from 'src'
+    let reachableNodes = []
+    
+    while (queue_.length > 0){
+      // Dequeue a vertex from queue
+      let u = queue_.dequeue()
+      reachableNodes.push(u)
+      
+      // Get all adjacent vertices of the dequeued vertex u. 
+      // If a adjacent has not been visited, then mark it visited and enqueue it
+      for(let neighbour_id of adjList[u]){
+        // Assign Component Number to all the  reachable nodes
+        if (visited[neighbour_id] == 0){
+          visited[neighbour_id] = 1
+          queue_.enqueue(neighbour_id)
+        }
+      }
+    }
+
+    return reachableNodes
+  }
+
+  reachableNodes(from_vertex_key){ 
+    let vertices_keys_to_indices = this.getVerticesKeystoIndices(from_vertex_key)
+    let from_vertex_id = vertices_keys_to_indices[from_vertex_key]
+    
+    let num_vertices = this.getNumVertices()
+    let visited = []
+
+    for(let i=0; i<num_vertices; i = i + 1) {
+      visited[i]=0
+    }
+    
+    // Get the number of nodes in the graph
+    // Map to store list of reachable Nodes for a  given node.
+    return this.#reachUtil(from_vertex_id, visited)
   }
 
   #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {

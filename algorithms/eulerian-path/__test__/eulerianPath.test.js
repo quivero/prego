@@ -30,7 +30,7 @@ describe('eulerianPath', () => {
         .addEdges([edgeAB, edgeAC, edgeBC, edgeBD, edgeCE]);
 
       eulerianPath(graph);
-    
+      
       expect(console.warn).toHaveBeenCalledTimes(1);
   });
   

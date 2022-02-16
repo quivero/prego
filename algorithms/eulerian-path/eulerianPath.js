@@ -9,11 +9,6 @@ import graphBridges from '../bridges/graphBridges.js';
 export default function eulerianPath(graph) {
   const eulerianPathVertices = [];
 
-  let forward_star=graph.getAdjacencyList(0);
-  let reverse_star=graph.getAdjacencyList(1);
-
-  let vertices_keys_to_indices=graph.getVerticesKeystoIndices();
-
   // Set that contains all vertices with even rank (number of neighbors).
   const evenRankVertices = {};
 
@@ -28,20 +23,11 @@ export default function eulerianPath(graph) {
 
   // Detect whether graph contains Eulerian Circuit or Eulerian Path or none of them.
   /** @params {GraphVertex} vertex */
-  let vertex_index=-1;
-  let vertex_key=''
-  let neighbours=[]
-
   graph.getAllVertices().forEach((vertex) => {
-    vertex_key=vertex.getKey()
-    vertex_index=vertices_keys_to_indices[vertex_key];
-    
-    neighbours=[...(new Set(forward_star[vertex_index].concat(reverse_star[vertex_index])))]
-    
-    if (neighbours.length % 2) {
-      oddRankVertices[vertex_key] = neighbours;
+    if (vertex.getDegree() % 2) {
+      oddRankVertices[vertex.getKey()] = vertex;
     } else {
-      evenRankVertices[vertex_key] = vertex;
+      evenRankVertices[vertex.getKey()] = vertex;
     }
   });
 
@@ -49,7 +35,12 @@ export default function eulerianPath(graph) {
   // Graph would be an Eulerian Circuit in case if all its vertices has even degree.
   // If not all vertices have even degree then graph must contain only two odd-degree
   // vertices in order to have Euler Path.
-  const isCircuit = graph.isEulerianCycle();
+  const isCircuit = !Object.values(oddRankVertices).length;
+
+  if (!isCircuit && Object.values(oddRankVertices).length !== 2) {
+    console.warn('Eulerian path must contain two odd-ranked vertices');
+    return []
+  }
 
   // Pick start vertex for traversal.
   let startVertex = null;
@@ -72,8 +63,7 @@ export default function eulerianPath(graph) {
     eulerianPathVertices.push(currentVertex);
 
     // Detect all bridges in graph.
-    // We need to do it in order to not delete bridges if there are other edges
-    // exists for deletion.
+    // We need to do it in order to not delete bridges if there are other edges  exists for deletion.
     const bridges = graphBridges(graph);
 
     // Peek the next edge to delete from graph.

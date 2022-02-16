@@ -4,6 +4,7 @@ import Graph from '../../data-structures/graph/Graph.js';
 import GraphVertex from '../../data-structures/graph/GraphVertex.js';
 import GraphEdge from '../../data-structures/graph/GraphEdge.js';
 import { getUniques, getAllIndexes } from '../arrays/arrays.js';
+import _ from 'lodash';
 
 export const describeBlueprint = (blueprint) => {
   let bp_graph = parseBlueprintToGraph(blueprint);
@@ -11,7 +12,7 @@ export const describeBlueprint = (blueprint) => {
   
   let types=['start', 'finish', 'systemtask', 'subprocess', 
               'scripttask', 'flow', 'usertask']
-  
+
   for(let type of types) {
     node_ids_per_type[type]=[]
 
@@ -22,10 +23,27 @@ export const describeBlueprint = (blueprint) => {
     )
   }
   
+  let start_finish_nodes=startAndFinishNodes(blueprint)
+  let reachable_nodes=[]
+  let workflow_finish_reachability={}
+
+  for(let start_node_key of start_finish_nodes.start_nodes) {
+    workflow_finish_reachability[start_node_key]=[]
+    
+    reachable_nodes=bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key))
+    
+    let reachable_finish_nodes=_.intersection(reachable_nodes, 
+                                              start_finish_nodes.finish_nodes)
+    if(reachable_finish_nodes.length!=0){
+      workflow_finish_reachability[start_node_key]=reachable_finish_nodes
+    }
+  }
+
   return {
     'name' : blueprint.name,
     'description' : blueprint.description,
     'node_ids_per_type': node_ids_per_type,
+    'reachable_finish_from_start': workflow_finish_reachability,
     'graph': bp_graph.describe()
   }
 }
@@ -144,11 +162,6 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const orphanNodes = bp_graph.orphanNodes();
   const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
   const vertices_indices_to_keys = bp_graph.getVerticesIndicestoKeys();
-  
-  console.log(vertices_keys_to_indices)
-  
-  console.log(start_key)
-  console.log(finish_key)
 
   const start_index = vertices_keys_to_indices[start_key];
   const finish_index = vertices_keys_to_indices[finish_key];

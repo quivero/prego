@@ -215,6 +215,20 @@ describe('Graph', () => {
     expect(graph.getEulerianPath()).toStrictEqual([0, 1, 2, 3, 4, 5]);
   });
 
+  /*
+  it('should return vertices indexes', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+
+    const graph = new Graph();
+
+    graph.addEdges([edgeAB]);
+    
+    expect(graph.getVerticesByIndexes([0, 1])).toStrictEqual(['A', 'B']);
+  });*/
+  
   it('should return false for a non-eulerian directed graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
@@ -800,6 +814,24 @@ describe('Graph', () => {
     expect(neighbors.length).toBe(2);
     expect(neighbors[0]).toEqual(vertexB);
     expect(neighbors[1]).toEqual(vertexC);
+  });
+
+  it('should return reachable nodes from from_vertex_key', () => {
+    const graph = new Graph(true);
+
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    graph.addVertex(vertexD)
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC])
+
+    expect(graph.reachableNodes('A')).toEqual([1, 2, 3]);
   });
 
   it('should return graph density', () => {
