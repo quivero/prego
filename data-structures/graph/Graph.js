@@ -1154,8 +1154,8 @@ export default class Graph {
   /**
    * @return {object}
    */
-  getCyclesVenn() {
-    return extendedVenn(this.getCycleIndices())
+  getCyclesVenn(cycle_indices) {
+    return extendedVenn(cycle_indices)
   }
 
   buildSubgraph(subgraph_vertex_indexes) {
@@ -1442,23 +1442,35 @@ export default class Graph {
       acyclic_paths = this.acyclicPaths(from, to);
     }
 
-    let cycles_venn = this.getCyclesVenn();
     let cycle_indices = this.getCycleIndices();
-
+    let cycles_venn = this.getCyclesVenn(cycle_indices);
+    
     let cyclic_paths = [];
 
     let cycles_connections = Object.keys(cycles_venn);
     let cycle_nodes_arr=[]
     let connected_cycles_indexes=[];
+    let acyclic_path=[]
+    let acyclic_paths_len=acyclic_paths.length
+    let curr_index=0;
+    let cycles_connections_len=cycles_connections.length
+    let cycles_connection=[]
+
+    acyclic_paths=removeArrayDuplicates(acyclic_paths)
     
-    // For each acyclic path, it finds if a cyclic connection 
-    // brings new paths
-    for(let acyclic_path of acyclic_paths){
-      for(let cycles_connection of cycles_connections) {
+    // For each acyclic path, it finds if a cyclic connection brings new paths    
+    for(let path_index in acyclic_paths){
+      acyclic_path=acyclic_paths[path_index]
+      
+      for(let cycles_connection_index in cycles_connections) {
+        cycles_connection=cycles_connections[cycles_connection_index]
+        
         connected_cycles_indexes = _.split(cycles_connection, ',');
         
+        curr_index=Number(cycles_connection_index)+Number(path_index*cycles_connections_len)
+        console.log(curr_index+'/'+acyclic_paths_len*cycles_connections_len)
+
         let cycle_nodes=new Set();
-        
         connected_cycles_indexes.forEach((cycle_index) => {
           cycle_index=Number(cycle_index)
           

@@ -198,9 +198,10 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
     length: routes.length,
     routes: [],
   };
+  
   let lane_route_i = [];
-
-  for (const i of Iter.range(routes.length)) {
+  
+  for (const i in routes) {
     lane_route_i = nodeRouteToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
     
     route_describe.routes.push(

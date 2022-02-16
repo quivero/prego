@@ -4,7 +4,6 @@ import { createRequire } from 'module';
 import fs from 'fs';
 
 import {
-  parseBlueprintToGraph,
   fromStartToFinishCombsAllPaths,
   describeBlueprint
 } from './utils/workflow/parsers.js';
@@ -31,28 +30,30 @@ app.get('/', (req, res) => {
 
   const bps_root = './samples/blueprints/approva/';
   const blueprints_fnames = fs.readdirSync(bps_root);
-  
+
   const READ_ALL_BPS = true;
-  const blueprint_fname = 'new_request.json';
 
   if (READ_ALL_BPS) {
-    let descriptions=[]
+    let paths=[]
+    let route_describe={}
 
     for (let i = 0; i < blueprints_fnames.length; i++) {
       const blueprint_i_name=blueprints_fnames[i]
       
       const fname = bps_root + blueprint_i_name;
       const blueprint_i = require(fname);
-      
-      descriptions.push(describeBlueprint(blueprint_i))      
+
+      paths.push(fromStartToFinishCombsAllPaths(blueprint_i))      
     }
     
-    res.send(descriptions);
+    res.send(paths);
   } else {
+    const blueprint_fname = 'new_request.json';
+    
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
 
-    const route_describe = describeBlueprint(blueprint);
+    const route_describe = fromStartToFinishCombsAllPaths(blueprint);
 
     res.send(route_describe);
   }
