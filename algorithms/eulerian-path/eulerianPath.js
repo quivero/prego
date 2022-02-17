@@ -7,11 +7,6 @@ import graphBridges from '../bridges/graphBridges.js';
  * @return {GraphVertex[]}
  */
 export default function eulerianPath(graph) {
-  if(!graph.isEulerianCycle()){
-    console.warn('Eulerian path must contain two odd-ranked vertices');
-    return []
-  }
-  
   const eulerianPathVertices = [];
 
   // Set that contains all vertices with even rank (number of neighbors).
@@ -46,7 +41,7 @@ export default function eulerianPath(graph) {
     console.warn('Eulerian path must contain two odd-ranked vertices');
     return []
   }
-
+  
   // Pick start vertex for traversal.
   let startVertex = null;
 
