@@ -29,8 +29,8 @@ export default {
   // @see: https://jestjs.io/docs/en/configuration#coveragethreshold-object
   coverageThreshold: {
     global: {
-      statements: 100,
-      branches: 95,
+      statements: 90,
+      branches: 90,
       functions: 100,
       lines: 100,
     },
