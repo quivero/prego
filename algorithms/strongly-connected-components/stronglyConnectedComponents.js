@@ -8,7 +8,7 @@ import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
 function getVerticesSortedByDfsFinishTime(graph) {
   // Set of all visited vertices during DFS pass.
   const visitedVerticesSet = {};
-  
+
   // Stack of vertices by finish time.
   // All vertices in this stack are ordered by finished time in decreasing order.
   // Vertex that has been finished first will be at the bottom of the stack and

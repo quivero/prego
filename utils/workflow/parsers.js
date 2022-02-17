@@ -1,65 +1,67 @@
 import Iter from 'es-iter';
 
+import _ from 'lodash';
 import Graph from '../../data-structures/graph/Graph.js';
 import GraphVertex from '../../data-structures/graph/GraphVertex.js';
 import GraphEdge from '../../data-structures/graph/GraphEdge.js';
 import { getUniques, getAllIndexes } from '../arrays/arrays.js';
-import _ from 'lodash';
 
 export const describeBlueprint = (blueprint) => {
-  let bp_graph = parseBlueprintToGraph(blueprint);
-  let node_ids_per_type={}
-  
-  let types=['start', 'finish', 'systemtask', 'subprocess', 
-              'scripttask', 'flow', 'usertask']
+  const bp_graph = parseBlueprintToGraph(blueprint);
+  const node_ids_per_type = {};
 
-  for(let type of types) {
-    node_ids_per_type[type]=[]
+  const types = ['start', 'finish', 'systemtask', 'subprocess',
+    'scripttask', 'flow', 'usertask'];
+
+  for (const type of types) {
+    node_ids_per_type[type] = [];
 
     getBlueprintNodesByType(blueprint, type).forEach(
       (node) => {
-        node_ids_per_type[type].push(node.id)
-      }
-    )
+        node_ids_per_type[type].push(node.id);
+      },
+    );
   }
-  
-  let start_finish_nodes=startAndFinishNodes(blueprint)
-  let reachable_nodes=[]
-  let workflow_finish_reachability={}
 
-  for(let start_node_key of start_finish_nodes.start_nodes) {
-    workflow_finish_reachability[start_node_key]=[]
-    
-    reachable_nodes=bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key))
-    
-    let reachable_finish_nodes=_.intersection(reachable_nodes, 
-                                              start_finish_nodes.finish_nodes)
-    if(reachable_finish_nodes.length!=0){
-      workflow_finish_reachability[start_node_key]=reachable_finish_nodes
+  const start_finish_nodes = startAndFinishNodes(blueprint);
+  let reachable_nodes = [];
+  const workflow_finish_reachability = {};
+
+  for (const start_node_key of start_finish_nodes.start_nodes) {
+    workflow_finish_reachability[start_node_key] = [];
+
+    reachable_nodes = bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key));
+
+    const reachable_finish_nodes = _.intersection(
+      reachable_nodes,
+      start_finish_nodes.finish_nodes,
+    );
+    if (reachable_finish_nodes.length != 0) {
+      workflow_finish_reachability[start_node_key] = reachable_finish_nodes;
     }
   }
 
   return {
-    'name' : blueprint.name,
-    'description' : blueprint.description,
-    'node_ids_per_type': node_ids_per_type,
-    'reachable_finish_from_start': workflow_finish_reachability,
-    'graph': bp_graph.describe()
-  }
-}
+    name: blueprint.name,
+    description: blueprint.description,
+    node_ids_per_type,
+    reachable_finish_from_start: workflow_finish_reachability,
+    graph: bp_graph.describe(),
+  };
+};
 
 export const getBlueprintNodesByType = (blueprint, type) => {
   const { nodes } = blueprint.blueprint_spec;
-  let nodes_per_type=[]
+  const nodes_per_type = [];
 
-  for (let node of nodes) {
-    if(node.type.toLowerCase() === type){
-      nodes_per_type.push(node)
+  for (const node of nodes) {
+    if (node.type.toLowerCase() === type) {
+      nodes_per_type.push(node);
     }
   }
 
-  return nodes_per_type
-}
+  return nodes_per_type;
+};
 
 export const parseBlueprintToGraph = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
@@ -157,7 +159,7 @@ export const nodeRouteToLaneRoute = (
 export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
   const node_id_to_lane = nodeToLane(blueprint);
-  
+
   const looseNodes = bp_graph.looseNodes();
   const orphanNodes = bp_graph.orphanNodes();
   const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
@@ -166,18 +168,18 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const start_index = vertices_keys_to_indices[start_key];
   const finish_index = vertices_keys_to_indices[finish_key];
 
-  let is_undefined=false;
+  let is_undefined = false;
   if (start_index === undefined) {
     console.warn(`Warning: Claimed start vertex key ${start_key} is not available within nodes`);
-    is_undefined=true;
-  }
-  
-  if (finish_index === undefined) {
-    console.warn(`Warning: Claimed finish vertex key ${finish_key} is not available within nodes`);
-    is_undefined=true;
+    is_undefined = true;
   }
 
-  if(is_undefined){
+  if (finish_index === undefined) {
+    console.warn(`Warning: Claimed finish vertex key ${finish_key} is not available within nodes`);
+    is_undefined = true;
+  }
+
+  if (is_undefined) {
     return [];
   }
 
@@ -198,12 +200,12 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
     length: routes.length,
     routes: [],
   };
-  
+
   let lane_route_i = [];
-  
+
   for (const i in routes) {
     lane_route_i = nodeRouteToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
-    
+
     route_describe.routes.push(
       {
         nodes_path: routes[i],

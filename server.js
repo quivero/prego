@@ -5,10 +5,10 @@ import fs from 'fs';
 
 import {
   fromStartToFinishCombsAllPaths,
-  describeBlueprint
+  describeBlueprint,
 } from './utils/workflow/parsers.js';
 
-import { cartesianProduct } from './utils/arrays/arrays.js'
+import { cartesianProduct } from './utils/arrays/arrays.js';
 
 const require = createRequire(import.meta.url);
 const app = express();
@@ -34,22 +34,22 @@ app.get('/', (req, res) => {
   const READ_ALL_BPS = true;
 
   if (READ_ALL_BPS) {
-    let paths=[]
-    let route_describe={}
+    const paths = [];
+    const route_describe = {};
 
     for (let i = 0; i < blueprints_fnames.length; i++) {
-      const blueprint_i_name=blueprints_fnames[i]
-      
+      const blueprint_i_name = blueprints_fnames[i];
+
       const fname = bps_root + blueprint_i_name;
       const blueprint_i = require(fname);
 
-      paths.push(fromStartToFinishCombsAllPaths(blueprint_i))      
+      paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
     }
-    
+
     res.send(paths);
   } else {
     const blueprint_fname = 'new_request.json';
-    
+
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
 
@@ -57,6 +57,5 @@ app.get('/', (req, res) => {
 
     res.send(route_describe);
   }
-
 });
 // [END app]

@@ -39,9 +39,9 @@ export default function eulerianPath(graph) {
 
   if (!isCircuit && Object.values(oddRankVertices).length !== 2) {
     console.warn('Eulerian path must contain two odd-ranked vertices');
-    return []
+    return [];
   }
-  
+
   // Pick start vertex for traversal.
   let startVertex = null;
 

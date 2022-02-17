@@ -22,9 +22,9 @@ export default class LinkedList {
   }
 
   get length() {
-    return this.toArray().length
+    return this.toArray().length;
   }
-  
+
   /**
    * @param {*} value
    * @return {LinkedList}

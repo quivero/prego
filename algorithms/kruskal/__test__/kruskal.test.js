@@ -38,8 +38,8 @@ describe('kruskal', () => {
 
     graph
       .addEdges([edgeAB, edgeAD, edgeAC, edgeBC, edgeBE,
-                 edgeDF, edgeEC, edgeEF, edgeFC, edgeFG]);
-    
+        edgeDF, edgeEC, edgeEF, edgeFC, edgeFG]);
+
     expect(graph.getWeight()).toEqual(46);
 
     const minimumSpanningTree = kruskal(graph);
@@ -70,7 +70,7 @@ describe('kruskal', () => {
     expect(graph.getWeight()).toEqual(9);
 
     const minimumSpanningTree = kruskal(graph);
-    
+
     expect(minimumSpanningTree.getWeight()).toBe(3);
     expect(minimumSpanningTree.getAllVertices().length).toBe(graph.getAllVertices().length);
     expect(minimumSpanningTree.getAllEdges().length).toBe(graph.getAllVertices().length - 1);

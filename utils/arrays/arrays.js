@@ -53,36 +53,36 @@ export const arraysEqual = (a, b) => {
   // Please note that calling sort on an array will modify that array.
   // you might want to clone your array first.
 
-  for (var i = 0; i < a.length; ++i) {
+  for (let i = 0; i < a.length; ++i) {
     if (a[i] !== b[i]) return false;
   }
   return true;
-}
+};
 
 // Cartesian product of arrays
 export const cartesianProduct = (a, b, ...c) => {
-  let f = (a, b) => [].concat(...a.map(a => b.map(b => [].concat(a, b))));
+  const f = (a, b) => [].concat(...a.map((a) => b.map((b) => [].concat(a, b))));
 
   return b ? cartesianProduct(f(a, b), ...c) : a;
-}
+};
 
-export const removeArrayDuplicates = (list) => {  
-  let unique = [];  
-  
-  list.forEach((item) => {  
-    let has_item=false 
+export const removeArrayDuplicates = (list) => {
+  const unique = [];
+
+  list.forEach((item) => {
+    let has_item = false;
 
     unique.forEach((unique_item) => {
-      has_item=has_item || arraysEqual(item, unique_item)
-    })
-    
-    if(!has_item){
-        unique.push(item);
-    }  
+      has_item = has_item || arraysEqual(item, unique_item);
+    });
+
+    if (!has_item) {
+      unique.push(item);
+    }
   });
 
-  return unique
-}
+  return unique;
+};
 
 export const getUniques = (vec) => Array.from(new Set(vec));
 
@@ -104,7 +104,7 @@ export const extendedVenn = (sets) => {
           Set.prototype.has,
           new Set(acc),
         ));
-      
+
       // No intersection means no exclusive value
       if (comb_sets_inter.length === 0) {
         break;
@@ -113,19 +113,18 @@ export const extendedVenn = (sets) => {
       const ev_keys_i_to_n = Object.keys(extended_venn);
 
       // Intersection of elements
-      comb_sets_union = 
-        ev_keys_i_to_n.length === 0 ? []
-          : ev_keys_i_to_n.reduce((acc, key) => [
-            ...new Set(
-              [
-                ...acc,
-                ...extended_venn[key],
-              ],
-            )], []);
+      comb_sets_union = ev_keys_i_to_n.length === 0 ? []
+        : ev_keys_i_to_n.reduce((acc, key) => [
+          ...new Set(
+            [
+              ...acc,
+              ...extended_venn[key],
+            ],
+          )], []);
 
       // Exclusive combination set elements
       comb_sets_excl = _.difference(comb_sets_inter, comb_sets_union);
-      
+
       if (comb_sets_excl.length !== 0) {
         extended_venn[comb_keys.toString()] = comb_sets_excl;
       }

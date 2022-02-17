@@ -28,30 +28,30 @@ describe('Graph', () => {
 
     graph.addVertices([A, B]);
 
-    let vertex = graph.getVertexByIndex(0)
+    const vertex = graph.getVertexByIndex(0);
 
     expect(vertex.getKey()).toEqual('A');
   });
 
   it('should get edges by vertex keys', () => {
     const graph = new Graph();
-    let keys = ['A', 'B', 'C'];
-    
+    const keys = ['A', 'B', 'C'];
+
     const [A, B, C] = createVertices(keys);
     const [AB, BC] = createEdges([[A, B], [B, C]]);
 
     graph.addEdges([AB, BC]);
-    
-    let edges = graph.getEdgesByVertexKeys(keys)
 
-    let edge_keys=[] 
+    const edges = graph.getEdgesByVertexKeys(keys);
+
+    const edge_keys = [];
     edges.forEach((edge) => {
-      edge_keys.push(edge.getKey())
-    })
+      edge_keys.push(edge.getKey());
+    });
 
     expect(edge_keys).toEqual(['A_B', 'B_C']);
   });
-  
+
   it('should add edges to undirected graph', () => {
     const graph = new Graph();
 
@@ -206,12 +206,12 @@ describe('Graph', () => {
     const edgeCD = new GraphEdge(vertexC, vertexD);
     const edgeDE = new GraphEdge(vertexD, vertexE);
     const edgeEF = new GraphEdge(vertexE, vertexF);
-    const edgeBE= new GraphEdge(vertexB, vertexE);
+    const edgeBE = new GraphEdge(vertexB, vertexE);
 
     const graph = new Graph();
 
     graph.addEdges([edgeAB, edgeBC, edgeCD, edgeDE, edgeEF]);
-    
+
     expect(graph.getEulerianPath()).toStrictEqual([0, 1, 2, 3, 4, 5]);
   });
 
@@ -225,16 +225,16 @@ describe('Graph', () => {
     const graph = new Graph();
 
     graph.addEdges([edgeAB]);
-    
+
     expect(graph.getVerticesByIndexes([0, 1])).toStrictEqual(['A', 'B']);
-  });*/
-  
+  }); */
+
   it('should return false for a non-eulerian directed graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
     const vertexD = new GraphVertex('D');
-    
+
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
     const edgeCD = new GraphEdge(vertexB, vertexD);
@@ -242,7 +242,7 @@ describe('Graph', () => {
     const graph = new Graph(true);
 
     graph.addEdges([edgeAB, edgeBC, edgeCD]);
-    
+
     expect(graph.isEulerian()).toStrictEqual(false);
   });
 
@@ -251,7 +251,7 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
     const vertexD = new GraphVertex('D');
-    
+
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
     const edgeCD = new GraphEdge(vertexC, vertexD);
@@ -260,7 +260,7 @@ describe('Graph', () => {
     const graph = new Graph(true);
 
     graph.addEdges([edgeAB, edgeBC, edgeCD, edgeDA]);
-    
+
     expect(graph.isEulerian()).toStrictEqual(true);
   });
 
@@ -269,7 +269,7 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
     const vertexD = new GraphVertex('D');
-    
+
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
     const edgeCD = new GraphEdge(vertexC, vertexD);
@@ -277,7 +277,7 @@ describe('Graph', () => {
     const graph = new Graph(true);
 
     graph.addEdges([edgeAB, edgeBC, edgeCD]);
-    
+
     expect(graph.isEulerian()).toStrictEqual(false);
   });
 
@@ -286,7 +286,7 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
     const vertexD = new GraphVertex('D');
-    
+
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
     const edgeCD = new GraphEdge(vertexB, vertexD);
@@ -294,7 +294,7 @@ describe('Graph', () => {
     const graph = new Graph();
 
     graph.addEdges([edgeAB, edgeBC, edgeCD]);
-    
+
     expect(graph.isEulerian()).toStrictEqual(0);
   });
 
@@ -306,7 +306,7 @@ describe('Graph', () => {
     const graph = new Graph();
 
     graph.addVertices([vertexA, vertexB, vertexC]);
-    
+
     expect(graph.isEulerian()).toStrictEqual(0);
   });
 
@@ -323,7 +323,7 @@ describe('Graph', () => {
     const graph = new Graph();
 
     graph.addEdges([edgeAB, edgeBC, edgeCD]);
-    
+
     expect(graph.isEulerian()).toStrictEqual(0);
   });
 
@@ -340,12 +340,12 @@ describe('Graph', () => {
     const edgeCD = new GraphEdge(vertexC, vertexD);
     const edgeDE = new GraphEdge(vertexD, vertexE);
     const edgeEF = new GraphEdge(vertexE, vertexF);
-    const edgeBE= new GraphEdge(vertexB, vertexE);
+    const edgeBE = new GraphEdge(vertexB, vertexE);
 
     const graph = new Graph();
 
     graph.addEdges([edgeAB, edgeBC, edgeCD, edgeDE, edgeEF]);
-    
+
     expect(graph.isEulerian()).toStrictEqual(1);
   });
 
@@ -362,13 +362,13 @@ describe('Graph', () => {
     const edgeCD = new GraphEdge(vertexC, vertexD);
     const edgeDE = new GraphEdge(vertexD, vertexE);
     const edgeEF = new GraphEdge(vertexE, vertexF);
-    const edgeFA= new GraphEdge(vertexF, vertexA);
+    const edgeFA = new GraphEdge(vertexF, vertexA);
 
     const graph = new Graph();
 
-    graph.addEdges([edgeAB, edgeBC, edgeCD, 
-                    edgeDE, edgeEF, edgeFA]);
-    
+    graph.addEdges([edgeAB, edgeBC, edgeCD,
+      edgeDE, edgeEF, edgeFA]);
+
     expect(graph.isEulerian()).toStrictEqual(2);
   });
 
@@ -385,13 +385,13 @@ describe('Graph', () => {
     const edgeCD = new GraphEdge(vertexC, vertexD);
     const edgeDE = new GraphEdge(vertexD, vertexE);
     const edgeEF = new GraphEdge(vertexE, vertexF);
-    const edgeFA= new GraphEdge(vertexF, vertexA);
+    const edgeFA = new GraphEdge(vertexF, vertexA);
 
     const graph = new Graph(true);
 
-    graph.addEdges([edgeAB, edgeBC, edgeCD, 
-                    edgeDE, edgeEF, edgeFA]);
-    
+    graph.addEdges([edgeAB, edgeBC, edgeCD,
+      edgeDE, edgeEF, edgeFA]);
+
     expect(graph.getAdjacencyList(1)).toEqual({
       0: [5],
       1: [0],
@@ -413,13 +413,13 @@ describe('Graph', () => {
     const edge12 = new GraphEdge(vertex1, vertex2);
     const edge24 = new GraphEdge(vertex2, vertex4);
     const edge42 = new GraphEdge(vertex4, vertex2);
-    const edge23= new GraphEdge(vertex2, vertex3);
-    const edge30= new GraphEdge(vertex3, vertex0);
+    const edge23 = new GraphEdge(vertex2, vertex3);
+    const edge30 = new GraphEdge(vertex3, vertex0);
 
     const graph = new Graph(true);
 
     graph.addEdges([edge01, edge12, edge24, edge42, edge23, edge30]);
-    
+
     expect(graph.isStronglyConnected()).toEqual(true);
   });
 
@@ -466,7 +466,7 @@ describe('Graph', () => {
     const F = new GraphVertex('F');
     const G = new GraphVertex('G');
     const H = new GraphVertex('H');
-    
+
     // Vertices
     const AB = new GraphEdge(A, B);
     const AC = new GraphEdge(A, C);
@@ -479,9 +479,9 @@ describe('Graph', () => {
     const GH = new GraphEdge(G, H);
 
     // Add edges
-    graph.addEdges([AB, AC, BD, CD, DE, 
-                    EF, EG, FH, GH]);
-    
+    graph.addEdges([AB, AC, BD, CD, DE,
+      EF, EG, FH, GH]);
+
     expect(graph.articulationPoints()).toStrictEqual([4, 3]);
   });
 
@@ -501,7 +501,7 @@ describe('Graph', () => {
       .addEdges([edgeAB, edgeBC, edgeCD]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
-    let vertices_indices = graph.getVerticesKeystoIndices();
+    const vertices_indices = graph.getVerticesKeystoIndices();
 
     expect(articulationPointsSet.length).toBe(2);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
@@ -525,7 +525,7 @@ describe('Graph', () => {
       .addEdges([edgeAB, edgeAC, edgeBC, edgeCD]);
 
     const articulationPointsSet = graph.articulationPoints();
-    let vertices_indices = graph.getVerticesKeystoIndices();
+    const vertices_indices = graph.getVerticesKeystoIndices();
 
     expect(articulationPointsSet.length).toBe(1);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
@@ -550,7 +550,7 @@ describe('Graph', () => {
       .addEdges([edgeAB, edgeAE, edgeCE, edgeBC, edgeCD]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
-    let vertices_indices = graph.getVerticesKeystoIndices();
+    const vertices_indices = graph.getVerticesKeystoIndices();
 
     expect(articulationPointsSet.length).toBe(1);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
@@ -580,10 +580,10 @@ describe('Graph', () => {
 
     graph
       .addEdges([edgeAB, edgeBC, edgeAC, edgeCD,
-                 edgeDE, edgeEG, edgeEF, edgeGF, edgeFH]);
+        edgeDE, edgeEG, edgeEF, edgeGF, edgeFH]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
-    let vertices_indices = graph.getVerticesKeystoIndices();
+    const vertices_indices = graph.getVerticesKeystoIndices();
 
     expect(articulationPointsSet.length).toBe(4);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexF.getKey()]);
@@ -616,10 +616,10 @@ describe('Graph', () => {
 
     graph
       .addEdges([edgeDE, edgeAB, edgeBC, edgeAC,
-                edgeCD, edgeEG, edgeEF, edgeGF, edgeFH]);
+        edgeCD, edgeEG, edgeEF, edgeGF, edgeFH]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
-    let vertices_indices = graph.getVerticesKeystoIndices();
+    const vertices_indices = graph.getVerticesKeystoIndices();
 
     expect(articulationPointsSet.length).toBe(4);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexF.getKey()]);
@@ -647,7 +647,7 @@ describe('Graph', () => {
       .addEdges([edgeAB, edgeAC, edgeBC, edgeCD, edgeDE]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
-    let vertices_indices = graph.getVerticesKeystoIndices();
+    const vertices_indices = graph.getVerticesKeystoIndices();
 
     expect(articulationPointsSet.length).toBe(2);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexD.getKey()]);
@@ -675,33 +675,33 @@ describe('Graph', () => {
     const graph = new Graph();
 
     graph
-      .addEdges([edgeAB, edgeAC, edgeBC, edgeCD, 
-                edgeCE, edgeCF, edgeEG, edgeFG]);
+      .addEdges([edgeAB, edgeAC, edgeBC, edgeCD,
+        edgeCE, edgeCF, edgeEG, edgeFG]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
-    let vertices_indices = graph.getVerticesKeystoIndices();
-    
+    const vertices_indices = graph.getVerticesKeystoIndices();
+
     expect(articulationPointsSet.length).toBe(1);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
   });
 
   it('should return true for strongly connected graph', () => {
-    let vertex_keys=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    const vertex_keys = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
     const [A, B, C, D, E, F, G, H] = createVertices(vertex_keys);
 
-    let [AB, AC, CD, BD, 
-         EF, EG, FH, GH, 
-         DE]=createEdges([[A, B], [B, C], [C, D], [D, A], 
-                          [E, F], [F, G], [G, H], [H, E], 
-                          [D, E]])
-    
+    const [AB, AC, CD, BD,
+      EF, EG, FH, GH,
+      DE] = createEdges([[A, B], [B, C], [C, D], [D, A],
+      [E, F], [F, G], [G, H], [H, E],
+      [D, E]]);
+
     const graph = new Graph(true);
-    
+
     graph.addEdges([AB, AC, CD, BD, EF, EG, FH, GH, DE]);
-    
-    let SCComponents = graph.getStronglyConnectedComponents();
-    
+
+    const SCComponents = graph.getStronglyConnectedComponents();
+
     expect(SCComponents).toEqual([[0, 3, 2, 1], [4, 7, 6, 5]]);
   });
 
@@ -749,7 +749,7 @@ describe('Graph', () => {
     graph.addEdges([AB, BC]);
 
     expect(graph.cyclicCircuits()).toEqual([]);
-  });  
+  });
 
   it('should find edge by vertices in undirected graph', () => {
     const graph = new Graph();
@@ -824,12 +824,12 @@ describe('Graph', () => {
     const vertexC = new GraphVertex('C');
     const vertexD = new GraphVertex('D');
 
-    graph.addVertex(vertexD)
+    graph.addVertex(vertexD);
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexA, vertexC);
 
-    graph.addEdges([edgeAB, edgeAC])
+    graph.addEdges([edgeAB, edgeAC]);
 
     expect(graph.reachableNodes('A')).toEqual([1, 2, 3]);
   });
@@ -943,7 +943,7 @@ describe('Graph', () => {
     const vertexC = new GraphVertex('C');
 
     graph.addVertices([vertexA, vertexB, vertexC]);
-    
+
     expect(graph.getVerticesIndicestoKeys()).toEqual({
       0: 'A',
       1: 'B',
@@ -970,13 +970,13 @@ describe('Graph', () => {
     const graph_ = new Graph(true);
 
     // Nodes
-    let [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F'])
+    const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
 
     // Vertices
-    const [AB, BC, CD, CE, 
-           EB, CF, FB] = new createEdges([[A, B], [B, C], [C, D], [C, E], 
-                                          [E, B], [C, F], [F, B]]);
-    
+    const [AB, BC, CD, CE,
+      EB, CF, FB] = new createEdges([[A, B], [B, C], [C, D], [C, E],
+      [E, B], [C, F], [F, B]]);
+
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
@@ -1064,7 +1064,7 @@ describe('Graph', () => {
 
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
-    
+
     expect(graph_.cycles).toEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
@@ -1090,7 +1090,7 @@ describe('Graph', () => {
 
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
-    
+
     expect(graph.isConnected()).toEqual(true);
   });
 
@@ -1098,13 +1098,13 @@ describe('Graph', () => {
     const graph = new Graph(true);
 
     // Nodes
-    let [A, B, C] = createVertices(['A', 'B', 'C']);
-    let [AB] = createEdges([[A, B]]);
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
+    const [AB] = createEdges([[A, B]]);
 
     // Add edges
     graph.addVertices([A, B, C]);
     graph.addEdges([AB]);
-    
+
     expect(graph.isConnected()).toEqual(false);
   });
 
@@ -1130,7 +1130,7 @@ describe('Graph', () => {
 
     // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
-    
+
     expect(graph.isConnected()).toEqual(true);
   });
 
@@ -1145,7 +1145,7 @@ describe('Graph', () => {
     const E = new GraphVertex('E');
     const F = new GraphVertex('F');
 
-    graph.addVertices([A, B, C, D, E, F])
+    graph.addVertices([A, B, C, D, E, F]);
 
     expect(graph.isConnected()).toEqual(false);
   });
@@ -1168,7 +1168,7 @@ describe('Graph', () => {
     const EF = new GraphEdge(E, F);
     const BE = new GraphEdge(B, E);
 
-    graph.addEdges([AB, BC, CD, DE, EF, BE])
+    graph.addEdges([AB, BC, CD, DE, EF, BE]);
 
     expect(graph.getEulerianPath()).toEqual([]);
   });
@@ -1190,8 +1190,8 @@ describe('Graph', () => {
     const DE = new GraphEdge(D, E);
     const EF = new GraphEdge(E, F);
 
-    graph.addEdges([AB, BC, CD, DE, EF])
-    
+    graph.addEdges([AB, BC, CD, DE, EF]);
+
     expect(graph.getEulerianPath()).toEqual([]);
   });
 
@@ -1214,7 +1214,7 @@ describe('Graph', () => {
     const EB = new GraphEdge(E, B);
     const CF = new GraphEdge(C, F);
     const FB = new GraphEdge(F, B);
-    
+
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
@@ -1228,20 +1228,20 @@ describe('Graph', () => {
     // Nodes
     const node_labels = ['A', 'B', 'C', 'D', 'E', 'F'];
     const [A, B, C, D, E, F] = createVertices(node_labels);
-    
+
     // Vertices
     const edge_vertices = [[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]];
-    
+
     // Add edges
     graph_.addEdges(createEdges(edge_vertices));
-    
+
     expect(graph_.allPaths(A, D)).toStrictEqual([
       [0, 1, 2, 3],
       [0, 1, 2, 4, 1, 2, 3],
-      [0, 1, 2, 5, 1, 2, 3]
+      [0, 1, 2, 5, 1, 2, 3],
     ]);
   });
-  
+
   it('should return cycles of vertices', () => {
     const graph_ = new Graph(true);
 
@@ -1252,7 +1252,7 @@ describe('Graph', () => {
     const D = new GraphVertex('D');
     const E = new GraphVertex('E');
     const F = new GraphVertex('F');
-    
+
     // Vertices
     const AB = new GraphEdge(A, B);
     const BC = new GraphEdge(B, C);
@@ -1459,7 +1459,7 @@ describe('Graph', () => {
 
     const graph = new Graph(true);
     graph.addEdges([edgeAB, edgeBC, edgeCD, edgeBD]);
-    
+
     const adjacencyMatrix = graph.getAdjacencyMatrix();
     expect(adjacencyMatrix).toEqual([
       [Infinity, 2, Infinity, Infinity],

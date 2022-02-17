@@ -1,19 +1,22 @@
 import Iter from 'es-iter';
 import _ from 'lodash';
 
-import Queue from '../queue/Queue.js'
+import Queue from '../queue/Queue.js';
 import stronglyConnectedComponents from '../../algorithms/strongly-connected-components/stronglyConnectedComponents.js';
 import eulerianPath from '../../algorithms/eulerian-path/eulerianPath.js';
 import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
 import VisitMetadata from './VisitMetadata.js';
-import { cartesianProduct, 
-         extendedVenn, 
-         removeArrayDuplicates } from '../../utils/arrays/arrays.js'
+import {
+  cartesianProduct,
+  extendedVenn,
+  removeArrayDuplicates,
+} from '../../utils/arrays/arrays.js';
 import GraphVertex from './GraphVertex.js';
 import GraphEdge from './GraphEdge.js';
 
 export default class Graph {
   #cycles;
+
   #density;
 
   /**
@@ -86,7 +89,7 @@ export default class Graph {
    * @returns GraphVertex
    */
   getVertexByIndex(vertexIndex) {
-    let indices_to_vertices = this.getVerticesIndicestoKeys();
+    const indices_to_vertices = this.getVerticesIndicestoKeys();
     return this.vertices[indices_to_vertices[vertexIndex]];
   }
 
@@ -108,7 +111,7 @@ export default class Graph {
   /**
    * @return {Array[string]}
    */
-   getAllVerticesKeys() {
+  getAllVerticesKeys() {
     return Object.keys(this.vertices);
   }
 
@@ -129,7 +132,7 @@ export default class Graph {
   /**
    * @return {GraphEdge[]}
    */
-   getAllEdgesKeys() {
+  getAllEdgesKeys() {
     return Object.keys(this.edges);
   }
 
@@ -137,7 +140,7 @@ export default class Graph {
    * @return {*[string]}
    */
   getVerticesKeys() {
-    return Object.keys(this.vertices)
+    return Object.keys(this.vertices);
   }
 
   /**
@@ -145,22 +148,19 @@ export default class Graph {
    */
   getVerticesByKeys(vertex_keys) {
     return vertex_keys.map(
-      (vertex_key) => {
-        return this.vertices[vertex_key]
-    })
+      (vertex_key) => this.vertices[vertex_key],
+    );
   }
-  
+
   /**
    * @return {GraphVertex[]}
    */
   getVerticesByIndexes(vertex_indexes) {
-    let index_to_key=this.getVerticesIndicestoKeys()
-    
+    const index_to_key = this.getVerticesIndicestoKeys();
+
     return this.getVerticesByKeys(
-      vertex_indexes.map((vertex_index) => {
-        return index_to_key[vertex_index]
-      })
-    )
+      vertex_indexes.map((vertex_index) => index_to_key[vertex_index]),
+    );
   }
 
   /**
@@ -168,19 +168,19 @@ export default class Graph {
    * @returns GraphVertex
    */
   getEdgesByVertexKeys(vertexKeys) {
-    let edges_from_keys=[]
-    let edges=this.getAllEdges();
-    
-    for(let i=0; i<edges.length; i = i + 1){
-      let edge=edges[i]
+    const edges_from_keys = [];
+    const edges = this.getAllEdges();
 
-      let startVertexKey = edge.startVertex.getKey();
-      let endVertexKey = edge.endVertex.getKey();
-      
-      if(vertexKeys.includes(startVertexKey) && 
-         vertexKeys.includes(endVertexKey)){
-          edges_from_keys.push(_.cloneDeep(edge));
-        }
+    for (let i = 0; i < edges.length; i += 1) {
+      const edge = edges[i];
+
+      const startVertexKey = edge.startVertex.getKey();
+      const endVertexKey = edge.endVertex.getKey();
+
+      if (vertexKeys.includes(startVertexKey)
+         && vertexKeys.includes(endVertexKey)) {
+        edges_from_keys.push(_.cloneDeep(edge));
+      }
     }
 
     return edges_from_keys;
@@ -191,29 +191,29 @@ export default class Graph {
    * @returns GraphVertex
    */
   getEdgesByVertexIndexes(vertexIndexes) {
-    let vertexKeys=[];
-    let vertices_indexes_to_keys=this.getVerticesIndicestoKeys()
-    
+    const vertexKeys = [];
+    const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
+
     vertexIndexes.forEach((vertexIndex) => {
-      vertexKeys.push(vertices_indexes_to_keys[vertexIndex])
-    })
-    
-    return this.getEdgesByVertexKeys(vertexKeys)
+      vertexKeys.push(vertices_indexes_to_keys[vertexIndex]);
+    });
+
+    return this.getEdgesByVertexKeys(vertexKeys);
   }
 
   /**
    * @param {integer} vertexIndex
    * @returns GraphVertex
    */
-   convertVerticesIndexestoKeys(vertexIndexes) {
-    let vertexKeys=[];
-    let vertices_indexes_to_keys=this.getVerticesIndicestoKeys()
-    
+  convertVerticesIndexestoKeys(vertexIndexes) {
+    const vertexKeys = [];
+    const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
+
     vertexIndexes.forEach((vertexIndex) => {
-      vertexKeys.push(vertices_indexes_to_keys[vertexIndex])
-    })
-    
-    return vertexKeys
+      vertexKeys.push(vertices_indexes_to_keys[vertexIndex]);
+    });
+
+    return vertexKeys;
   }
 
   /**
@@ -221,67 +221,66 @@ export default class Graph {
    * @returns GraphVertex
    */
   convertVerticesKeystoIndexes(vertexKeys) {
-    let vertexIndexes=[];
-    let vertices_keys_to_indexes=this.getVerticesKeystoIndices()
-    
+    const vertexIndexes = [];
+    const vertices_keys_to_indexes = this.getVerticesKeystoIndices();
+
     vertexKeys.forEach((vertexKey) => {
-      vertexIndexes.push(vertices_keys_to_indexes[vertexKey])
-    })
-    
-    return vertexIndexes
+      vertexIndexes.push(vertices_keys_to_indexes[vertexKey]);
+    });
+
+    return vertexIndexes;
   }
 
   /**
    * @returns {Object}
    */
-  getAdjacencyList(type=0) {
+  getAdjacencyList(type = 0) {
     const adjList = {};
     const vertices_keys_to_indexes = this.getVerticesKeystoIndices();
     const vertex_keys = Object.keys(vertices_keys_to_indexes);
     const vertex_values = Object.values(vertices_keys_to_indexes);
     const n_vertices = this.getNumVertices();
-    
+
     // Initialize
-    for (let i = 0; i < n_vertices; i = i + 1) {
+    for (let i = 0; i < n_vertices; i += 1) {
       adjList[vertex_values[i]] = [];
     }
 
     // to-adjacency dictionary
-    if(type==0){
+    if (type == 0) {
       // Populate
-      for (let i = 0; i < n_vertices; i = i + 1) {
+      for (let i = 0; i < n_vertices; i += 1) {
         const vertex_i = this.getVertexByKey(vertex_keys[i]);
         const neighbors_i = this.getNeighbors(vertex_i);
 
         const neighbors_index = [];
         neighbors_i.forEach(
           (vertex) => {
-            if(vertex.getKey() !== undefined || 
-               !neighbors_index.includes(vertex.getKey())){
+            if (vertex.getKey() !== undefined
+               || !neighbors_index.includes(vertex.getKey())) {
               neighbors_index.push(vertices_keys_to_indexes[vertex.getKey()]);
             }
-          }
+          },
         );
-        
+
         adjList[i] = neighbors_index;
       }
-
     } else {
       // to-adjacency dictionary
-      let toAdjList = this.getAdjacencyList(0);
+      const toAdjList = this.getAdjacencyList(0);
 
-      let vertex_i=-1;
-      let vertex_ij=-1;
-      let toAdjList_i=[];
+      let vertex_i = -1;
+      let vertex_ij = -1;
+      let toAdjList_i = [];
 
-      for (let i = 0; i < n_vertices; i = i + 1) {
-        vertex_i=vertex_values[i];
-        toAdjList_i=toAdjList[vertex_i]
-        
-        for(let j = 0; j < toAdjList_i.length; j = j + 1){
-          vertex_ij=toAdjList_i[j];
-          
-          adjList[vertex_ij].push(vertex_i)
+      for (let i = 0; i < n_vertices; i += 1) {
+        vertex_i = vertex_values[i];
+        toAdjList_i = toAdjList[vertex_i];
+
+        for (let j = 0; j < toAdjList_i.length; j += 1) {
+          vertex_ij = toAdjList_i[j];
+
+          adjList[vertex_ij].push(vertex_i);
         }
       }
     }
@@ -298,7 +297,7 @@ export default class Graph {
     const adjList = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
 
-    for (let i = 0; i < n_vertices; i = i + 1) {
+    for (let i = 0; i < n_vertices; i += 1) {
       if (adjList[i].length === 0) {
         loose_nodes.push(i);
       }
@@ -318,7 +317,7 @@ export default class Graph {
 
     const to_vertices = new Set();
 
-    for (let i = 0; i < n_vertices; i = i + 1) {
+    for (let i = 0; i < n_vertices; i += 1) {
       const neighbors = adjList[i];
       for (let j = 0; j < neighbors.length; j += 1) {
         to_vertices.add(neighbors[j]);
@@ -345,20 +344,19 @@ export default class Graph {
     if (this.edges[edge.getKey()]) {
       console.warn('Warning: Edge has already been added before. Please, choose other key!');
       return;
-    } else {
-      this.edges[edge.getKey()] = edge;
     }
-    
-    let startVertex = this.getVertexByKey(edge.startVertex.getKey());
-    let endVertex = this.getVertexByKey(edge.endVertex.getKey());
+    this.edges[edge.getKey()] = edge;
+
+    const startVertex = this.getVertexByKey(edge.startVertex.getKey());
+    const endVertex = this.getVertexByKey(edge.endVertex.getKey());
 
     // Insert start vertex if it wasn't inserted.
-    if (startVertex===undefined) {
+    if (startVertex === undefined) {
       this.addVertex(edge.startVertex);
     }
 
     // Insert end vertex if it wasn't inserted.
-    if (endVertex===undefined) {
+    if (endVertex === undefined) {
       this.addVertex(edge.endVertex);
     }
 
@@ -371,8 +369,6 @@ export default class Graph {
       edge.startVertex.addEdge(edge);
       edge.endVertex.addEdge(edge);
     }
-
-    return this;
   }
 
   /**
@@ -438,20 +434,16 @@ export default class Graph {
     const adjList = this.getAdjacencyList(0);
 
     return Object
-            .values(adjList)
-            .map((to_neighbours) => {
-                return to_neighbours.length
-            })
+      .values(adjList)
+      .map((to_neighbours) => to_neighbours.length);
   }
-  
+
   getReverseDegrees() {
     const adjList = this.getAdjacencyList(1);
 
     return Object
-            .values(adjList)
-            .map((to_neighbours) => {
-                return to_neighbours.length
-            })
+      .values(adjList)
+      .map((to_neighbours) => to_neighbours.length);
   }
 
   /**
@@ -462,10 +454,10 @@ export default class Graph {
     this.getAllVertices().forEach((vertex, index) => {
       verticesIndices[vertex.getKey()] = index;
     });
-  
+
     return verticesIndices;
   }
-  
+
   /**
    * @return {object}
    */
@@ -474,8 +466,8 @@ export default class Graph {
     const values = Object.values(keys_to_indices);
     const keys = Object.keys(keys_to_indices);
     const n_vertices = this.getNumVertices();
-    
-    let indices_vertices = {};
+
+    const indices_vertices = {};
 
     for (let i = 0; i < n_vertices; i += 1) {
       indices_vertices[values[i]] = keys[i];
@@ -504,7 +496,7 @@ export default class Graph {
     const adjacencyMatrix = Array(vertices.length).fill(null).map(
       () => Array(vertices.length).fill(Infinity),
     );
-    
+
     // Fill the columns.
     vertices.forEach((vertex, vertexIndex) => {
       vertex.getNeighbors().forEach((neighbor) => {
@@ -513,7 +505,7 @@ export default class Graph {
         adjacencyMatrix[vertexIndex][neighborIndex] = this.findEdge(vertex, neighbor).weight;
       });
     });
-    
+
     return adjacencyMatrix;
   }
 
@@ -522,28 +514,28 @@ export default class Graph {
    * @return {Graph}
    */
   reverse() {
-    let is_reversed={}
-    for(let edge of this.getAllEdges()) {
-      is_reversed[edge.getKey()]=false;
+    const is_reversed = {};
+    for (const edge of this.getAllEdges()) {
+      is_reversed[edge.getKey()] = false;
     }
 
     if (this.isDirected) {
       /** @param {GraphEdge} edge */
       this.getAllEdges().forEach((edge) => {
-        let edge_key = edge.getKey()
+        const edge_key = edge.getKey();
 
-        if(!is_reversed[edge_key]){
+        if (!is_reversed[edge_key]) {
           // Delete straight edge from graph and from vertices.
           this.deleteEdge(edge);
-          
+
           // Reverse the edge.
           edge.reverse();
 
-          let reversed_edge_key=edge.getKey();
+          const reversed_edge_key = edge.getKey();
 
-          if(this.edges[reversed_edge_key] !== undefined){
-            let edge_twin = this.edges[reversed_edge_key]
-            
+          if (this.edges[reversed_edge_key] !== undefined) {
+            const edge_twin = this.edges[reversed_edge_key];
+
             // Delete edge twin from graph and from vertices.
             this.deleteEdge(edge_twin);
 
@@ -552,16 +544,15 @@ export default class Graph {
 
             // Add edge twin
             this.addEdge(edge_twin);
-                        
-            is_reversed[reversed_edge_key]=true;
+
+            is_reversed[reversed_edge_key] = true;
           }
 
           // Add reversed edge back to the graph and its vertices.
           this.addEdge(edge);
-        
-          is_reversed[edge_key]=true;
+
+          is_reversed[edge_key] = true;
         }
-        
       });
     } else {
       console.warn('Warning: This is an UNDIRECTED graph!');
@@ -585,7 +576,7 @@ export default class Graph {
     const undirected_graph = new Graph(false);
     const edges = this.getAllEdges();
 
-    for (let i = 0; i < edges.length; i = i + 1) {
+    for (let i = 0; i < edges.length; i += 1) {
       undirected_graph.addEdge(_.cloneDeep(edges[i]));
     }
 
@@ -647,17 +638,16 @@ export default class Graph {
   }
 
   // A function used by DFS
-  DFSUtil(v, visited){
+  DFSUtil(v, visited) {
     const adjList = this.getAdjacencyList();
 
     // Mark the current node as visited
     visited[v] = true;
 
-    // Recur for all the vertices adjacent to this vertex       
-    for(let i of adjList[v]){
-        let n = i;
-        if (!visited[n])
-            this.DFSUtil(n, visited);
+    // Recur for all the vertices adjacent to this vertex
+    for (const i of adjList[v]) {
+      const n = i;
+      if (!visited[n]) { this.DFSUtil(n, visited); }
     }
   }
 
@@ -665,10 +655,10 @@ export default class Graph {
     const eulerian_path = eulerianPath(this);
     const verticesIndices = this.getVerticesKeystoIndices();
 
-    let epath=[];
-    
-    for(let i=0; i<eulerian_path.length;i++){
-      let vertex=eulerian_path[i];
+    const epath = [];
+
+    for (let i = 0; i < eulerian_path.length; i++) {
+      const vertex = eulerian_path[i];
       epath.push(verticesIndices[vertex.value]);
     }
 
@@ -676,23 +666,23 @@ export default class Graph {
   }
 
   getStronglyConnectedComponents() {
-    let SC_sets = stronglyConnectedComponents(this);
-    
+    const SC_sets = stronglyConnectedComponents(this);
+
     const verticesIndices = this.getVerticesKeystoIndices();
 
-    let SC_set_by_index=[];
-    let SC_sets_by_index=[];
+    let SC_set_by_index = [];
+    const SC_sets_by_index = [];
 
-    for(let i=0; i<SC_sets.length;i++){ 
-      let SC_set=SC_sets[i];
+    for (let i = 0; i < SC_sets.length; i++) {
+      const SC_set = SC_sets[i];
 
-      SC_set_by_index=[];
-      for(let j=0; j<SC_set.length; j++){ 
-        let vertex=SC_set[j];
+      SC_set_by_index = [];
+      for (let j = 0; j < SC_set.length; j++) {
+        const vertex = SC_set[j];
 
         SC_set_by_index.push(verticesIndices[vertex.value]);
       }
-      
+
       SC_sets_by_index.push(SC_set_by_index);
     }
 
@@ -701,160 +691,153 @@ export default class Graph {
 
   // Method to check if all non-zero degree vertices are
   // connected. It mainly does DFS traversal starting from
-  isConnected(){
+  isConnected() {
     const n_vertices = this.getNumVertices();
     const adjList = this.getAdjacencyList();
     const edges = this.getAllEdges();
-    
+
     // If there are no edges in the graph, return false
-    if (edges.length == 0){
+    if (edges.length == 0) {
       return false;
     }
 
     // Mark all the vertices as not visited
-    let visited = new Array(n_vertices);
-    for (let i = 0; i < n_vertices; i++){
+    const visited = new Array(n_vertices);
+    for (let i = 0; i < n_vertices; i++) {
       visited[i] = false;
     }
 
-    let forward_degrees = this.getForwardDegrees();
-    let reverse_degrees = this.getReverseDegrees();
+    const forward_degrees = this.getForwardDegrees();
+    const reverse_degrees = this.getReverseDegrees();
 
-    let summedDegrees=[]
-    for(let i=0; i<n_vertices; i = i + 1) {
-      summedDegrees[i]=reverse_degrees[i]+forward_degrees[i]
+    const summedDegrees = [];
+    for (let i = 0; i < n_vertices; i += 1) {
+      summedDegrees[i] = reverse_degrees[i] + forward_degrees[i];
     }
 
-    let zero_summed_degrees=summedDegrees.filter((summedDegree) => summedDegree==0)
-    
-    if(zero_summed_degrees.length!=0)
-      return false
+    const zero_summed_degrees = summedDegrees.filter((summedDegree) => summedDegree == 0);
+
+    if (zero_summed_degrees.length != 0) { return false; }
 
     // Find a vertex with non-zero degree
-    for (let i=0; i<n_vertices; i = i + 1) {      
-      if(adjList[i].length!=0) {
+    for (let i = 0; i < n_vertices; i += 1) {
+      if (adjList[i].length != 0) {
         // Start DFS traversal from a vertex with non-zero degree
         this.DFSUtil(i, visited);
 
         // Check if all non-zero degree vertices are visited
-        for (let j = 0; j < n_vertices; j=j+1){
-          if (visited[j] == false && adjList[i].length > 0){
+        for (let j = 0; j < n_vertices; j += 1) {
+          if (visited[j] == false && adjList[i].length > 0) {
             return false;
           }
         }
       }
-    } 
+    }
 
     return true;
   }
 
   // The main function that returns true if graph is strongly
   // connected
-  isStronglyConnected(){
+  isStronglyConnected() {
     const n_vertices = this.getNumVertices();
 
     // Step 1: Mark all the vertices as not visited (For
     // first DFS)
-    let visited = new Array(this.V);
-    for (let i = 0; i < n_vertices; i++)
-        visited[i] = false;
+    const visited = new Array(this.V);
+    for (let i = 0; i < n_vertices; i++) { visited[i] = false; }
 
     // Step 2: Do DFS traversal starting from the first vertex.
     this.DFSUtil(0, visited);
 
     // If DFS traversal doesn't visit all vertices, then return false.
-    for (let i = 0; i < n_vertices; i++)
-        if (visited[i] == false)
-            return false;
+    for (let i = 0; i < n_vertices; i++) {
+      if (visited[i] == false) { return false; }
+    }
 
     // Step 3: Create a reversed graph
-    let gr = this.copy().reverse();
-    
+    const gr = this.copy().reverse();
+
     // Step 4: Mark all the vertices as not visited (For second DFS)
-    for (let i = 0; i < n_vertices; i++)
-        visited[i] = false;
-    
+    for (let i = 0; i < n_vertices; i++) { visited[i] = false; }
+
     // Step 5: Do DFS for reversed graph starting from first vertex.
     // Starting Vertex must be same starting point of first DFS
     gr.DFSUtil(0, visited);
-    
+
     // If all vertices are not visited in second DFS, then
     // return false
-    for (let i = 0; i < n_vertices; i++)
-        if (visited[i] == false)
-            return false;
+    for (let i = 0; i < n_vertices; i++) {
+      if (visited[i] == false) { return false; }
+    }
 
     return true;
   }
 
-  /* 
+  /*
     The function returns one of the following values
     If the graph is directed:
       0 --> If graph is not Eulerian
       1 --> If graph has an Euler path (Semi-Eulerian)
-      2 --> If graph has an Euler Circuit (Eulerian)  
+      2 --> If graph has an Euler Circuit (Eulerian)
 
     If the graph is undirected:
       false --> If graph is not Eulerian
-      true  --> If graph has an Euler Circuit (Eulerian)  
+      true  --> If graph has an Euler Circuit (Eulerian)
     */
-  isEulerian(){
+  isEulerian() {
     const adjList = this.getAdjacencyList();
     const reverse_star = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
 
     // Check if all non-zero degree vertices are connected
-    if(this.isDirected){
-      if (this.isStronglyConnected() == false){
+    if (this.isDirected) {
+      if (this.isStronglyConnected() == false) {
         return false;
       }
 
       // Check if in degree and out degree of every vertex is same
-      for (let i = 0; i < n_vertices; i++){
-        if (adjList[i].length != reverse_star[i].length){
+      for (let i = 0; i < n_vertices; i++) {
+        if (adjList[i].length != reverse_star[i].length) {
           return false;
         }
       }
 
       return true;
-    
-    } else {
-      // Check if all non-zero degree vertices are connected
-      if (this.isConnected() == false)
-        return 0;
-      
-      // Count vertices with odd degree
-      let odd = 0;
-      for (let i = 0; i < n_vertices; i++){
-        if (adjList[i].length%2!=0){
-          odd++;
-        }
-      }
-      
-      // If count is more than 2, then graph is not Eulerian
-      if (odd > 2){
-        return 0;
-      }
-
-      // If odd count is 2, then semi-eulerian.
-      // If odd count is 0, then eulerian
-      // Note: An odd count can never be 1 for undirected graph
-      return (odd==2)? 1 : 2;
     }
+    // Check if all non-zero degree vertices are connected
+    if (this.isConnected() == false) { return 0; }
+
+    // Count vertices with odd degree
+    let odd = 0;
+    for (let i = 0; i < n_vertices; i++) {
+      if (adjList[i].length % 2 != 0) {
+        odd++;
+      }
+    }
+
+    // If count is more than 2, then graph is not Eulerian
+    if (odd > 2) {
+      return 0;
+    }
+
+    // If odd count is 2, then semi-eulerian.
+    // If odd count is 0, then eulerian
+    // Note: An odd count can never be 1 for undirected graph
+    return (odd == 2) ? 1 : 2;
   }
 
   isEulerianCycle() {
-    let num_vertices=this.getNumVertices();
-    let forward_star=this.getAdjacencyList(0);
-    let reverse_star=this.getAdjacencyList(1);
+    const num_vertices = this.getNumVertices();
+    const forward_star = this.getAdjacencyList(0);
+    const reverse_star = this.getAdjacencyList(1);
 
     // Check if all non-zero degree vertices are connected
-    if (!this.isStronglyConnected())
-      return false;
+    if (!this.isStronglyConnected()) { return false; }
 
     // Check if in degree and out degree of every vertex is same
-    for (let i = 0; i < num_vertices; i = i + 1){
-      if (forward_star[i].length != reverse_star[i].length){
+    for (let i = 0; i < num_vertices; i += 1) {
+      if (forward_star[i].length != reverse_star[i].length) {
         return false;
       }
     }
@@ -875,7 +858,7 @@ export default class Graph {
     low[v] = preorder[v];
 
     for (let i = 0; i < adjList[v].length; i += 1) {
-      let w = adjList[v][i];
+      const w = adjList[v][i];
       if (preorder[w] === -1) {
         this.bridgesUtil(v, w, preorder, low, counter, bridges);
 
@@ -899,7 +882,7 @@ export default class Graph {
     // Mark all the vertices as not visited
     const n_vertices = this.getNumVertices();
     const bridges = [];
-    let counter = 0;
+    const counter = 0;
 
     // pre[v]: order in which dfs examines v
     // low[v]: lowest preorder of any vertex connected to v
@@ -915,112 +898,107 @@ export default class Graph {
     return bridges;
   }
 
-
- /**
+  /**
   * Tarjan's algorithm for finding articulation points in graph.
   *
   * @return {Object}
   */
- articulationPoints() {
-  let vertex_key_to_index=this.getVerticesKeystoIndices()
-  
-  // Set of vertices we've already visited during DFS.
-  const visitedSet = {};
+  articulationPoints() {
+    const vertex_key_to_index = this.getVerticesKeystoIndices();
 
-  // Set of articulation points.
-  const articulationPointsSet = new Set();
+    // Set of vertices we've already visited during DFS.
+    const visitedSet = {};
 
-  // Time needed to discover to the current vertex.
-  let discoveryTime = 0;
+    // Set of articulation points.
+    const articulationPointsSet = new Set();
 
-  // Peek the start vertex for DFS traversal.
-  const startVertex = this.getAllVertices()[0];
+    // Time needed to discover to the current vertex.
+    let discoveryTime = 0;
 
-  const dfsCallbacks = {
+    // Peek the start vertex for DFS traversal.
+    const startVertex = this.getAllVertices()[0];
+
+    const dfsCallbacks = {
     /**
      * @param {GraphVertex} currentVertex
      * @param {GraphVertex} previousVertex
      */
-    enterVertex: ({ currentVertex, previousVertex }) => {
+      enterVertex: ({ currentVertex, previousVertex }) => {
       // Tick discovery time.
-      discoveryTime += 1;
+        discoveryTime += 1;
 
-      // Put current vertex to visited set.
-      visitedSet[currentVertex.getKey()] = new VisitMetadata({
-        discoveryTime,
-        lowDiscoveryTime: discoveryTime,
-      });
+        // Put current vertex to visited set.
+        visitedSet[currentVertex.getKey()] = new VisitMetadata({
+          discoveryTime,
+          lowDiscoveryTime: discoveryTime,
+        });
 
-      if (previousVertex) {
+        if (previousVertex) {
         // Update children counter for previous vertex.
-        visitedSet[previousVertex.getKey()].independentChildrenCount += 1;
-      }
-    },
-    /**
+          visitedSet[previousVertex.getKey()].independentChildrenCount += 1;
+        }
+      },
+      /**
      * @param {GraphVertex} currentVertex
      * @param {GraphVertex} previousVertex
      */
-    leaveVertex: ({ currentVertex, previousVertex }) => {
-      if (previousVertex === null) {
+      leaveVertex: ({ currentVertex, previousVertex }) => {
+        if (previousVertex === null) {
         // Don't do anything for the root vertex if it is already current (not previous one)
-        return;
-      }
+          return;
+        }
 
-      // Update the low time with the smallest time of adjacent vertices.
-      // Get minimum low discovery time from all neighbors.
-      /** @param {GraphVertex} neighbor */
-      visitedSet[currentVertex.getKey()].lowDiscoveryTime = currentVertex.getNeighbors()
-        .filter((earlyNeighbor) => earlyNeighbor.getKey() !== previousVertex.getKey())
+        // Update the low time with the smallest time of adjacent vertices.
+        // Get minimum low discovery time from all neighbors.
+        /** @param {GraphVertex} neighbor */
+        visitedSet[currentVertex.getKey()].lowDiscoveryTime = currentVertex.getNeighbors()
+          .filter((earlyNeighbor) => earlyNeighbor.getKey() !== previousVertex.getKey())
         /**
          * @param {number} lowestDiscoveryTime
          * @param {GraphVertex} neighbor
          */
-        .reduce(
-          (lowestDiscoveryTime, neighbor) => {
-            const neighborLowTime = visitedSet[neighbor.getKey()].lowDiscoveryTime;
-            return neighborLowTime < lowestDiscoveryTime ? neighborLowTime : lowestDiscoveryTime;
-          },
-          visitedSet[currentVertex.getKey()].lowDiscoveryTime,
-        );
+          .reduce(
+            (lowestDiscoveryTime, neighbor) => {
+              const neighborLowTime = visitedSet[neighbor.getKey()].lowDiscoveryTime;
+              return neighborLowTime < lowestDiscoveryTime ? neighborLowTime : lowestDiscoveryTime;
+            },
+            visitedSet[currentVertex.getKey()].lowDiscoveryTime,
+          );
 
-      // Detect whether previous vertex is articulation point or not.
-      // To do so we need to check two [OR] conditions:
-      // 1. Is it a root vertex with at least two independent children.
-      // 2. If its visited time is <= low time of adjacent vertex.
-      if (previousVertex === startVertex) {
+        // Detect whether previous vertex is articulation point or not.
+        // To do so we need to check two [OR] conditions:
+        // 1. Is it a root vertex with at least two independent children.
+        // 2. If its visited time is <= low time of adjacent vertex.
+        if (previousVertex === startVertex) {
         // Check that root vertex has at least two independent children.
-        if (visitedSet[previousVertex.getKey()].independentChildrenCount >= 2) {
-          let a_point = previousVertex.getKey()
-          
-          articulationPointsSet.add(a_point);
-        }
-      } else {
+          if (visitedSet[previousVertex.getKey()].independentChildrenCount >= 2) {
+            const a_point = previousVertex.getKey();
+
+            articulationPointsSet.add(a_point);
+          }
+        } else {
         // Get current vertex low discovery time.
-        const currentLowDiscoveryTime = visitedSet[currentVertex.getKey()].lowDiscoveryTime;
+          const currentLowDiscoveryTime = visitedSet[currentVertex.getKey()].lowDiscoveryTime;
 
-        // Compare current vertex low discovery time with parent discovery time. Check if there
-        // are any short path (back edge) exists. If we can't get to current vertex other then
-        // via parent then the parent vertex is articulation point for current one.
-        const parentDiscoveryTime = visitedSet[previousVertex.getKey()].discoveryTime;
-        if (parentDiscoveryTime <= currentLowDiscoveryTime) {
-          let a_point = previousVertex.getKey()
+          // Compare current vertex low discovery time with parent discovery time. Check if there
+          // are any short path (back edge) exists. If we can't get to current vertex other then
+          // via parent then the parent vertex is articulation point for current one.
+          const parentDiscoveryTime = visitedSet[previousVertex.getKey()].discoveryTime;
+          if (parentDiscoveryTime <= currentLowDiscoveryTime) {
+            const a_point = previousVertex.getKey();
 
-          articulationPointsSet.add(a_point);
+            articulationPointsSet.add(a_point);
+          }
         }
-      }
-    },
-    allowTraversal: ({ nextVertex }) => {
-      return !visitedSet[nextVertex.getKey()];
-    },
-  };
+      },
+      allowTraversal: ({ nextVertex }) => !visitedSet[nextVertex.getKey()],
+    };
 
-  // Do Depth First Search traversal over submitted graph.
-  depthFirstSearch(this, startVertex, dfsCallbacks);
+    // Do Depth First Search traversal over submitted graph.
+    depthFirstSearch(this, startVertex, dfsCallbacks);
 
-  return [...articulationPointsSet].map((elem) => {
-    return vertex_key_to_index[elem]
-  });
-}
+    return [...articulationPointsSet].map((elem) => vertex_key_to_index[elem]);
+  }
 
   /**
    * @abstract Tarjan method for cycles enumeration
@@ -1117,10 +1095,10 @@ export default class Graph {
       marked.push(false);
     }
 
-    let cycles = [];
+    const cycles = [];
     for (let i = 0; i < n_vertices; i += 1) {
       const points = [];
-      this.#tarjanCycleMethod(i, i, false, points,  marked_stack, marked);
+      this.#tarjanCycleMethod(i, i, false, points, marked_stack, marked);
 
       while (marked_stack.length > 0) {
         const u = marked_stack.pop();
@@ -1134,76 +1112,75 @@ export default class Graph {
   /**
      * @return {object}
      */
-  getCycleIndices(recalculate=false) {
-    let cycles_indices = {};
+  getCycleIndices(recalculate = false) {
+    const cycles_indices = {};
     let cycles = [];
-    
+
     if (this.#cycles.length === 0 || recalculate) {
       cycles = this.cyclicCircuits();
     }
-    
-    cycles=this.#cycles
+
+    cycles = this.#cycles;
 
     for (let i = 0; i < cycles.length; i += 1) {
       cycles_indices[i] = cycles[i];
     }
-    
+
     return cycles_indices;
   }
-  
+
   /**
    * @return {object}
    */
   getCyclesVenn(cycle_indices) {
-    return extendedVenn(cycle_indices)
+    return extendedVenn(cycle_indices);
   }
 
   buildSubgraph(subgraph_vertex_indexes) {
     // Construct the cycle appendix anew
-    let subgraph_edges=this.getEdgesByVertexIndexes(subgraph_vertex_indexes);
-    
-    let new_vertices={}
-    subgraph_edges.map((edge) => {
-      let keys_sofar=Object.keys(new_vertices);
-      let start_key = edge.startVertex.getKey();
-      let end_key = edge.endVertex.getKey();
+    const subgraph_edges = this.getEdgesByVertexIndexes(subgraph_vertex_indexes);
 
-      if(!keys_sofar.includes(start_key)) {
-        new_vertices[start_key] = new GraphVertex(start_key)
+    const new_vertices = {};
+    subgraph_edges.forEach((edge) => {
+      const keys_sofar = Object.keys(new_vertices);
+      const start_key = edge.startVertex.getKey();
+      const end_key = edge.endVertex.getKey();
+
+      if (!keys_sofar.includes(start_key)) {
+        new_vertices[start_key] = new GraphVertex(start_key);
       }
 
-      if(!keys_sofar.includes(end_key)) {
-        new_vertices[end_key] = new GraphVertex(end_key)
+      if (!keys_sofar.includes(end_key)) {
+        new_vertices[end_key] = new GraphVertex(end_key);
       }
     });
 
-    let new_edges=subgraph_edges.map((edge) => {
-      let start_key=edge.startVertex.getKey()
-      let end_key=edge.endVertex.getKey()
-      
-      let start_vertex = new_vertices[start_key]
-      let end_vertex = new_vertices[end_key]
-      
-      return new GraphEdge(start_vertex, end_vertex)
-    })
+    const new_edges = subgraph_edges.map((edge) => {
+      const start_key = edge.startVertex.getKey();
+      const end_key = edge.endVertex.getKey();
 
-    let subgraph=new Graph(this.isDirected);
-    subgraph.addEdges(new_edges)
+      const start_vertex = new_vertices[start_key];
+      const end_vertex = new_vertices[end_key];
 
-    return subgraph
+      return new GraphEdge(start_vertex, end_vertex);
+    });
+
+    const subgraph = new Graph(this.isDirected);
+    subgraph.addEdges(new_edges);
+
+    return subgraph;
   }
 
   // Returns count of not reachable nodes from
   // vertex v.
   // It uses recursive DFSUtil()
-  countNotReach(from_vertex_index){
-    let num_vertices=this.getNumVertices();
+  countNotReach(from_vertex_index) {
+    const num_vertices = this.getNumVertices();
 
     // Mark all the vertices as not visited
-    let visited = new Array(num_vertices);
+    const visited = new Array(num_vertices);
 
-    for(let i = 0; i < num_vertices; i++)
-        visited[i] = false;
+    for (let i = 0; i < num_vertices; i++) { visited[i] = false; }
 
     // Call the recursive helper function
     // to print DFS traversal
@@ -1211,69 +1188,68 @@ export default class Graph {
 
     // Return count of not visited nodes
     let count = 0;
-    for(let i = 0; i < num_vertices; i++){
-        if (visited[i] == false)
-            count++;
+    for (let i = 0; i < num_vertices; i++) {
+      if (visited[i] == false) { count++; }
     }
 
     return count;
   }
 
-  #reachUtil(src, visited){
-    let adjList = this.getAdjacencyList()
+  #reachUtil(src, visited) {
+    const adjList = this.getAdjacencyList();
 
     // Mark all the vertices as not visited
     // Create a queue for BFS
     // a =  visited
-    let queue_ = new Queue()
-    
-    queue_.enqueue(src)
-    
+    const queue_ = new Queue();
+
+    queue_.enqueue(src);
+
     // Assign Component Number
-    visited[src] = 1
-    
+    visited[src] = 1;
+
     // Vector to store all the reachable
     // nodes from 'src'
-    let reachableNodes = []
-    
-    while (queue_.length > 0){
+    const reachableNodes = [];
+
+    while (queue_.length > 0) {
       // Dequeue a vertex from queue
-      let u = queue_.dequeue()
-      reachableNodes.push(u)
-      
-      // Get all adjacent vertices of the dequeued vertex u. 
+      const u = queue_.dequeue();
+      reachableNodes.push(u);
+
+      // Get all adjacent vertices of the dequeued vertex u.
       // If a adjacent has not been visited, then mark it visited and enqueue it
-      for(let neighbour_id of adjList[u]){
+      for (const neighbour_id of adjList[u]) {
         // Assign Component Number to all the  reachable nodes
-        if (visited[neighbour_id] == 0){
-          visited[neighbour_id] = 1
-          queue_.enqueue(neighbour_id)
+        if (visited[neighbour_id] == 0) {
+          visited[neighbour_id] = 1;
+          queue_.enqueue(neighbour_id);
         }
       }
     }
 
-    return reachableNodes
+    return reachableNodes;
   }
 
-  reachableNodes(from_vertex_key){ 
-    let vertices_keys_to_indices = this.getVerticesKeystoIndices(from_vertex_key)
-    let from_vertex_id = vertices_keys_to_indices[from_vertex_key]
-    
-    let num_vertices = this.getNumVertices()
-    let visited = []
+  reachableNodes(from_vertex_key) {
+    const vertices_keys_to_indices = this.getVerticesKeystoIndices(from_vertex_key);
+    const from_vertex_id = vertices_keys_to_indices[from_vertex_key];
 
-    for(let i=0; i<num_vertices; i = i + 1) {
-      visited[i]=0
+    const num_vertices = this.getNumVertices();
+    const visited = [];
+
+    for (let i = 0; i < num_vertices; i += 1) {
+      visited[i] = 0;
     }
-    
+
     // Get the number of nodes in the graph
     // Map to store list of reachable Nodes for a  given node.
-    return this.#reachUtil(from_vertex_id, visited)
+    return this.#reachUtil(from_vertex_id, visited);
   }
 
   #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
     const adj_list = this.getAdjacencyList();
-    
+
     const adj_len = adj_list[from_index].length;
 
     if (from_index === to_index) {
@@ -1290,7 +1266,7 @@ export default class Graph {
     // Recur for all the vertices adjacent to current vertex u
     for (let i = 0; i < adj_len; i += 1) {
       const neighbor_i = adj_list[from_index][i];
-      let ith_was_visited = is_visited[neighbor_i];
+      const ith_was_visited = is_visited[neighbor_i];
 
       if (!ith_was_visited) {
         // store current node in path[]
@@ -1305,7 +1281,7 @@ export default class Graph {
         );
 
         // remove current node  in path[]
-        let idx = local_path_list.indexOf(neighbor_i);
+        const idx = local_path_list.indexOf(neighbor_i);
         local_path_list.splice(idx, 1);
       }
     }
@@ -1318,17 +1294,17 @@ export default class Graph {
    * @param {GraphVertex} from
    * @param {GraphVertex} to
    * @return {Array[Integer]} paths
-   **/
+   * */
   acyclicPaths(from, to) {
     const verticesKeystoIndices = this.getVerticesKeystoIndices();
-    
+
     const from_index = verticesKeystoIndices[from];
     const to_index = verticesKeystoIndices[to];
 
     const n_vertices = this.getNumVertices();
 
-    let is_visited = new Array(this.v);
-    for (let i of Iter.range(n_vertices)) {
+    const is_visited = new Array(this.v);
+    for (const i of Iter.range(n_vertices)) {
       is_visited[i] = false;
     }
 
@@ -1344,149 +1320,148 @@ export default class Graph {
     return paths;
   }
 
-  #allPathsUtil(acyclic_path_indexes, cycle_nodes_indexes){
-    let intersect_nodes=_.intersection(acyclic_path_indexes, cycle_nodes_indexes);
-    
-    let forward_star=this.getAdjacencyList(0);
-    let reverse_star=this.getAdjacencyList(1);
-    let vertex_keys_to_indexes = this.getVerticesKeystoIndices()
-    
-    let inflow_nodes=[];
-    let outflow_nodes=[];
-    let new_routes=[];
-    
-    let only_cycle_nodes_indexes=_.difference(cycle_nodes_indexes, acyclic_path_indexes);
+  #allPathsUtil(acyclic_path_indexes, cycle_nodes_indexes) {
+    const intersect_nodes = _.intersection(acyclic_path_indexes, cycle_nodes_indexes);
+
+    const forward_star = this.getAdjacencyList(0);
+    const reverse_star = this.getAdjacencyList(1);
+    const vertex_keys_to_indexes = this.getVerticesKeystoIndices();
+
+    const inflow_nodes = [];
+    const outflow_nodes = [];
+    const new_routes = [];
+
+    const only_cycle_nodes_indexes = _.difference(cycle_nodes_indexes, acyclic_path_indexes);
 
     // Cycles intercept the main path through in- and out- flow vertices
-    for(let intersect_node of intersect_nodes){
-      if(_.intersection(forward_star[intersect_node], only_cycle_nodes_indexes).length!=0){
+    for (const intersect_node of intersect_nodes) {
+      if (_.intersection(forward_star[intersect_node], only_cycle_nodes_indexes).length != 0) {
         outflow_nodes.push(intersect_node);
       }
-      
-      if(_.intersection(reverse_star[intersect_node], only_cycle_nodes_indexes).length!=0){
+
+      if (_.intersection(reverse_star[intersect_node], only_cycle_nodes_indexes).length != 0) {
         inflow_nodes.push(intersect_node);
       }
     }
 
     // Construct the cycle appendix anew
-    let cycle_subgraph=this.buildSubgraph(cycle_nodes_indexes)
+    const cycle_subgraph = this.buildSubgraph(cycle_nodes_indexes);
 
-    let subgraph_edges=cycle_subgraph.getAllEdges()
-    
+    const subgraph_edges = cycle_subgraph.getAllEdges();
+
     subgraph_edges.forEach(
       (subgraph_edge) => {
-        
-        let edge_vertex_indexes = [
+        const edge_vertex_indexes = [
           vertex_keys_to_indexes[subgraph_edge.startVertex.getKey()],
-          vertex_keys_to_indexes[subgraph_edge.endVertex.getKey()]
-        ]
-        
-        if(_.intersection(only_cycle_nodes_indexes, edge_vertex_indexes).length===0) {
+          vertex_keys_to_indexes[subgraph_edge.endVertex.getKey()],
+        ];
+
+        if (_.intersection(only_cycle_nodes_indexes, edge_vertex_indexes).length === 0) {
           cycle_subgraph.deleteEdge(subgraph_edge);
         }
-      }
+      },
     );
-    
-    let acyclic_path_keys=this.convertVerticesIndexestoKeys(acyclic_path_indexes);
+
+    const acyclic_path_keys = this.convertVerticesIndexestoKeys(acyclic_path_indexes);
 
     // New routes may come from out-in flow cyclic paths
-    let new_route=[]
-    for(let combination of cartesianProduct(outflow_nodes, inflow_nodes)){
-      let start_node_index=combination[0];
-      let finish_node_index=combination[1];
-      
-      let startVertex=this.getVertexByIndex(start_node_index)
-      let finishVertex=this.getVertexByIndex(finish_node_index)
-      
-      for(let out_in_flow of cycle_subgraph.allPaths(startVertex, finishVertex)){
-        let out_in_keys=cycle_subgraph.convertVerticesIndexestoKeys(out_in_flow);
-        
+    let new_route = [];
+    for (const combination of cartesianProduct(outflow_nodes, inflow_nodes)) {
+      let start_node_index = combination[0];
+      let finish_node_index = combination[1];
+
+      const startVertex = this.getVertexByIndex(start_node_index);
+      const finishVertex = this.getVertexByIndex(finish_node_index);
+
+      for (let out_in_flow of cycle_subgraph.allPaths(startVertex, finishVertex)) {
+        const out_in_keys = cycle_subgraph.convertVerticesIndexestoKeys(out_in_flow);
+
         // Nodes of outgoing route MUST only belong to cycle_nodes
         start_node_index = acyclic_path_indexes.indexOf(start_node_index);
         finish_node_index = acyclic_path_indexes.indexOf(finish_node_index);
-        
-        let intersec_len = start_node_index==finish_node_index ? 1 : 2;
-        let intersection_clause=_.intersection(acyclic_path_keys, out_in_keys).length===intersec_len
-        let finish_precede_start_clause=start_node_index >= finish_node_index
 
-        let can_increment_route= intersection_clause && finish_precede_start_clause
-                                
-        if(can_increment_route){
-          out_in_flow=this.convertVerticesKeystoIndexes(out_in_keys)
-          
-          new_route = [].concat(acyclic_path_indexes.slice(0, start_node_index+1),
-                                out_in_flow.slice(1, -1),
-                                acyclic_path_indexes.slice(finish_node_index))
-          new_routes.push(new_route);        
+        const intersec_len = start_node_index == finish_node_index ? 1 : 2;
+        const intersection_clause = _.intersection(acyclic_path_keys, out_in_keys).length === intersec_len;
+        const finish_precede_start_clause = start_node_index >= finish_node_index;
+
+        const can_increment_route = intersection_clause && finish_precede_start_clause;
+
+        if (can_increment_route) {
+          out_in_flow = this.convertVerticesKeystoIndexes(out_in_keys);
+
+          new_route = [].concat(
+            acyclic_path_indexes.slice(0, start_node_index + 1),
+            out_in_flow.slice(1, -1),
+            acyclic_path_indexes.slice(finish_node_index),
+          );
+          new_routes.push(new_route);
         }
       }
     }
-    
-    return new_routes
+
+    return new_routes;
   }
 
   allPaths(from, to) {
-    if(!this.isCyclic){
+    if (!this.isCyclic) {
       return this.acyclicPaths(from, to);
     }
-    
+
     let acyclic_paths = [];
-    if(from==to){
-      if(this.isEulerian()){
-        let eulerian_paths = this.getEulerianPath();
-        return [eulerian_paths]
-      } else {
-        acyclic_paths=[]
+    if (from == to) {
+      if (this.isEulerian()) {
+        const eulerian_paths = this.getEulerianPath();
+        return [eulerian_paths];
       }
+      acyclic_paths = [];
     } else {
       acyclic_paths = this.acyclicPaths(from, to);
     }
 
-    let cycle_indices = this.getCycleIndices();
-    let cycles_venn = this.getCyclesVenn(cycle_indices);
-    
+    const cycle_indices = this.getCycleIndices();
+    const cycles_venn = this.getCyclesVenn(cycle_indices);
+
     let cyclic_paths = [];
 
-    let cycles_connections = Object.keys(cycles_venn);
-    let cycle_nodes_arr=[]
-    let connected_cycles_indexes=[];
-    let acyclic_path=[]
-    let acyclic_paths_len=acyclic_paths.length
-    let curr_index=0;
-    let cycles_connections_len=cycles_connections.length
-    let cycles_connection=[]
+    const cycles_connections = Object.keys(cycles_venn);
+    let cycle_nodes_arr = [];
+    let connected_cycles_indexes = [];
+    let acyclic_path = [];
+    const cycles_connections_len = cycles_connections.length;
+    let cycles_connection = [];
+    const eval_len = acyclic_paths.length * cycles_connections_len;
 
-    acyclic_paths=removeArrayDuplicates(acyclic_paths)
-    
-    // For each acyclic path, it finds if a cyclic connection brings new paths    
-    for(let path_index in acyclic_paths){
-      acyclic_path=acyclic_paths[path_index]
-      
-      for(let cycles_connection_index in cycles_connections) {
-        cycles_connection=cycles_connections[cycles_connection_index]
-        
+    acyclic_paths = removeArrayDuplicates(acyclic_paths);
+
+    console.warn(`Warning: Evaluation intersections between acyclic routes and cycle ${eval_len}`);
+
+    // For each acyclic path, it finds if a cyclic connection brings new paths
+    for (const path_index in acyclic_paths) {
+      acyclic_path = acyclic_paths[path_index];
+
+      for (const cycles_connection_index in cycles_connections) {
+        cycles_connection = cycles_connections[cycles_connection_index];
+
         connected_cycles_indexes = _.split(cycles_connection, ',');
-        
-        curr_index=Number(cycles_connection_index)+Number(path_index*cycles_connections_len)
-        
-        let cycle_nodes=new Set();
+
+        const cycle_nodes = new Set();
         connected_cycles_indexes.forEach((cycle_index) => {
-          cycle_index=Number(cycle_index)
-          
-          cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes)
+          cycle_index = Number(cycle_index);
+
+          cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes);
         });
 
-        cycle_nodes_arr=[...cycle_nodes];
-        
-        let cyclic_paths_i=[];
-        if(_.intersection(acyclic_path, cycle_nodes_arr).length!=0){
-          cyclic_paths_i=this.#allPathsUtil(acyclic_path, cycle_nodes_arr)
-          cyclic_paths=cyclic_paths.concat(cyclic_paths_i);
+        cycle_nodes_arr = [...cycle_nodes];
+
+        let cyclic_paths_i = [];
+        if (_.intersection(acyclic_path, cycle_nodes_arr).length != 0) {
+          cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
+          cyclic_paths = cyclic_paths.concat(cyclic_paths_i);
         }
       }
     }
-    
-    cyclic_paths=removeArrayDuplicates(cyclic_paths)
+
+    cyclic_paths = removeArrayDuplicates(cyclic_paths);
 
     return acyclic_paths.concat(cyclic_paths);
   }
@@ -1498,7 +1473,7 @@ export default class Graph {
    */
   getVertexCycles() {
     const n_vertices = this.getNumVertices();
-    let cycles = this.cyclicCircuits();
+    const cycles = this.cyclicCircuits();
     const nodes_to_cycles = {};
 
     for (let i = 0; i < n_vertices; i += 1) {
@@ -1510,7 +1485,7 @@ export default class Graph {
       cnodes_temp = cnodes_temp.concat(cycles[i]);
     }
 
-    let cyclic_nodes = Array.from(new Set(...[cnodes_temp]));
+    const cyclic_nodes = Array.from(new Set(...[cnodes_temp]));
 
     for (let i = 0; i < cyclic_nodes.length; i += 1) {
       const j = cyclic_nodes[i];
@@ -1529,9 +1504,9 @@ export default class Graph {
    * @return {object}
    */
   describe() {
-    let is_cyclic = this.isCyclic();
-    let is_eulerian = this.isEulerian()
-    
+    const is_cyclic = this.isCyclic();
+    const is_eulerian = this.isEulerian();
+
     return {
       vertices: Object.keys(this.vertices).toString(),
       edges: Object.keys(this.edges).toString(),
@@ -1543,7 +1518,7 @@ export default class Graph {
       bridges: this.bridges(),
       is_cyclic,
       ...is_cyclic && { all_cycles: this.cyclicCircuits() },
-      is_eulerian: is_eulerian,
+      is_eulerian,
       ...is_eulerian && { eulerian_path: this.getEulerianPath() },
       is_connected: this.isConnected(),
     };

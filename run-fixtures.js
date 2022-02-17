@@ -1,4 +1,5 @@
-const fs = require("fs");
+const fs = require('fs');
+
 const FIXTURES_BASE_DIR = `${__dirname}/fixtures`;
 
 /**
@@ -8,23 +9,23 @@ const FIXTURES_BASE_DIR = `${__dirname}/fixtures`;
  * @returns {undefined}
  */
 function generateFixtureJestSnippets(files) {
-    if (!files || !files.length) {
-        throw new Error("A valid file name must be provided");
-    }
+  if (!files || !files.length) {
+    throw new Error('A valid file name must be provided');
+  }
 
-    const open = `
+  const open = `
     // WARNING: this file is generated automatically
     const backgroundColorReplacer = require('../../replacer');
 
     describe('backgroundColorReplacer', () => {
   `;
-    const close = `});`;
-    const specs = files
-        .map(fname => {
-            const input = fs.readFileSync(`${FIXTURES_BASE_DIR}/${fname}`);
-            const specName = fname.split(".js")[0].replace(/[-]/gi, " ");
+  const close = '});';
+  const specs = files
+    .map((fname) => {
+      const input = fs.readFileSync(`${FIXTURES_BASE_DIR}/${fname}`);
+      const specName = fname.split('.js')[0].replace(/[-]/gi, ' ');
 
-            return `
+      return `
         it("${specName}", () => {
           try {
             const { target, options } = require(\`../${fname}\`);
@@ -34,10 +35,10 @@ function generateFixtureJestSnippets(files) {
           }
         });
       `;
-        })
-        .join("\n");
+    })
+    .join('\n');
 
-    return `${open}${specs}${close}`;
+  return `${open}${specs}${close}`;
 }
 
 /**
@@ -49,15 +50,15 @@ function generateFixtureJestSnippets(files) {
  * @returns {undefined}
  */
 function parseFileTree(err, files) {
-    if (err) {
-        // eslint-disable-next-line
+  if (err) {
+    // eslint-disable-next-line
         console.error(err);
-        process.exit(1);
-    }
+    process.exit(1);
+  }
 
-    const tmp = generateFixtureJestSnippets(files.filter(f => f !== "tests"));
+  const tmp = generateFixtureJestSnippets(files.filter((f) => f !== 'tests'));
 
-    fs.writeFileSync(`${FIXTURES_BASE_DIR}/tests/fixtures.spec.js`, tmp);
+  fs.writeFileSync(`${FIXTURES_BASE_DIR}/tests/fixtures.spec.js`, tmp);
 }
 
 fs.readdir(FIXTURES_BASE_DIR, parseFileTree);

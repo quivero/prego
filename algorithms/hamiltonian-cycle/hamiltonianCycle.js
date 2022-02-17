@@ -13,7 +13,7 @@ function isSafe(adjacencyMatrix, verticesKeystoIndices, cycle, vertexCandidate) 
   // Get end and candidate vertices indices in adjacency matrix.
   const candidateVertexAdjacencyIndex = verticesKeystoIndices[vertexCandidate.getKey()];
   const endVertexAdjacencyIndex = verticesKeystoIndices[endVertex.getKey()];
-  
+
   // Check if last vertex in the path and candidate vertex are adjacent.
   if (adjacencyMatrix[endVertexAdjacencyIndex][candidateVertexAdjacencyIndex] === Infinity) {
     return false;
@@ -41,7 +41,7 @@ function isCycle(adjacencyMatrix, verticesKeystoIndices, cycle) {
   // Get start/end vertices indices in adjacency matrix.
   const startVertexAdjacencyIndex = verticesKeystoIndices[startVertex.getKey()];
   const endVertexAdjacencyIndex = verticesKeystoIndices[endVertex.getKey()];
-  
+
   // Check if we can go from end vertex to the start one.
   return adjacencyMatrix[endVertexAdjacencyIndex][startVertexAdjacencyIndex] !== Infinity;
 }
@@ -108,7 +108,7 @@ export default function hamiltonianCycle(graph) {
   const verticesKeystoIndices = graph.getVerticesKeystoIndices();
   const adjacencyMatrix = graph.getAdjacencyMatrix();
   const vertices = graph.getAllVertices();
-  
+
   // Define start vertex. We will always pick the first one
   // this it doesn't matter which vertex to pick in a cycle.
   // Every vertex is in a cycle so we can start from any of them.

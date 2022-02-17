@@ -38,8 +38,8 @@ describe('prim', () => {
 
     graph
       .addEdges([edgeAB, edgeAD, edgeAC, edgeBC, edgeBE,
-                 edgeDF, edgeEC, edgeEF, edgeFC, edgeFG]);
-    
+        edgeDF, edgeEC, edgeEF, edgeFC, edgeFG]);
+
     expect(graph.getWeight()).toEqual(46);
 
     const minimumSpanningTree = prim(graph);

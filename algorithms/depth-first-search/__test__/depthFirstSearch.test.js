@@ -27,7 +27,7 @@ describe('depthFirstSearch', () => {
     graph
       .addEdges([edgeAB, edgeBC, edgeCG, edgeAD,
         edgeAE, edgeEF, edgeFD, edgeDG]);
-    
+
     expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G');
 
     const enterVertexCallback = jest.fn();
@@ -99,8 +99,8 @@ describe('depthFirstSearch', () => {
     const edgeDG = new GraphEdge(vertexD, vertexG);
 
     graph
-      .addEdges([edgeAB, edgeBC, edgeCG, edgeAD, 
-                edgeAE, edgeEF, edgeFD, edgeDG]);
+      .addEdges([edgeAB, edgeBC, edgeCG, edgeAD,
+        edgeAE, edgeEF, edgeFD, edgeDG]);
 
     expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G');
 
