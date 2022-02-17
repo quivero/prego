@@ -1468,8 +1468,7 @@ export default class Graph {
         connected_cycles_indexes = _.split(cycles_connection, ',');
         
         curr_index=Number(cycles_connection_index)+Number(path_index*cycles_connections_len)
-        console.log(curr_index+'/'+acyclic_paths_len*cycles_connections_len)
-
+        
         let cycle_nodes=new Set();
         connected_cycles_indexes.forEach((cycle_index) => {
           cycle_index=Number(cycle_index)
