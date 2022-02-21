@@ -17,12 +17,8 @@ describe('stronglyConnectedComponents', () => {
 
     const graph = new Graph(true);
 
-    graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC)
-      .addEdge(edgeCA)
-      .addEdge(edgeCD);
-
+    graph.addEdges([edgeAB, edgeBC, edgeCA, edgeCD]);
+    
     const components = stronglyConnectedComponents(graph);
 
     expect(components).toBeDefined();
@@ -65,20 +61,11 @@ describe('stronglyConnectedComponents', () => {
     const graph = new Graph(true);
 
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC)
-      .addEdge(edgeCA)
-      .addEdge(edgeBD)
-      .addEdge(edgeDE)
-      .addEdge(edgeEF)
-      .addEdge(edgeFD)
-      .addEdge(edgeGF)
-      .addEdge(edgeGH)
-      .addEdge(edgeHI)
-      .addEdge(edgeIJ)
-      .addEdge(edgeJG)
-      .addEdge(edgeJK);
-
+      .addEdges([edgeAB, edgeBC, edgeCA, edgeBD,
+        edgeDE, edgeEF, edgeFD, edgeGF,
+        edgeGH, edgeHI, edgeIJ, edgeJG,
+        edgeJK]);
+    
     const components = stronglyConnectedComponents(graph);
 
     expect(components).toBeDefined();

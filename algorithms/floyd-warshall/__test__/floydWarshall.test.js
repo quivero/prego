@@ -31,29 +31,14 @@ describe('floydWarshall', () => {
 
     // Add vertices first just to have them in desired order.
     graph
-      .addVertex(vertexA)
-      .addVertex(vertexB)
-      .addVertex(vertexC)
-      .addVertex(vertexD)
-      .addVertex(vertexE)
-      .addVertex(vertexF)
-      .addVertex(vertexG)
-      .addVertex(vertexH);
+      .addVertices([vertexA, vertexB, vertexC, vertexD,
+        vertexE, vertexF, vertexG, vertexH]);
 
     // Now, when vertices are in correct order let's add edges.
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeAE)
-      .addEdge(edgeAC)
-      .addEdge(edgeBC)
-      .addEdge(edgeBD)
-      .addEdge(edgeEC)
-      .addEdge(edgeED)
-      .addEdge(edgeDC)
-      .addEdge(edgeDG)
-      .addEdge(edgeDF)
-      .addEdge(edgeFG)
-      .addEdge(edgeEG);
+      .addEdges([edgeAB, edgeAE, edgeAC, edgeBC,
+        edgeBD, edgeEC, edgeED, edgeDC,
+        edgeDG, edgeDF, edgeFG, edgeEG]);
 
     const { distances, nextVertices } = floydWarshall(graph);
 
@@ -104,20 +89,11 @@ describe('floydWarshall', () => {
 
     // Add vertices first just to have them in desired order.
     graph
-      .addVertex(vertexA)
-      .addVertex(vertexB)
-      .addVertex(vertexC)
-      .addVertex(vertexD);
+      .addVertices([vertexA, vertexB, vertexC, vertexD]);
 
     // Now, when vertices are in correct order let's add edges.
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBA)
-      .addEdge(edgeAD)
-      .addEdge(edgeDA)
-      .addEdge(edgeBC)
-      .addEdge(edgeCA)
-      .addEdge(edgeCD);
+      .addEdges([edgeAB, edgeBA, edgeAD, edgeDA, edgeBC, edgeCA, edgeCD]);
 
     const { distances, nextVertices } = floydWarshall(graph);
 
@@ -169,24 +145,11 @@ describe('floydWarshall', () => {
 
     // Add vertices first just to have them in desired order.
     graph
-      .addVertex(vertexA)
-      .addVertex(vertexB)
-      .addVertex(vertexC)
-      .addVertex(vertexD)
-      .addVertex(vertexE)
-      .addVertex(vertexF)
-      .addVertex(vertexG);
+      .addVertices([vertexA, vertexB, vertexC, vertexD, vertexE, vertexF, vertexG]);
 
     // Now, when vertices are in correct order let's add edges.
     graph
-      .addEdge(edgeFE)
-      .addEdge(edgeFA)
-      .addEdge(edgeED)
-      .addEdge(edgeDA)
-      .addEdge(edgeDC)
-      .addEdge(edgeAC)
-      .addEdge(edgeCB)
-      .addEdge(edgeBA);
+      .addEdges([edgeFE, edgeFA, edgeED, edgeDA, edgeDC, edgeAC, edgeCB, edgeBA]);
 
     const { distances, nextVertices } = floydWarshall(graph);
 

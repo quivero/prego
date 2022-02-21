@@ -21,15 +21,8 @@ describe('hamiltonianCycle', () => {
     const edgeDE = new GraphEdge(vertexD, vertexE);
 
     const graph = new Graph();
-    graph
-      .addEdge(edgeAB)
-      .addEdge(edgeAE)
-      .addEdge(edgeAC)
-      .addEdge(edgeBE)
-      .addEdge(edgeBC)
-      .addEdge(edgeBD)
-      .addEdge(edgeCD)
-      .addEdge(edgeDE);
+    graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE, 
+                    edgeBC, edgeBD, edgeCD, edgeDE]);
 
     const hamiltonianCycleSet = hamiltonianCycle(graph);
 
@@ -76,12 +69,7 @@ describe('hamiltonianCycle', () => {
 
     const graph = new Graph();
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeAE)
-      .addEdge(edgeBE)
-      .addEdge(edgeBC)
-      .addEdge(edgeBD)
-      .addEdge(edgeCD);
+      .addEdges([edgeAB, edgeAE, edgeBE, edgeBC, edgeBD, edgeCD]);
 
     const hamiltonianCycleSet = hamiltonianCycle(graph);
 
