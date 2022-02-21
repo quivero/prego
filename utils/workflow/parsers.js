@@ -208,7 +208,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
     route_describe.routes.push(
       {
-        nodes_path: routes[i],
+        nodes_path: bp_graph.convertVerticesIndexestoKeys(routes[i]),
         lanes_path: lane_route_i,
       },
     );
