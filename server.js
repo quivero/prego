@@ -31,19 +31,22 @@ app.get('/', (req, res) => {
   const bps_root = './samples/blueprints/';
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = false;
+  const READ_ALL_BPS = true;
 
   if (READ_ALL_BPS) {
     const paths = [];
     
     for (let i = 0; i < blueprints_fnames.length; i++) {
       const blueprint_i_name = blueprints_fnames[i];
-
       const fname = bps_root + blueprint_i_name;
-      const blueprint_i = require(fname);
+      const tokens=fname.split('.');
 
-      //paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
-      paths.push(describeBlueprint(blueprint_i));
+      if(tokens[tokens.length-1]=='json') {
+        const blueprint_i = require(fname);
+        
+        //paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
+        paths.push(describeBlueprint(blueprint_i));
+      }
     }
     
     res.send(paths);
