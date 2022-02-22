@@ -28,10 +28,10 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
 
-  const bps_root = './samples/blueprints/';
+  const bps_root = './samples/blueprints/approva/';
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = true;
+  const READ_ALL_BPS = false;
 
   if (READ_ALL_BPS) {
     const paths = [];
@@ -50,9 +50,9 @@ app.get('/', (req, res) => {
     }
     
     res.send(paths);
-
+  
   } else {
-    const blueprint_fname = 'minimalBP-api-provu.json';
+    const blueprint_fname = 'request_review.json';
 
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
