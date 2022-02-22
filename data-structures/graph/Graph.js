@@ -157,7 +157,7 @@ export default class Graph {
    */
   getVerticesByIndexes(vertex_indexes) {
     const index_to_key = this.getVerticesIndicestoKeys();
-
+    
     return this.getVerticesByKeys(
       vertex_indexes.map((vertex_index) => index_to_key[vertex_index]),
     );
@@ -466,13 +466,13 @@ export default class Graph {
     const values = Object.values(keys_to_indices);
     const keys = Object.keys(keys_to_indices);
     const n_vertices = this.getNumVertices();
-
+    
     const indices_vertices = {};
 
     for (let i = 0; i < n_vertices; i += 1) {
       indices_vertices[values[i]] = keys[i];
     }
-
+    
     return indices_vertices;
   }
 
@@ -654,12 +654,16 @@ export default class Graph {
   getEulerianPath() {
     const eulerian_path = eulerianPath(this);
     const verticesIndices = this.getVerticesKeystoIndices();
-
+    
     const epath = [];
-
+    
     for (let i = 0; i < eulerian_path.length; i++) {
       const vertex = eulerian_path[i];
       epath.push(verticesIndices[vertex.value]);
+    }
+    
+    if(epath.length!=0) {
+      epath.push(epath[0])
     }
 
     return epath;
@@ -792,12 +796,8 @@ export default class Graph {
 
     // Check if all non-zero degree vertices are connected
     if (this.isDirected) {
-      if (this.isStronglyConnected() == false) {
-        return false;
-      }
-
       // Check if in degree and out degree of every vertex is same
-      for (let i = 0; i < n_vertices; i++) {
+      for (let i = 0; i < n_vertices; i++) {  
         if (adjList[i].length != reverse_star[i].length) {
           return false;
         }
@@ -805,6 +805,7 @@ export default class Graph {
 
       return true;
     }
+
     // Check if all non-zero degree vertices are connected
     if (this.isConnected() == false) { return 0; }
 
@@ -826,14 +827,11 @@ export default class Graph {
     // Note: An odd count can never be 1 for undirected graph
     return (odd == 2) ? 1 : 2;
   }
-
+  
   isEulerianCycle() {
     const num_vertices = this.getNumVertices();
     const forward_star = this.getAdjacencyList(0);
     const reverse_star = this.getAdjacencyList(1);
-
-    // Check if all non-zero degree vertices are connected
-    if (!this.isStronglyConnected()) { return false; }
 
     // Check if in degree and out degree of every vertex is same
     for (let i = 0; i < num_vertices; i += 1) {
@@ -1406,14 +1404,14 @@ export default class Graph {
     if (!this.isCyclic) {
       return this.acyclicPaths(from, to);
     }
-
+    
     let acyclic_paths = [];
     if (from == to) {
       if (this.isEulerian()) {
+        console.log(this.getEulerianPath())
         const eulerian_paths = this.getEulerianPath();
         return [eulerian_paths];
       }
-      acyclic_paths = [];
     } else {
       acyclic_paths = this.acyclicPaths(from, to);
     }
