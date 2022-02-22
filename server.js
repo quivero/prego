@@ -8,8 +8,6 @@ import {
   describeBlueprint,
 } from './utils/workflow/parsers.js';
 
-import { cartesianProduct } from './utils/arrays/arrays.js';
-
 const require = createRequire(import.meta.url);
 const app = express();
 
@@ -31,8 +29,8 @@ app.get('/', (req, res) => {
   const bps_root = './samples/blueprints/approva/';
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = false;
-
+  const READ_ALL_BPS = true;
+  
   if (READ_ALL_BPS) {
     const paths = [];
     
@@ -57,7 +55,7 @@ app.get('/', (req, res) => {
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
 
-    const route_describe = fromStartToFinishCombsAllPaths(blueprint);
+    const route_describe = describeBlueprint(blueprint);
 
     res.send(route_describe);
   }

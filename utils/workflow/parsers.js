@@ -24,18 +24,23 @@ export const describeBlueprint = (blueprint) => {
   }
 
   const start_finish_nodes = startAndFinishNodes(blueprint);
-  let reachable_nodes = [];
-  const workflow_finish_reachability = {};
+  let reachable_nodes = {};
+  let non_reachable_nodes = {};
 
+  const workflow_finish_reachability = {};
+  
   for (const start_node_key of start_finish_nodes.start_nodes) {
     workflow_finish_reachability[start_node_key] = [];
 
-    reachable_nodes = bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key));
-
+    reachable_nodes[start_node_key] = bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key));
+    
     const reachable_finish_nodes = _.intersection(
-      reachable_nodes,
+      reachable_nodes[start_node_key],
       start_finish_nodes.finish_nodes,
     );
+
+    non_reachable_nodes[start_node_key]=_.difference(bp_graph.getAllVerticesKeys(), reachable_nodes[start_node_key])
+
     if (reachable_finish_nodes.length != 0) {
       workflow_finish_reachability[start_node_key] = reachable_finish_nodes;
     }
@@ -45,6 +50,8 @@ export const describeBlueprint = (blueprint) => {
     name: blueprint.name,
     description: blueprint.description,
     node_ids_per_type,
+    reachable_from_start: reachable_nodes,
+    non_reachable_from_start: non_reachable_nodes,
     reachable_finish_from_start: workflow_finish_reachability,
     graph: bp_graph.describe(),
   };
