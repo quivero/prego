@@ -1,10 +1,10 @@
 // Javascript program to generate all unique partitions of an integer
-import { arraysEqual } from '../arrays/arrays.js';
+import { getUniques } from '../arrays/arrays.js';
 
 // Function to generate all unique partitions of an integer
-export const partitions = (n) => {
+export const partitions = (n, size) => {
   // An array to store a partition
-  const p = new Array(n);
+  const p = new Uint8Array(n);
   const partitions_dict = {};
 
   for (let i = 0; i < n; i += 1) {
@@ -19,23 +19,12 @@ export const partitions = (n) => {
 
   // This loop first prints current partition, then generates next
   // partition. The loop stops when the current partition has all 1s
-  while (k > 0) {
-    // print current partition
-    const elem = [];
-
-    for (let i = 0; i < k; i += 1) {
-      elem.push(p[i]);
+  while (getUniques(p) !== 1) {
+    if(k==size){
+      // print current partition
+      console.log(Array.from(p.subarray(0, k+1)))
     }
-
-    elem.sort();
-
-    is_inside = false;
-    for (const partition of partitions_dict[k + 1]) {
-      console.log(arraysEqual(partition, elem));
-
-      is_inside = is_inside && arraysEqual(partition, elem);
-    }
-
+    
     // Generate next partition
 
     // Find the rightmost non-one value in p[]. Also, update
@@ -47,6 +36,11 @@ export const partitions = (n) => {
       k -= 1;
     }
 
+    // If k < 0, all the values are 1 so
+    // there are no more partitions
+    if (k < 0) 
+        break;
+    
     // Decrease the p[k] found above and adjust the rem_val
     p[k] -= 1;
     rem_val += 1;
@@ -62,6 +56,8 @@ export const partitions = (n) => {
 
     // Copy rem_val to next position and increment position
     p[k + 1] = rem_val;
-    k += 1;
+    k += 1;    
   }
+
+  return partitions_dict
 };
