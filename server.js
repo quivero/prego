@@ -8,6 +8,10 @@ import {
   describeBlueprint,
 } from './utils/workflow/parsers.js';
 
+import {
+  partitions,
+} from './utils/combinatorics/partition.js';
+
 const require = createRequire(import.meta.url);
 const app = express();
 
@@ -26,10 +30,10 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
 
-  const bps_root = './samples/blueprints/approva/';
+  const bps_root = './samples/blueprints/';
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = true;
+  const READ_ALL_BPS = false;
   
   if (READ_ALL_BPS) {
     const paths = [];
@@ -50,13 +54,13 @@ app.get('/', (req, res) => {
     res.send(paths);
   
   } else {
-    const blueprint_fname = 'request_review.json';
+    const blueprint_fname = 'generate_number.json';
 
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
-
-    const route_describe = describeBlueprint(blueprint);
-
+    
+    const route_describe = fromStartToFinishCombsAllPaths(blueprint);
+    
     res.send(route_describe);
   }
 });
