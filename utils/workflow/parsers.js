@@ -209,6 +209,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   };
 
   let lane_route_i = [];
+  const total_len=0
 
   for (const i in routes) {
     lane_route_i = nodeRouteToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
@@ -228,6 +229,7 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
   const sf_nodes = startAndFinishNodes(blueprint);
 
   const paths = {};
+  let total_length = 0;
   let startNode;
   let finishNode;
 
@@ -238,10 +240,15 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
 
       const label = `${startNode}_${finishNode}`;
       paths[label] = fromStartToFinishAllPaths(blueprint, startNode, finishNode);
+      
+      total_length += paths[label].length
     }
   }
-
-  return paths;
+  
+  return {
+    length: total_length, 
+    from_to: paths
+  };
 };
 
 export const parseWorkflowXMLToGraph = () => {
