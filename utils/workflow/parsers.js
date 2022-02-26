@@ -227,7 +227,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 export const fromStartToFinishCombsAllPaths = (blueprint) => {
   const sf_nodes = startAndFinishNodes(blueprint);
 
-  const acyclic_paths = {};
+  const paths = {};
   let startNode;
   let finishNode;
 
@@ -237,11 +237,11 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
       finishNode = sf_nodes.finish_nodes[j];
 
       const label = `${startNode}_${finishNode}`;
-      acyclic_paths[label] = fromStartToFinishAllPaths(blueprint, startNode, finishNode);
+      paths[label] = fromStartToFinishAllPaths(blueprint, startNode, finishNode);
     }
   }
 
-  return acyclic_paths;
+  return paths;
 };
 
 export const parseWorkflowXMLToGraph = () => {
