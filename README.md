@@ -2,7 +2,7 @@
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
-Its main funcionality is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
+Its objective is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
 
 ## Preamble
 
@@ -40,3 +40,8 @@ You must follow the instructions below
 
 1. Add router to handle multiple use cases;
 2. Add a docker-compose.yaml to ```up``` application
+
+## Prelude
+
+In case you run it as a service, nodemon may disappear from terminal. You may kill the process by run of command ```fuser -k 8080/tcp``` 
+
