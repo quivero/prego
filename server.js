@@ -34,33 +34,32 @@ app.get('/', (req, res) => {
   const blueprints_fnames = fs.readdirSync(bps_root);
 
   const READ_ALL_BPS = false;
-  
+
   if (READ_ALL_BPS) {
     const paths = [];
-    
-    for (let i = 0; i < blueprints_fnames.length; i++) {
+
+    for (let i = 0; i < blueprints_fnames.length; i += 1) {
       const blueprint_i_name = blueprints_fnames[i];
       const fname = bps_root + blueprint_i_name;
-      const tokens=fname.split('.');
+      const tokens = fname.split('.');
 
-      if(tokens[tokens.length-1]=='json') {
+      if (tokens[tokens.length - 1] === 'json') {
         const blueprint_i = require(fname);
-        
-        //paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
+
+        // paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
         paths.push(describeBlueprint(blueprint_i));
       }
     }
-    
+
     res.send(paths);
-  
   } else {
     const blueprint_fname = 'generate_number.json';
 
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
-    
+
     const route_describe = fromStartToFinishCombsAllPaths(blueprint);
-    
+
     res.send(route_describe);
   }
 });

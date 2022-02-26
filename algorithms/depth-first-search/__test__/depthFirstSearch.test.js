@@ -110,7 +110,7 @@ describe('depthFirstSearch', () => {
     depthFirstSearch(graph, vertexA, {
       enterVertex: enterVertexCallback,
       leaveVertex: leaveVertexCallback,
-      allowTraversal: ({ currentVertex, nextVertex }) => !(currentVertex === vertexA && nextVertex === vertexB),
+      allowTraversal: ({ currentVertex, nextVertex }) => currentVertex !== vertexA || nextVertex !== vertexB,
     });
 
     expect(enterVertexCallback).toHaveBeenCalledTimes(7);

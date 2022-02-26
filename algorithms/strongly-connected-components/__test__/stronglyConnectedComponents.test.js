@@ -18,7 +18,7 @@ describe('stronglyConnectedComponents', () => {
     const graph = new Graph(true);
 
     graph.addEdges([edgeAB, edgeBC, edgeCA, edgeCD]);
-    
+
     const components = stronglyConnectedComponents(graph);
 
     expect(components).toBeDefined();
@@ -65,7 +65,7 @@ describe('stronglyConnectedComponents', () => {
         edgeDE, edgeEF, edgeFD, edgeGF,
         edgeGH, edgeHI, edgeIJ, edgeJG,
         edgeJK]);
-    
+
     const components = stronglyConnectedComponents(graph);
 
     expect(components).toBeDefined();

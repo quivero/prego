@@ -24,24 +24,24 @@ export const describeBlueprint = (blueprint) => {
   }
 
   const start_finish_nodes = startAndFinishNodes(blueprint);
-  let reachable_nodes = {};
-  let non_reachable_nodes = {};
+  const reachable_nodes = {};
+  const non_reachable_nodes = {};
 
   const workflow_finish_reachability = {};
-  
+
   for (const start_node_key of start_finish_nodes.start_nodes) {
     workflow_finish_reachability[start_node_key] = [];
 
     reachable_nodes[start_node_key] = bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key));
-    
+
     const reachable_finish_nodes = _.intersection(
       reachable_nodes[start_node_key],
       start_finish_nodes.finish_nodes,
     );
 
-    non_reachable_nodes[start_node_key]=_.difference(bp_graph.getAllVerticesKeys(), reachable_nodes[start_node_key])
+    non_reachable_nodes[start_node_key] = _.difference(bp_graph.getAllVerticesKeys(), reachable_nodes[start_node_key]);
 
-    if (reachable_finish_nodes.length != 0) {
+    if (reachable_finish_nodes.length !== 0) {
       workflow_finish_reachability[start_node_key] = reachable_finish_nodes;
     }
   }
@@ -151,7 +151,7 @@ export const nodeRouteToLaneRoute = (
   for (const vertex_j of node_route) {
     const lane_vertex_j = node_id_to_lane[vertices_indices_to_keys[vertex_j]];
 
-    if (lane_route.length == 0) {
+    if (lane_route.length === 0) {
       lane_route.push(lane_vertex_j);
     } else if (lane_route[lane_route.length - 1] !== lane_vertex_j) {
       lane_route.push(lane_vertex_j);

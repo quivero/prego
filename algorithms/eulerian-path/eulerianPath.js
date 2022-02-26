@@ -63,7 +63,8 @@ export default function eulerianPath(graph) {
     eulerianPathVertices.push(currentVertex);
 
     // Detect all bridges in graph.
-    // We need to do it in order to not delete bridges if there are other edges  exists for deletion.
+    // We need to do it in order to not delete bridges if there are other edges
+    // exists for deletion.
     const bridges = graphBridges(graph);
 
     // Peek the next edge to delete from graph.
