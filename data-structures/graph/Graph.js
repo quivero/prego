@@ -421,9 +421,6 @@ export default class Graph {
     const startVertex = this.getVertexByKey(edge.startVertex.getKey());
     const endVertex = this.getVertexByKey(edge.endVertex.getKey());
 
-    console.log(startVertex.getNeighbors());
-    console.log(endVertex.getNeighbors());
-
     startVertex.deleteEdge(edge);
     endVertex.deleteEdge(edge);
   }
@@ -608,7 +605,7 @@ export default class Graph {
    */
   #isCyclicUtil(index, visited, recStack) {
     const adjList = this.getAdjacencyList();
-    console.log(adjList);
+    
     // Mark the current node as visited and part of recursion stack
     if (recStack[index]) { return true; }
 
@@ -1449,7 +1446,6 @@ export default class Graph {
   }
 
   allPaths(from, to) {
-    console.log(this.isCyclic());
     if (!this.isCyclic()) {
       return this.acyclicPaths(from, to);
     }
