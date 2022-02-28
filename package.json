@@ -20,6 +20,7 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
     "es-iter": "^1.1.2",
     "eslint-nibble": "^8.0.1",
     "express": "^4.17.2",
