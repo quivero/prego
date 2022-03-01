@@ -7,6 +7,10 @@ import graphBridges from '../bridges/graphBridges.js';
  * @return {GraphVertex[]}
  */
 export default function eulerianPath(graph) {
+  if(!graph.isEulerian()) {
+    return []
+  }
+  
   const eulerianPathVertices = [];
 
   // Set that contains all vertices with even rank (number of neighbors).
@@ -36,11 +40,6 @@ export default function eulerianPath(graph) {
   // If not all vertices have even degree then graph must contain only two odd-degree
   // vertices in order to have Euler Path.
   const isCircuit = !Object.values(oddRankVertices).length;
-
-  if (!isCircuit && Object.values(oddRankVertices).length !== 2) {
-    console.warn('Eulerian path must contain two odd-ranked vertices');
-    return [];
-  }
 
   // Pick start vertex for traversal.
   let startVertex = null;
