@@ -10,29 +10,6 @@ beforeEach(() => {
 });
 
 describe('eulerianPath', () => {
-  it('should throw an warning on console when graph is not Eulerian', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
-
-    const edgeAB = new GraphEdge(vertexA, vertexB);
-    const edgeAC = new GraphEdge(vertexA, vertexC);
-    const edgeBC = new GraphEdge(vertexB, vertexC);
-    const edgeBD = new GraphEdge(vertexB, vertexD);
-    const edgeCE = new GraphEdge(vertexC, vertexE);
-
-    const graph = new Graph();
-
-    graph
-      .addEdges([edgeAB, edgeAC, edgeBC, edgeBD, edgeCE]);
-
-    eulerianPath(graph);
-
-    expect(console.warn).toHaveBeenCalledTimes(1);
-  });
-
   it('should find Eulerian Circuit in graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
