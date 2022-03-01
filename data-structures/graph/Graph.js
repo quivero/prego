@@ -11,10 +11,12 @@ export default class Graph {
   /**
    * @param {boolean} isDirected
    */
-  constructor(isDirected = false) {
+  constructor(isDirected = false, name='') {
+    this.isDirected = isDirected;
+
     this.vertices = {};
     this.edges = {};
-    this.isDirected = isDirected;
+
     this.#cycles = [];
     this.#density = 0;
   }
