@@ -83,11 +83,11 @@ describe('Graph', () => {
 
     const [A, B, C] = createVertices(keys);
     const [AB, BC] = createEdges([[A, B], [B, C]]);
-    
+
     graph.addEdges([AB, BC]);
 
     const edge_keys = graph.getEdgesKeysByVertexKeys(vertexKeys, true);
-    
+
     expect(edge_keys).toEqual(['A_B']);
   });
 
