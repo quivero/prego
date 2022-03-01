@@ -12,7 +12,7 @@ export default class GraphVertex {
     if (label === undefined) {
       throw new Error('Graph vertex must have a label');
     }
-    
+
     /**
      * @param {GraphEdge} edgeA
      * @param {GraphEdge} edgeB

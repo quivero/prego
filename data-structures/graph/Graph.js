@@ -11,7 +11,7 @@ export default class Graph {
   /**
    * @param {boolean} isDirected
    */
-  constructor(isDirected = false, name='') {
+  constructor(isDirected = false, name = '') {
     this.isDirected = isDirected;
 
     this.vertices = {};
@@ -72,7 +72,7 @@ export default class Graph {
    * @returns GraphVertex
    */
   getVertexByIndex(vertexIndex) {
-    let indices_to_vertices = this.getIndicesToVertices();
+    const indices_to_vertices = this.getIndicesToVertices();
     return Indices_to_vertices[vertexIndex];
   }
 
@@ -116,11 +116,11 @@ export default class Graph {
     const n_vertices = this.getNumVertices();
 
     // Initialization
-    for (let i = 0; i < n_vertices; i = i + 1) {
+    for (let i = 0; i < n_vertices; i += 1) {
       adjList[vertex_values[i]] = [];
     }
 
-    for (let i = 0; i < n_vertices; i = i + 1) {
+    for (let i = 0; i < n_vertices; i += 1) {
       const vertex_i = this.getVertexByKey(vertex_keys[i]);
       const neighbors_i = this.getNeighbors(vertex_i);
 
@@ -145,7 +145,7 @@ export default class Graph {
     const adjList = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
 
-    for (let i = 0; i < n_vertices; i = i + 1) {
+    for (let i = 0; i < n_vertices; i += 1) {
       if (adjList[i].length === 0) {
         loose_nodes.push(i);
       }
@@ -165,7 +165,7 @@ export default class Graph {
 
     const to_vertices = new Set();
 
-    for (let i = 0; i < n_vertices; i = i + 1) {
+    for (let i = 0; i < n_vertices; i += 1) {
       const neighbors = adjList[i];
       for (let j = 0; j < neighbors.length; j += 1) {
         to_vertices.add(neighbors[j]);
@@ -294,7 +294,7 @@ export default class Graph {
     const values = Object.values(vertices_indices);
     const keys = Object.keys(vertices_indices);
     const n_vertices = this.getNumVertices();
-    let indices_vertices = {};
+    const indices_vertices = {};
 
     for (let i = 0; i < n_vertices; i += 1) {
       indices_vertices[values[i]] = keys[i];
@@ -366,7 +366,7 @@ export default class Graph {
     const undirected_graph = new Graph(false);
     const edges = this.getAllEdges();
 
-    for (let i = 0; i < edges.length; i = i + 1) {
+    for (let i = 0; i < edges.length; i += 1) {
       undirected_graph.addEdge(_.cloneDeep(edges[i]));
     }
 
@@ -465,7 +465,7 @@ export default class Graph {
     // Mark all the vertices as not visited
     const n_vertices = graph_.getNumVertices();
     const bridges = [];
-    let counter = 0;
+    const counter = 0;
 
     // pre[v]: order in which dfs examines v
     // low[v]: lowest preorder of any vertex connected to v
@@ -577,7 +577,7 @@ export default class Graph {
       marked.push(false);
     }
 
-    let cycles = [];
+    const cycles = [];
     for (let i = 0; i < n_vertices; i += 1) {
       const points = [];
       this.#tarjanCycleMethod(i, i, false, points, cycles, marked_stack, marked);
@@ -595,7 +595,7 @@ export default class Graph {
      * @return {object}
      */
   getCycleIndices() {
-    let cycles_indices = {};
+    const cycles_indices = {};
     let cycles = [];
 
     if (this.#cycles.length === 0) {
@@ -627,7 +627,7 @@ export default class Graph {
     // Recur for all the vertices adjacent to current vertex u
     for (let i = 0; i < adj_len; i += 1) {
       const neighbor_i = adj_list[from_index][i];
-      let ith_was_visited = is_visited[neighbor_i];
+      const ith_was_visited = is_visited[neighbor_i];
 
       if (!ith_was_visited) {
         // store current node in path[]
@@ -642,7 +642,7 @@ export default class Graph {
         );
 
         // remove current node  in path[]
-        let idx = local_path_list.indexOf(neighbor_i);
+        const idx = local_path_list.indexOf(neighbor_i);
         local_path_list.splice(idx, 1);
       }
     }
@@ -731,7 +731,7 @@ export default class Graph {
           }
         } else {
           // Get current vertex low discovery time.
-          let currentLowDiscoveryTime = visitedSet[currentVertex.getKey()].lowDiscoveryTime;
+          const currentLowDiscoveryTime = visitedSet[currentVertex.getKey()].lowDiscoveryTime;
 
           // Compare current vertex low discovery time with parent discovery time. Check if there
           // are any short path (back edge) exists. If we can't get to current vertex other then
@@ -765,8 +765,8 @@ export default class Graph {
     const to_index = verticesIndices[to];
     const n_vertices = this.getNumVertices();
 
-    let is_visited = new Array(this.v);
-    for (let i of Iter.range(n_vertices)) {
+    const is_visited = new Array(this.v);
+    for (const i of Iter.range(n_vertices)) {
       is_visited[i] = false;
     }
 
@@ -789,7 +789,7 @@ export default class Graph {
    */
   getVertexCycles() {
     const n_vertices = this.getNumVertices();
-    let cycles = this.cyclicPaths();
+    const cycles = this.cyclicPaths();
     const nodes_to_cycles = {};
 
     for (let i = 0; i < n_vertices; i += 1) {
@@ -801,7 +801,7 @@ export default class Graph {
       cnodes_temp = cnodes_temp.concat(cycles[i]);
     }
 
-    let cyclic_nodes = Array.from(new Set(...[cnodes_temp]));
+    const cyclic_nodes = Array.from(new Set(...[cnodes_temp]));
 
     for (let i = 0; i < cyclic_nodes.length; i += 1) {
       const j = cyclic_nodes[i];
@@ -820,7 +820,7 @@ export default class Graph {
    * @return {object}
    */
   describe() {
-    let is_cyclic = this.isCyclic();
+    const is_cyclic = this.isCyclic();
     return {
       vertices: Object.keys(this.vertices).toString(),
       edges: Object.keys(this.edges).toString(),
