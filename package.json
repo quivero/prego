@@ -4,6 +4,7 @@
   "version": "5.1.0",
   "description": "Package to handle dot-quiver based structures",
   "main": "index.js",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brunolnetto/dot-quiver.git"
@@ -18,19 +19,18 @@
   },
   "homepage": "https://github.com/brunolnetto/dot-quiver#readme",
   "dependencies": {
-    "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.11",
     "es-iter": "^1.1.2",
-    "eslint-nibble": "^8.0.1",
+    "eslint-nibble": "^4.2.1",
     "express": "^4.17.2",
     "fs": "^0.0.2",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.15",
-    "np": "^7.6.0",
+    "np": "^5.1.3",
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "nodemon ./server.js",
+    "start": "nodemon ./src/index.js",
     "test": "jest",
     "test:watch": "jest --watchAll --coverage",
     "lint": "npx eslint --fix .",
@@ -39,10 +39,10 @@
     "update": "npm i -g npm-check-updates && ncu -u && npm update"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.17.0",
     "@types/jest": "27.4.0",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
-    "babel-eslint": "^10.1.0",
     "eslint": "^8.7.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-google": "^0.14.0",
@@ -50,7 +50,9 @@
     "eslint-plugin-jest": "^26.0.0",
     "eslint-scope": "^7.1.0",
     "jest": "^27.4.7",
-    "npm-check-engine": "^1.0.0"
+    "npm-check-engine": "^1.0.0",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
   },
   "engines": {
     "node": " >=16.0.0",
