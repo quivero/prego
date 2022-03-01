@@ -20,11 +20,11 @@ export const partitions = (n, size) => {
   // This loop first prints current partition, then generates next
   // partition. The loop stops when the current partition has all 1s
   while (getUniques(p) !== 1) {
-    if(k==size){
+    if (k == size) {
       // print current partition
-      console.log(Array.from(p.subarray(0, k+1)))
+      console.log(Array.from(p.subarray(0, k + 1)));
     }
-    
+
     // Generate next partition
 
     // Find the rightmost non-one value in p[]. Also, update
@@ -38,9 +38,8 @@ export const partitions = (n, size) => {
 
     // If k < 0, all the values are 1 so
     // there are no more partitions
-    if (k < 0) 
-        break;
-    
+    if (k < 0) { break; }
+
     // Decrease the p[k] found above and adjust the rem_val
     p[k] -= 1;
     rem_val += 1;
@@ -56,8 +55,8 @@ export const partitions = (n, size) => {
 
     // Copy rem_val to next position and increment position
     p[k + 1] = rem_val;
-    k += 1;    
+    k += 1;
   }
 
-  return partitions_dict
+  return partitions_dict;
 };
