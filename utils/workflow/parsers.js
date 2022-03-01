@@ -209,7 +209,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   };
 
   let lane_route_i = [];
-  const total_len=0
+  const total_len = 0;
 
   for (const i in routes) {
     lane_route_i = nodeRouteToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);

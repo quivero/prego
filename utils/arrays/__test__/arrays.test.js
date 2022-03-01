@@ -4,7 +4,7 @@ import {
   isCyclicEqual,
   getUniques,
   extendedVenn,
-  arraysEqual
+  arraysEqual,
 } from '../arrays';
 
 console.error = jest.fn();
@@ -47,18 +47,18 @@ describe('Array', () => {
 });
 
 describe('arraysEqual', () => {
-    it('should return true for 2 equal arrays', () => {
-      expect(arraysEqual('abc', 'abc')).toStrictEqual(true);
-    });
-    
-    it('should return false for null value', () => {
-      expect(arraysEqual(null, 42)).toStrictEqual(false);
-      expect(arraysEqual(42, null)).toStrictEqual(false);
-    });
+  it('should return true for 2 equal arrays', () => {
+    expect(arraysEqual('abc', 'abc')).toStrictEqual(true);
+  });
 
-    it('should return false for arrays of different lengths', () => {
-      expect(arraysEqual([0, 1], [0, 1, 2])).toStrictEqual(false);
-    });
+  it('should return false for null value', () => {
+    expect(arraysEqual(null, 42)).toStrictEqual(false);
+    expect(arraysEqual(42, null)).toStrictEqual(false);
+  });
+
+  it('should return false for arrays of different lengths', () => {
+    expect(arraysEqual([0, 1], [0, 1, 2])).toStrictEqual(false);
+  });
 });
 
 describe('Extended venn diagram', () => {
