@@ -27,8 +27,8 @@ describe('bfTravellingSalesman', () => {
     const graph = new Graph(true);
     graph
       .addEdges([edgeAB, edgeBD, edgeDC, edgeCA,
-        edgeBA, edgeDB, edgeCD, edgeAC,
-        edgeAD, edgeDA, edgeBC, edgeCB]);
+                 edgeBA, edgeDB, edgeCD, edgeAC,
+                 edgeAD, edgeDA, edgeBC, edgeCB]);
 
     const salesmanPath = bfTravellingSalesman(graph);
 
