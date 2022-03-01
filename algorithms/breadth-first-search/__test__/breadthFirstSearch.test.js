@@ -28,7 +28,7 @@ describe('breadthFirstSearch', () => {
 
     graph.addEdges([edgeAB, edgeBC, edgeCG, edgeAD, edgeAE, edgeEF, edgeFD, edgeDH, edgeGH]);
 
-    expect(graph.toString()).toBe('A,B,C,G,D,E,F,H');
+    expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_H,G_H');
 
     const enterVertexCallback = jest.fn();
     const leaveVertexCallback = jest.fn();
@@ -104,7 +104,7 @@ describe('breadthFirstSearch', () => {
 
     graph.addEdges([edgeAB, edgeBC, edgeCG, edgeAD, edgeAE, edgeEF, edgeFD, edgeDH, edgeGH]);
 
-    expect(graph.toString()).toBe('A,B,C,G,D,E,F,H');
+    expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_H,G_H');
 
     const enterVertexCallback = jest.fn();
     const leaveVertexCallback = jest.fn();

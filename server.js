@@ -4,12 +4,13 @@ import { createRequire } from 'module';
 import fs from 'fs';
 
 import {
-  startAndFinishNodes,
-  nodeToLane,
-  parseBlueprintToGraph,
-  fromStartToFinishAcyclicPaths,
-  fromStartToFinishCombsAcyclicPaths,
+  fromStartToFinishCombsAllPaths,
+  describeBlueprint,
 } from './utils/workflow/parsers.js';
+
+import {
+  partitions,
+} from './utils/combinatorics/partition.js';
 
 const require = createRequire(import.meta.url);
 const app = express();
@@ -27,37 +28,39 @@ app.listen(PORT, () => {
 });
 
 app.get('/', (req, res) => {
-  // Driver program
-  // Create a sample graph
+  // Driver program - Create a sample graph
 
-  // let parseBlueprintToGraph();
   const bps_root = './samples/blueprints/';
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = true;
-  const blueprint_fname = 'DemandasEspontaneas.json';
-
-  const graphs = [];
-  const descriptions = [];
+  const READ_ALL_BPS = false;
 
   if (READ_ALL_BPS) {
-    for (let i = 0; i < blueprints_fnames.length; i++) {
-      const fname = bps_root + blueprints_fnames[i];
-      const blueprint_i = require(fname);
+    const paths = [];
 
-      // let graph_i = parseBlueprintToGraph(blueprint_i);
-      descriptions.push(fromStartToFinishCombsAcyclicPaths(blueprint_i));
+    for (let i = 0; i < blueprints_fnames.length; i += 1) {
+      const blueprint_i_name = blueprints_fnames[i];
+      const fname = bps_root + blueprint_i_name;
+      const tokens = fname.split('.');
+
+      if (tokens[tokens.length - 1] === 'json') {
+        const blueprint_i = require(fname);
+
+        // paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
+        paths.push(describeBlueprint(blueprint_i));
+      }
     }
 
-    res.send(descriptions);
+    res.send(paths);
   } else {
+    const blueprint_fname = 'generate_number.json';
+
     const fname = bps_root + blueprint_fname;
-    const blueprint_i = require(fname);
+    const blueprint = require(fname);
 
-    const graph = parseBlueprintToGraph(blueprint_i);
-    const route_describe = fromStartToFinishAcyclicPaths(blueprint_i, '1', '91');
+    const route_describe = fromStartToFinishCombsAllPaths(blueprint);
 
-    res.send(fromStartToFinishCombsAcyclicPaths(blueprint_i));
+    res.send(route_describe);
   }
 });
 // [END app]

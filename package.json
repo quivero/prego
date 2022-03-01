@@ -1,7 +1,7 @@
 {
   "name": "dot-quiver",
   "type": "module",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Package to handle dot-quiver based structures",
   "main": "index.js",
   "repository": {
@@ -27,23 +27,23 @@
     "fs": "^0.0.2",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.15",
-    "np": "^7.6.0"
+    "np": "^7.6.0",
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "start": "nodemon ./server.js",
     "test": "jest",
+    "test:watch": "jest --watchAll --coverage",
     "lint": "npx eslint --fix .",
     "nibble": "npx eslint-nibble .",
     "fixable-nibble": "npx eslint-nibble --fixable-only .",
-    "update": "npm i -g npm-check-updates && ncu -u && npm update",
-    "coverage": "npm run test -- --coverage"
+    "update": "npm i -g npm-check-updates && ncu -u && npm update"
   },
   "devDependencies": {
     "@types/jest": "27.4.0",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "babel-eslint": "^10.1.0",
-    "canvas": "2.9.0",
     "eslint": "^8.7.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-google": "^0.14.0",

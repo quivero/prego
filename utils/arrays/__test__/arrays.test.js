@@ -3,6 +3,7 @@ import {
   cyclicSort,
   isCyclicEqual,
   getUniques,
+  extendedVenn,
 } from '../arrays';
 
 console.error = jest.fn();
@@ -41,5 +42,38 @@ describe('Array', () => {
   it('Throws console.error in case the index exceeds array size', () => {
     cyclicSort('ABCD', 5);
     expect(console.error).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Extended venn diagram', () => {
+  it('Validate information from Extended Venn Diagram', () => {
+    const list_1 = [1, 2, 3, 4, 5];
+    const list_2 = [4, 5, 6, 7];
+
+    expect(extendedVenn([list_1, list_2])).toEqual({
+      '0,1': [4, 5],
+      0: [1, 2, 3],
+      1: [6, 7],
+    });
+  });
+
+  it('Validate non-intersection from Extended Venn Diagram', () => {
+    const list_1 = [1, 2, 3];
+    const list_2 = [4, 5, 6];
+
+    expect(extendedVenn([list_1, list_2])).toEqual({
+      0: [1, 2, 3],
+      1: [4, 5, 6],
+    });
+  });
+
+  it('Validate empty exclusivity from Extended Venn Diagram', () => {
+    const list_1 = [1, 2, 3, 4, 5, 6];
+    const list_2 = [4, 5, 6];
+
+    expect(extendedVenn([list_1, list_2])).toEqual({
+      0: [1, 2, 3],
+      '0,1': [4, 5, 6],
+    });
   });
 });

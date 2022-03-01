@@ -22,12 +22,7 @@ describe('detectDirectedCycle', () => {
 
     const graph = new Graph(true);
     graph
-      .addEdge(edgeAB)
-      .addEdge(edgeBC)
-      .addEdge(edgeAC)
-      .addEdge(edgeDA)
-      .addEdge(edgeDE)
-      .addEdge(edgeEF);
+      .addEdges([edgeAB, edgeBC, edgeAC, edgeDA, edgeDE, edgeEF]);
 
     expect(detectDirectedCycle(graph)).toBeNull();
 

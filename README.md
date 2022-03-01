@@ -2,7 +2,7 @@
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
-Its main funcionality is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
+Its objective is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
 
 ## Preamble
 
@@ -24,8 +24,18 @@ You must follow the instructions below
 
 1) Clone the repository typing on terminal `git clone git@github.com:brunolnetto/dot-quiver.git`;
 2) Run the commands:
+<<<<<<< HEAD
     2.1. `npm install`: install local dependencies;
     2.2. `npm start`: run the server locally;
+=======
+
+    2.1. `pip install pre-commit && pre-commit install`: install pre-commit git hooks;
+    
+    2.2. `npm install`: install local dependencies;
+    
+    2.3. `npm start`: run the server locally;
+
+>>>>>>> origin/main
 3) Open a browser;
 4) Type `localhost:8080` on the URL field;
 
@@ -35,3 +45,8 @@ You must follow the instructions below
 
 1. Add router to handle multiple use cases;
 2. Add a docker-compose.yaml to ```up``` application
+
+## Prelude
+
+In case you run it as a service, nodemon may disappear from terminal. You may kill the process by run of command ```fuser -k 8080/tcp``` 
+

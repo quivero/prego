@@ -43,6 +43,47 @@ export const isCyclicEqual = (control_, treatment_) => {
   return false;
 };
 
+export const arraysEqual = (a, b) => {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  for (let i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+};
+
+// Cartesian product of arrays
+export const cartesianProduct = (a, b, ...c) => {
+  const f = (a, b) => [].concat(...a.map((a) => b.map((b) => [].concat(a, b))));
+
+  return b ? cartesianProduct(f(a, b), ...c) : a;
+};
+
+export const removeArrayDuplicates = (list) => {
+  const unique = [];
+
+  list.forEach((item) => {
+    let has_item = false;
+
+    unique.forEach((unique_item) => {
+      has_item = has_item || arraysEqual(item, unique_item);
+    });
+
+    if (!has_item) {
+      unique.push(item);
+    }
+  });
+
+  return unique;
+};
+
 export const getUniques = (vec) => Array.from(new Set(vec));
 
 export const extendedVenn = (sets) => {
@@ -69,16 +110,7 @@ export const extendedVenn = (sets) => {
         break;
       }
 
-      const ev_keys_i_to_n = [];
-      Object
-        .keys(extended_venn)
-        .forEach(
-          (key) => {
-            if (key.split(',').length >= i) {
-              ev_keys_i_to_n.push(key);
-            }
-          },
-        );
+      const ev_keys_i_to_n = Object.keys(extended_venn);
 
       // Intersection of elements
       comb_sets_union = ev_keys_i_to_n.length === 0 ? []
@@ -93,7 +125,7 @@ export const extendedVenn = (sets) => {
       // Exclusive combination set elements
       comb_sets_excl = _.difference(comb_sets_inter, comb_sets_union);
 
-      if (comb_sets_inter.length !== 0) {
+      if (comb_sets_excl.length !== 0) {
         extended_venn[comb_keys.toString()] = comb_sets_excl;
       }
     }

@@ -1,5 +1,5 @@
 import GraphEdge from '.../../../data-structures/graph/GraphEdge';
-import GraphVertex from '../../../data-structures/graph/GraphVertex';
+import GraphVertex from '../../../data-structures/graph/GraphVertex.ts';
 import Graph from '../../../data-structures/graph/Graph';
 import hamiltonianCycle from '../hamiltonianCycle';
 
@@ -21,9 +21,9 @@ describe('hamiltonianCycle', () => {
     const edgeDE = new GraphEdge(vertexD, vertexE);
 
     const graph = new Graph();
-    graph
-      .addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
-        edgeBC, edgeBD, edgeCD, edgeDE]);
+
+    graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
+      edgeBC, edgeBD, edgeCD, edgeDE]);
 
     const hamiltonianCycleSet = hamiltonianCycle(graph);
 

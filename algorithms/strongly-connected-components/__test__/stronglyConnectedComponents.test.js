@@ -17,8 +17,7 @@ describe('stronglyConnectedComponents', () => {
 
     const graph = new Graph(true);
 
-    graph
-      .addEdges([edgeAB, edgeBC, edgeCA, edgeCD]);
+    graph.addEdges([edgeAB, edgeBC, edgeCA, edgeCD]);
 
     const components = stronglyConnectedComponents(graph);
 
@@ -62,9 +61,10 @@ describe('stronglyConnectedComponents', () => {
     const graph = new Graph(true);
 
     graph
-      .addEdges([edgeAB, edgeBC, edgeCA, edgeBD, edgeDE,
-        edgeEF, edgeFD, edgeGF, edgeGH, edgeHI,
-        edgeIJ, edgeJG, edgeJK]);
+      .addEdges([edgeAB, edgeBC, edgeCA, edgeBD,
+        edgeDE, edgeEF, edgeFD, edgeGF,
+        edgeGH, edgeHI, edgeIJ, edgeJG,
+        edgeJK]);
 
     const components = stronglyConnectedComponents(graph);
 

@@ -1,4 +1,4 @@
-import graphBridges from '../bridges/graphBridges';
+import graphBridges from '../bridges/graphBridges.js';
 
 /**
  * Fleury's algorithm of finding Eulerian Path (visit all graph edges exactly once).
@@ -38,7 +38,8 @@ export default function eulerianPath(graph) {
   const isCircuit = !Object.values(oddRankVertices).length;
 
   if (!isCircuit && Object.values(oddRankVertices).length !== 2) {
-    throw new Error('Eulerian path must contain two odd-ranked vertices');
+    console.warn('Eulerian path must contain two odd-ranked vertices');
+    return [];
   }
 
   // Pick start vertex for traversal.

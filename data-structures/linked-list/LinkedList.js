@@ -5,6 +5,9 @@ export default class LinkedList {
   /**
    * @param {Function} [comparatorFunction]
    */
+
+  #length;
+
   constructor(comparatorFunction) {
     /** @var LinkedListNode */
     this.head = null;
@@ -12,7 +15,14 @@ export default class LinkedList {
     /** @var LinkedListNode */
     this.tail = null;
 
+    /** @int */
+    this.#length = 0;
+
     this.compare = new Comparator(comparatorFunction);
+  }
+
+  get length() {
+    return this.toArray().length;
   }
 
   /**
