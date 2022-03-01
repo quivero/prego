@@ -24,18 +24,9 @@ You must follow the instructions below
 
 1) Clone the repository typing on terminal `git clone git@github.com:brunolnetto/dot-quiver.git`;
 2) Run the commands:
-<<<<<<< HEAD
     2.1. `npm install`: install local dependencies;
     2.2. `npm start`: run the server locally;
-=======
 
-    2.1. `pip install pre-commit && pre-commit install`: install pre-commit git hooks;
-    
-    2.2. `npm install`: install local dependencies;
-    
-    2.3. `npm start`: run the server locally;
-
->>>>>>> origin/main
 3) Open a browser;
 4) Type `localhost:8080` on the URL field;
 

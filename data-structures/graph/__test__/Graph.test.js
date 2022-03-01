@@ -232,7 +232,7 @@ describe('Graph', () => {
     const edgeEF = new GraphEdge(vertexE, vertexF);
 
     const graph = new Graph();
-    
+
     graph.addEdges([edgeAB, edgeBC, edgeCD, edgeDE, edgeEF]);
 
     expect(graph.getEulerianPath()).toStrictEqual([0, 1, 2, 3, 4, 5, 0]);

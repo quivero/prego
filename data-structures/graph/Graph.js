@@ -11,7 +11,8 @@ import {
   extendedVenn,
   removeArrayDuplicates,
 } from '../../utils/arrays/arrays.js';
-import GraphVertex from './GraphVertex.ts';
+
+import GraphVertex from './GraphVertex.js';
 import GraphEdge from './GraphEdge.js';
 
 export default class Graph {
@@ -287,7 +288,7 @@ export default class Graph {
     } else {
       // to-adjacency dictionary
       const toAdjList = this.getAdjacencyList(0);
-      
+
       let vertex_i = -1;
       let vertex_ij = -1;
       let toAdjList_i = [];
@@ -671,14 +672,14 @@ export default class Graph {
 
   getEulerianPath() {
     const eulerian_path = eulerianPath(this);
-    
+
     const verticesIndices = this.getVerticesKeystoIndices();
-    
+
     const epath = [];
 
     for (let i = 0; i < eulerian_path.length; i += 1) {
       const vertex = eulerian_path[i];
-      epath.push(verticesIndices[vertex.getKey()]);
+      epath.push(verticesIndices[vertex.value]);
     }
 
     if (epath.length !== 0) {
@@ -1366,7 +1367,6 @@ export default class Graph {
 
       path_edges.push(`${acyclic_path_keys[i]}_${acyclic_path_keys[i + 1]}`);
     }
-
 
     // Cycles intercept the main path through in- and out- flow vertices
     for (const intersect_node_id of intersect_nodes) {
