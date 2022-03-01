@@ -1498,7 +1498,7 @@ export default class Graph {
         cycle_nodes_arr = [...cycle_nodes];
 
         let cyclic_paths_i = [];
-        
+
         if (_.intersection(acyclic_path, cycle_nodes_arr).length !== 0) {
           cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
           cyclic_paths = cyclic_paths.concat(cyclic_paths_i);

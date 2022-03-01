@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
       const blueprint_i_name = blueprints_fnames[i];
       const fname = bps_root + blueprint_i_name;
       const tokens = fname.split('.');
-      
+
       if (tokens[tokens.length - 1] === 'json') {
         const blueprint_i = require(fname);
 

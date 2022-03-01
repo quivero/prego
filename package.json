@@ -32,6 +32,7 @@
   "scripts": {
     "start": "nodemon ./src/index.js",
     "test": "jest",
+    "publish": "np --any-branch",
     "test:watch": "jest --watchAll --coverage",
     "lint": "npx eslint --fix .",
     "nibble": "npx eslint-nibble .",
