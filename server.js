@@ -38,27 +38,26 @@ app.get('/', (req, res) => {
   if (READ_ALL_BPS) {
     const paths = {};
     let total_paths_len = 0;
-    
+
     for (let i = 0; i < blueprints_fnames.length; i += 1) {
       const blueprint_i_name = blueprints_fnames[i];
       const fname = bps_root + blueprint_i_name;
       const tokens = fname.split('.');
-      
+
       if (tokens[tokens.length - 1] === 'json') {
         const blueprint_i = require(fname);
 
         paths[blueprint_i_name] = fromStartToFinishCombsAllPaths(blueprint_i);
-        total_paths_len += paths[blueprints_fnames[i]].length
+        total_paths_len += paths[blueprints_fnames[i]].length;
       }
     }
-    
+
     res.send(
       {
-        length: total_paths_len, 
-        blueprints: paths 
-      }
+        length: total_paths_len,
+        blueprints: paths,
+      },
     );
-  
   } else {
     const blueprint_fname = 'generate_number.json';
 
