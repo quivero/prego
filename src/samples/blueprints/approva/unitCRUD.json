@@ -1,0 +1,555 @@
+{
+    "name": "unitCRUD",
+    "description": "Fluxo para cadastro de unidades",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "GENERAL",
+                "name": "General access",
+                "rule": {
+                    "$js": "({actor_data, bag}) => ((actor_data.claims).includes('admin') || (actor_data.claims).includes('list') || (actor_data.claims).includes('overwrite'))"
+                }
+            },
+            {
+                "id": "LIST",
+                "name": "List",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (((actor_data.claims).includes('admin') || (actor_data.claims).includes('list')) && actor_data.actor_id == bag.actor_id)"
+                }
+            },
+            {
+                "id": "OVERWRITE",
+                "name": "Overwrite",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (((actor_data.claims).includes('admin') || (actor_data.claims).includes('overwrite')) && actor_data.actor_id == bag.actor_id)"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start unit CRUD",
+                "next": "GET-DEV-CONTRACTS",
+                "type": "Start",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input_schema": {
+                        "type": "object",
+                        "required": [
+                            "intent",
+                            "key"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "key": {
+                                "type": "string"
+                            },
+                            "intent": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-DEV-CONTRACTS",
+                "name": "Get dev contracts",
+                "next": "SET-DEV-CONTRACTS-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/dev_contracts?key=eq.{{bag.key}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-DEV-CONTRACTS-TO-BAG",
+                "name": "Set task settings to bag",
+                "next": "VALIDATE-INPUT",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "limit": {
+                            "$js": "({bag}) => bag.limit ? bag.limit : 10"
+                        },
+                        "filter": {
+                            "$js": "({bag}) => {let filter = ''; if (bag.filters) {const f = bag.filters; Object.entries(f).forEach(([key, value]) => {filter += key + '=eq.' + value + '&';});}; return filter;}"
+                        },
+                        "offset": {
+                            "$js": "({bag}) => bag.offset ? bag.offset : 0"
+                        },
+                        "schema": {
+                            "$ref": "result.data[0].value"
+                        },
+                        "filters": {
+                            "$js": "({bag}) => bag.filters ? bag.filters : {}"
+                        },
+                        "key_url": {
+                            "$js": "({bag}) => {return (bag.key).substring(5,(bag.key.length))}"
+                        },
+                        "actor_id": {
+                            "$ref": "actor_data.actor_id"
+                        },
+                        "pagination": {
+                            "$js": "({bag}) => bag.offset && bag.limit ? bag.offset * bag.limit : 0"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATE-INPUT",
+                "name": "Validade input",
+                "next": "VERIFY-INTENT",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/units?id=*"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204,
+                        400,
+                        404
+                    ]
+                }
+            },
+            {
+                "id": "CHECK-INPUT",
+                "name": "Check input",
+                "next": {
+                    "true": "VERIFY-INTENT",
+                    "default": "FINISH-DEV-CONTRACTS"
+                },
+                "type": "Flow",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VERIFY-INTENT",
+                "name": "Verify user intent",
+                "next": {
+                    "default": "GET-COUNT",
+                    "OVERWRITE": "GET-UUID"
+                },
+                "type": "Flow",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.intent"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-COUNT",
+                "name": "Get count",
+                "next": "SET-COUNT-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "LIST",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/{{bag.key_url}}?select=total_items:count('*')&properties_projects_id=eq.{{bag.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-COUNT-TO-BAG",
+                "name": "Set count to bag",
+                "next": "GET-UNITS",
+                "type": "SystemTask",
+                "lane_id": "LIST",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "total_items": {
+                            "$ref": "result.data[0].total_items"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-UNITS",
+                "name": "Get units",
+                "next": "LIST",
+                "type": "SystemTask",
+                "lane_id": "LIST",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/{{bag.key_url}}?properties_projects_id=eq.{{bag.id}}&offset={{bag.pagination}}&limit={{bag.limit}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "LIST",
+                "name": "Show units to user",
+                "next": "CHECK-TIMEOUT-LIST",
+                "type": "UserTask",
+                "lane_id": "LIST",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        },
+                        "list": {
+                            "$ref": "result.data"
+                        },
+                        "limit": {
+                            "$ref": "bag.limit"
+                        },
+                        "offset": {
+                            "$ref": "bag.offset"
+                        },
+                        "total_items": {
+                            "$ref": "bag.total_items"
+                        },
+                        "activity_schema": {
+                            "$ref": "bag.schema.LIST"
+                        }
+                    },
+                    "action": "LIST",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "CHECK-TIMEOUT-LIST",
+                "name": "Check timeout",
+                "next": {
+                    "true": "FINISH-LIST",
+                    "default": "SET-OFFSET-LIMIT-TO-BAG"
+                },
+                "type": "Flow",
+                "lane_id": "LIST",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-OFFSET-LIMIT-TO-BAG",
+                "name": "Set value offset and limit to bag",
+                "next": "GET-COUNT",
+                "type": "SystemTask",
+                "lane_id": "LIST",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "limit": {
+                            "$js": "({result}) => result.activities[0]?.data?.limit ? result.activities[0].data.limit : 10"
+                        },
+                        "filter": {
+                            "$js": "({result}) => {let filter = ''; if (result.activities[0]?.data?.filters) {const f = result.activities[0].data.filters; Object.entries(f).forEach(([key, value]) => {filter += key + '=eq.' + value + '&';});}; return filter;}"
+                        },
+                        "offset": {
+                            "$js": "({result}) => result.activities[0]?.data?.offset ? result.activities[0].data.offset : 0"
+                        },
+                        "filters": {
+                            "$js": "({result}) => result.activities[0]?.data?.filters ? result.activities[0].data.filters : {}"
+                        },
+                        "pagination": {
+                            "$js": "({result}) => result.activities[0]?.data?.limit && result.activities[0]?.data?.offset ? result.activities[0].data.limit * result.activities[0].data.offset : 0"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-UUID",
+                "name": "Get uuid",
+                "next": "IMPORT-NEW-SHEET",
+                "type": "SystemTask",
+                "lane_id": "OVERWRITE",
+                "category": "CreateIdTask",
+                "parameters": {
+                    "input": {
+                        "form_data": {
+                            "resource_id": {
+                                "$ref": "bag.id"
+                            },
+                            "resource_type": {
+                                "$ref": "bag.key_url"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "IMPORT-NEW-SHEET",
+                "name": "User send sheet",
+                "next": "VALIDATE-NEW-SHEEET",
+                "type": "UserTask",
+                "lane_id": "OVERWRITE",
+                "parameters": {
+                    "input": {},
+                    "action": "IMPORT_NEW_SHEET",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "VALIDATE-NEW-SHEEET",
+                "name": "Validate new sheets",
+                "next": {
+                    "true": "SET-NEW-SHEET-TO-BAG",
+                    "default": "NOTIFY-REFUSE"
+                },
+                "type": "Flow",
+                "lane_id": "OVERWRITE",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => result.activities[0]?.data?.units?.length > 0 ? true : false"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-NEW-SHEET-TO-BAG",
+                "name": "Set new sheet to bag",
+                "next": "VALIDATE-SHEET-AND-SHOW-DIFF",
+                "type": "SystemTask",
+                "lane_id": "OVERWRITE",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "units": {
+                            "$ref": "result.activities[0].data.units"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATE-SHEET-AND-SHOW-DIFF",
+                "name": "Verify if sheet is valid",
+                "next": "SHEET-REVIEW",
+                "type": "SystemTask",
+                "lane_id": "OVERWRITE",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "units": {
+                            "$ref": "bag.units"
+                        },
+                        "properties_projects_id": {
+                            "$ref": "bag.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/validate/units-list"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SHEET-REVIEW",
+                "name": "User send sheet",
+                "next": "CONFIRM-OVERWRITE",
+                "type": "UserTask",
+                "lane_id": "OVERWRITE",
+                "parameters": {
+                    "input": {
+                        "diff": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "$ref": "bag.schema.OVERWRITE"
+                        }
+                    },
+                    "action": "SHEET_REVIEW",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "CONFIRM-OVERWRITE",
+                "name": "Confirm overwrite",
+                "next": {
+                    "CONFIRM": "OVERWRITE",
+                    "default": "NOTIFY-REFUSE"
+                },
+                "type": "Flow",
+                "lane_id": "OVERWRITE",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue ? 'CANCEL' : result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "NOTIFY-REFUSE",
+                "name": "Notify review refuse",
+                "next": "FINISH",
+                "type": "UserTask",
+                "lane_id": "OVERWRITE",
+                "parameters": {
+                    "input": {
+                        "message": "Requisição cancelada!",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_SHEET_REFUSE",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "OVERWRITE",
+                "name": "Overwrite",
+                "next": "NOTIFY-SUCCESS",
+                "type": "SystemTask",
+                "lane_id": "OVERWRITE",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "units": {
+                            "$ref": "bag.units"
+                        },
+                        "properties_projects_id": {
+                            "$ref": "bag.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/unit/create-units-from-list"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "NOTIFY-SUCCESS",
+                "name": "Notify review refuse",
+                "next": "FINISH",
+                "type": "UserTask",
+                "lane_id": "OVERWRITE",
+                "parameters": {
+                    "input": {
+                        "message": "Sucesso!",
+                        "toggleModal": true
+                    },
+                    "action": "NOTIFY_SUCCESS",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "FINISH-REFUSE",
+                "name": "Finish unitCRUD if review refuse",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "OVERWRITE"
+            },
+            {
+                "id": "FINISH-LIST",
+                "name": "Finish unitCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "LIST"
+            },
+            {
+                "id": "FINISH",
+                "name": "Finish unitCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "OVERWRITE"
+            },
+            {
+                "id": "FINISH-DEV-CONTRACTS",
+                "name": "Finish unitCRUD",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "GENERAL"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "POSTGREST": "POSTGREST",
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

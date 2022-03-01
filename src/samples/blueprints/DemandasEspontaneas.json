@@ -1,0 +1,1901 @@
+{
+  "name": "DemandasEspontaneas",
+  "description": "Orsegups demandas espontaneas",
+  "blueprint_spec": {
+    "requirements": [
+      "core"
+    ],
+    "prepare": [],
+    "lanes": [
+      {
+        "id": "o1",
+        "name": "default",
+        "rule": [
+          "fn",
+          [
+            "&",
+            "args"
+          ],
+          true
+        ]
+      },
+      {
+        "id": "o2",
+        "name": "representante",
+        "rule": [
+          "fn",
+          [
+            "actor_data",
+            "bag"
+          ],
+          [
+            "=",
+            [
+              "get",
+              "bag",
+              [
+                "`",
+                "actor_id"
+              ]
+            ],
+            [
+              "get",
+              "actor_data",
+              [
+                "`",
+                "actor_id"
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "id": "o3",
+        "name": "gestores",
+        "rule": [
+          "fn",
+          [
+            "actor_data",
+            "bag"
+          ],
+          [
+            "eval",
+            [
+              "apply",
+              "or",
+              [
+                "map",
+                [
+                  "fn",
+                  [
+                    "v"
+                  ],
+                  [
+                    "=",
+                    "v",
+                    [
+                      "get",
+                      "actor_data",
+                      [
+                        "`",
+                        "actor_id"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "get",
+                  "bag",
+                  [
+                    "`",
+                    "gestores_ids"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "id": "o4",
+        "name": "pool",
+        "rule": [
+          "fn",
+          [
+            "actor_data",
+            "bag"
+          ],
+          [
+            "eval",
+            [
+              "apply",
+              "or",
+              [
+                "map",
+                [
+                  "fn",
+                  [
+                    "v"
+                  ],
+                  [
+                    "=",
+                    "v",
+                    [
+                      "get",
+                      "actor_data",
+                      [
+                        "`",
+                        "actor_id"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "get",
+                  "bag",
+                  [
+                    "`",
+                    "lista_vendedores_ids"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "id": "3",
+        "name": "authenticated",
+        "rule": [
+          "fn",
+          [
+            "actor_data",
+            "bag"
+          ],
+          [
+            "eval",
+            [
+              "apply",
+              "or",
+              [
+                "map",
+                [
+                  "fn",
+                  [
+                    "v"
+                  ],
+                  [
+                    "=",
+                    "v",
+                    [
+                      "`",
+                      "authenticated"
+                    ]
+                  ]
+                ],
+                [
+                  "get",
+                  "actor_data",
+                  [
+                    "`",
+                    "claims"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "1",
+        "type": "Start",
+        "name": "Start node",
+        "parameters": {
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "nome",
+              "prod_servico",
+              "telefone",
+              "compromisso"
+            ],
+            "properties": {
+              "id_cliente_ext": {
+                "type": "string"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "endereco": {
+                "type": "object",
+                "properties": {
+                  "endereco": {
+                    "type": "string"
+                  },
+                  "nrEndereco": {
+                    "type": "string"
+                  },
+                  "complemento": {
+                    "type": "string"
+                  },
+                  "bairro": {
+                    "type": "string"
+                  },
+                  "cidade": {
+                    "type": "string"
+                  },
+                  "uf": {
+                    "type": "string"
+                  },
+                  "cep": {
+                    "type": "string"
+                  }
+                }
+              },
+              "regional": {
+                "type": "string"
+              },
+              "telefone": {
+                "type": "string"
+              },
+              "prod_servico": {
+                "type": "string",
+                "enum": [
+                  "alarme",
+                  "cftv",
+                  "pgo",
+                  "ALARME",
+                  "CFTV",
+                  "PGO"
+                ]
+              },
+              "representante": {
+                "type": "string"
+              },
+              "compromisso": {
+                "type": "object",
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": [
+                      "visita tecnica",
+                      "VISITA TECNICA",
+                      "ligacao",
+                      "LIGACAO",
+                      "reuniao",
+                      "REUNIAO"
+                    ]
+                  },
+                  "data_inicio": {
+                    "type": "string",
+                    "format": "dateTime"
+                  },
+                  "data_fim": {
+                    "type": "string",
+                    "format": "dateTime"
+                  }
+                }
+              },
+              "contato": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "telefone": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "next": "0-0C",
+        "lane_id": "o1"
+      },
+      {
+        "id": "0-0C",
+        "next": "1-0L",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Salva collections na bag",
+        "parameters": {
+          "input": {
+            "collections": {
+              "historico_eventos_collection_id": "38ccb1e0-1ad4-11eb-ba42-01e2029c0a36",
+              "clientes_collection_id": "de789100-2f73-11eb-ba42-01e2029c0a36",
+              "quarentena_collection_id": "dec159d0-2f73-11eb-ba42-01e2029c0a36",
+              "vendedores_collection_id": "deae6e10-2f73-11eb-ba42-01e2029c0a36",
+              "oportunidades_collection_id": "de8bf1f0-2f73-11eb-ba42-01e2029c0a36"
+            },
+            "prazo": {
+              "$js": "({bag}) => new Date(bag.compromisso.data_inicio) - Date.now() + 3*60*60*1000"
+            },
+            "actor_id": {
+              "$ref": "actor_data.id"
+            },
+            "regional": {
+              "$js": "({bag}) => bag.telefone.substring(0,2)"
+            },
+            "event_type": {
+              "$js": "({bag}) => { const tipo = bag.compromisso.tipo; let type = ''; switch(tipo) {case 'visita tecnica': case 'VISITA TECNICA': type = 'VISIT'; break; case 'ligacao': case 'LIGACAO': type = 'CALL'; break; default: type = 'MEETING';} return type; }"
+            },
+            "account_id": {
+              "$ref": "actor_data.account_id"
+            },
+            "representante": {
+              "$js": "({ bag }) => (bag.representante === '' ? undefined : bag.representante)"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-0L",
+        "type": "SystemTask",
+        "name": "Cria Location",
+        "next": "1-0LB",
+        "lane_id": "o1",
+        "category": "createLocation",
+        "parameters": {
+          "input": {
+            "location": {
+              "account_id": {
+                "$ref": "bag.account_id"
+              },
+              "street": {
+                "$ref": "bag.endereco.endereco"
+              },
+              "number": {
+                "$ref": "bag.endereco.nrEndereco"
+              },
+              "city": {
+                "$js": "({bag}) => !bag.endereco || !bag.endereco.cidade || bag.endereco.cidade == 'undefined' ? 'Florianópolis' : bag.endereco.cidade"
+              },
+              "state": {
+                "$js": "({bag}) => !bag.endereco || !bag.endereco.uf || bag.endereco.uf == 'undefined' ? 'SC' : bag.endereco.uf"
+              },
+              "country": "Brazil",
+              "zipcode": {
+                "$ref": "bag.endereco.cep"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "1-0LB",
+        "next": "1-1",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Salvar location na Bag",
+        "parameters": {
+          "input": {
+            "location_id": {
+              "$ref": "result.id"
+            },
+            "formatted_address": {
+              "$ref": "result.formatted_address"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-1",
+        "next": "F0",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Consulta cliente pelo telefone",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.clientes_collection_id"
+            },
+            "document_keys": [
+              {
+                "telefone": {
+                  "$ref": "bag.telefone"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "F0",
+        "type": "Flow",
+        "name": "O cliente já existe?",
+        "next": {
+          "0": "1-P",
+          "default": "1-1A"
+        },
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "decision": {
+              "$ref": "result.documents.length"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-P",
+        "type": "SystemTask",
+        "name": "Salvar cliente como place",
+        "next": "1-PB",
+        "lane_id": "o1",
+        "category": "savePlace",
+        "parameters": {
+          "input": {
+            "place": {
+              "name": {
+                "$ref": "bag.nome"
+              },
+              "address1": {
+                "$ref": "bag.endereco.complemento"
+              },
+              "phone_number": {
+                "$ref": "bag.telefone"
+              },
+              "location_id": {
+                "$ref": "bag.location_id"
+              },
+              "account_id": {
+                "$ref": "bag.account_id"
+              },
+              "status": "ACTIVE"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-PB",
+        "type": "SystemTask",
+        "name": "Salvar place na bag",
+        "next": "1-1C",
+        "lane_id": "o1",
+        "category": "setToBag",
+        "parameters": {
+          "input": {
+            "place_id": {
+              "$ref": "result.id"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-1C",
+        "next": "1-1CB",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "saveDocument",
+        "name": "Salvar cliente na collection",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.clientes_collection_id"
+            },
+            "actor_id": {
+              "$ref": "actor_data.actor_id"
+            },
+            "document_obj": {
+              "id_cliente_ext": {
+                "$ref": "bag.id_cliente_ext"
+              },
+              "place_ref": {
+                "$ref": "bag.place_id"
+              },
+              "razao_social": "",
+              "nome": {
+                "$ref": "bag.nome"
+              },
+              "tipo_pessoa": "1",
+              "id_fiscal": "",
+              "endereco": {
+                "$ref": "bag.location_id"
+              },
+              "endereco_cobranca": "",
+              "endereco_entrega": "",
+              "regional": {
+                "$ref": "bag.regional"
+              },
+              "telefone": {
+                "$ref": "bag.telefone"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "1-1CB",
+        "next": "1-2",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Salvar cliente na Bag",
+        "parameters": {
+          "input": {
+            "cliente_id": {
+              "$ref": "result.document_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-1A",
+        "next": "1-2",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Salvar cliente na Bag",
+        "parameters": {
+          "input": {
+            "cliente_id": {
+              "$ref": "result.documents[0].id"
+            },
+            "cliente": {
+              "$ref": "result.documents[0]"
+            },
+            "place_id": {
+              "$ref": "result.documents[0].data.place_ref.id"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-2",
+        "next": "1-2A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Procura oportunidades existentes",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.oportunidades_collection_id"
+            },
+            "document_keys": [
+              {
+                "cliente_ref": {
+                  "$ref": "bag.cliente_id"
+                },
+                "status": "ativa"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "1-2A",
+        "next": "F1",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Salvar oportunidade na Bag",
+        "parameters": {
+          "input": {
+            "oportunidade": {
+              "$ref": "result.documents[0]"
+            },
+            "oportunidade_id": {
+              "$ref": "result.documents[0].id"
+            }
+          }
+        }
+      },
+      {
+        "id": "F1",
+        "next": {
+          "default": "6-1",
+          "": "F2",
+          "undefined": "F2"
+        },
+        "type": "Flow",
+        "name": "Vendedor enviado?",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "vendedor": {
+              "$ref": "bag.representante"
+            }
+          }
+        }
+      },
+      {
+        "id": "F2",
+        "next": {
+          "default": "1-3A",
+          "undefined": "2-1"
+        },
+        "type": "Flow",
+        "name": "Existe oportunidade?",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "oportunidade": {
+              "$ref": "bag.oportunidade"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-3A",
+        "next": "1-3B",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Salvar vendedor na Bag",
+        "parameters": {
+          "input": {
+            "vendedor_id": {
+              "$ref": "bag.oportunidade.data.representante"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-3B",
+        "next": "1-3C",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "getDocument",
+        "name": "Buscar vendedor",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.vendedores_collection_id"
+            },
+            "document_id": {
+              "$ref": "bag.vendedor_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-3C",
+        "next": "1-4",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guardar actor_id",
+        "parameters": {
+          "input": {
+            "actor_id": {
+              "$ref": "result.documents.data.actor_ref.id"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-4",
+        "next": "1-5",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "saveDocument",
+        "name": "Cria oportunidade",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.oportunidades_collection_id"
+            },
+            "actor_id": {
+              "$ref": "actor_data.actor_id"
+            },
+            "document_obj": {
+              "status": "ativa",
+              "cliente": {
+                "id": {
+                  "$ref": "bag.cliente_id"
+                },
+                "data": {
+                  "nome": {
+                    "$ref": "bag.nome"
+                  },
+                  "endereco": {
+                    "$mustache": "{{bag.endereco}}{{#bag.nrEndereco}}, {{/bag.nrEndereco}}{{bag.nrEndereco}}"
+                  },
+                  "regional": {
+                    "$ref": "bag.regional"
+                  },
+                  "telefone": {
+                    "$ref": "bag.telefone"
+                  },
+                  "place_ref": {
+                    "$ref": "bag.place_id"
+                  }
+                }
+              },
+              "nome_cliente": {
+                "$ref": "bag.nome"
+              },
+              "representante": {
+                "$ref": "bag.actor_id"
+              },
+              "email_representante": {
+                "$ref": "bag.actor_profile_email"
+              },
+              "vendedor_ref": {
+                "$ref": "bag.vendedor_id"
+              },
+              "location_ref": {
+                "$ref": "bag.location_id"
+              },
+              "origem": "Demanda espontanea",
+              "servico": {
+                "$js": "({ bag }) => { const p = bag.prod_servico; return p.toLowerCase(); }"
+              },
+              "perfil": {
+                "$ref": "bag.actor_profile_id"
+              },
+              "estado": "compromisso",
+              "compromissos": {
+                "$js": "() => [{ tipo: 'demanda espontanea', proximo: 'compromisso', dt: new Date() }]"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "1-5",
+        "next": "1-5A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "getDocument",
+        "name": "Buscar oportunidade",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.oportunidades_collection_id"
+            },
+            "document_id": {
+              "$ref": "result.document_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-5A",
+        "next": "1-6",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "SetToBag",
+        "name": "Guardar oportunidade",
+        "parameters": {
+          "input": {
+            "oportunidade": {
+              "$ref": "result.documents"
+            },
+            "oportunidade_id": {
+              "$ref": "result.documents.id"
+            }
+          }
+        }
+      },
+      {
+        "id": "1-6",
+        "next": "1-7",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "saveEvent",
+        "name": "Cria compromisso",
+        "parameters": {
+          "input": {
+            "event_obj": {
+              "id": "",
+              "recurrence": {},
+              "end": {
+                "$js": "({bag}) => bag.compromisso.data_fim"
+              },
+              "type": {
+                "$ref": "bag.event_type"
+              },
+              "start": {
+                "$ref": "bag.compromisso.data_inicio"
+              },
+              "title": {
+                "$ref": "bag.nome"
+              },
+              "status": {
+                "checkin": "PENDING",
+                "activity": "SCHEDULED",
+                "location": "PENDING"
+              },
+              "location": {
+                "id": {
+                  "$ref": "bag.location_id"
+                },
+                "formatted_address": {
+                  "$ref": "bag.formatted_address"
+                }
+              },
+              "place_id": {
+                "$ref": "bag.place_id"
+              },
+              "timezone": "GMT-3",
+              "attendees": [
+                {
+                  "$ref": "bag.actor_id"
+                }
+              ],
+              "all_day": false,
+              "permissions": "",
+              "additional_data": {
+                "cliente_id": {
+                  "$ref": "bag.cliente_id"
+                },
+                "oportunidade_id": {
+                  "$ref": "bag.oportunidade.id"
+                }
+              },
+              "description": {
+                "$mustache": "Telefone: {{bag.telefone}}{{#bag.contato.0}}\nOportunidade: {{bag.oportunidade.nano_id}}\n\nContatos:{{/bag.contato.0}}{{#bag.contato}}\nnome: {{nome}}\ntelefone: {{telefone}}\n{{/bag.contato}}"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "1-7",
+        "next": "91",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "saveDocument",
+        "name": "Salva histórico do evento",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.historico_eventos_collection_id"
+            },
+            "actor_id": {
+              "$ref": "actor_data.actor_id"
+            },
+            "document_obj": {
+              "event_id": {
+                "$ref": "result.data[0]"
+              },
+              "oportunidade_id": {
+                "$ref": "bag.oportunidade.id"
+              },
+              "origem": "Demanda espontanea"
+            }
+          }
+        }
+      },
+      {
+        "id": "6-1",
+        "next": "6-1F",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "getProfileByEmail",
+        "name": "Buscar actor profile do vendedor",
+        "parameters": {
+          "input": {
+            "email": {
+              "$ref": "bag.representante"
+            }
+          }
+        }
+      },
+      {
+        "id": "6-1F",
+        "name": "Retornou actor_id",
+        "lane_id": "o1",
+        "type": "Flow",
+        "next": {
+          "undefined": "F2",
+          "default": "6-1A"
+        },
+        "parameters": {
+          "input": {
+            "actor_id": {
+              "$ref": "result.actor_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "6-1A",
+        "next": "6-1B",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "SetToBag",
+        "name": "Guardar actor profile do vendedor",
+        "parameters": {
+          "input": {
+            "vendedor_profile_id": {
+              "$ref": "result.id"
+            }
+          }
+        }
+      },
+      {
+        "id": "6-1B",
+        "next": "6-1BA",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Buscar vendedor",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.vendedores_collection_id"
+            },
+            "document_keys": [
+              {
+                "perfil": {
+                  "$ref": "bag.vendedor_profile_id"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "6-1BA",
+        "next": "F3",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "SetToBag",
+        "name": "Guardar vendedor",
+        "parameters": {
+          "input": {
+            "vendedor_id": {
+              "$ref": "result.documents[0].id"
+            },
+            "actor_id": {
+              "$ref": "result.documents[0].data.actor_ref.id"
+            },
+            "actor_profile_id": {
+              "$ref": "result.documents[0].data.perfil.id"
+            },
+            "actor_profile_email": {
+              "$ref": "result.documents[0].data.perfil.email"
+            }
+          }
+        }
+      },
+      {
+        "id": "F3",
+        "next": {
+          "default": "6-2",
+          "undefined": "7-1"
+        },
+        "type": "Flow",
+        "name": "Existe oportunidade?",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "oportunidade": {
+              "$ref": "bag.oportunidade"
+            }
+          }
+        }
+      },
+      {
+        "id": "7-1",
+        "next": "7-2",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "saveDocument",
+        "name": "Cria oportunidade",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.oportunidades_collection_id"
+            },
+            "actor_id": {
+              "$ref": "actor_data.actor_id"
+            },
+            "document_obj": {
+              "cliente_ref": {
+                "$ref": "bag.cliente_id"
+              },
+              "servico": {
+                "$ref": "bag.prod_servico"
+              },
+              "vendedor_ref": {
+                "$ref": "bag.representante"
+              },
+              "perfil": {
+                "$ref": "bag.actor_profile_id"
+              },
+              "status": "ativa"
+            }
+          }
+        }
+      },
+      {
+        "id": "7-2",
+        "next": "7-2A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "getDocument",
+        "name": "Buscar oportunidade",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.oportunidades_collection_id"
+            },
+            "document_id": {
+              "$ref": "bag.result_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "7-2A",
+        "next": "6-2",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "SetToBag",
+        "name": "Salva oportunidade na bag",
+        "parameters": {
+          "input": {
+            "oportunidade": {
+              "$ref": "result.documents"
+            }
+          }
+        }
+      },
+      {
+        "id": "6-2",
+        "next": "6-2B",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "saveEvent",
+        "name": "Criar compromisso",
+        "parameters": {
+          "input": {
+            "event_obj": {
+              "recurrence": {},
+              "id": "",
+              "title": {
+                "$ref": "bag.nome"
+              },
+              "start": {
+                "$js": "() => new Date()"
+              },
+              "end": {
+                "$js": "() => new Date(new Date().getTime() + 900)"
+              },
+              "attendees": [
+                {
+                  "$ref": "bag.actor_id"
+                }
+              ],
+              "location": {},
+              "type": "CALL",
+              "status": {
+                "checkin": "PENDING",
+                "activity": "SCHEDULED",
+                "location": "PENDING"
+              },
+              "permissions": "",
+              "timezone": "GMT-3",
+              "all_day": {},
+              "additional_data": {
+                "cliente_id": {
+                  "$ref": "bag.cliente_id"
+                },
+                "oportunidade_id": {
+                  "$ref": "bag.oportunidade.id"
+                }
+              },
+              "description": {
+                "$mustache": "Telefone: {{bag.telefone}}{{#bag.contato.0}}\nOportunidade: {{bag.oportunidade.nano_id}}\n\nContatos:{{/bag.contato.0}}{{#bag.contato}}\nnome: {{nome}}\ntelefone: {{telefone}}\n{{/bag.contato}}"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "6-2B",
+        "next": "6-2H",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "SetToBag",
+        "name": "Guardar ID Compromisso",
+        "parameters": {
+          "input": {
+            "event_id": {
+              "$ref": "result.data[0]"
+            }
+          }
+        }
+      },
+      {
+        "id": "6-2H",
+        "next": "91",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "saveDocument",
+        "name": "Salva histórico do evento",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.historico_eventos_collection_id"
+            },
+            "actor_id": {
+              "$ref": "actor_data.actor_id"
+            },
+            "document_obj": {
+              "event_id": {
+                "$ref": "bag.event_id"
+              },
+              "oportunidade_id": {
+                "$ref": "bag.oportunidade.id"
+              },
+              "origem": "Demanda espontanea"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-1",
+        "next": "F8",
+        "type": "SystemTask",
+        "lane_id": "o1",
+        "category": "searchDocument",
+        "name": "Busca contratos",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.contratos_collection_id"
+            },
+            "document_keys": [
+              {
+                "cliente_ref": {
+                  "$ref": "bag.cliente_id"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "F8",
+        "next": {
+          "0": "F12",
+          "default": "2-1A"
+        },
+        "type": "Flow",
+        "name": "Existe contrato?",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "contrato": {
+              "$ref": "result.documents.length"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-1A",
+        "next": "1-4",
+        "type": "SystemTask",
+        "lane_id": "o1",
+        "category": "setToBag",
+        "name": "Salva contratos",
+        "parameters": {
+          "input": {
+            "vendedor_id_conferir": {
+              "$ref": "result.documents[0].id"
+            },
+            "actor_id": {
+              "$ref": "result.documents[0].data.vendedor_ref.id"
+            }
+          }
+        }
+      },
+      {
+        "id": "F12",
+        "next": {
+          "default": "2-2A",
+          "true": "2-2A",
+          "false": "3-1A"
+        },
+        "type": "Flow",
+        "name": "Prazo de agendamento maior do que 4h",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "prazo": {
+              "$js": "({ bag }) => bag.prazo > 4*60*60*1000"
+            }
+          }
+        }
+      },
+      {
+        "id": "3-1A",
+        "next": "3-1F",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Busca gerente da região",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.vendedores_collection_id"
+            },
+            "document_keys": [
+              {
+                "regional": {
+                  "$ref": "bag.regional"
+                },
+                "role": "gerente"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "3-1F",
+        "type": "Flow",
+        "next": {
+          "0": "3-3FB",
+          "default": "3-1B"
+        },
+        "lane_id": "o1",
+        "category": "setToBag",
+        "name": "Existe gerente na região?",
+        "parameters": {
+          "input": {
+            "decision_key": {
+              "$ref": "result.documents.length"
+            }
+          }
+        }
+      },
+      {
+        "id": "3-1B",
+        "next": "3-2A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guarda gerente na bag",
+        "parameters": {
+          "input": {
+            "gerente": {
+              "$ref": "result.documents[0]"
+            },
+            "gestores_ids": [
+              {
+                "$ref": "result.documents[0].data.actor_ref.id"
+              },
+              {
+                "$ref": "result.documents[0].data.gerente_ref.id"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "3-2A",
+        "next": "3-2B",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Busca vendedores subordinados",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.vendedores_collection_id"
+            },
+            "document_keys": [
+              {
+                "gerente_ref": {
+                  "$ref": "bag.gerente.data.actor_ref.id"
+                },
+                "role": "vendedor"
+              },
+              {
+                "actor_ref": {
+                  "$ref": "bag.gerente.data.actor_ref.id"
+                }
+              },
+              {
+                "role": "superintendente"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "3-2B",
+        "next": "3-4A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guarda lista de vendedores na bag",
+        "parameters": {
+          "input": {
+            "lista_vendedores": {
+              "$ref": "result.documents"
+            }
+          }
+        }
+      },
+      {
+        "id": "3-3FB",
+        "next": "3-3B",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Busca superintendente",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.vendedores_collection_id"
+            },
+            "document_keys": [
+              {
+                "role": "superintendente"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "3-3B",
+        "next": "3-3A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guarda superintendente",
+        "parameters": {
+          "input": {
+            "gerente": {
+              "$ref": "result.documents[0]"
+            },
+            "gestores_ids": [
+              {
+                "$ref": "result.documents[0].data.actor_ref.id"
+              },
+              {
+                "$ref": "result.documents[0].data.gerente_ref.id"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "3-3A",
+        "next": "3-3B2",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Busca todos os vendedores",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.vendedores_collection_id"
+            },
+            "document_keys": []
+          }
+        }
+      },
+      {
+        "id": "3-3B2",
+        "next": "3-4A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guarda lista de vendedores na bag",
+        "parameters": {
+          "input": {
+            "lista_vendedores": {
+              "$ref": "result.documents"
+            }
+          }
+        }
+      },
+      {
+        "id": "3-4A",
+        "next": "3-4B",
+        "lane_id": "o3",
+        "type": "UserTask",
+        "name": "Gerente seleciona vendedor para oportunidade",
+        "parameters": {
+          "action": "OPEN_CUSTOMFORM_WITH_DOCUMENTS",
+          "activity_manager": "commit",
+          "input": {
+            "data": [
+              {
+                "label": "Oportunidade",
+                "type": "single_document",
+                "fields": {
+                  "schema": {
+                    "type": "object",
+                    "required": [
+                      "nome",
+                      "prod_servico",
+                      "telefone",
+                      "compromisso"
+                    ],
+                    "properties": {
+                      "id_cliente_ext": {
+                        "type": "string"
+                      },
+                      "nome": {
+                        "type": "string"
+                      },
+                      "endereco": {
+                        "type": "object",
+                        "properties": {
+                          "endereco": {
+                            "type": "string"
+                          },
+                          "nrEndereco": {
+                            "type": "string"
+                          },
+                          "complemento": {
+                            "type": "string"
+                          },
+                          "bairro": {
+                            "type": "string"
+                          },
+                          "cidade": {
+                            "type": "string"
+                          },
+                          "uf": {
+                            "type": "string"
+                          },
+                          "cep": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "regional": {
+                        "type": "string"
+                      },
+                      "telefone": {
+                        "type": "string"
+                      },
+                      "prod_servico": {
+                        "type": "string",
+                        "enum": [
+                          "alarme",
+                          "cftv",
+                          "pgo",
+                          "ALARME",
+                          "CFTV",
+                          "PGO"
+                        ]
+                      },
+                      "representante": {
+                        "type": "string"
+                      },
+                      "compromisso": {
+                        "type": "object",
+                        "properties": {
+                          "tipo": {
+                            "type": "string",
+                            "enum": [
+                              "visita tecnica",
+                              "VISITA TECNICA",
+                              "ligacao",
+                              "LIGACAO",
+                              "reuniao",
+                              "REUNIAO"
+                            ]
+                          },
+                          "data_inicio": {
+                            "type": "string",
+                            "format": "dateTime"
+                          },
+                          "data_fim": {
+                            "type": "string",
+                            "format": "dateTime"
+                          }
+                        }
+                      },
+                      "contato": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "nome": {
+                              "type": "string"
+                            },
+                            "telefone": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "document": {
+                    "id_cliente_ext": {
+                      "$ref": "bag.id_cliente_ext"
+                    },
+                    "nome": {
+                      "$ref": "bag.nome"
+                    },
+                    "endereco": {
+                      "$ref": "bag.endereco"
+                    },
+                    "telefone": {
+                      "$ref": "bag.telefone"
+                    },
+                    "prod_servico": {
+                      "$ref": "bag.prod_servico"
+                    },
+                    "representante": {
+                      "$ref": "bag.representante"
+                    }
+                  }
+                }
+              },
+              {
+                "label": "Decisão",
+                "type": "custom_form",
+                "fields": [
+                  {
+                    "type": "Select",
+                    "name": "actor_id",
+                    "label": "Selecione um(a) vendedor(a) para assumir essa oportunidade",
+                    "options": {
+                      "$js": "({ bag }) => bag.lista_vendedores.map((vendedor) => ({ key: vendedor.data.actor_ref.id, label: `${vendedor.data.perfil.name} ${vendedor.data.perfil.lastname}` })).sort((a,b) => { return a.label > b.label ? -1 : 0 })"
+                    },
+                    "validate": {
+                      "$fn": "({ form }) => !form.actor_id || form.actor_id === '' ? 'Escolha um vendedor' ? false"
+                    },
+                    "initial": "",
+                    "enable": true
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "3-4B",
+        "next": "1-4",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guarda escolha do gerente na bag",
+        "parameters": {
+          "input": {
+            "actor_id": {
+              "$ref": "result.activities[0].data.actor_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-2A",
+        "next": "F9",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Busca vendedores no ddd do produto",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.vendedores_collection_id"
+            },
+            "document_keys": [
+              {
+                "regional": [
+                  {
+                    "$ref": "bag.regional"
+                  }
+                ],
+                "role": "vendedor"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "F9",
+        "next": {
+          "0": "3-1A",
+          "1": "2-2B",
+          "default": "2-2C"
+        },
+        "type": "Flow",
+        "name": "Existe vendedor",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "decision": {
+              "$ref": "result.documents.length"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-2B",
+        "next": "1-4",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guardar vendedor",
+        "parameters": {
+          "input": {
+            "actor_id": {
+              "$ref": "result.documents[0].data.actor_ref.id"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-2C",
+        "next": "2-3A",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guardar lista de vendedores",
+        "parameters": {
+          "input": {
+            "lista_vendedores": {
+              "$ref": "result.documents"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-3A",
+        "next": "2-3B",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "searchDocument",
+        "name": "Consulta vendedores em quarentena",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.quarentena_collection_id"
+            },
+            "document_keys": [
+              {
+                "regional": {
+                  "$ref": "bag.regional"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "2-3B",
+        "next": "F10",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guardar lista quarentena",
+        "parameters": {
+          "input": {
+            "quarentena_id": {
+              "$ref": "result.documents[0].id"
+            },
+            "lista_quarentena": {
+              "$ref": "result.documents[0].data.vendedores"
+            }
+          }
+        }
+      },
+      {
+        "id": "F10",
+        "next": {
+          "default": "2-3E",
+          "false": "2-3E",
+          "true": "2-3C"
+        },
+        "type": "Flow",
+        "name": "Existe vendedor fora da quarentena?",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "decision_key": {
+              "$js": "({ bag }) => new Set(bag.lista_quarentena).size == bag.lista_vendedores.length"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-3C",
+        "next": "2-3D",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guardar nova quarentena",
+        "parameters": {
+          "input": {
+            "quarentena_id": {
+              "$ref": "result.documents[0].id"
+            },
+            "lista_quarentena": {
+              "$js": "({bag}) => {\n              const contaOcorrencias = (iter, elem) => iter.reduce((acc, curr) => curr == elem ? ++acc : acc, 0); \n              return bag.lista_quarentena.reduce((acc, curr, index, self) => {\n                const ogCount = contaOcorrencias(self, curr); \n                const thisCount = contaOcorrencias(acc, curr); \n                thisCount < ogCount - 1 ? acc.push(curr) : undefined; return acc}, [])\n              }"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-3D",
+        "next": "2-3E",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "updateDocument",
+        "name": "Apaga lista de quarentena",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.quarentena_collection_id"
+            },
+            "document_id": {
+              "$ref": "bag.quarentena_id"
+            },
+            "document_obj": {
+              "vendedores": {
+                "$ref": "bag.lista_quarentena"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "2-3E",
+        "next": "2-4",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Calcula regra da lane",
+        "parameters": {
+          "input": {
+            "lista_vendedores_ids": {
+              "$js": "({ bag }) => {const lista_quarentena = bag.lista_quarentena || []; return bag.lista_vendedores.map((doc) => doc.data.actor_ref.id).filter((id) => !lista_quarentena.includes(id))}"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-4",
+        "next": "F11",
+        "lane_id": "o4",
+        "type": "UserTask",
+        "name": "Pegar oportunidade",
+        "parameters": {
+          "timeout": 900,
+          "action": "UPDATE_FORM_SPEC_FOR_FULFILLMENT",
+          "activity_manager": "commit",
+          "input": {
+            "title": "Pega oportunidade",
+            "submit_label": "Pegar Oportunidade",
+            "fields": [
+              {
+                "type": "Label",
+                "name": "label_nome",
+                "label": {
+                  "$js": "({ bag }) => `**Nome:** ${bag.nome}`"
+                },
+                "validate": false,
+                "initial": "",
+                "enable": true,
+                "readonly": true
+              },
+              {
+                "type": "Label",
+                "name": "label_endereco",
+                "label": {
+                  "$js": "({ bag }) => `**Endereço:** ${bag.formatted_address}`"
+                },
+                "validate": false,
+                "initial": "",
+                "enable": true,
+                "readonly": true
+              },
+              {
+                "type": "Label",
+                "name": "label_telefone",
+                "label": {
+                  "$js": "({ bag }) => `**Telefone:** ${bag.telefone}`"
+                },
+                "validate": false,
+                "initial": "",
+                "enable": true,
+                "readonly": true
+              },
+              {
+                "type": "Label",
+                "name": "label_servico",
+                "label": {
+                  "$js": "({ bag }) => `**Serviço:** ${bag.prod_servico}`"
+                },
+                "validate": false,
+                "initial": "",
+                "enable": true,
+                "readonly": true
+              },
+              {
+                "type": "Label",
+                "name": "label_tipo_compromisso",
+                "label": {
+                  "$js": "({ bag }) => `**Compromisso:** ${bag.compromisso.tipo}`"
+                },
+                "validate": false,
+                "initial": "",
+                "enable": true,
+                "readonly": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "F11",
+        "next": {
+          "default": "2-6A",
+          "true": "3-1A",
+          "false": "2-6A"
+        },
+        "type": "Flow",
+        "name": "Houve timeout?",
+        "lane_id": "o1",
+        "parameters": {
+          "input": {
+            "timeout": {
+              "$ref": "result.is_continue"
+            }
+          }
+        }
+      },
+      {
+        "id": "2-6A",
+        "next": "2-6B",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "updateDocument",
+        "name": "Colocar vendedor em quarentena",
+        "parameters": {
+          "input": {
+            "collection_id": {
+              "$ref": "bag.collections.quarentena_collection_id"
+            },
+            "document_id": {
+              "$ref": "bag.quarentena_id"
+            },
+            "document_obj": {
+              "vendedores": {
+                "$js": "({bag, actor_data}) => {let newArray = bag.lista_quarentena; newArray.push(actor_data.actor_id); return newArray;};"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "2-6B",
+        "next": "1-4",
+        "lane_id": "o1",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "name": "Guardar lista quarentena",
+        "parameters": {
+          "input": {
+            "actor_id": {
+              "$ref": "actor_data.actor_id"
+            }
+          }
+        }
+      },
+      {
+        "id": "91",
+        "type": "Finish",
+        "name": "Finish node",
+        "next": null,
+        "lane_id": "o1"
+      }
+    ],
+    "environment": {}
+  }
+}

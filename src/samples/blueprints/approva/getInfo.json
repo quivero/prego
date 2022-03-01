@@ -1,0 +1,1343 @@
+{
+    "name": "getInfo",
+    "description": "Subprocess to get client info",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "REQUESTBOT",
+                "name": "Buyer",
+                "rule": {
+                    "$js": "({actor_data}) => actor_data.claims.includes('requestBot')"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start getInfo",
+                "next": "START-UPDATE-PRE",
+                "type": "Start",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input_schema": {
+                        "type": "object",
+                        "required": [
+                            "key",
+                            "mobile_phone",
+                            "profile",
+                            "profile_type",
+                            "chat_id"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string"
+                            },
+                            "chat_id": {
+                                "type": "string"
+                            },
+                            "profile": {
+                                "type": "object"
+                            },
+                            "request_id": {
+                                "type": "string"
+                            },
+                            "mobile_phone": {
+                                "type": "string"
+                            },
+                            "profile_type": {
+                                "type": "string"
+                            },
+                            "parent_process_data": {
+                                "type": "object"
+                            },
+                            "confirmation_required": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "START-UPDATE-PRE",
+                "name": "Start process to update request",
+                "next": "CONFIG",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "startProcess",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "profile": {
+                            "$ref": "bag.profile"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.party_number"
+                        },
+                        "profile_type": {
+                            "$ref": "bag.profile_type"
+                        }
+                    },
+                    "actor_data": {
+                        "$ref": "actor_data"
+                    },
+                    "workflow_name": "updateRequestV3"
+                }
+            },
+            {
+                "id": "CONFIG",
+                "name": "Set basic parameters",
+                "next": "VERIFY-VALUE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "baseURL": "{{SERVICE_API}}",
+                        "author_id": {
+                            "$ref": "environment.XPTO"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VERIFY-VALUE",
+                "name": "Verify inputs",
+                "next": {
+                    "true": "EARLY-RETURN",
+                    "default": "MOCK"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !!bag.profile[bag.key] && bag.profile[bag.key].valid"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "MOCK",
+                "name": "use mock",
+                "next": {
+                    "true": "MOCK-DEV-CONTRACT",
+                    "default": "DEV-CONTRACT"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !!bag.mock"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "DEV-CONTRACT",
+                "name": "Fetch settings for running it",
+                "next": "DEV-CONTRACT-RESPONSE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/dev_contracts?key=eq.{{bag.profile_type}}_{{bag.key}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        },
+                        "max_content_length": 50000
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "DEV-CONTRACT-RESPONSE",
+                "name": "use mock",
+                "next": {
+                    "0": "EXIT-NO-MESSAGE",
+                    "default": "DEV-CONTRACT-BAG"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data.length"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "MOCK-DEV-CONTRACT",
+                "name": "Set task settings to bag",
+                "next": "MOCK-DEV-CONTRACT-BAG",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "mockData": {
+                            "validators": [
+                                {
+                                    "url": "https://616db49fa83a850017caa6b4.mockapi.io/aprova/validator/",
+                                    "error": {
+                                        "BALROG": "you could not pass",
+                                        "FRIEND": "you can enter"
+                                    }
+                                },
+                                {
+                                    "url": "https://616db49fa83a850017caa6b4.mockapi.io/aprova/otherValidator/",
+                                    "error": {
+                                        "BALROG": "you could not pass",
+                                        "FRIEND": "you can enter"
+                                    }
+                                },
+                                {
+                                    "url": "https://616db49fa83a850017caa6b4.mockapi.io/aprova/thirdIsACharm/",
+                                    "error": {
+                                        "BALROG": "you shall not pass",
+                                        "FRIEND": "you can enter"
+                                    }
+                                }
+                            ],
+                            "response_type": "TEXT",
+                            "check_messages": [
+                                {
+                                    "message": "Check message 1",
+                                    "external_id": "c1"
+                                },
+                                {
+                                    "message": "Check message 2",
+                                    "external_id": "c2"
+                                }
+                            ],
+                            "success_messages": [
+                                {
+                                    "message": "Success message 1",
+                                    "external_id": "cp1"
+                                },
+                                {
+                                    "message": "Sucesss message 2",
+                                    "external_id": "cp2"
+                                },
+                                {
+                                    "message": "Sucesss message 3",
+                                    "external_id": "cp3"
+                                }
+                            ],
+                            "acquisition_messages": [
+                                {
+                                    "message": "Acquision Msg 0",
+                                    "external_id": "0"
+                                },
+                                {
+                                    "message": "Acquision Msg 1",
+                                    "external_id": "1"
+                                },
+                                {
+                                    "message": "Acquision Msg 2",
+                                    "external_id": "2"
+                                },
+                                {
+                                    "message": "Acquision Msg 3",
+                                    "external_id": "3"
+                                },
+                                {
+                                    "message": "Acquision Msg 4",
+                                    "external_id": "4"
+                                },
+                                {
+                                    "message": "Acquision Msg 5",
+                                    "external_id": "5"
+                                }
+                            ],
+                            "check_timeout_policy": 10,
+                            "instruction_messages": [
+                                {
+                                    "message": "I1",
+                                    "external_id": "123"
+                                },
+                                {
+                                    "message": "I2",
+                                    "external_id": "234"
+                                }
+                            ],
+                            "check_timeout_messages": [
+                                {
+                                    "message": "Check proceed message 1",
+                                    "external_id": "cp1"
+                                },
+                                {
+                                    "message": "Check proceed message 2",
+                                    "external_id": "cp2"
+                                },
+                                {
+                                    "message": "Check proceed message 3",
+                                    "external_id": "cp3"
+                                }
+                            ],
+                            "acquisition_timeout_policy": 30,
+                            "acquisition_proceed_messages": [
+                                {
+                                    "message": "Acq Proceed Msg 1",
+                                    "external_id": "12"
+                                },
+                                {
+                                    "message": "Acq Proceed Msg 2",
+                                    "external_id": "23"
+                                },
+                                {
+                                    "message": "Acq Proceed Msg 3",
+                                    "external_id": "34"
+                                },
+                                {
+                                    "message": "Acq Proceed Msg 4",
+                                    "external_id": "45"
+                                },
+                                {
+                                    "message": "Acq Proceed Msg 5",
+                                    "external_id": "56"
+                                }
+                            ],
+                            "check_timeout_timeout_policy": 10,
+                            "acquisition_proceed_timeout_policy": 8
+                        }
+                    }
+                }
+            },
+            {
+                "id": "MOCK-DEV-CONTRACT-BAG",
+                "name": "Set task settings to bag",
+                "next": "HAS-INSTRUCTIONS",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "settings": {
+                            "values": {
+                                "$ref": "bag.mockData"
+                            }
+                        },
+                        "check_len": {
+                            "$js": "({bag}) => bag.mockData.check_messages.length || 0"
+                        },
+                        "check_counter": 0,
+                        "acquisition_len": {
+                            "$js": "({bag}) => bag.mockData.acquisition_messages.length || 0"
+                        },
+                        "default_timeout": 10,
+                        "check_timeout_len": {
+                            "$js": "({bag}) => bag.mockData.check_timeout_messages.length || 0"
+                        },
+                        "acquisition_counter": 0,
+                        "remaining_validators": {
+                            "$ref": "bag.mockData.validators"
+                        },
+                        "check_timeout_counter": 0,
+                        "acquisition_proceed_len": {
+                            "$js": "({bag}) => bag.mockData.acquisition_proceed_messages.length || 0"
+                        },
+                        "acquisition_proceed_counter": 0
+                    }
+                }
+            },
+            {
+                "id": "DEV-CONTRACT-BAG",
+                "name": "Set task settings to bag",
+                "next": "HAS-INSTRUCTIONS",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "key_name": {
+                            "$ref": "result.data.[0].value.key_name"
+                        },
+                        "settings": {
+                            "values": {
+                                "$ref": "result.data[0].value"
+                            }
+                        },
+                        "check_len": {
+                            "$js": "({result}) => result.data[0].value.check_messages?.length || 0"
+                        },
+                        "check_counter": 0,
+                        "acquisition_len": {
+                            "$js": "({result}) => result.data[0].value.acquisition_messages?.length || 0"
+                        },
+                        "default_timeout": 10,
+                        "check_timeout_len": {
+                            "$js": "({result}) => result.data[0].value.check_timeout_messages?.length || 0"
+                        },
+                        "acquisition_counter": 0,
+                        "remaining_validators": {
+                            "$ref": "result.data.[0].value.validators"
+                        },
+                        "check_timeout_counter": 0,
+                        "acquisition_proceed_len": {
+                            "$js": "({result}) => result.data[0].value.acquisition_timeout?.length || 0"
+                        },
+                        "acquisition_proceed_counter": 0
+                    }
+                }
+            },
+            {
+                "id": "HAS-INSTRUCTIONS",
+                "name": "verify if it has instruction messages",
+                "next": {
+                    "0": "ACQUISITION",
+                    "default": "NOTIFY-INSTRUCTIONS",
+                    "undefined": "ACQUISITION"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.settings.values.instruction_messages.length"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "NOTIFY-INSTRUCTIONS",
+                "name": "Sends the instructions messages to the user",
+                "next": "ACQUISITION",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": {
+                            "$ref": "bag.settings.values.instruction_messages"
+                        },
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "action": "NOTIFY_MESSAGE",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "ACQUISITION",
+                "name": "User uploading documents",
+                "next": "ACQ-TIMEOUT",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": [
+                            {
+                                "$js": "({bag}) => bag.settings.values.acquisition_messages[bag.acquisition_counter]"
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.mobile_phone"
+                        },
+                        "profile_type": {
+                            "$ref": "bag.profile_type"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                },
+                                "external_id": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_SEND_INFORMATION",
+                    "timeout": 10800
+                }
+            },
+            {
+                "id": "CLIENT-WANNA-RETURN-RESET-NEXT",
+                "name": "Client wants to restart",
+                "next": {
+                    "NEXT": "EXIT-NEXT",
+                    "RESET": "EXIT-RESET",
+                    "FINISH": "EXIT-FINISH",
+                    "RETURN": "EXIT-RETURN",
+                    "default": "ACQ-BAG"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => (result.activities[0].data.message.content.text === 'RECOMEÇAR') ? 'RESET' : (result.activities[0].data.message.content.text === 'VOLTAR') ? 'RETURN' : (result.activities[0].data.message.content.text === 'PULAR') ? 'NEXT' : (result.activities[0].data.message.content.text === 'FINALIZAR') ? 'FINISH' : result.activities[0].data.message.content.text "
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-BAG",
+                "name": "set info to bag and zero counter",
+                "next": "VALIDATORS-LENGTH",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "value": {
+                            "$js": "({bag, result}) => (bag.settings.values.response_type === 'ATTACHMENT') ? result.activities[0].data.message.content.attachment_id : result.activities[0].data.message.content.text"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-TIMEOUT",
+                "name": "Verify if timeout expired",
+                "next": {
+                    "true": "ACQ-COUNTER",
+                    "default": "CLIENT-WANNA-RETURN-RESET-NEXT"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-COUNTER",
+                "name": "Verify count",
+                "next": {
+                    "true": "ACQ-PROCEED-COUNTER",
+                    "default": "ACQ-COUNTER-INCREASE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.acquisition_counter >= (bag.acquisition_len - 1)"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-COUNTER-INCREASE",
+                "name": "increase acquisition counter",
+                "next": "ACQUISITION",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "acquisition_counter": {
+                            "$js": "({bag}) => bag.acquisition_counter + 1"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-PROCEED-COUNTER-INCREASE",
+                "name": "increase acquisition counter",
+                "next": "ACQUISITION-PROCEED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "acquisition_proceed_counter": {
+                            "$js": "({bag}) => bag.acquisition_proceed_counter + 1"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-COUNTER-INCREASE",
+                "name": "increase acquisition counter",
+                "next": "CHECK",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "check_counter": {
+                            "$js": "({bag}) => bag.check_counter + 1"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-PROCEED-COUNTER-INCREASE",
+                "name": "increase acquisition counter",
+                "next": "CHECK-PROCEED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "check_timeout_counter": {
+                            "$js": "({bag}) => bag.check_timeout_counter + 1"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQUISITION-PROCEED",
+                "name": "Ask if user want to proceed with uploading process",
+                "next": "ACQ-PROCEED-TIMEOUT",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": [
+                            {
+                                "$js": "({bag}) => bag.settings.values.acquisition_proceed_messages[bag.acquisition_proceed_counter]"
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.mobile_phone"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_SEND_INFORMATION",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "ACQ-PROCEED-TIMEOUT",
+                "name": "Verify if timeout expired for acquisition proceed",
+                "next": {
+                    "true": "ACQ-PROCEED-COUNTER",
+                    "default": "ACQ-PROCEED-RESPONSE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-PROCEED-COUNTER",
+                "name": "Verify count",
+                "next": {
+                    "true": "EXIT-INACTIVE",
+                    "default": "ACQ-PROCEED-COUNTER-INCREASE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.acquisition_proceed_counter >= (bag.acquisition_proceed_len)"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-PROCEED-RESPONSE",
+                "name": "Verify if user will proceed with uploading process",
+                "next": {
+                    "1": "ACQ-COUNTERS-RESET",
+                    "2": "EXIT-USER-DECISION",
+                    "default": "ACQ-PROCEED-COUNTER-RESET"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.payload.message.content.text"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ACQ-COUNTERS-RESET",
+                "name": "zero acq counters",
+                "next": "ACQUISITION",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "acquisition_counter": 0,
+                        "acquisition_proceed_counter": 0
+                    }
+                }
+            },
+            {
+                "id": "ALL-COUNTERS-RESET",
+                "name": "zero ALL counters",
+                "next": "ACQUISITION",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "check_counter": 0,
+                        "acquisition_counter": 0,
+                        "check_timeout_counter": 0,
+                        "acquisition_proceed_counter": 0
+                    }
+                }
+            },
+            {
+                "id": "CHECK-COUNTERS-RESET",
+                "name": "zero check counters",
+                "next": "CHECK",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "check_counter": 0,
+                        "check_timeout_counter": 0
+                    }
+                }
+            },
+            {
+                "id": "ACQ-PROCEED-COUNTER-RESET",
+                "name": "zero acq counters",
+                "next": "ACQUISITION-PROCEED",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "acquisition_proceed_counter": 0
+                    }
+                }
+            },
+            {
+                "id": "VALIDATORS-LENGTH",
+                "name": "Verify if there is a check url to call",
+                "next": {
+                    "true": "VALIDATORS-TAKE-FIRST",
+                    "default": "VALIDATOR-ERRORS"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !bag.bypass_validator && bag.remaining_validators.length > 0"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CONFIRMATION-REQUIRED",
+                "name": "Verify if a check url is provided",
+                "next": {
+                    "true": "CHECK",
+                    "default": "NOTIFY-SUCCESS"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => !bag.bypass_check && bag.check_len > 0"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATORS-TAKE-FIRST",
+                "name": "bag first validator",
+                "next": "VALIDATOR",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "setToBag",
+                "parameters": {
+                    "input": {
+                        "current_validator": {
+                            "$js": "({bag}) => bag.remaining_validators.shift()"
+                        },
+                        "remaining_validators": {
+                            "$js": "({bag}) => { let result = bag.remaining_validators; result.shift(); return result; }"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATOR",
+                "name": "Validate user info",
+                "next": "VALIDATOR-BAG",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "value": {
+                            "$ref": "bag.value"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/{{{bag.current_validator.url}}}"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "VALIDATOR-BAG",
+                "name": "bag response",
+                "next": "VALIDATORS-LENGTH",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "setToBag",
+                "parameters": {
+                    "input": {
+                        "validator_error_messages": {
+                            "$js": "({ bag, result }) => { let errors = bag.validator_error_messages || []; if (result.data.error_list) { errors.push(...result.data.error_list.flatMap((error) => bag.current_validator.error[error] || { 'text': error })); } return errors; };"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATOR-ERRORS",
+                "name": "Notify validate message",
+                "next": {
+                    "0": "CONFIRMATION-REQUIRED",
+                    "default": "NOTIFY-VALIDATOR-ERROR",
+                    "undefined": "CONFIRMATION-REQUIRED"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.validator_error_messages.length"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "NOTIFY-VALIDATOR-ERROR",
+                "name": "Notify user data received is invalid",
+                "next": "VALIDATOR-ERRORS-RESET",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": {
+                            "$ref": "bag.validator_error_messages"
+                        },
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "action": "NOTIFY_MESSAGE",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "VALIDATOR-ERRORS-RESET",
+                "name": "zero errors and reset validators",
+                "next": "ACQUISITION",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "current_validator": null,
+                        "remaining_validators": {
+                            "$ref": "bag.settings.values.validators"
+                        },
+                        "validator_error_messages": []
+                    }
+                }
+            },
+            {
+                "id": "CHECK",
+                "name": "Get user consent to verify if document is correct",
+                "next": "CHECK-TIMEOUT",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": [
+                            {
+                                "$js": "({bag}) => bag.settings.values.check_messages[bag.check_counter]"
+                            },
+                            {
+                                "text": {
+                                    "$mustache": "{{bag.key_name}}: {{bag.value}}"
+                                }
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.mobile_phone"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_SELECT_OPTION",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "CHECK-TIMEOUT",
+                "name": "Check if CHECK has expired",
+                "next": {
+                    "true": "CHECK-COUNTER",
+                    "default": "CHECK-RESPONSE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-COUNTER",
+                "name": "Verify count",
+                "next": {
+                    "true": "CHECK-PROCEED-LENGTH",
+                    "default": "CHECK-COUNTER-INCREASE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.check_counter >= (bag.check_len - 1)"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-RESPONSE",
+                "name": "Verify user consent",
+                "next": {
+                    "1": "NOTIFY-SUCCESS",
+                    "2": "ALL-COUNTERS-RESET",
+                    "default": "CHECK"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.message.content.text"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-PROCEED-LENGTH",
+                "name": "Verify if a check proceed message exists",
+                "next": {
+                    "0": "EXIT-INACTIVE",
+                    "default": "CHECK-PROCEED"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.check_timeout_len"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-PROCEED",
+                "name": "If user did not respond, check if he wants to continue",
+                "next": "CHECK-PROCEED-TIMEOUT",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": [
+                            {
+                                "$js": "({bag}) => bag.settings.values.check_timeout_messages[bag.check_timeout_counter]"
+                            }
+                        ],
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.mobile_phone"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_SELECT_OPTION",
+                    "timeout": 3600
+                }
+            },
+            {
+                "id": "CHECK-PROCEED-TIMEOUT",
+                "name": "Verify user consent",
+                "next": {
+                    "true": "CHECK-PROCEED-COUNTER",
+                    "default": "CHECK-PROCEED-RESPONSE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-PROCEED-COUNTER",
+                "name": "Verify count",
+                "next": {
+                    "true": "EXIT-INACTIVE",
+                    "default": "CHECK-PROCEED-COUNTER-INCREASE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.check_timeout_counter >= (bag.check_timeout_len - 1)"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CHECK-PROCEED-RESPONSE",
+                "name": "Verify user consent",
+                "next": {
+                    "1": "NOTIFY-SUCCESS",
+                    "2": "EXIT-USER-DECISION",
+                    "default": "CHECK-COUNTERS-RESET"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.payload.message.content.text"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "NOTIFY-SUCCESS",
+                "name": "Notify success",
+                "next": "UPDATE-PROFILE",
+                "type": "UserTask",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "chat_id": {
+                            "$ref": "bag.chat_id"
+                        },
+                        "messages": {
+                            "$ref": "bag.settings.values.success_messages"
+                        },
+                        "author_id": {
+                            "$ref": "bag.author_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "action": "NOTIFY_SUCCESS",
+                    "timeout": 1
+                }
+            },
+            {
+                "id": "UPDATE-PROFILE",
+                "name": "Add key to profile",
+                "next": "START-UPDATE-POS",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "profile": {
+                            "$js": "({bag}) => ({ ...bag.profile, [[bag.key]]: { value: bag.value, valid: false }})"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "START-UPDATE-POS",
+                "name": "Start process to update request",
+                "next": "RETURN",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "startProcess",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.key"
+                        },
+                        "profile": {
+                            "$ref": "bag.profile"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request_id"
+                        },
+                        "party_number": {
+                            "$ref": "bag.party_number"
+                        },
+                        "profile_type": {
+                            "$ref": "bag.profile_type"
+                        }
+                    },
+                    "actor_data": {
+                        "$ref": "actor_data"
+                    },
+                    "workflow_name": "updateRequestV3"
+                }
+            },
+            {
+                "id": "EARLY-RETURN",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "SUCCESS-NOOP",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "RETURN",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "SUCCESS",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT-INACTIVE",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "FAIL-TIMEOUT",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT-USER-DECISION",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "FAIL-QUIT",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT-NO-MESSAGE",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "FAIL-SETTINGS",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT-RESET",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "RESET-CLIENT",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT-RETURN",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "RETURN-CLIENT",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT-NEXT",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "NEXT-QUESTION",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "EXIT-FINISH",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "status": "FINISH-PROCESS",
+                        "profile": {
+                            "$ref": "bag.profile"
+                        }
+                    }
+                }
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "XPTO": "BOTAUTHOR",
+            "POSTGREST": "POSTGREST",
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

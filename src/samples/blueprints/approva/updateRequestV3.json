@@ -1,0 +1,201 @@
+{
+    "name": "updateRequestV3",
+    "description": "process to update request",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "REQUESTBOT",
+                "name": "Buyer",
+                "rule": {
+                    "$js": "({actor_data}) => actor_data.claims.includes('requestBot');"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start updateRequestV3",
+                "next": "CONFIG",
+                "type": "Start",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input_schema": {
+                        "type": "object",
+                        "required": [
+                            "profile",
+                            "profile_type"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string"
+                            },
+                            "profile": {
+                                "type": "object"
+                            },
+                            "request_id": {
+                                "type": "string"
+                            },
+                            "party_number": {
+                                "type": "string"
+                            },
+                            "profile_type": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CONFIG",
+                "name": "Set basic parameters",
+                "next": "UPDATE-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "retries": 0,
+                        "BASE_URL": "aprova_services:3000",
+                        "codeRetries": {
+                            "403": 2,
+                            "502": 3
+                        }
+                    }
+                }
+            },
+            {
+                "id": "UPDATE-REQUEST",
+                "name": "Update Request",
+                "next": "RESPONSE",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "status": "AWAITING_DOCUMENTS",
+                        "profiles": {
+                            "$js": "({bag}) => {return{[bag.profile_type]:bag.profile}}"
+                        },
+                        "request_id": {
+                            "$ref": "bag.request_id"
+                        },
+                        "current_get_info": {
+                            "key": {
+                                "$ref": "bag.key"
+                            },
+                            "profile_type": {
+                                "$ref": "bag.profile_type"
+                            }
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/requests/create-request-from-metadata"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "RESPONSE",
+                "name": "Verify response code",
+                "next": {
+                    "200": "END-SUCCESS",
+                    "201": "END-SUCCESS",
+                    "202": "END-SUCCESS",
+                    "204": "END-SUCCESS",
+                    "default": "RETRY"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "RETRY",
+                "name": "use mock",
+                "next": {
+                    "default": "RETRY-COUNT",
+                    "undefined": "END-ERROR"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.codeRetries[result.status]"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "RETRY-COUNT",
+                "name": "Verify count",
+                "next": {
+                    "true": "END-MAX-RETRIES",
+                    "default": "RETRY-INCREASE"
+                },
+                "type": "Flow",
+                "lane_id": "REQUESTBOT",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({bag}) => bag.retries >= bag.codeRetries[result.status]"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "RETRY-INCREASE",
+                "name": "increase retry counter",
+                "next": "UPDATE-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "REQUESTBOT",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "acquisition_counter": {
+                            "$js": "({bag}) => bag.retries + 1"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "END-SUCCESS",
+                "name": "Finish updateRequestV3",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "END-ERROR",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            },
+            {
+                "id": "END-MAX-RETRIES",
+                "name": "Finish getInfo",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "REQUESTBOT"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

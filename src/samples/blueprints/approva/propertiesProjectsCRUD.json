@@ -1,0 +1,512 @@
+{
+    "name": "propertiesProjectsCRUD",
+    "description": "Workflow para CRUD de empreendimentos",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "B",
+                "name": "Backoffice",
+                "rule": {
+                    "$js": "({actor_data}) => actor_data.claims.includes('adminPropertiesProjects')"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "S",
+                "name": "Start Workflow",
+                "next": "ST1",
+                "type": "Start",
+                "lane_id": "B",
+                "parameters": {
+                    "input_schema": {
+                        "required": [
+                            "offset",
+                            "limit"
+                        ],
+                        "properties": {
+                            "limit": {
+                                "type": "integer"
+                            },
+                            "offset": {
+                                "type": "integer"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Request to Mock.io",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/properties_projects/raw?limit={{bag.limit}}&offset={{bag.offset}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U1",
+                "name": "User selects what wanna to do",
+                "next": "SET-ACTION-TO-BAG",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "properties": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "ack": {
+                                    "type": "boolean"
+                                },
+                                "text": "Tem certeza que deseja apagar o empreendimento? A ação não poderá ser desfeita.",
+                                "title": "Apagar",
+                                "action": {
+                                    "type": "string"
+                                },
+                                "images": {
+                                    "type": "array"
+                                },
+                                "option": {
+                                    "type": "string"
+                                },
+                                "buttons": [
+                                    {
+                                        "type": "primary",
+                                        "label": "Sim"
+                                    },
+                                    {
+                                        "type": "secondary",
+                                        "label": "Cancelar"
+                                    }
+                                ],
+                                "latitude": {
+                                    "type": "string"
+                                },
+                                "longitude": {
+                                    "type": "string"
+                                },
+                                "acessories": {
+                                    "type": "string"
+                                },
+                                "credit_limit": {
+                                    "type": "string"
+                                },
+                                "properties_ids": {
+                                    "type": "array"
+                                },
+                                "region_description": {
+                                    "type": "string"
+                                },
+                                "project_description": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CHOOSE_ACTION_PROPETIES_PROJECT_CRUD"
+                }
+            },
+            {
+                "id": "SET-ACTION-TO-BAG",
+                "name": "Set action to bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F1",
+                "name": "Check action",
+                "next": {
+                    "CREATE": "F3",
+                    "DELETE": "F2",
+                    "UPDATE": "F4",
+                    "default": "E",
+                    "FETCH_MORE": "B3",
+                    "RETURN_LIST": "ST1"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U3",
+                "name": "User insert information to create an enterprise",
+                "next": "F3",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "project_description",
+                                "credit_limit",
+                                "external_ids"
+                            ],
+                            "properties": {
+                                "images": {
+                                    "type": "array"
+                                },
+                                "option": {
+                                    "type": "string"
+                                },
+                                "latitude": {
+                                    "type": "string"
+                                },
+                                "longitude": {
+                                    "type": "string"
+                                },
+                                "acessories": {
+                                    "type": "string"
+                                },
+                                "credit_limit": {
+                                    "type": "string"
+                                },
+                                "properties_ids": {
+                                    "type": "array"
+                                },
+                                "region_description": {
+                                    "type": "string"
+                                },
+                                "project_description": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "CREATE_PROPERTY_PROJECT"
+                }
+            },
+            {
+                "id": "F3",
+                "name": "Check payload to create",
+                "next": {
+                    "return": "ST1",
+                    "default": "ST2"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST2",
+                "name": "Request to create an enterprise",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "data": {
+                            "$ref": "result.activities[0].data"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/properties_projects"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U4",
+                "name": "User insert information to UPDATE info",
+                "next": "F4",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "id"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "images": {
+                                    "type": "array"
+                                },
+                                "option": {
+                                    "type": "string"
+                                },
+                                "latitude": {
+                                    "type": "string"
+                                },
+                                "longitude": {
+                                    "type": "string"
+                                },
+                                "acessories": {
+                                    "type": "string"
+                                },
+                                "credit_limit": {
+                                    "type": "string"
+                                },
+                                "region_description": {
+                                    "type": "string"
+                                },
+                                "project_description": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "action": "UPDATE_PROPERTY_PROJECT"
+                }
+            },
+            {
+                "id": "F4",
+                "name": "Check option to update",
+                "next": {
+                    "return": "ST1",
+                    "default": "B2"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "B2",
+                "name": "Set enterprise's id to bag",
+                "next": "ST3",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.activities[0].data.id"
+                        },
+                        "new_data": {
+                            "$ref": "result.activities[0].data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Request to update an enterprise",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "data": {
+                            "$ref": "bag.new_data"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/properties_projects/{{bag.id}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U2",
+                "name": "Confirm delete",
+                "next": "F2",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "text": "Tem certeza que deseja apagar o empreendimento? A ação não poderá ser desfeita.",
+                        "title": "Apagar",
+                        "buttons": [
+                            {
+                                "type": "primary",
+                                "label": "Sim"
+                            },
+                            {
+                                "type": "secondary",
+                                "label": "Cancelar"
+                            }
+                        ],
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "ack"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "action": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "CONFIRM_DELETE_PROPERTY_PROJECT"
+                }
+            },
+            {
+                "id": "F2",
+                "name": "Check ACK delete",
+                "next": {
+                    "true": "B1",
+                    "false": "ST1",
+                    "default": "ST1"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.ack"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "B1",
+                "name": "Set enterprise's id to Bag",
+                "next": "ST4",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.activities[0].data.id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST4",
+                "name": "Request to delete an enterprise",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/properties_projects/{{bag.id}}"
+                        },
+                        "verb": "DELETE",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "B3",
+                "name": "Set offset to bag",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "offset": {
+                            "$js": "({bag}) => bag.offset + bag.limit"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CONFIRMATION-MESSAGE",
+                "name": "Request made message",
+                "next": "SET-ACTION-TO-BAG",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "bag.action"
+                        },
+                        "confirm_message": true
+                    },
+                    "action": "CONFIRMATION_MESSAGE_TO_USER_ON_PROPERTIES_PROJECTS_CRUD",
+                    "activity_schema": {
+                        "type": "object",
+                        "properties": {
+                            "action": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                }
+            },
+            {
+                "id": "E",
+                "name": "Finish",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "B"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "SERVICE_API": "SERVICE_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

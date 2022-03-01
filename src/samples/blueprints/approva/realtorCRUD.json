@@ -1,0 +1,828 @@
+{
+    "name": "realtorCRUD",
+    "description": "Workflow para CRUD de corretores",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "B",
+                "name": "Backoffice",
+                "rule": {
+                    "$js": "({actor_data}) => actor_data.claims.includes('adminRealtors')"
+                }
+            },
+            {
+                "id": "B-LATCHED",
+                "name": "Backoffice Latched",
+                "rule": {
+                    "$js": "({actor_data, bag}) => actor_data.claims.includes('adminRealtors') && bag.actor_id === actor_data.actor_id"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "S",
+                "name": "Start Workflow",
+                "next": "ST1",
+                "type": "Start",
+                "lane_id": "B",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Get realtors",
+                "next": "SB1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/list/realtor"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB1",
+                "name": "Set realtors to Bag",
+                "next": "ST10",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "actor_id": {
+                            "$ref": "actor_data.actor_id"
+                        },
+                        "realtors": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST10",
+                "name": "List active teams",
+                "next": "SB5",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/list-realtor-teams/active"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB5",
+                "name": "Set realtors to Bag",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "teams": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U1",
+                "name": "User selects what wanna to do",
+                "next": "SB2",
+                "type": "UserTask",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "teams": {
+                            "$ref": "bag.teams"
+                        },
+                        "realtors": {
+                            "$ref": "bag.realtors"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "action": {
+                                    "type": "string"
+                                },
+                                "mobile_phone": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CHOOSE_ACTION_REALTORS_CRUD"
+                }
+            },
+            {
+                "id": "SB2",
+                "name": "Set activity information to bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "result.activities[0].data.id"
+                        },
+                        "name": {
+                            "$ref": "result.activities[0].data.name"
+                        },
+                        "actor": {
+                            "$ref": "result.activities[0].data.mobile_phone"
+                        },
+                        "email": {
+                            "$ref": "result.activities[0].data.email"
+                        },
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        },
+                        "option": {
+                            "$ref": "result.activities[0].data.option"
+                        },
+                        "team_id": {
+                            "$ref": "result.activities[0].data.team_id"
+                        },
+                        "mobile_phone": {
+                            "$ref": "result.activities[0].data.mobile_phone"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F1",
+                "name": "Check action",
+                "next": {
+                    "CREATE": "ST7",
+                    "DELETE": "F4",
+                    "UPDATE": "F3",
+                    "default": "E",
+                    "UPDATE_NEW_PHONE": "ST8",
+                    "VERIFICATION_NUMBER_PHONE": "ST1"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST7",
+                "name": "Verification number phone",
+                "next": "F5",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/verify/{{bag.mobile_phone}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F5",
+                "name": "Check number phone verification",
+                "next": {
+                    "true": "F2",
+                    "default": "U2"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST8",
+                "name": "Verification number phone update realtor",
+                "next": "F6",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/verify/{{bag.mobile_phone}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F6",
+                "name": "Check number phone verification update realtor",
+                "next": {
+                    "true": "F3",
+                    "default": "U2"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U2",
+                "name": "Open cellular number duplication modal",
+                "next": "SB4",
+                "type": "UserTask",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "realtors": {
+                            "$ref": "bag.realtors"
+                        },
+                        "toggleModal": true,
+                        "activity_schema": {
+                            "type": "object",
+                            "required": [
+                                "action"
+                            ],
+                            "properties": {
+                                "action": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "USER_CHOOSE_ACTION_REALTORS_VERIFICATION_PHONE"
+                }
+            },
+            {
+                "id": "SB4",
+                "name": "Save action bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F2",
+                "name": "Check payload to create",
+                "next": {
+                    "return": "ST1",
+                    "default": "ST2"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST2",
+                "name": "Get account settings",
+                "next": "SB3",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/accounts"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB3",
+                "name": "Save default claims to bag",
+                "next": "ST3",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "account_id": {
+                            "$ref": "result.data[0].id"
+                        },
+                        "default_claims": {
+                            "$ref": "result.data[0].settings.default_user_claims"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Create actor",
+                "next": "ST4",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "CreateActorTask",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.mobile_phone"
+                        },
+                        "claims": {
+                            "$ref": "bag.default_claims"
+                        },
+                        "account_id": {
+                            "$ref": "bag.account_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST4",
+                "name": "Create profile",
+                "next": "SET-REALTOR-ID-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "role": "REALTOR",
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "actor_id": {
+                            "$ref": "result.actor.id"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/create"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-REALTOR-ID-TO-BAG",
+                "name": "Save realtor id to bag",
+                "next": "CREATE-PARTY",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "realtor_id": {
+                            "$ref": "result.data.id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "CREATE-PARTY",
+                "name": "Create party on CHAT Service.",
+                "next": "ST12",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "role": "REALTOR",
+                        "actor": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/create-party-by-actor"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST12",
+                "name": "Set team to realtor",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "team_id": {
+                            "$ref": "bag.team_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/set-realtor-team/{{bag.realtor_id}}"
+                        },
+                        "verb": "PATCH",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F3",
+                "name": "Check option to update",
+                "next": {
+                    "return": "ST1",
+                    "default": "GET-ACCOUNT-INFO"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-ACCOUNT-INFO",
+                "name": "Get account settings",
+                "next": "SET-CLAIMS-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/accounts"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-CLAIMS-TO-BAG",
+                "name": "Save default claims to bag",
+                "next": "ST5",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "default_claims": {
+                            "$ref": "result.data[0].settings.default_user_claims"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST5",
+                "name": "update profile",
+                "next": "ST9",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "email": {
+                            "$ref": "bag.email"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/{{bag.id}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST9",
+                "name": "update actor",
+                "next": "UPDATE-PARTY",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.actor"
+                        },
+                        "claims": {
+                            "$ref": "bag.default_claims"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.WORKFLOW_API}}}/actor/update/{{result.data.actor_id}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "UPDATE-PARTY",
+                "name": "Update Party on CHAT Service.",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.user.mobile_phone"
+                        },
+                        "new_actor": {
+                            "$ref": "bag.actor"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/chat/update-party-by-actor"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "F4",
+                "name": "Check option to inactivate",
+                "next": {
+                    "return": "ST1",
+                    "default": "ST6"
+                },
+                "type": "Flow",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST6",
+                "name": "inactivate profile",
+                "next": "CONFIRMATION-MESSAGE",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "id": {
+                            "$ref": "bag.id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/profiles/disable/{{bag.id}}"
+                        },
+                        "verb": "PUT",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "CONFIRMATION-MESSAGE",
+                "name": "Request made message",
+                "next": "SET-ACTION-TO-BAG",
+                "type": "UserTask",
+                "lane_id": "B-LATCHED",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "bag.action"
+                        },
+                        "confirm_message": true
+                    },
+                    "action": "CONFIRMATION_MESSAGE_TO_USER_ON_REALTORS_CRUD",
+                    "activity_schema": {
+                        "type": "object",
+                        "properties": {
+                            "action": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                }
+            },
+            {
+                "id": "SET-ACTION-TO-BAG",
+                "name": "Set activity information to bag",
+                "next": "F1",
+                "type": "SystemTask",
+                "lane_id": "B-LATCHED",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "action": {
+                            "$ref": "result.activities[0].data.action"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "E",
+                "name": "Finish",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "B-LATCHED"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "JWT_KEY": "JWT_KEY_BP",
+            "CHAT_API": "CHAT_API",
+            "POSTGREST": "POSTGREST",
+            "SERVICE_API": "SERVICE_API",
+            "WORKFLOW_API": "WORKFLOW_API"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

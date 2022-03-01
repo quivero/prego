@@ -1,0 +1,222 @@
+{
+    "name": "analyseDocumentation",
+    "description": "Fluxo único para análise dos documentos do usuário",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "B",
+                "name": "Backoffice",
+                "rule": [
+                    "fn",
+                    [
+                        "actor_data",
+                        "bag"
+                    ],
+                    [
+                        "eval",
+                        [
+                            "apply",
+                            "or",
+                            [
+                                "map",
+                                [
+                                    "fn",
+                                    [
+                                        "v"
+                                    ],
+                                    [
+                                        "=",
+                                        "v",
+                                        [
+                                            "`",
+                                            "analyseDocuments"
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "get",
+                                    "actor_data",
+                                    [
+                                        "`",
+                                        "claims"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "nodes": [
+            {
+                "id": "SA",
+                "name": "Start workflow to analyse documents",
+                "next": "ST1",
+                "type": "Start",
+                "lane_id": "B",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Get all proofs waiting analysis",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/proofs?status=eq.WAITING_ANALYSIS"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "U1",
+                "name": "User selects proof to refut or aproove",
+                "next": "F1",
+                "type": "UserTask",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "proofs": {
+                            "$ref": "result.data"
+                        },
+                        "activity_schema": {
+                            "type": "object",
+                            "properties": {
+                                "option": {
+                                    "type": "string"
+                                },
+                                "approved": {
+                                    "type": "boolean"
+                                },
+                                "proof_id": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "PROOFS_LIST"
+                }
+            },
+            {
+                "id": "F1",
+                "name": "Default Flow",
+                "next": {
+                    "finish": "E",
+                    "default": "F2"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.option"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "F2",
+                "name": "Default Flow",
+                "next": {
+                    "true": "ST2",
+                    "default": "ST3"
+                },
+                "type": "Flow",
+                "lane_id": "B",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "result.activities[0].data.approved"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST2",
+                "name": "Approve proof",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "proof_id": {
+                            "$ref": "result.activities[0].data.proof_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/documents/approve"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Approve proof",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "B",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "proof_id": {
+                            "$ref": "result.activities[0].data.proof_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/documents/refut"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "E",
+                "name": "Término de análise de documentos",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "B"
+            }
+        ],
+        "prepare": [],
+        "environment": {},
+        "requirements": [
+            "core"
+        ]
+    }
+}

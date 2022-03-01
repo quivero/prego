@@ -1,0 +1,570 @@
+{
+    "name": "salesManagement",
+    "description": "Fluxo para gestão de vendas",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "GENERAL",
+                "name": "General access",
+                "rule": {
+                    "$js": "({actor_data, bag}) => (actor_data.claims).includes('salesManagement')"
+                }
+            },
+            {
+                "id": "LIST-READ",
+                "name": "List and read claims",
+                "rule": {
+                    "$js": "({actor_data, bag}) => ((actor_data.claims).includes('salesManagement') && actor_data.actor_id == bag.actor_id)"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "id": "START",
+                "name": "Start unit CRUD",
+                "next": "GET-DEV-CONTRACTS",
+                "type": "Start",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input_schema": {
+                        "type": "object",
+                        "required": [
+                            "intent",
+                            "key"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "key": {
+                                "type": "string"
+                            },
+                            "intent": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-DEV-CONTRACTS",
+                "name": "Get dev contracts",
+                "next": "SET-DEV-CONTRACTS-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/dev_contracts?key=eq.{{bag.key}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-DEV-CONTRACTS-TO-BAG",
+                "name": "Set task settings to bag",
+                "next": "VALIDATE-INPUT",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "filter": {
+                            "$js": "({bag}) => {let filter = ''; if (bag.filters) {const f = bag.filters; Object.entries(f).forEach(([key, value]) => {filter += key + '=eq.' + value + '&';});}; return filter;}"
+                        },
+                        "schema": {
+                            "$ref": "result.data[0].value"
+                        },
+                        "key_url": {
+                            "$js": "({bag}) => {return (bag.key).substring(7,(bag.key.length))}"
+                        },
+                        "actor_id": {
+                            "$ref": "actor_data.actor_id"
+                        },
+                        "pagination": {
+                            "$js": "({bag}) => bag.offset && bag.limit ? bag.offset * bag.limit : null"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VALIDATE-INPUT",
+                "name": "Validade input",
+                "next": "VERIFY-INTENT",
+                "type": "SystemTask",
+                "lane_id": "GENERAL",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/units?id=*"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204,
+                        400,
+                        404
+                    ]
+                }
+            },
+            {
+                "id": "CHECK-INPUT",
+                "name": "Check input",
+                "next": {
+                    "true": "VERIFY-INTENT",
+                    "default": "FINISH-DEV-CONTRACTS"
+                },
+                "type": "Flow",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.status"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "VERIFY-INTENT",
+                "name": "Verify user intent",
+                "next": {
+                    "READ": "GET-REQUEST",
+                    "default": "LIST-REQUESTS-FOR-KANBAN"
+                },
+                "type": "Flow",
+                "lane_id": "GENERAL",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$ref": "bag.intent"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "LIST-REQUESTS-FOR-KANBAN",
+                "name": "List requests for kanban",
+                "next": "SET-REQUEST-LIST-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "is_team": {
+                            "$ref": "bag.is_team"
+                        },
+                        "actor_id": {
+                            "$ref": "bag.actor_id"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/requests_management/list-requests-for-kanban"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-REQUEST-LIST-TO-BAG",
+                "name": "Set request list to bag",
+                "next": "GET-INTERACTION-INFORMATION-BY-REQUEST",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "requests": {
+                            "$ref": "result.data"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-INTERACTION-INFORMATION-BY-REQUEST",
+                "name": "Get interaction information by request",
+                "next": "LIST",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "requests": {
+                            "$ref": "bag.requests"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.CHAT_API}}}/rpc/message/get-interaction-information-by-request"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "Prefer": "return=representation",
+                            "ContentType": "application/json",
+                            "Authorization": {
+                                "$mustache": "Bearer {{{environment.JWT_KEY}}}"
+                            }
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "LIST",
+                "name": "Show units to user",
+                "next": "CHECK-TIMEOUT-LIST",
+                "type": "UserTask",
+                "lane_id": "LIST-READ",
+                "parameters": {
+                    "input": {
+                        "list": {
+                            "$ref": "result.data"
+                        },
+                        "interactions": {
+                            "$ref": "bag.interactions"
+                        },
+                        "last_message": {
+                            "$ref": "bag.last_message"
+                        },
+                        "activity_schema": {
+                            "$ref": "bag.schema.LIST"
+                        }
+                    },
+                    "action": "LIST",
+                    "timeout": 360
+                }
+            },
+            {
+                "id": "CHECK-TIMEOUT-LIST",
+                "name": "Check timeout",
+                "next": {
+                    "true": "FINISH-LIST",
+                    "default": "SET-OFFSET-LIMIT-TO-BAG"
+                },
+                "type": "Flow",
+                "lane_id": "LIST-READ",
+                "parameters": {
+                    "input": {
+                        "key": {
+                            "$js": "({result}) => !!result.is_continue"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SET-OFFSET-LIMIT-TO-BAG",
+                "name": "Set value offset and limit to bag",
+                "next": "LIST",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "limit": {
+                            "$js": "({result}) => result.activities[0]?.data?.limit ? result.activities[0].data.limit : 10"
+                        },
+                        "filter": {
+                            "$js": "({result}) => {let filter = ''; if (result.activities[0]?.data?.filters) {const f = result.activities[0].data.filters; Object.entries(f).forEach(([key, value]) => {filter += key + '=eq.' + value + '&';});}; return filter;}"
+                        },
+                        "offset": {
+                            "$js": "({result}) => result.activities[0]?.data?.offset ? result.activities[0].data.offset : 0"
+                        },
+                        "filters": {
+                            "$js": "({result}) => result.activities[0]?.data?.filters ? result.activities[0].data.filters : {}"
+                        },
+                        "pagination": {
+                            "$js": "({result}) => result.activities[0]?.data?.limit && result.activities[0]?.data?.offset ? result.activities[0].data.limit * result.activities[0].data.offset : 0"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-REQUEST",
+                "name": "Get request",
+                "next": "SET-REQUEST-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/requests?id=eq.{{bag.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204,
+                        400,
+                        404,
+                        408,
+                        409
+                    ]
+                }
+            },
+            {
+                "id": "SET-REQUEST-TO-BAG",
+                "name": "Set request to bag",
+                "next": "GET-PROFILE-CLIENT",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "request": {
+                            "$ref": "result.data[0]"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-PROFILE-CLIENT",
+                "name": "Get profile",
+                "next": "SET-PROFILE-CLIENT-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/profiles?id=eq.{{bag.request.buyer_id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-PROFILE-CLIENT-TO-BAG",
+                "name": "Set profile to bag",
+                "next": "GET-PROFILE-REALTOR",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "profile": {
+                            "$js": "({result}) => result.data[0] ? result.data[0] : null"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-PROFILE-REALTOR",
+                "name": "Get profile",
+                "next": "SET-PROFILE-REALTOR-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.POSTGREST}}}/profiles?id=eq.{{bag.request.realtor}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204,
+                        400,
+                        404,
+                        408,
+                        409
+                    ]
+                }
+            },
+            {
+                "id": "SET-PROFILE-REALTOR-TO-BAG",
+                "name": "Set profile to bag",
+                "next": "GET-PROOFS",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "realtor": {
+                            "$js": "({result}) => result.data[0] ? result.data[0] : null"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "GET-PROOFS",
+                "name": "Get proofs",
+                "next": "SET-PROOFS-TO-BAG",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "{{{environment.SERVICE_API}}}/rpc/requests/{{bag.request.id}}"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SET-PROOFS-TO-BAG",
+                "name": "Set proofs to bag",
+                "next": "SEND-DATA-TO-READ",
+                "type": "SystemTask",
+                "lane_id": "LIST-READ",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "proofs": {
+                            "$ref": "result.data.proofs"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "SEND-DATA-TO-READ",
+                "name": "Send data to read",
+                "next": "FINISH-READ",
+                "type": "UserTask",
+                "lane_id": "LIST-READ",
+                "parameters": {
+                    "input": {
+                        "proofs": {
+                            "$ref": "bag.proofs"
+                        },
+                        "realtor": {
+                            "$ref": "bag.realtor"
+                        },
+                        "request": {
+                            "$ref": "bag.request"
+                        },
+                        "profiles": {
+                            "main": {
+                                "$js": "({ bag }) => { const title = { name: bag?.request?.metadata?.profiles?.main?.name?.value, email: bag?.request?.metadata?.profiles?.main?.email?.value, phone: bag?.party_number }; return { ...bag?.request?.metadata?.profiles?.main, title }; };"
+                            },
+                            "second": {
+                                "$js": "({ bag }) => { const title = { name: bag?.request?.metadata?.profiles?.second?.name?.value, email: bag?.request?.metadata?.profiles.second?.email?.value }; return { ...bag?.request?.metadata?.profiles?.second, title }; };"
+                            }
+                        },
+                        "card_data": {
+                            "date": {
+                                "$ref": "bag.profile.created_at"
+                            },
+                            "name": {
+                                "$ref": "bag.profile.name"
+                            },
+                            "phone": {
+                                "$ref": "bag.profile.mobile_phone"
+                            }
+                        },
+                        "ui_schema": {
+                            "$ref": "bag.schema.READ.ui_schema"
+                        },
+                        "activity_schema": {
+                            "$ref": "bag.schema.READ.activity_schema"
+                        },
+                        "additionalProperties": false
+                    },
+                    "action": "READ",
+                    "timeout": 360
+                }
+            },
+            {
+                "id": "FINISH-LIST",
+                "name": "Finish salesManagement",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "LIST-READ"
+            },
+            {
+                "id": "FINISH-READ",
+                "name": "Finish salesManagement",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "LIST-READ"
+            },
+            {
+                "id": "FINISH-DEV-CONTRACTS",
+                "name": "Finish salesManagement",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "GENERAL"
+            }
+        ],
+        "prepare": [],
+        "environment": {
+            "XPTO": "BOTAUTHOR",
+            "JWT_KEY": "JWT_KEY_BP",
+            "CHAT_API": "CHAT_API",
+            "POSTGREST": "POSTGREST",
+            "SERVICE_API": "SERVICE_API",
+            "CHAT_POSTGREST": "CHAT_POSTGREST"
+        },
+        "requirements": [
+            "core"
+        ]
+    }
+}

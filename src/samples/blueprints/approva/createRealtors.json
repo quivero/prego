@@ -1,0 +1,221 @@
+{
+    "name": "createRealtors",
+    "description": "Fluxo único para criação dos perfis de corretores",
+    "blueprint_spec": {
+        "lanes": [
+            {
+                "id": "A",
+                "name": "Anonymous",
+                "rule": [
+                    "fn",
+                    [
+                        "actor_data",
+                        "bag"
+                    ],
+                    [
+                        "eval",
+                        [
+                            "apply",
+                            "or",
+                            [
+                                "map",
+                                [
+                                    "fn",
+                                    [
+                                        "v"
+                                    ],
+                                    [
+                                        "=",
+                                        "v",
+                                        [
+                                            "`",
+                                            "anonymous"
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "get",
+                                    "actor_data",
+                                    [
+                                        "`",
+                                        "claims"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "nodes": [
+            {
+                "id": "SA",
+                "name": "Start workflow to create Realtor",
+                "next": "ST1",
+                "type": "Start",
+                "lane_id": "A",
+                "parameters": {
+                    "input_schema": {}
+                }
+            },
+            {
+                "id": "ST1",
+                "name": "Get account settings",
+                "next": "SB1",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {},
+                    "request": {
+                        "url": {
+                            "$mustache": "http://postgrest:3000/accounts"
+                        },
+                        "verb": "GET",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "SB1",
+                "name": "Save default claims to bag",
+                "next": "U1",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "account_id": {
+                            "$ref": "result.data[0].id"
+                        },
+                        "default_claims": {
+                            "$ref": "result.data[0].settings.default_user_claims"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "U1",
+                "name": "User inserts information to create Realtor",
+                "next": "SB2",
+                "type": "UserTask",
+                "lane_id": "A",
+                "parameters": {
+                    "input": {
+                        "activity_schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "mobile_phone": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "action": "SUBMIT_REALTOR_MOBILE_PHONE"
+                }
+            },
+            {
+                "id": "SB2",
+                "name": "Set actor_number to bag",
+                "next": "ST2",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "SetToBag",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "result.activities[0].data.name"
+                        },
+                        "mobile_phone": {
+                            "$ref": "result.activities[0].data.mobile_phone"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST2",
+                "name": "Create actor",
+                "next": "ST3",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "CreateActorTask",
+                "parameters": {
+                    "input": {
+                        "actor": {
+                            "$ref": "bag.mobile_phone"
+                        },
+                        "claims": {
+                            "$ref": "bag.default_claims"
+                        },
+                        "account_id": {
+                            "$ref": "bag.account_id"
+                        }
+                    }
+                }
+            },
+            {
+                "id": "ST3",
+                "name": "Create profile",
+                "next": "E",
+                "type": "SystemTask",
+                "lane_id": "A",
+                "category": "HTTP",
+                "parameters": {
+                    "input": {
+                        "name": {
+                            "$ref": "bag.name"
+                        },
+                        "role": "REALTOR",
+                        "actor_id": {
+                            "$ref": "result.actor.id"
+                        },
+                        "mobile_phone": {
+                            "$ref": "bag.mobile_phone"
+                        }
+                    },
+                    "request": {
+                        "url": {
+                            "$mustache": "http://aprova_services:3000/rpc/profiles/create"
+                        },
+                        "verb": "POST",
+                        "headers": {
+                            "ContentType": "application/json"
+                        }
+                    },
+                    "valid_response_codes": [
+                        200,
+                        201,
+                        203,
+                        204
+                    ]
+                }
+            },
+            {
+                "id": "E",
+                "name": "Finish workflow to create realtor",
+                "next": null,
+                "type": "Finish",
+                "lane_id": "A"
+            }
+        ],
+        "prepare": [],
+        "environment": {},
+        "requirements": [
+            "core"
+        ]
+    }
+}
