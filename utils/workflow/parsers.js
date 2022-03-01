@@ -240,14 +240,14 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
 
       const label = `${startNode}_${finishNode}`;
       paths[label] = fromStartToFinishAllPaths(blueprint, startNode, finishNode);
-      
-      total_length += paths[label].length
+
+      total_length += paths[label].length;
     }
   }
-  
+
   return {
-    length: total_length, 
-    from_to: paths
+    length: total_length,
+    from_to: paths,
   };
 };
 

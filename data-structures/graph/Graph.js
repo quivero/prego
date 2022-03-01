@@ -1187,9 +1187,10 @@ export default class Graph {
   }
 
   // Returns count of not reachable nodes from
-  // vertex v.
-  // It uses recursive DFSUtil()
-  countNotReach(from_vertex_index) {
+  // vertex v. It uses recursive DFSUtil()
+  countUnreachebleNodes(from_vertex_key) {
+    const vertices_keys_to_indices = this.getVerticesKeystoIndices(from_vertex_key);
+    const from_vertex_index = vertices_keys_to_indices[from_vertex_key];
     const num_vertices = this.getNumVertices();
 
     // Mark all the vertices as not visited

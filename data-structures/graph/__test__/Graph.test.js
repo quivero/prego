@@ -76,6 +76,21 @@ describe('Graph', () => {
     expect(edge_keys).toEqual(['A_B', 'B_C']);
   });
 
+  it('should get edges by vertex keys', () => {
+    const graph = new Graph();
+    const keys = ['A', 'B', 'C'];
+    const vertexKeys = ['A', 'B'];
+
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+    
+    graph.addEdges([AB, BC]);
+
+    const edge_keys = graph.getEdgesKeysByVertexKeys(vertexKeys, true);
+    
+    expect(edge_keys).toEqual(['A_B']);
+  });
+
   it('should add edges to undirected graph', () => {
     const graph = new Graph();
 
@@ -962,6 +977,24 @@ describe('Graph', () => {
     graph.addEdges([edgeAB, edgeAC]);
 
     expect(graph.reachableNodes('A')).toEqual([1, 2, 3]);
+  });
+
+  it('should return number of non-reachable nodes', () => {
+    const graph = new Graph(true);
+
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    graph.addVertex(vertexD);
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC]);
+
+    expect(graph.countUnreachebleNodes('A')).toEqual(1);
   });
 
   it('should return graph density', () => {
