@@ -30,14 +30,15 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
 
-  const bps_root = './samples/blueprints/';
+  const bps_root = './samples/blueprints/approva/';
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = false;
+  const READ_ALL_BPS = true;
 
   if (READ_ALL_BPS) {
-    const paths = [];
-
+    const paths = {};
+    let total_paths_len = 0;
+    
     for (let i = 0; i < blueprints_fnames.length; i += 1) {
       const blueprint_i_name = blueprints_fnames[i];
       const fname = bps_root + blueprint_i_name;
@@ -47,11 +48,20 @@ app.get('/', (req, res) => {
         const blueprint_i = require(fname);
 
         // paths.push(fromStartToFinishCombsAllPaths(blueprint_i));
-        paths.push(describeBlueprint(blueprint_i));
+        paths[blueprint_i_name] = fromStartToFinishCombsAllPaths(blueprint_i);
       }
     }
 
-    res.send(paths);
+    for(let i = 0; i < blueprints_fnames.length; i += 1){
+      total_paths_len += paths[blueprints_fnames[i]].length
+    }
+
+    res.send(
+      {
+        length: total_paths_len, 
+        blueprints: paths 
+      }
+    );
   } else {
     const blueprint_fname = 'generate_number.json';
 
