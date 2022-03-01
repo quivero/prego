@@ -1,5 +1,5 @@
 {
-  "name": "dot-quiver",
+  "name": "dot-quiver-api",
   "type": "module",
   "version": "5.1.0",
   "description": "Package to handle dot-quiver based structures",
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/brunolnetto/dot-quiver-api/issues"
   },
-  "homepage": "https://github.com/brunolnetto/dot-quiver#readme",
+  "homepage": "https://github.com/brunolnetto/dot-quiver-api#readme",
   "dependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.11",
