@@ -6,7 +6,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunolnetto/dot-quiver.git"
+    "url": "git+https://github.com/brunolnetto/dot-quiver-api.git"
   },
   "keywords": [
     "graphs"
@@ -14,7 +14,7 @@
   "author": "brunolnetto",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brunolnetto/dot-quiver/issues"
+    "url": "https://github.com/brunolnetto/dot-quiver-api/issues"
   },
   "homepage": "https://github.com/brunolnetto/dot-quiver#readme",
   "dependencies": {
