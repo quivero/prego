@@ -1,6 +1,10 @@
 import _ from 'lodash';
 import Iter from 'es-iter';
 
+export const ones = (n) => {
+  return Array(n).fill(1)
+} 
+
 export const getAllIndexes = (arr, val) => {
   const indexes = [];
   let i;
@@ -44,7 +48,11 @@ export const isCyclicEqual = (control_, treatment_) => {
 };
 
 export const arraysEqual = (a, b) => {
-  if (a === b) return true;
+  
+  if(typeof(a) === 'number' && typeof(b) === 'number') {
+    return a === b
+  }
+
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
 
@@ -58,6 +66,20 @@ export const arraysEqual = (a, b) => {
   }
   return true;
 };
+
+export const ascendingSort = (arr) => {
+  return arr.sort().reverse()
+}
+
+export const hasElement = (arr, elem) => {
+  for(let i = 0; i <= arr.length; i += 1) {
+    if(arraysEqual(arr[i], elem)) {
+      return true;
+    }
+  }
+
+  return false
+}
 
 // Cartesian product of arrays
 export const cartesianProduct = (a, b, ...c) => {

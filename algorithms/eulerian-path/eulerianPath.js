@@ -7,10 +7,10 @@ import graphBridges from '../bridges/graphBridges.js';
  * @return {GraphVertex[]}
  */
 export default function eulerianPath(graph) {
-  if(!graph.isEulerian()) {
-    return []
+  if (!graph.isEulerian()) {
+    return [];
   }
-  
+
   const eulerianPathVertices = [];
 
   // Set that contains all vertices with even rank (number of neighbors).

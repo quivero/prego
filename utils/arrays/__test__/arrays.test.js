@@ -5,6 +5,7 @@ import {
   getUniques,
   extendedVenn,
   arraysEqual,
+  hasElement
 } from '../arrays';
 
 console.error = jest.fn();
@@ -58,6 +59,20 @@ describe('arraysEqual', () => {
 
   it('should return false for arrays of different lengths', () => {
     expect(arraysEqual([0, 1], [0, 1, 2])).toStrictEqual(false);
+  });
+});
+
+describe('hasElement', () => {
+  it('should return true for element on array', () => {
+    expect(hasElement([1, 2, 3], 3)).toStrictEqual(true);
+  });
+  
+  it('should return true for array on array of elements', () => {
+    expect(hasElement([[1, 2], [1, 2, 3]], [1, 2])).toStrictEqual(true);
+  });
+
+  it('should return true for array on array of elements', () => {
+    expect(hasElement([[1, 2], [1, 2, 3]], [1])).toStrictEqual(false);
   });
 });
 

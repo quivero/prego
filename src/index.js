@@ -5,7 +5,6 @@ import fs from 'fs';
 
 import {
   fromStartToFinishCombsAllPaths,
-  describeBlueprint,
 } from '../utils/workflow/parsers.js';
 
 import {
@@ -65,8 +64,8 @@ app.get('/', (req, res) => {
     const blueprint = require(fname);
 
     const route_describe = fromStartToFinishCombsAllPaths(blueprint);
-
-    res.send(route_describe);
+    
+    res.send(partitions(1000, 5));
   }
 });
 // [END app]
