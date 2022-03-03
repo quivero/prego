@@ -37,8 +37,8 @@ export const partitions = (n_points, n_blobs) => {
         
         is_swap = curr_partition[program_counter+1] >= curr_partition[program_counter]
 
-        let is_new_partition = !hasElement(partitions, ascendingSort([...curr_partition])) &&
-                               !curr_partition.includes(0)
+        is_new_partition = !hasElement(partitions, ascendingSort([...curr_partition])) &&
+                           !curr_partition.includes(0)
         if(is_new_partition) {
           partitions.push(ascendingSort([...curr_partition]))
         }
