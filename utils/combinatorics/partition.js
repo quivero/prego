@@ -1,62 +1,53 @@
 // Javascript program to generate all unique partitions of an integer
-import { getUniques } from '../arrays/arrays.js';
+import {
+  hasElement,
+  ones,
+  ascendingSort
+} from '../arrays/arrays.js';
 
 // Function to generate all unique partitions of an integer
-export const partitions = (n, size) => {
-  // An array to store a partition
-  const p = new Uint8Array(n);
-  const partitions_dict = {};
-
-  for (let i = 0; i < n; i += 1) {
-    partitions_dict[i + 1] = [];
+export const partitions = (n_points, n_blobs) => {
+  if(n_points < 0 || n_blobs < 0) {
+    throw Error('Number of points and blobs MUST be greater than 0.');
+  }
+  
+  if(n_points < n_blobs - 1) {
+    throw Error('Number of points MUST be greater than number of blobs minus 1.');
+  }
+  
+  if(n_blobs === 1) {
+    return [n_points]
   }
 
-  // Index of last element in a partition
-  let k = 0;
+  let program_counter = 0;
+  let is_swap;
+  let curr_partition = [n_points-n_blobs+1].concat(ones(n_blobs-1));
+  let partitions = [[...curr_partition]];
+  let is_new_partition = false;
+  
+  for(let i = 1; i < n_blobs; i += 1) {
+    program_counter = 0;
 
-  // Initialize first partition as number itself
-  p[k] = n;
+    while(program_counter <= i-1) {
+      is_swap = false;
+      
+      while(!is_swap) {
+        curr_partition[program_counter] -= 1;      
+        curr_partition[program_counter+1] += 1;
+        
+        is_swap = curr_partition[program_counter+1] >= curr_partition[program_counter]
 
-  // This loop first prints current partition, then generates next
-  // partition. The loop stops when the current partition has all 1s
-  while (getUniques(p) !== 1) {
-    if (k == size) {
-      // print current partition
-      console.log(Array.from(p.subarray(0, k + 1)));
+        let is_new_partition = !hasElement(partitions, ascendingSort([...curr_partition])) &&
+                               !curr_partition.includes(0)
+        if(is_new_partition) {
+          partitions.push(ascendingSort([...curr_partition]))
+        }
+      }
+
+      program_counter += 1;
     }
-
-    // Generate next partition
-
-    // Find the rightmost non-one value in p[]. Also, update
-    // the rem_val so that we know how much value can be accommodated
-    let rem_val = 0;
-
-    while (k >= 0 && p[k] === 1) {
-      rem_val += p[k];
-      k -= 1;
-    }
-
-    // If k < 0, all the values are 1 so
-    // there are no more partitions
-    if (k < 0) { break; }
-
-    // Decrease the p[k] found above and adjust the rem_val
-    p[k] -= 1;
-    rem_val += 1;
-
-    // If rem_val is more, then the sorted order is violated. Divide rem_val in
-    // different values of size p[k] and copy these values at different positions
-    // after p[k]
-    while (rem_val > p[k]) {
-      p[k + 1] = p[k];
-      rem_val -= p[k];
-      k += 1;
-    }
-
-    // Copy rem_val to next position and increment position
-    p[k + 1] = rem_val;
-    k += 1;
   }
-
-  return partitions_dict;
+  
+  return partitions;
 };
+
