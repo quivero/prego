@@ -30,10 +30,10 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
 
-  const bps_root = process.cwd() + '/src/samples/blueprints/';
+  const bps_root = `${process.cwd()}/src/samples/blueprints/`;
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = true;
+  const READ_ALL_BPS = false;
 
   if (READ_ALL_BPS) {
     const paths = {};
@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
         total_paths_len += paths[blueprints_fnames[i]].length;
       }
     }
-
+    
     res.send(
       {
         length: total_paths_len,
