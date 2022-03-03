@@ -1,4 +1,3 @@
-import Iter from 'es-iter';
 import _ from 'lodash';
 
 import Queue from '../queue/Queue.js';
@@ -900,10 +899,10 @@ export default class Graph {
 
     // pre[v]: order in which dfs examines v
     // low[v]: lowest preorder of any vertex connected to v
-    const preorder = Iter.repeat(-1, n_vertices).toArray();
-    const low = Iter.repeat(-1, n_vertices).toArray();
+    const preorder = _.repeat(-1, n_vertices).toArray();
+    const low = _.repeat(-1, n_vertices).toArray();
 
-    for (const v of Iter.range(n_vertices)) {
+    for (const v of _.range(n_vertices)) {
       if (preorder[v] === -1) {
         this.bridgesUtil(v, v, preorder, low, counter, bridges);
       }
@@ -1320,7 +1319,7 @@ export default class Graph {
     const n_vertices = this.getNumVertices();
 
     const is_visited = new Array(this.v);
-    for (const i of Iter.range(n_vertices)) {
+    for (const i of _.range(n_vertices)) {
       is_visited[i] = false;
     }
 

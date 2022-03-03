@@ -1,5 +1,5 @@
+import 'lodash.combinations';
 import _ from 'lodash';
-import Iter from 'es-iter';
 
 export const ones = (n) => {
   return Array(n).fill(1)
@@ -68,7 +68,9 @@ export const arraysEqual = (a, b) => {
 };
 
 export const ascendingSort = (arr) => {
-  return arr.sort().reverse()
+  arr.sort((a, b) => a - b).reverse()
+  
+  return arr
 }
 
 export const hasElement = (arr, elem) => {
@@ -116,7 +118,7 @@ export const extendedVenn = (sets) => {
   let comb_sets_excl = {};
 
   for (const i of _.rangeRight(1, keys.length + 1)) {
-    for (const comb_keys of new Iter(keys).combinations(i)) {
+    for (const comb_keys of new _.combinations(keys, i)) {
       const comb_sets = comb_keys.map((key) => sets[key]);
 
       // Intersection of elements

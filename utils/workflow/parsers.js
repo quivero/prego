@@ -1,5 +1,3 @@
-import Iter from 'es-iter';
-
 import _ from 'lodash';
 import Graph from '../../data-structures/graph/Graph.js';
 import GraphVertex from '../../data-structures/graph/GraphVertex.js';
@@ -233,9 +231,9 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
   let startNode;
   let finishNode;
 
-  for (const i of Iter.range(sf_nodes.start_nodes.length)) {
+  for (const i of _.range(sf_nodes.start_nodes.length)) {
     startNode = sf_nodes.start_nodes[i];
-    for (const j of Iter.range(sf_nodes.finish_nodes.length)) {
+    for (const j of _.range(sf_nodes.finish_nodes.length)) {
       finishNode = sf_nodes.finish_nodes[j];
 
       const label = `${startNode}_${finishNode}`;

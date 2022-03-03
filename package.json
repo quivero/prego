@@ -20,7 +20,6 @@
   "homepage": "https://github.com/brunolnetto/dot-quiver#readme",
   "dependencies": {
     "@babel/preset-env": "^7.16.11",
-    "es-iter": "^1.1.2",
     "eslint-nibble": "^4.2.1",
     "express": "^4.17.2",
     "fs": "^0.0.2",

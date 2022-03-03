@@ -51,3 +51,6 @@ export const partitions = (n_points, n_blobs) => {
   return partitions;
 };
 
+export const (points, comb) => {
+  
+}

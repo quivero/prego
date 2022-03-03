@@ -57,6 +57,7 @@ app.get('/', (req, res) => {
         blueprints: paths,
       },
     );
+    
   } else {
     const blueprint_fname = 'generate_number.json';
 
@@ -65,7 +66,7 @@ app.get('/', (req, res) => {
 
     const route_describe = fromStartToFinishCombsAllPaths(blueprint);
     
-    res.send(partitions(1000, 5));
+    res.send(partitions(100, 20));
   }
 });
 // [END app]
