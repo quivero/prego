@@ -2,21 +2,25 @@ import _ from 'lodash';
 
 import Queue from '../queue/Queue.js';
 import stronglyConnectedComponents from '../../algorithms/strongly-connected-components/stronglyConnectedComponents.js';
+
 import eulerianPath from '../../algorithms/eulerian-path/eulerianPath.js';
+import hamiltonianCycle from '../../algorithms/hamiltonian-cycle/hamiltonianCycle.js';
+
 import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
 import VisitMetadata from './VisitMetadata.js';
+
 import {
   cartesianProduct,
   extendedVenn,
   removeArrayDuplicates,
   ones
 } from '../../utils/arrays/arrays.js';
+
 import GraphVertex from './GraphVertex.js';
 import GraphEdge from './GraphEdge.js';
 
 export default class Graph {
   #cycles;
-
   #density;
 
   /**
@@ -1431,7 +1435,7 @@ export default class Graph {
         cycle_subgraph.deleteEdge(subgraph_edge);
       }
     }
-
+    
     // New routes may come from out-in flow cyclic paths
     let new_route = [];
     for (const combination of cartesianProduct(outflow_nodes, inflow_nodes)) {
