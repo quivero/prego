@@ -249,6 +249,20 @@ export default class Graph {
   }
 
   /**
+   * @param {integer} vertexIndex
+   * @returns GraphVertex
+   */
+   convertVerticestoVerticesKeys(vertices) {
+    const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
+
+    return vertices.map(
+      (vertex) => {
+        return vertex.getKey();
+      }
+    );;
+  }
+
+  /**
    * @returns {Object}
    */
   getAdjacencyList(type = 0) {
@@ -683,6 +697,16 @@ export default class Graph {
     }
 
     return epath;
+  }
+
+  getHamiltonianCycles() {
+    let hamiltonian_cycles = hamiltonianCycle(this);
+
+    return hamiltonian_cycles.map(
+      (hamiltonian_cycle) => {
+        return this.convertVerticestoVerticesKeys(hamiltonian_cycle)
+      }
+    )
   }
 
   getStronglyConnectedComponents() {
