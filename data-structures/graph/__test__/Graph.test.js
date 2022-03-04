@@ -71,8 +71,6 @@ describe('Graph', () => {
     
     graph.addEdges([AB, BC]);
 
-    console.log(graph.describe())
-
     expect(_.isEqual(graph.describe(), 
       {
         "adjacency_list": {
