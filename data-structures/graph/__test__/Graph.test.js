@@ -70,37 +70,26 @@ describe('Graph', () => {
     const [AB, BC] = createEdges([[A, B], [B, C]]);
     
     graph.addEdges([AB, BC]);
-
-    expect(_.isEqual(graph.describe(), 
-      {
-        "adjacency_list": {
-          "0": [],
-          "1": [],
-          "2": [],
-        },
-        "articulation_nodes": [],
-        "bridges": [],
-        "edges": "",
-        "is_connected": false,
-        "is_cyclic": false,
-        "is_eulerian": 0,
-        "loose_nodes": [
-          0,
-          1,
-          2,
-        ],
-        "orphan_nodes": [
-          0,
-          1,
-        2,
-        ],
-        "vertices": 'A,B,C',
-        "vertices_keys_to_indices": {
-        "A": 0,
-          "B": 1,
-          "C": 2,
-        }
-    })).toBe(true);
+    
+    expect(
+      _.isEqual(graph.describe(), 
+                {
+                  "vertices": 'A,B,C',
+                  "edges": 'A_B,B_C',
+                  "vertices_keys_to_indices": { A: 0, B: 1, C: 2 },
+                  "adjacency_list": { '0': [ 1 ], '1': [ 0, 2 ], '2': [ 1 ] },
+                  "loose_nodes": [],
+                  "orphan_nodes": [],
+                  "articulation_nodes": [ 1 ],
+                  "bridges": [ [ 1, 2 ], [ 0, 1 ] ],
+                  "is_cyclic": true,
+                  "all_cycles": [ [ 0, 1 ] ],
+                  "is_eulerian": 1,
+                  "eulerian_path": [ 0, 1, 2, 0 ],
+                  "is_connected": false
+                }
+      )
+    ).toBe(true);
   });
 
   it('should get edges by vertex keys', () => {
