@@ -1,8 +1,11 @@
 import Graph from '../Graph';
 import GraphVertex, { createVertices } from '../GraphVertex';
 import GraphEdge, { createEdges } from '../GraphEdge';
+
 import { arraysEqual,
         isCyclicEqual } from '../../../utils/arrays/arrays';
+
+import _ from 'lodash';
 
 console.warn = jest.fn();
 
@@ -57,6 +60,49 @@ describe('Graph', () => {
     graph.addVertices([A, B]);
 
     expect(graph.getVerticesKeys()).toEqual(['A', 'B']);
+  });
+
+  it('should get graph description object', () => {
+    const graph = new Graph();
+    const keys = ['A', 'B', 'C'];
+
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+    
+    graph.addEdges([AB, BC]);
+
+    console.log(graph.describe())
+
+    expect(_.isEqual(graph.describe(), 
+      {
+        "adjacency_list": {
+          "0": [],
+          "1": [],
+          "2": [],
+        },
+        "articulation_nodes": [],
+        "bridges": [],
+        "edges": "",
+        "is_connected": false,
+        "is_cyclic": false,
+        "is_eulerian": 0,
+        "loose_nodes": [
+          0,
+          1,
+          2,
+        ],
+        "orphan_nodes": [
+          0,
+          1,
+        2,
+        ],
+        "vertices": 'A,B,C',
+        "vertices_keys_to_indices": {
+        "A": 0,
+          "B": 1,
+          "C": 2,
+        }
+    })).toBe(true);
   });
 
   it('should get edges by vertex keys', () => {
@@ -555,6 +601,28 @@ describe('Graph', () => {
     expect(articulationPointsSet.length).toBe(2);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
     expect(articulationPointsSet[1]).toBe(vertices_indices[vertexB.getKey()]);
+  });
+
+  it('should find articulation points in simple graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+
+    const graph = new Graph();
+
+    graph
+      .addEdges([edgeAB, edgeBC, edgeCD]);
+
+    let ids = graph.convertVerticestoVerticesIndices([
+      vertexA, vertexB, vertexC, vertexD
+    ])
+    
+    expect(arraysEqual(ids, [0, 1, 2, 3])).toBe(true);
   });
 
   it('should find articulation points in simple graph with back edge', () => {
@@ -1497,6 +1565,22 @@ describe('Graph', () => {
                   assertHamiltonianCycles[3])).toBe(true)
   });
 
+  it('should return [] for all paths in a non-hamiltonian graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    
+    const graph = new Graph();
+    graph.addEdges([edgeAB, edgeBC, edgeCD]);
+    
+    expect(arraysEqual(graph.allPaths('A'), [])).toBe(true)
+  });
+  
   it('should return all eulerian paths for graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');

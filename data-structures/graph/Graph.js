@@ -257,7 +257,7 @@ export default class Graph {
    * @param {GraphVertex[]} vertices
    * @returns {String[]}
    */
-   convertVerticestoVerticesKeys(vertices) {
+  convertVerticestoVerticesKeys(vertices) {
     return vertices.map(
       (vertex) => {
         return vertex.getKey();
