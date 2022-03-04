@@ -1,5 +1,7 @@
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 
+[![codecov](https://codecov.io/gh/dot-quiver/dot-quiver-api/branch/main/graph/badge.svg?token=U6VOO56PDL)](https://codecov.io/gh/dot-quiver/dot-quiver-api)
+
 # A structure, many possibilities
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
