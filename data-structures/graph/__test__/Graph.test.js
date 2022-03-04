@@ -1404,8 +1404,57 @@ describe('Graph', () => {
       [0, 1, 2, 5, 1, 2, 3],
     ]);
   });
+  
+  it('should find hamiltonian paths in graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
 
-  it('should return all paths for eulerian graph', () => {
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAE = new GraphEdge(vertexA, vertexE);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+    const edgeBE = new GraphEdge(vertexB, vertexE);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeBD = new GraphEdge(vertexB, vertexD);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+
+    const graph = new Graph();
+    graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
+      edgeBC, edgeBD, edgeCD, edgeDE]);
+
+    const hamiltonianCycleSet = graph.getHamiltonianCycles();
+
+    expect(hamiltonianCycleSet.length).toBe(8);
+    
+    expect(hamiltonianCycleSet[0][0]).toBe(vertexA.getKey());
+    expect(hamiltonianCycleSet[0][1]).toBe(vertexB.getKey());
+    expect(hamiltonianCycleSet[0][2]).toBe(vertexE.getKey());
+    expect(hamiltonianCycleSet[0][3]).toBe(vertexD.getKey());
+    expect(hamiltonianCycleSet[0][4]).toBe(vertexC.getKey());
+
+    expect(hamiltonianCycleSet[1][0]).toBe(vertexA.getKey());
+    expect(hamiltonianCycleSet[1][1]).toBe(vertexB.getKey());
+    expect(hamiltonianCycleSet[1][2]).toBe(vertexC.getKey());
+    expect(hamiltonianCycleSet[1][3]).toBe(vertexD.getKey());
+    expect(hamiltonianCycleSet[1][4]).toBe(vertexE.getKey());
+
+    expect(hamiltonianCycleSet[2][0]).toBe(vertexA.getKey());
+    expect(hamiltonianCycleSet[2][1]).toBe(vertexE.getKey());
+    expect(hamiltonianCycleSet[2][2]).toBe(vertexB.getKey());
+    expect(hamiltonianCycleSet[2][3]).toBe(vertexD.getKey());
+    expect(hamiltonianCycleSet[2][4]).toBe(vertexC.getKey());
+
+    expect(hamiltonianCycleSet[3][0]).toBe(vertexA.getKey());
+    expect(hamiltonianCycleSet[3][1]).toBe(vertexE.getKey());
+    expect(hamiltonianCycleSet[3][2]).toBe(vertexD.getKey());
+    expect(hamiltonianCycleSet[3][3]).toBe(vertexB.getKey());
+    expect(hamiltonianCycleSet[3][4]).toBe(vertexC.getKey());
+  });
+
+  it('should return all eulerian paths for graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
