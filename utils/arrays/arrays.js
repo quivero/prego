@@ -39,7 +39,7 @@ export const isCyclicEqual = (control_, treatment_) => {
   }
 
   for (let i = 0; i < treatment_.length; i += 1) {
-    if (cyclicSort(treatment_, i) === control_) {
+    if (arraysEqual(cyclicSort(treatment_, i), control_)) {
       return true;
     }
   }
