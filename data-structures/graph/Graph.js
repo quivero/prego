@@ -9,6 +9,7 @@ import {
   cartesianProduct,
   extendedVenn,
   removeArrayDuplicates,
+  ones
 } from '../../utils/arrays/arrays.js';
 import GraphVertex from './GraphVertex.js';
 import GraphEdge from './GraphEdge.js';
@@ -899,8 +900,8 @@ export default class Graph {
 
     // pre[v]: order in which dfs examines v
     // low[v]: lowest preorder of any vertex connected to v
-    const preorder = _.repeat(-1, n_vertices).toArray();
-    const low = _.repeat(-1, n_vertices).toArray();
+    const preorder = ones(n_vertices).map((x) => -x);
+    const low = ones(n_vertices).map((x) => -x);
 
     for (const v of _.range(n_vertices)) {
       if (preorder[v] === -1) {
