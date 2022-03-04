@@ -67,7 +67,7 @@ export const arraysEqual = (a, b) => {
   return true;
 };
 
-export const ascendingSort = (arr) => {
+export const descendingSort = (arr) => {
   arr.sort((a, b) => a - b).reverse()
   
   return arr

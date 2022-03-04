@@ -5,7 +5,8 @@ import {
   getUniques,
   extendedVenn,
   arraysEqual,
-  hasElement
+  hasElement,
+  descendingSort
 } from '../arrays';
 
 console.error = jest.fn();
@@ -36,7 +37,11 @@ describe('Array', () => {
   it('Reorder elements from chain in a cyclic form', () => {
     expect(cyclicSort('ABCD', 2)).toStrictEqual('CDAB');
   });
-
+  
+  it('Returns an descending ordered array', () => {
+    expect(descendingSort([1,2,3,4,5])).toEqual([5,4,3,2,1]);
+  });
+  
   it('Returns the unique array elements', () => {
     expect(getUniques('ABCDA')).toEqual(['A', 'B', 'C', 'D']);
   });
