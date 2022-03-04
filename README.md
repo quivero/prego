@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/dot-quiver)](https://www.npmjs.com/package/dot-quiver)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/dot-quiver)
 ![Documentation Status](https://img.shields.io/npm/l/dot-quiver)
-[![Code coverage report](https://codecov.io/gh/dot-quiver/dot-quiver-api/branch/main/graph/badge.svg?token=U6VOO56PDL)](ttps://codecov.io/gh/dot-quiver/dot-quiver-api)
+[![Code coverage report](https://codecov.io/gh/dot-quiver/dot-quiver-api/branch/main/graph/badge.svg?token=U6VOO56PDL)](https://app.codecov.io/gh/dot-quiver/dot-quiver-api)
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
