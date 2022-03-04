@@ -1,3 +1,5 @@
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+
 # A structure, many possibilities
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
