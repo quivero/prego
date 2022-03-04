@@ -2,19 +2,11 @@
 A structure, many possibilities
 ====================
 
-
-.. image:: https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg
-        :target: https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md
-        :alt: StandWithUkraine
-.. image:: https://img.shields.io/npm/v/dot-quiver
-        :alt: npm version
-.. image:: https://img.shields.io/github/sponsors/dot-quiver
-        :alt: GitHub Sponsors
-.. image:: https://img.shields.io/npm/l/dot-quiver
-        :alt: Documentation Status
-.. image:: https://codecov.io/gh/dot-quiver/dot-quiver-api/branch/main/graph/badge.svg?token=U6VOO56PDL
-        :target: https://codecov.io/gh/dot-quiver/dot-quiver-api
-        :alt: Code coverage report
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+[![npm version](https://img.shields.io/npm/v/dot-quiver)]
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/dot-quiver)]
+[![Documentation Status](https://img.shields.io/npm/l/dot-quiver)]
+[![Code coverage report](https://codecov.io/gh/dot-quiver/dot-quiver-api/branch/main/graph/badge.svg?token=U6VOO56PDL)][https://codecov.io/gh/dot-quiver/dot-quiver-api]
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
