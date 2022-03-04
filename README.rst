@@ -1,5 +1,7 @@
+====================
 A structure, many possibilities
 ====================
+
 
 .. image:: https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg
         :target: https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md
