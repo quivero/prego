@@ -46,22 +46,13 @@ export const isCyclicEqual = (control_, treatment_) => {
 };
 
 export const arraysEqual = (a, b) => {
-  if (typeof (a) === 'number' && typeof (b) === 'number') {
-    return a === b;
+  let type_equality_clause = typeof(a) === typeof(b)
+
+  if (type_equality_clause) {
+    return JSON.stringify(a) === JSON.stringify(b) ;
+  } else {
+    return false
   }
-
-  if (a == null || b == null) return false;
-  if (a.length !== b.length) return false;
-
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  // Please note that calling sort on an array will modify that array.
-  // you might want to clone your array first.
-
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
 };
 
 export const descendingSort = (arr) => {
