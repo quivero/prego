@@ -3,7 +3,7 @@ import PriorityQueue from '../PriorityQueue';
 describe('PriorityQueue', () => {
   it('should create default priority queue', () => {
     const priorityQueue = new PriorityQueue();
-    
+
     expect(priorityQueue).toBeDefined();
   });
 
@@ -36,7 +36,7 @@ describe('PriorityQueue', () => {
     priorityQueue.add(user3, 0);
     expect(priorityQueue.peek()).toBe(user3);
   });
-  
+
   it('should poll from queue with respect to priorities', () => {
     const priorityQueue = new PriorityQueue();
 

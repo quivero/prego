@@ -1,9 +1,7 @@
 import 'lodash.combinations';
 import _ from 'lodash';
 
-export const ones = (n) => {
-  return Array(n).fill(1)
-} 
+export const ones = (n) => Array(n).fill(1);
 
 export const getAllIndexes = (arr, val) => {
   const indexes = [];
@@ -48,9 +46,8 @@ export const isCyclicEqual = (control_, treatment_) => {
 };
 
 export const arraysEqual = (a, b) => {
-  
-  if(typeof(a) === 'number' && typeof(b) === 'number') {
-    return a === b
+  if (typeof (a) === 'number' && typeof (b) === 'number') {
+    return a === b;
   }
 
   if (a == null || b == null) return false;
@@ -68,20 +65,20 @@ export const arraysEqual = (a, b) => {
 };
 
 export const descendingSort = (arr) => {
-  arr.sort((a, b) => a - b).reverse()
-  
-  return arr
-}
+  arr.sort((a, b) => a - b).reverse();
+
+  return arr;
+};
 
 export const hasElement = (arr, elem) => {
-  for(let i = 0; i <= arr.length; i += 1) {
-    if(arraysEqual(arr[i], elem)) {
+  for (let i = 0; i <= arr.length; i += 1) {
+    if (arraysEqual(arr[i], elem)) {
       return true;
     }
   }
 
-  return false
-}
+  return false;
+};
 
 // Cartesian product of arrays
 export const cartesianProduct = (a, b, ...c) => {

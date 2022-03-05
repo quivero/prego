@@ -1,11 +1,12 @@
+import _ from 'lodash';
 import Graph from '../Graph';
 import GraphVertex, { createVertices } from '../GraphVertex';
 import GraphEdge, { createEdges } from '../GraphEdge';
 
-import { arraysEqual,
-        isCyclicEqual } from '../../../utils/arrays/arrays';
-
-import _ from 'lodash';
+import {
+  arraysEqual,
+  isCyclicEqual,
+} from '../../../utils/arrays/arrays';
 
 console.warn = jest.fn();
 
@@ -68,27 +69,28 @@ describe('Graph', () => {
 
     const [A, B, C] = createVertices(keys);
     const [AB, BC] = createEdges([[A, B], [B, C]]);
-    
+
     graph.addEdges([AB, BC]);
-    
+
     expect(
-      _.isEqual(graph.describe(), 
-                {
-                  "vertices": 'A,B,C',
-                  "edges": 'A_B,B_C',
-                  "vertices_keys_to_indices": { A: 0, B: 1, C: 2 },
-                  "adjacency_list": { '0': [ 1 ], '1': [ 0, 2 ], '2': [ 1 ] },
-                  "loose_nodes": [],
-                  "orphan_nodes": [],
-                  "articulation_nodes": [ 1 ],
-                  "bridges": [ [ 1, 2 ], [ 0, 1 ] ],
-                  "is_cyclic": true,
-                  "all_cycles": [ [ 0, 1 ] ],
-                  "is_eulerian": 1,
-                  "eulerian_path": [ 0, 1, 2, 0 ],
-                  "is_connected": false
-                }
-      )
+      _.isEqual(
+        graph.describe(),
+        {
+          vertices: 'A,B,C',
+          edges: 'A_B,B_C',
+          vertices_keys_to_indices: { A: 0, B: 1, C: 2 },
+          adjacency_list: { 0: [1], 1: [0, 2], 2: [1] },
+          loose_nodes: [],
+          orphan_nodes: [],
+          articulation_nodes: [1],
+          bridges: [[1, 2], [0, 1]],
+          is_cyclic: true,
+          all_cycles: [[0, 1]],
+          is_eulerian: 1,
+          eulerian_path: [0, 1, 2, 0],
+          is_connected: false,
+        },
+      ),
     ).toBe(true);
   });
 
@@ -605,10 +607,10 @@ describe('Graph', () => {
     graph
       .addEdges([edgeAB, edgeBC, edgeCD]);
 
-    let ids = graph.convertVerticestoVerticesIndices([
-      vertexA, vertexB, vertexC, vertexD
-    ])
-    
+    const ids = graph.convertVerticestoVerticesIndices([
+      vertexA, vertexB, vertexC, vertexD,
+    ]);
+
     expect(arraysEqual(ids, [0, 1, 2, 3])).toBe(true);
   });
 
@@ -1461,7 +1463,7 @@ describe('Graph', () => {
       [0, 1, 2, 5, 1, 2, 3],
     ]);
   });
-  
+
   it('should find hamiltonian paths in graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
@@ -1481,13 +1483,13 @@ describe('Graph', () => {
     const graph = new Graph();
     graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
       edgeBC, edgeBD, edgeCD, edgeDE]);
-    
-    let keysToIds = graph.getVerticesKeystoIndices()
-    
+
+    const keysToIds = graph.getVerticesKeystoIndices();
+
     const hamiltonianCycleSet = graph.getHamiltonianCycles();
-    
+
     expect(hamiltonianCycleSet.length).toBe(8);
-    
+
     expect(hamiltonianCycleSet[0][0]).toBe(keysToIds[vertexA.getKey()]);
     expect(hamiltonianCycleSet[0][1]).toBe(keysToIds[vertexB.getKey()]);
     expect(hamiltonianCycleSet[0][2]).toBe(keysToIds[vertexE.getKey()]);
@@ -1532,24 +1534,36 @@ describe('Graph', () => {
     const graph = new Graph();
     graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
       edgeBC, edgeBD, edgeCD, edgeDE]);
-    
+
     const assertHamiltonianCycles = graph.getHamiltonianCycles();
     const hamiltonianCycleSet = graph.allPaths('C');
-    
+
     expect(hamiltonianCycleSet.length).toBe(8);
-    
+
     expect(
-      isCyclicEqual(hamiltonianCycleSet[0].slice(1), 
-                  assertHamiltonianCycles[0])).toBe(true);
+      isCyclicEqual(
+        hamiltonianCycleSet[0].slice(1),
+        assertHamiltonianCycles[0],
+      ),
+    ).toBe(true);
     expect(
-      isCyclicEqual(hamiltonianCycleSet[1].slice(1), 
-                  assertHamiltonianCycles[1])).toBe(true)
+      isCyclicEqual(
+        hamiltonianCycleSet[1].slice(1),
+        assertHamiltonianCycles[1],
+      ),
+    ).toBe(true);
     expect(
-      isCyclicEqual(hamiltonianCycleSet[2].slice(1), 
-                  assertHamiltonianCycles[2])).toBe(true)
+      isCyclicEqual(
+        hamiltonianCycleSet[2].slice(1),
+        assertHamiltonianCycles[2],
+      ),
+    ).toBe(true);
     expect(
-      isCyclicEqual(hamiltonianCycleSet[3].slice(1), 
-                  assertHamiltonianCycles[3])).toBe(true)
+      isCyclicEqual(
+        hamiltonianCycleSet[3].slice(1),
+        assertHamiltonianCycles[3],
+      ),
+    ).toBe(true);
   });
 
   it('should return [] for all paths in a non-hamiltonian graph', () => {
@@ -1557,17 +1571,17 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
     const vertexD = new GraphVertex('D');
-    
+
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
     const edgeCD = new GraphEdge(vertexC, vertexD);
-    
+
     const graph = new Graph();
     graph.addEdges([edgeAB, edgeBC, edgeCD]);
-    
-    expect(arraysEqual(graph.allPaths('A'), [])).toBe(true)
+
+    expect(arraysEqual(graph.allPaths('A'), [])).toBe(true);
   });
-  
+
   it('should return all eulerian paths for graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');

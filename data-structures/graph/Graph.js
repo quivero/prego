@@ -14,7 +14,7 @@ import {
   extendedVenn,
   removeArrayDuplicates,
   ones,
-  getAllIndexes
+  getAllIndexes,
 } from '../../utils/arrays/arrays.js';
 
 import GraphVertex from './GraphVertex.js';
@@ -22,6 +22,7 @@ import GraphEdge from './GraphEdge.js';
 
 export default class Graph {
   #cycles;
+
   #density;
 
   /**
@@ -259,9 +260,7 @@ export default class Graph {
    */
   convertVerticestoVerticesKeys(vertices) {
     return vertices.map(
-      (vertex) => {
-        return vertex.getKey();
-      }
+      (vertex) => vertex.getKey(),
     );
   }
 
@@ -269,10 +268,10 @@ export default class Graph {
    * @param {GraphVertex[]} vertices
    * @returns {String[]}
    */
-   convertVerticestoVerticesIndices(vertices) {
+  convertVerticestoVerticesIndices(vertices) {
     return this.convertVerticesKeystoIndexes(
-      this.convertVerticestoVerticesKeys(vertices)
-    )
+      this.convertVerticestoVerticesKeys(vertices),
+    );
   }
 
   /**
@@ -713,15 +712,13 @@ export default class Graph {
   }
 
   getHamiltonianCycles() {
-    let hamiltonian_cycles = hamiltonianCycle(this);
+    const hamiltonian_cycles = hamiltonianCycle(this);
 
     return hamiltonian_cycles.map(
-      (hamiltonian_cycle) => {
-        return this.convertVerticesKeystoIndexes(
-          this.convertVerticestoVerticesKeys(hamiltonian_cycle)
-        )
-      }
-    )
+      (hamiltonian_cycle) => this.convertVerticesKeystoIndexes(
+        this.convertVerticestoVerticesKeys(hamiltonian_cycle),
+      ),
+    );
   }
 
   getStronglyConnectedComponents() {
@@ -1446,7 +1443,7 @@ export default class Graph {
         cycle_subgraph.deleteEdge(subgraph_edge);
       }
     }
-    
+
     // New routes may come from out-in flow cyclic paths
     let new_route = [];
     for (const combination of cartesianProduct(outflow_nodes, inflow_nodes)) {
@@ -1485,33 +1482,31 @@ export default class Graph {
     return new_routes;
   }
 
-  allPaths(from_key, to_key=from_key) {
+  allPaths(from_key, to_key = from_key) {
     if (!this.isCyclic()) {
       return this.acyclicPaths(from_key, to_key);
     }
 
-    let from_id = this.getVertexIndex(this.vertices[from_key]);
-    
+    const from_id = this.getVertexIndex(this.vertices[from_key]);
+
     let acyclic_paths = [];
     if (from_key === to_key) {
-      let hamiltonian_cycles = this.getHamiltonianCycles()
+      const hamiltonian_cycles = this.getHamiltonianCycles();
 
       if (hamiltonian_cycles.length === 0) {
         return [];
-      } else {
-        return hamiltonian_cycles.map((hamiltonian_cycle) => {
-          let id = getAllIndexes(hamiltonian_cycle, from_id)
-          
-          id=id[0]
-
-          return hamiltonian_cycle.slice(id).concat(
-              hamiltonian_cycle.slice(0, id)
-            ).concat(from_id)
-        })
       }
-    } else {
-      acyclic_paths = this.acyclicPaths(from_key, to_key);
+      return hamiltonian_cycles.map((hamiltonian_cycle) => {
+        let id = getAllIndexes(hamiltonian_cycle, from_id);
+
+        id = id[0];
+
+        return hamiltonian_cycle.slice(id).concat(
+          hamiltonian_cycle.slice(0, id),
+        ).concat(from_id);
+      });
     }
+    acyclic_paths = this.acyclicPaths(from_key, to_key);
 
     const cycle_indices = this.getCycleIndices();
     const cycles_venn = this.getCyclesVenn(cycle_indices);

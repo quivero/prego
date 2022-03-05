@@ -6,7 +6,7 @@ import {
   extendedVenn,
   arraysEqual,
   hasElement,
-  descendingSort
+  descendingSort,
 } from '../arrays';
 
 console.error = jest.fn();
@@ -37,11 +37,11 @@ describe('Array', () => {
   it('Reorder elements from chain in a cyclic form', () => {
     expect(cyclicSort('ABCD', 2)).toStrictEqual('CDAB');
   });
-  
+
   it('Returns an descending ordered array', () => {
-    expect(descendingSort([1,2,3,4,5])).toEqual([5,4,3,2,1]);
+    expect(descendingSort([1, 2, 3, 4, 5])).toEqual([5, 4, 3, 2, 1]);
   });
-  
+
   it('Returns the unique array elements', () => {
     expect(getUniques('ABCDA')).toEqual(['A', 'B', 'C', 'D']);
   });
@@ -71,7 +71,7 @@ describe('hasElement', () => {
   it('should return true for element on array', () => {
     expect(hasElement([1, 2, 3], 3)).toStrictEqual(true);
   });
-  
+
   it('should return true for array on array of elements', () => {
     expect(hasElement([[1, 2], [1, 2, 3]], [1, 2])).toStrictEqual(true);
   });

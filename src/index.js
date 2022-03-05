@@ -50,14 +50,13 @@ app.get('/', (req, res) => {
         total_paths_len += paths[blueprints_fnames[i]].length;
       }
     }
-    
+
     res.send(
       {
         length: total_paths_len,
         blueprints: paths,
       },
     );
-    
   } else {
     const blueprint_fname = 'generate_number.json';
 
@@ -65,7 +64,7 @@ app.get('/', (req, res) => {
     const blueprint = require(fname);
 
     const route_describe = fromStartToFinishCombsAllPaths(blueprint);
-    
+
     res.send(partitions(100, 20));
   }
 });
