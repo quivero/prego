@@ -46,15 +46,15 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 
 1. data-structures/graph/Graph.js:
 
-    [ ] isChain(vertices_indices_path)
-    [ ] isChain(vertices_indices_path)
-    [ ] isEmpty(vertices_indices_path)
-    [x] girth()
-    [ ] isTraceable()
-    [ ] isreachable(from_vertex, to_vertex)
-    [ ] isHamiltonian()
-    [ ] isPredecessor(vertex)
-    [ ] volume(vertices_indices)
+    - [ ] isChain(vertices_indices_path)
+    - [ ] isChain(vertices_indices_path)
+    - [ ] isEmpty(vertices_indices_path)
+    - [x] girth()
+    - [ ] isTraceable()
+    - [ ] isreachable(from_vertex, to_vertex)
+    - [ ] isHamiltonian()
+    - [ ] isPredecessor(vertex)
+    - [ ] volume(vertices_indices)
 
 2. data-structures/graph/Chain.js
 
