@@ -42,7 +42,7 @@ You must follow the instructions below
 
 ### As a Package
 
-A glossary with implementation possibilities is available [here](https://en.wikipedia.org/wiki/Glossary_of_graph_theory). The library's author is able sofar to obtain the following ideas from it:
+A glossary with implementation possibilities is available [here](https://en.wikipedia.org/wiki/Glossary_of_graph_theory). The author of this library is able sofar to obtain the following ideas from it:
 
 1. data-structures/graph/Graph.js:
 
