@@ -50,9 +50,9 @@ A glossary with implementation possibilities is available [here](https://en.wiki
     - [ ] isEmpty()
     - [x] girth()
     - [ ] isTraceable()
-    - [ ] isreachable(from_vertex, to_vertex)
+    - [ ] isReachable(from_vertex, to_vertex)
     - [ ] isHamiltonian()
-    - [ ] isPredecessor(vertex)
+    - [ ] isPredecessor(vertex, candidate)
     - [ ] volume(vertices_indices)
 
 2. data-structures/graph/Chain.js
