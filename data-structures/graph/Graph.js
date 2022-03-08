@@ -340,6 +340,14 @@ export default class Graph {
 
     return adjList;
   }
+  
+  getInOutDegreeList(type = 0) {
+    const adjList = getAdjacencyList(type)
+    
+    return objectMap(adjList, (value) => {
+      return value.length
+    })   
+  }
 
   /**
    * @abstract looseNodes are vertices without to-nodes
