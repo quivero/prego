@@ -40,7 +40,25 @@ You must follow the instructions below
 
 ## Backlog
 
-```dot-quiver``` as a service
+- Package: https://en.wikipedia.org/wiki/Glossary_of_graph_theory
+
+1. data-structures/graph/Graph.js:
+
+    a. isChain(vertices_indices_path)
+    b. isChain(vertices_indices_path)
+    c. isEmpty(vertices_indices_path)
+    d. girth()
+    e. isTraceable()
+    f. isreachable(from_vertex, to_vertex)
+    g. isHamiltonian()
+    h. isPredecessor(vertex)
+    i. volume(vertices_indices)
+
+1. data-structures/graph/Chain.js
+
+2. data-structures/utils/graph/graph.js -> {petersonCycles}
+
+- Service
 
 1. Add router to handle multiple use cases;
 2. Add a docker-compose.yaml to ```up``` application
