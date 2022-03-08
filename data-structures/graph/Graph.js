@@ -17,8 +17,8 @@ import {
   getAllIndexes,
 } from '../../utils/arrays/arrays.js';
 
-import { 
-  objectMap 
+import {
+  objectMap,
 } from '../../utils/objects/objects.js';
 
 import GraphVertex from './GraphVertex.js';
@@ -71,7 +71,7 @@ export default class Graph {
       console.warn('Warning: Vertex has already been added before. Please, choose other key!');
       return;
     }
-    
+
     this.vertices[newVertex.getKey()] = newVertex;
     return this;
   }
@@ -340,13 +340,11 @@ export default class Graph {
 
     return adjList;
   }
-  
+
   getInOutDegreeList(type = 0) {
-    const adjList = getAdjacencyList(type)
-    
-    return objectMap(adjList, (value) => {
-      return value.length
-    })   
+    const adjList = getAdjacencyList(type);
+
+    return objectMap(adjList, (value) => value.length);
   }
 
   /**
@@ -406,6 +404,7 @@ export default class Graph {
       console.warn('Warning: Edge has already been added before. Please, choose other key!');
       return;
     }
+
     this.edges[edge.getKey()] = edge;
 
     const startVertex = this.getVertexByKey(edge.startVertex.getKey());

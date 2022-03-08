@@ -55,40 +55,49 @@ export const partitions = (n_points, n_blobs) => {
 };
 
 export const cardvecCombinations = (points, card_vec) => {
-  let elem_0 = card_vec[0]
-  let blob_combs = []
-  let blob_comb = []
-  let elem_1_combs = []
-  
-  if(points.length !== card_vec.reduce((a, b) => {return a+b})){
-    throw Error('The sum of card_vec elements MUST be equal to points cardinality')
-  }
-  
-  if(card_vec.length===1) {
-    return [points]
+  const elem_0 = card_vec[0];
+  const blob_combs = [];
+  let blob_comb = [];
+  let elem_1_combs = [];
+
+  if (points.length !== card_vec.reduce((a, b) => a + b)) {
+    throw Error('The sum of card_vec elements MUST be equal to points cardinality');
   }
 
-  for(let elem_0_comb of _.combinations(points, elem_0)) {
-    
-    blob_comb = [elem_0_comb]
-    
-    elem_1_combs = cardvecCombinations(
-      _.difference(points, elem_0_comb), card_vec.slice(1)
-    )
-    
-    blob_comb.push(elem_1_combs)
-    blob_combs.push(blob_comb)
-  }
-  
-  return blob_combs
-}
-
-/* 
-export const constellationSeeker = (points, origin) => {
-  if(origin in points) {
-    throw Error('Origin MUST be within points!')
+  if (card_vec.length === 1) {
+    return [points];
   }
 
-  return []
-}
-*/
+  console.log(`card_vec: ${card_vec}`);
+
+  for (const elem_0_comb of _.combinations(points, elem_0)) {
+    blob_comb = [elem_0_comb];
+
+    elem_1_combs = cardvecCombinations(_.difference(points, elem_0_comb), card_vec.slice(1));
+
+    blob_comb.push(elem_1_combs);
+
+    blob_combs.push(blob_comb);
+  }
+
+  return blob_combs;
+};
+
+export const constellationSeeker = (points, n_blobs, origin) => {
+  if (!points.includes(origin)) {
+    throw Error('Origin MUST be within points!');
+  }
+
+  if (points.length < n_blobs) {
+    throw Error('Number of points MUST be greater than number of blobs');
+  }
+
+  const points_ = _.difference(points, origin);
+  let comb = [];
+
+  for (const comb_vec of partitions(points_.length, n_blobs)) {
+    comb = cardvecCombinations(points_, comb_vec);
+  }
+
+  return [];
+};

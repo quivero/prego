@@ -46,13 +46,12 @@ export const isCyclicEqual = (control_, treatment_) => {
 };
 
 export const arraysEqual = (a, b) => {
-  let type_equality_clause = typeof(a) === typeof(b)
+  const type_equality_clause = typeof (a) === typeof (b);
 
   if (type_equality_clause) {
-    return JSON.stringify(a) === JSON.stringify(b) ;
-  } else {
-    return false
+    return JSON.stringify(a) === JSON.stringify(b);
   }
+  return false;
 };
 
 export const descendingSort = (arr) => {
