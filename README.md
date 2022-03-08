@@ -47,8 +47,7 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 1. data-structures/graph/Graph.js:
 
     - [ ] isChain(vertices_indices_path)
-    - [ ] isChain(vertices_indices_path)
-    - [ ] isEmpty(vertices_indices_path)
+    - [ ] isEmpty()
     - [x] girth()
     - [ ] isTraceable()
     - [ ] isreachable(from_vertex, to_vertex)
