@@ -40,25 +40,35 @@ You must follow the instructions below
 
 ## Backlog
 
-- Package: https://en.wikipedia.org/wiki/Glossary_of_graph_theory
+### As a Package
+
+A glossary with implementation possibilities is available [here](https://en.wikipedia.org/wiki/Glossary_of_graph_theory). The library's author is able sofar to obtain the following ideas from it:
 
 1. data-structures/graph/Graph.js:
 
     a. isChain(vertices_indices_path)
+    
     b. isChain(vertices_indices_path)
+    
     c. isEmpty(vertices_indices_path)
+    
     d. girth()
+    
     e. isTraceable()
+    
     f. isreachable(from_vertex, to_vertex)
+    
     g. isHamiltonian()
+    
     h. isPredecessor(vertex)
+    
     i. volume(vertices_indices)
 
 1. data-structures/graph/Chain.js
 
 2. data-structures/utils/graph/graph.js -> {petersonCycles}
 
-- Service
+### As a Service
 
 1. Add router to handle multiple use cases;
 2. Add a docker-compose.yaml to ```up``` application
