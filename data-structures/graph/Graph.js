@@ -17,6 +17,10 @@ import {
   getAllIndexes,
 } from '../../utils/arrays/arrays.js';
 
+import { 
+  objectMap 
+} from '../../utils/objects/objects.js';
+
 import GraphVertex from './GraphVertex.js';
 import GraphEdge from './GraphEdge.js';
 
@@ -62,6 +66,12 @@ export default class Graph {
    * @returns {Graph}
    */
   addVertex(newVertex) {
+    // Check if vertex has been already added.
+    if (this.vertices[newVertex.getKey()]) {
+      console.warn('Warning: Vertex has already been added before. Please, choose other key!');
+      return;
+    }
+    
     this.vertices[newVertex.getKey()] = newVertex;
     return this;
   }
