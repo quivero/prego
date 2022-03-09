@@ -6,7 +6,11 @@ export const objectMap = (object, mapFn) => Object.keys(object).reduce((result, 
 }, {});
 
 export const initObject = (keys, init_value) => {
+  let a = [], total = keys.length;
+  
+  while(total--) a.push([]);
+
   return Object.fromEntries(
-    zip(keys, _.repeat(init_value, keys.length))
+    zip(keys, [...a])
   )
 }
