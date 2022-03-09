@@ -46,18 +46,18 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 
 1. data-structures/graph/Graph.js:
 
-    - [ ] isChain(vertices_indices_path)
-    - [ ] isEmpty()
+    - [x] isChain(vertices_indices_path)
+    - [x] isEmpty()
     - [x] girth()
-    - [ ] isTraceable()
-    - [ ] isReachable(from_vertex, to_vertex)
-    - [ ] isHamiltonian()
-    - [ ] isPredecessor(vertex, candidate)
-    - [ ] volume(vertices_indices)
+    - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
+    - [x] isReachable(from_vertex, to_vertex):
+    - [ ] isHamiltonian(): 
+    - [x] isPredecessor(vertex, candidate):
+    - [x] getReachibilityList(type = 0)
+    - [x] getReachibilityVenn(type = 0)
+    - [ ] volume(vertices_indices):
 
-2. data-structures/graph/Chain.js
-
-3. data-structures/utils/graph/graph.js -> {petersonCycles}
+4. data-structures/utils/graph/graph.js -> {petersonCycles}
 
 ### As a Service
 
