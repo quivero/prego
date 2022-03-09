@@ -1213,7 +1213,7 @@ describe('Graph', () => {
 
     graph.addEdges([edgeAB, edgeAC]);
 
-    expect(graph.reachableNodes('A')).toEqual([1, 2, 3]);
+    expect(graph.reachableNodes('A')).toEqual([2, 3]);
   });
 
   it('should return from-reachability list of all nodes', () => {
@@ -1233,10 +1233,10 @@ describe('Graph', () => {
 
     expect(graph.getReachabilityList(0)).toEqual(
       {
-        0: [0, 1, 2],
-        1: [1],
-        2: [2],
-        3: [3],
+        0: [1, 2],
+        1: [],
+        2: [],
+        3: [],
       },
     );
   });
@@ -1259,8 +1259,8 @@ describe('Graph', () => {
     expect(graph.getReachabilityList(1)).toEqual(
       {
         0: [],
-        1: [1],
-        2: [1],
+        1: [0],
+        2: [0],
         3: [],
       },
     );

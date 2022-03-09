@@ -1417,7 +1417,10 @@ export default class Graph {
     while (queue_.length > 0) {
       // Dequeue a vertex from queue
       const u = queue_.dequeue();
-      reachableNodes.push(u);
+
+      if((src !== u) || (src === u && adjList[src].includes(u))) {
+        reachableNodes.push(u);
+      }
 
       // Get all adjacent vertices of the dequeued vertex u.
       // If a adjacent has not been visited, then mark it visited and enqueue it
