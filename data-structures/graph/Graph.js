@@ -404,7 +404,7 @@ export default class Graph {
 
     return orphan_nodes;
   }
-
+  
   /**
    * @param {GraphEdge} edge
    * @returns {Graph}
@@ -1284,7 +1284,7 @@ export default class Graph {
    * @return {Array[Array]} cycle
    */
   girph() {
-    return Math.min(cyclicCircuits().map((cycle) => { return cycle.length }))
+    return Math.min(...this.cyclicCircuits().map((cycle) => { return cycle.length }))
   }
 
   /**
@@ -1469,7 +1469,7 @@ export default class Graph {
     
     vertices_indices.forEach((vertex_index) => {
       reachability_list[vertex_index] = this.reachableNodes(
-        this.convertVerticesKeystoIndexes([from_vertex_key]))
+        this.convertVerticesIndexestoKeys([vertex_index]))
     });
     
     if(type == 0) {
@@ -1478,11 +1478,17 @@ export default class Graph {
     } else {
       let incoming_list = initObject(vertices_indices, [])
       
-      vertices_indices.forEach((vertex_index) => {
-        reachability_list[vertex_index].forEach((reachable_index_from_vertex_id) => {
-          incoming_list[reachable_index_from_vertex_id].push(vertex_index)
-        })
-      })
+      for(let from_vertex_id of vertices_indices) {
+        for(let to_vertex_id of reachability_list[from_vertex_id]) {
+          
+          if(!incoming_list[to_vertex_id].includes(Number(from_vertex_id))) {
+            incoming_list[to_vertex_id].push(Number(from_vertex_id))
+          }
+        }
+      }
+      
+      
+      return incoming_list
     }
   }
 
@@ -1496,17 +1502,6 @@ export default class Graph {
    reachabilityVenn(type = 0) {
      return extendedVenn(this.getReachabilityList(type))
    }
-
-  /**
-   * @abstract returns the reachability list. 
-   *  - type := 0 : 
-   *  - type := 1 : 
-   * @param {string} from_vertex_key: source node
-   * @return {Array} reachableNodes
-   */
-  getReachabilityVenn(type = 0) {
-
-  }
 
   /**
    * @abstract returns true if to_vertex_key is reachable from from_vertex_key

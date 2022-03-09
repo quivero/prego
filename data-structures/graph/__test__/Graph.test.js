@@ -52,7 +52,7 @@ describe('Graph', () => {
 
     expect(vertices_index).toEqual(['A', 'B']);
   });
-
+  
   it('should get vertices keys', () => {
     const graph = new Graph();
 
