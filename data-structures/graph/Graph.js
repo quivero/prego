@@ -353,7 +353,7 @@ export default class Graph {
    * @return {object}
    */
   getInOutDegreeList(type = 0) {
-    const adjList = getAdjacencyList(type);
+    const adjList = this.getAdjacencyList(type);
 
     return objectMap(adjList, (value) => value.length);
   }
