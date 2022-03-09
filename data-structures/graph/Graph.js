@@ -68,12 +68,11 @@ export default class Graph {
    */
   addVertex(newVertex) {
     // Check if vertex has been already added.
-    if (this.vertices[newVertex.getKey()]) {
-      console.warn('Warning: Vertex has already been added before. Please, choose other key!');
-      return;
+    if (Object.keys(this.vertices).includes(newVertex.value)) {
+      throw Error('Vertex has already been added before. Please, choose other key!');
     }
 
-    this.vertices[newVertex.getKey()] = newVertex;
+    this.vertices[newVertex.value] = newVertex;
     return this;
   }
 
@@ -1844,10 +1843,10 @@ export default class Graph {
    */
   isChain(chain_candidate) {
     let is_chain = true;
-    let adjList = getAdjacencyList(0)
+    let adjList = this.getAdjacencyList(0)
 
     for(let i=0; i<chain_candidate.length-1; i+=1) {
-      is_chain &= adjList[chain_candidate[i]].includes(chain_candidate[i+1])
+      is_chain &&= adjList[chain_candidate[i]].includes(chain_candidate[i+1])
     }
 
     return is_chain

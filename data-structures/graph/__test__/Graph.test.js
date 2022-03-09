@@ -63,6 +63,18 @@ describe('Graph', () => {
     expect(graph.getVerticesKeys()).toEqual(['A', 'B']);
   });
 
+  it('should throw a warning for added repeated vertices', () => {
+    function addRepeatedEdge() {
+      const graph = new Graph();
+
+      const [A] = createVertices(['A']);
+      graph.addVertex(A);
+      graph.addVertex(A);
+    }
+
+    expect(addRepeatedEdge).toThrow('Vertex has already been added before. Please, choose other key!');
+  });
+
   it('should get graph description object', () => {
     const graph = new Graph();
     const keys = ['A', 'B', 'C'];
