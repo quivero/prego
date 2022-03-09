@@ -1,10 +1,10 @@
-import { 
+import {
   objectMap,
-  initObject 
+  initObject,
 } from '../objects.js';
 
-import { 
-  arraysEqual
+import {
+  arraysEqual,
 } from '../../arrays/arrays.js';
 
 describe('objects', () => {
@@ -16,10 +16,10 @@ describe('objects', () => {
       '{\"a\":2,\"b\":4,\"c\":6}',
     );
   });
-  
+
   it('should return an object initializer', () => {
     const newObject = initObject(['a', 'b'], []);
-  
+
     expect(arraysEqual(Object.keys(newObject), ['a', 'b'])).toBe(true);
   });
 });

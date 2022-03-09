@@ -52,7 +52,7 @@ describe('Graph', () => {
 
     expect(vertices_index).toEqual(['A', 'B']);
   });
-  
+
   it('should get vertices keys', () => {
     const graph = new Graph();
 
@@ -169,7 +169,7 @@ describe('Graph', () => {
     const [AB] = createEdges([[A, B]]);
 
     // Add edges
-    graph.addEdges([AB]);    
+    graph.addEdges([AB]);
 
     expect(graph.isEmpty()).toEqual(false);
   });
@@ -585,7 +585,7 @@ describe('Graph', () => {
 
     graph.addEdges([edgeAB, edgeBC, edgeCD,
       edgeDE, edgeEF, edgeFA]);
-    
+
     expect(graph.getInOutDegreeList(0)).toEqual({
       0: 1,
       1: 1,
@@ -616,32 +616,33 @@ describe('Graph', () => {
     const [
       AD, AE, AF,
       BD, BE, BF,
-      CD, CE, CF, 
+      CD, CE, CF,
       DA, DB, DC,
       EA, EB, EC,
-      FA, FB, FC
+      FA, FB, FC,
     ] = createEdges(
       [
-        [A, D], [A, E], [A, F], 
+        [A, D], [A, E], [A, F],
         [B, D], [B, E], [B, F],
-        [C, D], [C, E], [C, F], 
+        [C, D], [C, E], [C, F],
         [D, A], [D, B], [D, C],
         [E, A], [E, B], [E, C],
-        [F, A], [F, B], [F, C]
-      ]);
-      
+        [F, A], [F, B], [F, C],
+      ],
+    );
+
     // Add edges
     graph.addEdges(
       [
         AD, AE, AF,
         BD, BE, BF,
-        CD, CE, CF, 
+        CD, CE, CF,
         DA, DB, DC,
         EA, EB, EC,
-        FA, FB, FC
-      ]
+        FA, FB, FC,
+      ],
     );
-    
+
     expect(graph.isBipartite()).toEqual(true);
   });
 
@@ -654,12 +655,12 @@ describe('Graph', () => {
 
     // Edges
     const [AB, AC, BC, BD, DE, DF, FE] = createEdges(
-      [[A, B], [A, C], [B, C], [B, D], [D, E], [D, F], [F, E]]
+      [[A, B], [A, C], [B, C], [B, D], [D, E], [D, F], [F, E]],
     );
-    
+
     // Add edges
-    graph.addEdges([ AB, AC, BC, BD, DE, DF, FE]);
-    
+    graph.addEdges([AB, AC, BC, BD, DE, DF, FE]);
+
     expect(graph.isBipartite()).toEqual(false);
   });
 
@@ -1232,11 +1233,11 @@ describe('Graph', () => {
 
     expect(graph.getReachabilityList(0)).toEqual(
       {
-        '0' : [0, 1, 2],
-        '1' : [1],
-        '2' : [2],
-        '3' : [3]
-      }
+        0: [0, 1, 2],
+        1: [1],
+        2: [2],
+        3: [3],
+      },
     );
   });
 
@@ -1257,11 +1258,11 @@ describe('Graph', () => {
 
     expect(graph.getReachabilityList(1)).toEqual(
       {
-        '0' : [],
-        '1' : [1],
-        '2' : [1],
-        '3' : []
-      }
+        0: [],
+        1: [1],
+        2: [1],
+        3: [],
+      },
     );
   });
 
@@ -1519,7 +1520,7 @@ describe('Graph', () => {
 
   it('should return size of smallest cycle', () => {
     const graph_ = new Graph(true);
-    
+
     // Nodes
     const A = new GraphVertex('A');
     const B = new GraphVertex('B');

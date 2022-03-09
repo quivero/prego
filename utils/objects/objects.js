@@ -1,4 +1,4 @@
-import _, { zip } from 'lodash'
+import _, { zip } from 'lodash';
 
 export const objectMap = (object, mapFn) => Object.keys(object).reduce((result, key) => {
   result[key] = mapFn(object[key]);
@@ -6,11 +6,12 @@ export const objectMap = (object, mapFn) => Object.keys(object).reduce((result, 
 }, {});
 
 export const initObject = (keys, init_value) => {
-  let a = [], total = keys.length;
+  const a = [];
+  let total = keys.length;
   
-  while(total--) a.push([]);
-
+  while (total--) a.push([]);
+  
   return Object.fromEntries(
-    zip(keys, [...a])
-  )
-}
+    zip(keys, [...a]),
+  );
+};
