@@ -106,6 +106,74 @@ describe('Graph', () => {
     ).toBe(true);
   });
 
+  it('should return true for a valid chain', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Vertices
+    const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
+
+    // Edges
+    const [AB, BC, CD, CE,
+      EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
+      [E, B], [C, F], [F, B]]);
+
+    // Add edges
+    graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+
+    expect(graph.isChain([0, 1, 2, 3])).toBe(true);
+  });
+
+  it('should return false for a invalid chain', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Vertices
+    const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
+
+    // Edges
+    const [AB, BC, CD, CE,
+      EB, CF, FB] = createEdges([[A, B], [B, C], [C, D], [C, E],
+      [E, B], [C, F], [F, B]]);
+
+    // Add edges
+    graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+
+    expect(graph.isChain([0, 1, 2, 1])).toEqual(false);
+  });
+
+  it('should return true for a empty graph', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Vertices
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
+
+    // Add vertices
+    graph.addVertices([A, B, C]);
+
+    expect(graph.isEmpty()).toEqual(true);
+  });
+
+  it('should return false for a non-empty graph', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Vertices
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
+
+    // Add vertices
+    graph.addVertices([A, B, C]);
+
+    // Edges
+    const [AB] = createEdges([[A, B]]);
+
+    // Add edges
+    graph.addEdges([AB]);    
+
+    expect(graph.isEmpty()).toEqual(false);
+  });
+
   it('should get edges by vertex keys', () => {
     const graph = new Graph();
     const keys = ['A', 'B', 'C'];
@@ -496,6 +564,103 @@ describe('Graph', () => {
       4: [3],
       5: [4],
     });
+  });
+
+  it('should return reverse star representation of a graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+    const edgeEF = new GraphEdge(vertexE, vertexF);
+    const edgeFA = new GraphEdge(vertexF, vertexA);
+
+    const graph = new Graph(true);
+
+    graph.addEdges([edgeAB, edgeBC, edgeCD,
+      edgeDE, edgeEF, edgeFA]);
+    
+    expect(graph.getInOutDegreeList(0)).toEqual({
+      0: 1,
+      1: 1,
+      2: 1,
+      3: 1,
+      4: 1,
+      5: 1,
+    });
+
+    expect(graph.getInOutDegreeList(1)).toEqual({
+      0: 1,
+      1: 1,
+      2: 1,
+      3: 1,
+      4: 1,
+      5: 1,
+    });
+  });
+
+  it('should return true for bipartite graph', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Vertices
+    const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
+
+    // Edges
+    const [
+      AD, AE, AF,
+      BD, BE, BF,
+      CD, CE, CF, 
+      DA, DB, DC,
+      EA, EB, EC,
+      FA, FB, FC
+    ] = createEdges(
+      [
+        [A, D], [A, E], [A, F], 
+        [B, D], [B, E], [B, F],
+        [C, D], [C, E], [C, F], 
+        [D, A], [D, B], [D, C],
+        [E, A], [E, B], [E, C],
+        [F, A], [F, B], [F, C]
+      ]);
+      
+    // Add edges
+    graph.addEdges(
+      [
+        AD, AE, AF,
+        BD, BE, BF,
+        CD, CE, CF, 
+        DA, DB, DC,
+        EA, EB, EC,
+        FA, FB, FC
+      ]
+    );
+    
+    expect(graph.isBipartite()).toEqual(true);
+  });
+
+  it('should return false for non-bipartite graph', () => {
+    // A directed graph
+    const graph = new Graph(false);
+
+    // Vertices
+    const [A, B, C, D, E, F] = createVertices(['A', 'B', 'C', 'D', 'E', 'F']);
+
+    // Edges
+    const [AB, AC, BC, BD, DE, DF, FE] = createEdges(
+      [[A, B], [A, C], [B, C], [B, D], [D, E], [D, F], [F, E]]
+    );
+    
+    // Add edges
+    graph.addEdges([ AB, AC, BC, BD, DE, DF, FE]);
+    
+    expect(graph.isBipartite()).toEqual(false);
   });
 
   it('should return true for strongly connected graph', () => {
@@ -1050,6 +1215,56 @@ describe('Graph', () => {
     expect(graph.reachableNodes('A')).toEqual([1, 2, 3]);
   });
 
+  it('should return from-reachability list of all nodes', () => {
+    const graph = new Graph(true);
+
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC]);
+
+    graph.addVertex(vertexD);
+
+    expect(graph.getReachabilityList(0)).toEqual(
+      {
+        '0' : [0, 1, 2],
+        '1' : [1],
+        '2' : [2],
+        '3' : [3]
+      }
+    );
+  });
+
+  it('should return to-reachability list of all nodes', () => {
+    const graph = new Graph(true);
+
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC]);
+
+    graph.addVertex(vertexD);
+
+    expect(graph.getReachabilityList(1)).toEqual(
+      {
+        '0' : [],
+        '1' : [1],
+        '2' : [1],
+        '3' : []
+      }
+    );
+  });
+
   it('should return number of non-reachable nodes', () => {
     const graph = new Graph(true);
 
@@ -1300,6 +1515,32 @@ describe('Graph', () => {
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     expect(graph_.cycles).toEqual([[1, 2, 4], [1, 2, 5]]);
+  });
+
+  it('should return size of smallest cycle', () => {
+    const graph_ = new Graph(true);
+    
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CD = new GraphEdge(C, D);
+    const CE = new GraphEdge(C, E);
+    const EB = new GraphEdge(E, B);
+    const CF = new GraphEdge(C, F);
+    const FB = new GraphEdge(F, B);
+
+    // Add edges
+    graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
+
+    expect(graph_.girph()).toEqual(3);
   });
 
   it('should return true for connected graph', () => {
