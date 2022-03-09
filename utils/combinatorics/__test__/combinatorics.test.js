@@ -1,6 +1,6 @@
 import {
   partitions,
-  cardvecCombinations
+  cardvecCombinations,
 } from '../partition.js';
 
 import {
@@ -14,32 +14,31 @@ describe('combinatorics', () => {
 
   it('should throw an error for negative number of partitions', () => {
     function partitionWithNegativeLength() {
-      return partitions(10, -1)
+      return partitions(10, -1);
     }
 
-    expect(partitionWithNegativeLength).toThrowError()
+    expect(partitionWithNegativeLength).toThrowError();
   });
 
   it('should throw an error for more blobs than points', () => {
     function partitionWithMoreBlobsThanPoints() {
-      return partitions(10, 11)
+      return partitions(10, 11);
     }
 
-    expect(partitionWithMoreBlobsThanPoints).toThrowError()
+    expect(partitionWithMoreBlobsThanPoints).toThrowError();
   });
 
   it('should throw an error for negative number of partitions', () => {
     function partitionWithMoreBlobsThanPoints() {
-      return partitions(10, 11)
+      return partitions(10, 11);
     }
 
-    expect(partitionWithMoreBlobsThanPoints).toThrowError()
+    expect(partitionWithMoreBlobsThanPoints).toThrowError();
   });
 
   it('should throw an error for negative number of partitions', () => {
-    expect(arraysEqual(partitions(10, 1), [10])).toBe(true)
+    expect(arraysEqual(partitions(10, 1), [10])).toBe(true);
   });
-
 });
 
 describe('cardvecCombinations', () => {
@@ -49,16 +48,16 @@ describe('cardvecCombinations', () => {
       [
         [[1], [[2, 3]]],
         [[2], [[1, 3]]],
-        [[3], [[1, 2]]]
-      ]
+        [[3], [[1, 2]]],
+      ],
     )).toStrictEqual(true);
   });
 
   it('should throw error ', () => {
     function cardvecSumDifferentFromPointsLength() {
-      return cardvecCombinations([1, 2, 3], [1, 1])
+      return cardvecCombinations([1, 2, 3], [1, 1]);
     }
-    
+
     expect(cardvecSumDifferentFromPointsLength).toThrow();
   });
 });

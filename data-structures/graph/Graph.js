@@ -1418,7 +1418,7 @@ export default class Graph {
       // Dequeue a vertex from queue
       const u = queue_.dequeue();
 
-      if((src !== u) || (src === u && adjList[src].includes(u))) {
+      if ((src !== u) || (src === u && adjList[src].includes(u))) {
         reachableNodes.push(u);
       }
 
