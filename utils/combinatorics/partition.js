@@ -14,8 +14,8 @@ export const partitions = (n_points, n_blobs) => {
     throw Error('Number of points and blobs MUST be greater than 0.');
   }
 
-  if (n_points < n_blobs - 1) {
-    throw Error('Number of points MUST be greater than number of blobs minus 1.');
+  if (n_points < n_blobs) {
+    throw Error('Number of points MUST be greater than number of blobs.');
   }
 
   if (n_blobs === 1) {
@@ -67,8 +67,6 @@ export const cardvecCombinations = (points, card_vec) => {
   if (card_vec.length === 1) {
     return [points];
   }
-
-  console.log(`card_vec: ${card_vec}`);
 
   for (const elem_0_comb of _.combinations(points, elem_0)) {
     blob_comb = [elem_0_comb];
