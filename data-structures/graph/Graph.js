@@ -19,6 +19,7 @@ import {
 
 import {
   objectMap,
+  initObject
 } from '../../utils/objects/objects.js';
 
 import GraphVertex from './GraphVertex.js';
@@ -118,8 +119,8 @@ export default class Graph {
   }
 
   /**
-     * @return {GraphVertex[]}
-     */
+   * @return {GraphVertex[]}
+   */
   getAllVertices() {
     return Object.values(this.vertices);
   }
@@ -285,6 +286,10 @@ export default class Graph {
   }
 
   /**
+   * @abstract Return adjacency list
+   * - type = 0: Forward star 
+   * - type = 1: Reverse star
+   * @param {Integer} vertices
    * @returns {Object}
    */
   getAdjacencyList(type = 0) {
@@ -341,6 +346,13 @@ export default class Graph {
     return adjList;
   }
 
+  /**
+   * @abstract Return an object that represents:
+   * - type = 0: the out-degree of each vertex 
+   * - type = 1: the in-degree of each vertex
+   * @param {Integer} type
+   * @return {object}
+   */
   getInOutDegreeList(type = 0) {
     const adjList = getAdjacencyList(type);
 
@@ -570,7 +582,7 @@ export default class Graph {
   }
 
   /**
-   * Reverse all the edges in directed graph.
+   * @abstract Reverse all the edges in directed graph.
    * @return {Graph}
    */
   reverse() {
@@ -622,7 +634,7 @@ export default class Graph {
   }
 
   /**
-   * Copy graph
+   * @abstract Copy graph
    * @return {Graph}
    */
   copy() {
@@ -644,6 +656,7 @@ export default class Graph {
   }
 
   /**
+   * @abstract Utilitary for isCyclic validator
    * @return {*[][]}
    */
   #isCyclicUtil(index, visited, recStack) {
@@ -671,6 +684,7 @@ export default class Graph {
   }
 
   /**
+   * @abstract validates if a graph is cyclic  
    * @return {Boolean} is_cyclic
    */
   isCyclic() {
@@ -696,7 +710,12 @@ export default class Graph {
     return false;
   }
 
-  // A function used by DFS
+  /**
+   * @abstract an utilitary function used by DFS
+   * @param {Integer} current_index
+   * @param {Array} visited
+   * @return {Boolean} is_cyclic
+   */
   DFSUtil(v, visited) {
     const adjList = this.getAdjacencyList();
 
@@ -710,6 +729,10 @@ export default class Graph {
     }
   }
 
+  /**
+   * @abstract returns eulerian walks  
+   * @return {Array} epath
+   */
   getEulerianPath() {
     const eulerian_path = eulerianPath(this);
     const verticesIndices = this.getVerticesKeystoIndices();
@@ -728,6 +751,10 @@ export default class Graph {
     return epath;
   }
 
+  /**
+   * @abstract returns hamiltonian walks  
+   * @return {Array} hamiltonian_paths
+   */
   getHamiltonianCycles() {
     const hamiltonian_cycles = hamiltonianCycle(this);
 
@@ -738,6 +765,11 @@ export default class Graph {
     );
   }
 
+  /**
+   * @abstract returns strongly connected components (vertes-sets with possible 
+   * from-to paths)  
+   * @return {Array} SC_components
+   */
   getStronglyConnectedComponents() {
     const SC_sets = stronglyConnectedComponents(this);
 
@@ -762,8 +794,11 @@ export default class Graph {
     return SC_sets_by_index;
   }
 
-  // Method to check if all non-zero degree vertices are
-  // connected. It mainly does DFS traversal starting from
+  /**
+   * @abstract checks if all non-zero degree vertices are
+   * connected. It mainly does DFS traversal starting from all vertices  
+   * @return {Boolean} is_connected
+   */
   isConnected() {
     const n_vertices = this.getNumVertices();
     const adjList = this.getAdjacencyList();
@@ -810,8 +845,10 @@ export default class Graph {
     return true;
   }
 
-  // The main function that returns true if graph is strongly
-  // connected
+  /**
+   * @abstract returns true if graph is strongly connected  
+   * @return {Boolean} is_strongly_connected
+   */
   isStronglyConnected() {
     const n_vertices = this.getNumVertices();
 
@@ -847,17 +884,17 @@ export default class Graph {
     return true;
   }
 
-  /*
-    The function returns one of the following values
-    If the graph is directed:
-      0 --> If graph is not Eulerian
-      1 --> If graph has an Euler path (Semi-Eulerian)
-      2 --> If graph has an Euler Circuit (Eulerian)
-
-    If the graph is undirected:
-      false --> If graph is not Eulerian
-      true  --> If graph has an Euler Circuit (Eulerian)
-    */
+  /**
+   * @abstract returns one of the following values
+   *  If the graph is directed:
+   *    0 --> If graph is not Eulerian
+   *    1 --> If graph has an Euler path (Semi-Eulerian)
+   *    2 --> If graph has an Euler Circuit (Eulerian)
+   *  If the graph is undirected:
+   *    false --> If graph is not Eulerian
+   *    true  --> If graph has an Euler Circuit (Eulerian)
+   * @return {Boolean} is_eulerian
+   */
   isEulerian() {
     const adjList = this.getAdjacencyList();
     const reverse_star = this.getAdjacencyList(1);
@@ -897,6 +934,10 @@ export default class Graph {
     return (odd === 2) ? 1 : 2;
   }
 
+  /**
+   * @abstract returns true for an eulerian cycle
+   * @return {Boolean} is_eulerian_cycle
+   */
   isEulerianCycle() {
     const num_vertices = this.getNumVertices();
     const forward_star = this.getAdjacencyList(0);
@@ -912,12 +953,73 @@ export default class Graph {
     return true;
   }
 
-  // A recursive function that finds and prints bridges using DFS traversal
-  // u --> The original vertex
-  // u --> The vertex to be visited next
-  // pre[v]: order in which dfs examines v
-  // low[v]: lowest preorder of any vertex connected to v
-  // parent[] --> Stores parent vertices in DFS tree
+  /**
+   * @abstract returns true if the graph may be bipartite
+   * @return {Boolean} is_eulerian_cycle
+   */
+  isBipartite(){
+    let num_vertices = this.getNumVertices();
+    let adjList = this.getAdjacencyList()
+
+    // vector to store colour of vertex assigning all to -1 i.e. uncoloured
+    // colours are either 0 or 1 for understanding take 0 as red and 1 as blue
+    let col = new Array(num_vertices);
+    for(let i = 0; i < num_vertices; i++)
+        col[i] = -1;
+  
+    // queue for BFS storing {vertex , colour}
+    let q = [];
+  
+    //loop incase graph is not connected
+    for (let i = 0; i < num_vertices; i++) {
+      // if not coloured
+      if (col[i] == -1) {
+        // colouring with 0 i.e. red
+        q.push({"first": i, "second": 0});
+        col[i] = 0;
+      
+        while (q.length != 0) {
+            let p = q[0];
+            q.shift();
+          
+            //current vertex
+            let v = p.first;
+            
+            // colour of current vertex
+            let c = p.second;
+              
+            // traversing vertexes connected to current vertex
+            for (let j of adjList[v]){
+                // if already coloured with parent vertex color
+                // then bipartite graph is not possible
+                if (col[j] == c) {
+                  return false;
+                }
+              
+                // if uncoloured
+                if (col[j] == -1){
+                  // colouring with opposite color to that of parent
+                  col[j] = (c==1) ? 0 : 1;
+                  q.push({"first": j, "second": col[j]});
+                }
+            }
+        }
+      }
+    }
+    
+    // if all vertexes are coloured such that
+    // no two connected vertex have same colours
+    return true;
+  }
+
+  /**
+   * @abstract finds and prints bridges using DFS traversal
+   * @param {Integer} u      : The original vertex
+   * @param {Integer} v      : --> The vertex to be visited next
+   * @param {Array} pre[v]   : order in which dfs examines v
+   * @param {Array} low[v]   : lowest preorder of any vertex connected to v
+   * @param {Array} parent[] : Stores parent vertices in DFS tree
+   */
   bridgesUtil(u, v, preorder, low, counter, bridges) {
     const adjList = this.getAdjacencyList();
 
@@ -942,10 +1044,11 @@ export default class Graph {
     }
   }
 
-  // DFS based function to find all bridges. It uses recursive function bridgeUtil()
+  /**
+   * @abstract find all bridges. It uses recursive function bridgeUtil()
+   * @return {Array}
+   */
   bridges() {
-    // const graph_ = this.isDirected ? this.retrieveUndirected() : _.cloneDeep(this);
-
     // Mark all the vertices as not visited
     const n_vertices = this.getNumVertices();
     const bridges = [];
@@ -966,7 +1069,7 @@ export default class Graph {
   }
 
   /**
-  * Tarjan's algorithm for finding articulation points in graph.
+  * @abstract Tarjan's algorithm for finding articulation points in graph.
   *
   * @return {Object}
   */
@@ -1146,6 +1249,7 @@ export default class Graph {
 
   /**
    * @abstract Returns all cycles within a graph
+   * 
    * @return {Array[Array]} cycle
    */
   cyclicCircuits() {
@@ -1176,8 +1280,19 @@ export default class Graph {
   }
 
   /**
-     * @return {object}
-     */
+   * @abstract returns the graph girph, defined by the smallest sycle length
+   * 
+   * @return {Array[Array]} cycle
+   */
+  girph() {
+    return Math.min(cyclicCircuits().map((cycle) => { return cycle.length }))
+  }
+
+  /**
+   * @abstract Returns a dictionary with cycle enumerations
+   * 
+   * @return {object}
+   */
   getCycleIndices(recalculate = false) {
     const cycles_indices = {};
     let cycles = [];
@@ -1196,12 +1311,20 @@ export default class Graph {
   }
 
   /**
+   * @abstract returns a dictionary with extended Venn diagram for cycles
+   * 
    * @return {object}
    */
   getCyclesVenn(cycle_indices) {
     return extendedVenn(cycle_indices);
   }
 
+  /**
+   * @abstract returns a subgraph with vertices indexes specified by input
+   * 
+   * @param {Array} subgraph_vertex_indexes
+   * @return {object}
+   */
   buildSubgraph(subgraph_vertex_indexes) {
     // Construct the cycle appendix anew
     const subgraph_edges = this.getEdgesByVertexIndexes(subgraph_vertex_indexes, true);
@@ -1239,8 +1362,13 @@ export default class Graph {
     return subgraph;
   }
 
-  // Returns count of not reachable nodes from
-  // vertex v. It uses recursive DFSUtil()
+  /**
+   * @abstract Returns count of not reachable nodes from vertex v. 
+   * It uses recursive DFSUtil()
+   * 
+   * @param {Integer} from_vertex_key
+   * @return {Integer}
+   */
   countUnreachebleNodes(from_vertex_key) {
     const vertices_keys_to_indices = this.getVerticesKeystoIndices(from_vertex_key);
     const from_vertex_index = vertices_keys_to_indices[from_vertex_key];
@@ -1264,6 +1392,13 @@ export default class Graph {
     return count;
   }
 
+  /**
+   * @abstract utilitary function to gather reachable nodes
+   * 
+   * @param {Integer} src: source node
+   * @param {Integer} visited: visited nodes list
+   * @return {Array} reachableNodes
+   */
   #reachUtil(src, visited) {
     const adjList = this.getAdjacencyList();
 
@@ -1300,8 +1435,14 @@ export default class Graph {
     return reachableNodes;
   }
 
+  /**
+   * @abstract returns the reachable nodes from some vertex with key vertex_key
+   * 
+   * @param {string} from_vertex_key: source node
+   * @return {Array} reachableNodes
+   */
   reachableNodes(from_vertex_key) {
-    const vertices_keys_to_indices = this.getVerticesKeystoIndices(from_vertex_key);
+    const vertices_keys_to_indices = this.getVerticesKeystoIndices();
     const from_vertex_id = vertices_keys_to_indices[from_vertex_key];
 
     const num_vertices = this.getNumVertices();
@@ -1316,6 +1457,100 @@ export default class Graph {
     return this.#reachUtil(from_vertex_id, visited);
   }
 
+  /**
+   * @abstract returns the reachability list. 
+   *  - type := 0 : reachable nodes from vertex id as dict key 
+   *  - type := 1 : reachable nodes to vertex id as dict key
+   * @param {string} type
+   * @return {Array} reachableNodes
+   */
+  getReachabilityList(type = 0) {
+    const vertices_indices = Object.keys(this.getAdjacencyList());
+    const reachability_list = initObject(vertices_indices, []);
+    
+    vertices_indices.forEach((vertex_index) => {
+      reachability_list[vertex_index] = this.reachableNodes(
+        this.convertVerticesKeystoIndexes([from_vertex_key]))
+    });
+    
+    if(type == 0) {
+      return reachability_list;
+
+    } else {
+      let incoming_list = initObject(vertices_indices, [])
+      
+      vertices_indices.forEach((vertex_index) => {
+        reachability_list[vertex_index].forEach((reachable_index_from_vertex_id) => {
+          incoming_list[reachable_index_from_vertex_id].push(vertex_index)
+        })
+      })
+    }
+  }
+
+  /**
+   * @abstract returns the reachability venn diagram as a dict. 
+   *  - type := 0 : reachable nodes from vertex id as dict key 
+   *  - type := 1 : reachable nodes to vertex id as dict key
+   * @param {string} type
+   * @return {object} reachabilityVenn
+   */
+   reachabilityVenn(type = 0) {
+     return extendedVenn(this.getReachabilityList(type))
+   }
+
+  /**
+   * @abstract returns the reachability list. 
+   *  - type := 0 : 
+   *  - type := 1 : 
+   * @param {string} from_vertex_key: source node
+   * @return {Array} reachableNodes
+   */
+  getReachabilityVenn(type = 0) {
+
+  }
+
+  /**
+   * @abstract returns true if to_vertex_key is reachable from from_vertex_key
+   * 
+   * @param {string} from_vertex_key: source node
+   * @param {string} to_vertex_key: destination node
+   * @return {Boolean} reachableNodes
+   */
+   isReachable(from_vertex_key, to_vertex_key) {
+    const vertices_keys_to_indices = this.getVerticesKeystoIndices();
+    const to_vertex_id = vertices_keys_to_indices[to_vertex_key];
+    let r_nodes_ids = reachableNodes(from_vertex_key)
+
+    return r_nodes_ids.includes(to_vertex_id)
+   }
+
+  /**
+   * @abstract returns true if node predecessor_candidate_key belongs to the 
+   * list of reverse star list
+   * 
+   * @param {string} from_vertex_key: source node
+   * @return {Array} reachableNodes
+   */
+   isPredecessor(vertex_key, predecessor_candidate_key) {
+    const vertices_keys_to_indices = this.getVerticesKeystoIndices();
+    
+    const vertex_id = vertices_keys_to_indices[vertex_key];
+    const predecessor_candidate_id = vertices_keys_to_indices[predecessor_candidate_key];
+    
+    const reverseStar = this.getAdjacencyList(1)
+
+    return reverseStar[vertex_id].includes(predecessor_candidate_id)
+   }
+
+  /**
+   * @abstract 
+   * 
+   * @param {Integer} from_index           : from-vertex index 
+   * @param {Integer} to_index             : to-vertex index
+   * @param {Array[Boolean]} is_visited    : array with boolean is_visited flags  
+   * @param {Array} local_path_list        : array with trail sequence
+   * @return {Array} 
+   */
   #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
     const adj_list = this.getAdjacencyList();
 
@@ -1360,10 +1595,12 @@ export default class Graph {
   }
 
   /**
+   * @abstract Acyclic paths from from_vertex to to_vertex 
+   * 
    * @param {GraphVertex} from
    * @param {GraphVertex} to
    * @return {Array[Integer]} paths
-   * */
+   */
   acyclicPaths(from, to) {
     const verticesKeystoIndices = this.getVerticesKeystoIndices();
 
@@ -1389,6 +1626,13 @@ export default class Graph {
     return paths;
   }
 
+  /**
+   * @abstract AllPaths utilitary function
+   * 
+   * @param {Array} acyclic_path_indexes
+   * @param {Array} cycle_nodes_indexes
+   * @return {Array[Integer]} allPaths for given acyclic path and 
+   */
   #allPathsUtil(acyclic_path_indexes, cycle_nodes_indexes) {
     const acyclic_path_keys = this.convertVerticesIndexestoKeys(acyclic_path_indexes);
 
@@ -1499,6 +1743,13 @@ export default class Graph {
     return new_routes;
   }
 
+  /**
+   * @abstract all paths between from and to vertices
+   * 
+   * @param {string} from_key
+   * @param {string} to_key
+   * @return {Array[Integer]} allPaths for given acyclic path and 
+   */
   allPaths(from_key, to_key = from_key) {
     if (!this.isCyclic()) {
       return this.acyclicPaths(from_key, to_key);
@@ -1576,9 +1827,36 @@ export default class Graph {
   }
 
   /**
-   * @param {GraphVertex} from
-   * @param {GraphVertex} to
-   * @return {Array[Array]} cycles
+   * @abstract returns true if a graph has no edge
+   * 
+   * @param {Array} chain_candidate
+   * @return {Object} nodes_to_cycles
+   */
+   isEmpty() {
+    return Object.keys(this.edges).length == 0
+  }
+
+  /**
+   * @abstract returns true if a indices vertices sequence is a valid chain
+   * 
+   * @param {Array} chain_candidate
+   * @return {Object} nodes_to_cycles
+   */
+  isChain(chain_candidate) {
+    let is_chain = true;
+    let adjList = getAdjacencyList(0)
+
+    for(let i=0; i<chain_candidate.length-1; i+=1) {
+      is_chain &= adjList[chain_candidate[i]].includes(chain_candidate[i+1])
+    }
+
+    return is_chain
+  }
+
+  /**
+   * @abstract returns nodes and respective cycles it is within
+   * 
+   * @return {Object} nodes_to_cycles
    */
   getVertexCycles() {
     const n_vertices = this.getNumVertices();

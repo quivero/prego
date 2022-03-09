@@ -8,7 +8,7 @@ import {
 } from '../utils/workflow/parsers.js';
 
 import {
-  partitions,
+  constellationSeeker,
 } from '../utils/combinatorics/partition.js';
 
 const require = createRequire(import.meta.url);
@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
 
     const route_describe = fromStartToFinishCombsAllPaths(blueprint);
 
-    res.send(partitions(100, 20));
+    res.send(constellationSeeker([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], 3, 10));
   }
 });
 // [END app]

@@ -83,6 +83,7 @@ export const cardvecCombinations = (points, card_vec) => {
   return blob_combs;
 };
 
+/*
 export const constellationSeeker = (points, n_blobs, origin) => {
   if (!points.includes(origin)) {
     throw Error('Origin MUST be within points!');
@@ -101,3 +102,4 @@ export const constellationSeeker = (points, n_blobs, origin) => {
 
   return [];
 };
+*/
