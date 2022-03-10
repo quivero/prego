@@ -1067,6 +1067,14 @@ export default class Graph {
   }
 
   /**
+   * @abstract A binding point is a bridge extremal point
+   * @return {Array}
+   */
+  bindingPoints() {
+    return _.uniq(_.flatten(this.bridges()))
+  }
+
+  /**
   * @abstract Tarjan's algorithm for finding articulation points in graph.
   *
   * @return {Object}
