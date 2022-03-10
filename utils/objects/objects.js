@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 export const objectMap = (object, mapFn) => Object.keys(object).reduce((result, key) => {
-  result[key] = mapFn(object[key]);
+  result[key] = mapFn(key, object[key]);
   return result;
 }, {});
 

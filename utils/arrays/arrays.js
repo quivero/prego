@@ -54,9 +54,18 @@ export const arraysEqual = (a, b) => {
   return false;
 };
 
-export const descendingSort = (arr) => {
-  arr.sort((a, b) => a - b).reverse();
+export const sort = (arr, sort_type = 0) => {
+  
+  arr.sort((a, b) => a - b);
 
+  if(sort_type == 0) {
+    arr.reverse()
+  } else if(sort_type == 1) {
+    // Do nothing
+  } else {
+    throw Error('Sorting types are 0 and 1 for descending and ascending order.')
+  }
+  
   return arr;
 };
 
