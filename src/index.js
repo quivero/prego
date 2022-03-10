@@ -3,13 +3,18 @@ import express from 'express';
 import { createRequire } from 'module';
 import fs from 'fs';
 
+import _ from 'lodash';
+
 import {
+  parseBlueprintToGraph,
   fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
-import {
+/*
+]import {
   constellationSeeker,
 } from '../utils/combinatorics/partition.js';
+*/
 
 const require = createRequire(import.meta.url);
 const app = express();
@@ -58,14 +63,19 @@ app.get('/', (req, res) => {
       },
     );
   } else {
-    const blueprint_fname = 'generate_number.json';
+    const blueprint_fname = 'DemandasEspontaneas.json';
 
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
+    const graph = parseBlueprintToGraph(blueprint);
+    const SCC = graph.getStronglyConnectedComponents();
+    
+    console.log(graph.getEdgesByVertexIndexes(graph.bindingPoints()))
+    console.log(_.flatten(graph.articulationPoints()))
 
     const route_describe = fromStartToFinishCombsAllPaths(blueprint);
 
-    res.send(constellationSeeker([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], 3, 10));
+    res.send(route_describe);
   }
 });
 // [END app]
