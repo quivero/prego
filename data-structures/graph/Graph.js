@@ -15,6 +15,7 @@ import {
   removeArrayDuplicates,
   ones,
   getAllIndexes,
+  sort
 } from '../../utils/arrays/arrays.js';
 
 import {
@@ -265,6 +266,29 @@ export default class Graph {
   }
 
   /**
+   * @param {GraphEdge} edge
+   * @returns {Array[Integer]} 
+   */
+  convertEdgeToVerticesIndices(edge) {
+    const keys_to_indices = this.getVerticesKeystoIndices()
+
+    return [
+      keys_to_indices[edge.startVertex.getKey()],
+      keys_to_indices[edge.endVertex.getKey()]
+    ]
+  }
+
+  /**
+   * @param {GraphEdge} edge
+   * @returns {Array[Integer]} 
+   */
+   convertEdgesToVerticesIndices(edges) {
+    return edges.map((edge) => {
+      return this.convertEdgeToVerticesIndices(edge)
+    })
+  }
+
+  /**
    * @param {GraphVertex[]} vertices
    * @returns {String[]}
    */
@@ -478,6 +502,15 @@ export default class Graph {
     startVertex.deleteEdge(edge);
     endVertex.deleteEdge(edge);
   }
+
+  /**
+   * @param {Array[GraphEdge]} edges
+   */
+   deleteEdges(edges) {
+    edges.forEach((edge) => {
+      this.deleteEdge(edge)
+    })
+   }
 
   /**
    * @param {GraphVertex} startVertex
