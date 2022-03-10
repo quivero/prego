@@ -6,15 +6,13 @@ import fs from 'fs';
 import _ from 'lodash';
 
 import {
+  sort
+} from '../utils/arrays/arrays.js';
+
+import {
   parseBlueprintToGraph,
   fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
-
-/*
-]import {
-  constellationSeeker,
-} from '../utils/combinatorics/partition.js';
-*/
 
 const require = createRequire(import.meta.url);
 const app = express();
@@ -62,20 +60,43 @@ app.get('/', (req, res) => {
         blueprints: paths,
       },
     );
+  
   } else {
     const blueprint_fname = 'DemandasEspontaneas.json';
 
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
     const graph = parseBlueprintToGraph(blueprint);
-    const SCC = graph.getStronglyConnectedComponents();
+
+    console.log('Interested vertices: ')
+    console.log(
+      _.difference(
+        _.range(graph.getNumVertices()), 
+        graph.bindingPoints()
+      )
+    );
     
-    console.log(graph.getEdgesByVertexIndexes(graph.bindingPoints()))
-    console.log(_.flatten(graph.articulationPoints()))
+    console.log('Bridge ends: ')
+    console.log(
+      sort(graph.bridges())
+    );
 
-    const route_describe = fromStartToFinishCombsAllPaths(blueprint);
-
-    res.send(route_describe);
+    console.log('Articulation points: ')
+    console.log(
+      sort(graph.articulationPoints())
+    );
+    
+    console.log('Binding points: ')
+    console.log(
+      sort(graph.bindingPoints())
+    );
+    
+    console.log('Bridge ends / Articulation points: ')
+    console.log(
+      graph.bridgeEndAndArticulationVenn()
+    );
+        
+    res.send(graph_.cyclicCircuits());
   }
 });
 // [END app]
