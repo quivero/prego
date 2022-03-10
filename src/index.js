@@ -96,7 +96,7 @@ app.get('/', (req, res) => {
       graph.bridgeEndAndArticulationVenn()
     );
         
-    res.send(graph_.cyclicCircuits());
+    res.send(graph.cyclicCircuits());
   }
 });
 // [END app]
