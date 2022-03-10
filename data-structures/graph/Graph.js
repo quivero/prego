@@ -827,6 +827,41 @@ export default class Graph {
   }
 
   /**
+   * @abstract returns an object with key as SCC index and value as vertices indices
+   * @return {Array} SC_components
+   */
+   getStronglyConnectedComponentsIndices() {
+    const bridgeEdges = this.getBridgeEdges()
+    
+    this.deleteEdges(bridgeEdges)
+    const SCC = this.getStronglyConnectedComponents()
+    this.addEdges(bridgeEdges)
+
+    return objectMap(
+      initObject(_.range(SCC.length), []),
+      (key, value) => {
+        return SCC[Number(key)]
+      }
+    )
+  }
+
+  getMapSCCToBindingPoints() {
+    const binding_points = this.bindingPoints();
+    let SCC_indices = this.getStronglyConnectedComponentsIndices();
+    
+    SCC_indices = objectMap(
+      SCC_indices, 
+      (key, SCC_vertices) => {
+        return SCC_vertices.filter((SCC_vertex_id) => {
+          return binding_points.includes(SCC_vertex_id)
+        })
+      }
+    )
+    
+    return SCC_indices
+  }
+
+  /**
    * @abstract checks if all non-zero degree vertices are
    * connected. It mainly does DFS traversal starting from all vertices
    * @return {Boolean} is_connected
@@ -1082,7 +1117,7 @@ export default class Graph {
   bridges() {
     // Mark all the vertices as not visited
     const n_vertices = this.getNumVertices();
-    const bridges = [];
+    let bridges = [];
     const counter = 0;
 
     // pre[v]: order in which dfs examines v
@@ -1095,16 +1130,41 @@ export default class Graph {
         this.bridgesUtil(v, v, preorder, low, counter, bridges);
       }
     }
-
-    return bridges;
+    
+    return bridges
   }
 
   /**
-   * @abstract A binding point is a bridge extremal point
+   * @abstract A bridge end is a bridge extremal point
+   * @return {Array}
+   */
+  bridgeEnds() {
+    return _.uniq(_.flatten(this.bridges()).sort())
+  }
+  
+  /**
+   * @abstract A binding point is either an articulation point or a bridge end
    * @return {Array}
    */
   bindingPoints() {
-    return _.uniq(_.flatten(this.bridges()))
+    return _.uniq(
+      this.bridgeEnds().concat(this.articulationPoints())
+    )
+  }
+
+  bridgeEndAndArticulationVenn() {
+    return extendedVenn({
+      'articulation': this.articulationPoints(),
+      'bridge_end': this.bridgeEnds()
+    })
+  }
+
+  /**
+   * @abstract find all bridge edges.
+   * @return {Array}
+   */
+  getBridgeEdges() {
+    return this.getEdgesByVertexIndexes(this.bindingPoints())
   }
 
   /**
