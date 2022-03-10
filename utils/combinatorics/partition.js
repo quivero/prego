@@ -5,7 +5,7 @@ import _ from 'lodash';
 import {
   hasElement,
   ones,
-  descendingSort,
+  sort,
 } from '../arrays/arrays.js';
 
 // Function to generate all unique partitions of an integer
@@ -40,10 +40,10 @@ export const partitions = (n_points, n_blobs) => {
 
         is_swap = curr_partition[program_counter + 1] >= curr_partition[program_counter];
 
-        is_new_partition = !hasElement(partitions, descendingSort([...curr_partition]))
+        is_new_partition = !hasElement(partitions, sort([...curr_partition]))
                            && !curr_partition.includes(0);
         if (is_new_partition) {
-          partitions.push(descendingSort([...curr_partition]));
+          partitions.push(sort([...curr_partition]));
         }
       }
 
