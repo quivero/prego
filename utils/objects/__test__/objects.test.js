@@ -1,5 +1,6 @@
 import {
   objectMap,
+  objectFilter,
   initObject,
 } from '../objects.js';
 
@@ -21,5 +22,19 @@ describe('objects', () => {
     const newObject = initObject(['a', 'b'], []);
 
     expect(arraysEqual(Object.keys(newObject), ['a', 'b'])).toBe(true);
+  });
+
+  it('should return filtered object', () => {
+    const object_ = initObject(['a', 'b'], 1);
+    object_['a'] = 2
+
+    const newObject = objectFilter(
+      object_,
+      (key, value) => {
+        return value === 2
+      }
+    )
+    
+    expect(JSON.stringify(newObject)).toBe(JSON.stringify({'b': 1}));
   });
 });
