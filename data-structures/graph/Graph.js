@@ -1751,6 +1751,7 @@ export default class Graph {
   getReachabilityList(type = 0) {
     const vertices_indices = Object.keys(this.getAdjacencyList());
     const reachability_list = initObject(vertices_indices, []);
+    const incoming_list = initObject(vertices_indices, []);
 
     vertices_indices.forEach((vertex_index) => {
       reachability_list[vertex_index] = this.reachableNodes(
@@ -1760,17 +1761,16 @@ export default class Graph {
 
     if (type == 0) {
       return reachability_list;
-    }
-    const incoming_list = initObject(vertices_indices, []);
+    } 
 
     for (const from_vertex_id of vertices_indices) {
       for (const to_vertex_id of reachability_list[from_vertex_id]) {
-        if (!incoming_list[to_vertex_id].includes(Number(from_vertex_id))) {
+        if(!incoming_list[to_vertex_id].includes(Number(from_vertex_id))) {
           incoming_list[to_vertex_id].push(Number(from_vertex_id));
         }
       }
     }
-
+    
     return incoming_list;
   }
 
