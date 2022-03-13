@@ -1151,8 +1151,173 @@ export default class Graph {
     return bridges
   }
 
+  bridgeDict() {
+    let bridges = this.bridges()
+    const bridge_keys = _.uniq(_.flatten(bridges))
+    let bridge_dict = initObject(bridge_keys, []);
+    let forward_star = this.getAdjacencyList(0)
+    let inverse_star = this.getAdjacencyList(1)
+    let neighbours = []
+    
+    bridge_keys.forEach((bridgeEnd) => {
+      neighbours = _.remove(
+        _.flatten(bridges.filter((bridge) => {
+          return bridge.includes(bridgeEnd)
+        })),
+        (elem) => { return elem !== bridgeEnd }
+      )
+
+      bridge_dict[bridgeEnd] = {
+        "out": neighbours.filter((neighbour) => {
+          return forward_star[bridgeEnd].includes(neighbour)
+        }),
+        "in": neighbours.filter((neighbour) => {
+          return inverse_star[bridgeEnd].includes(neighbour)
+        }) 
+      }
+    })
+
+    return bridge_dict
+  }
+
+  islands() {
+    let bridge_dict = this.bridgeDict();
+    let bridge_ends = Object.keys(bridge_dict).map(
+      (bridge_end) => { 
+        return Number(bridge_end)
+      }
+    );
+    
+    const bridge_only_ends = _.difference(
+      bridge_ends, this.articulationPoints()
+    )
+
+    let is_end = false;
+    
+    let islands = initObject(bridge_ends, []);
+    
+    let island_inner_nodes = [];
+    let island_bridge_ends = [];
+    
+    let new_neighbours = [];
+    let outer_neighbours = []
+    
+    let bridge_end_is_visited = initObject(bridge_only_ends, false)
+    
+    let island_candidates = _.difference(_.range(this.getNumVertices()), bridge_ends)
+    
+    this.articulationPoints().forEach((articulation_point) => {
+      islands[articulation_point] = {
+        'bridge_ends': [articulation_point],
+        'inner_vertices': []
+      }
+    })
+    
+    bridge_only_ends.forEach((bridge_end) => {
+      
+      if(bridge_end_is_visited[bridge_end] === false) {
+        island_bridge_ends = [bridge_end];
+        island_inner_nodes = [];
+
+        is_end = false;
+
+        let i = 0
+        
+        do {          
+          // Iteration current neighbours
+          new_neighbours = _.uniq(
+            _.difference(
+              _.flatten(
+                Object.values(
+                  this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends))
+                )
+              ),
+              _.flatten(
+                island_bridge_ends.map(
+                  (island_bridge_end) => {
+                    return _.union(
+                      bridge_dict[island_bridge_end]['out'],
+                      bridge_dict[island_bridge_end]['in']
+                    )
+                  }
+                )
+              ),
+              _.union(island_inner_nodes, island_bridge_ends)
+            )
+          )
+
+          // Add new bridge ends to island
+          island_bridge_ends = _.uniq(
+            island_bridge_ends.concat(
+              new_neighbours.filter(
+                (neighbour) => {
+                  return bridge_only_ends.includes(neighbour)
+                }
+              )
+            )
+          )
+          
+          // Add new inner nodes to island
+          island_inner_nodes = _.uniq(
+            island_inner_nodes.concat(
+              new_neighbours.filter(
+                (neighbour) => {
+                  return !bridge_only_ends.includes(neighbour)
+                }
+              )
+            )
+          )
+          
+          // Update island_candidates by removing its current island_inner_nodes
+          island_candidates = _.difference(island_candidates, island_inner_nodes)
+          
+          // Obtain outre neighbours of current blob
+          outer_neighbours = _.uniq(
+            _.flatten(
+              Object.values(
+                this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends))
+              ), _.union(island_inner_nodes, island_bridge_ends)
+            )
+          )
+          
+          i += 1
+          
+          is_end = new_neighbours.length === 0
+
+        // Stop in case outer neighbours are only bridge ends or articulation points
+        } while(!is_end)
+
+
+        // All bridge ends already visited 
+        island_bridge_ends.forEach(
+          (island_bridge_end) => {
+            bridge_end_is_visited[island_bridge_end] = true
+          }
+        )
+        
+        islands[bridge_end] = {
+          'bridge_ends': island_bridge_ends,
+          'inner_vertices': island_inner_nodes
+        }
+      }
+    
+      bridge_end_is_visited[bridge_end] === true
+    })
+    
+    islands = objectFilter(islands, (key, value) => {
+      return value.length === 0
+    })
+
+    return Object.fromEntries(
+      _.zip(
+        _.range(Object.keys(islands).length),
+        Object.values(islands)
+      )
+    )
+  }
+
   /**
-   * @abstract A bridge end is a bridge extremal point
+   * @abstract A bridge end is either a bridge head or tail
    * @return {Array}
    */
   bridgeEnds() {
