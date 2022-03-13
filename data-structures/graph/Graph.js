@@ -429,6 +429,23 @@ export default class Graph {
     return orphan_nodes;
   }
 
+  getVerticesNeighbours(vertices_indices) {
+    let forward_star = this.getAdjacencyList(0)
+    let reverse_star = this.getAdjacencyList(1)
+    let neighbours = initObject(vertices_indices, []) 
+    
+    vertices_indices.forEach((vertex_index) => {
+      neighbours[vertex_index] = _.uniq(
+        _.union(
+          forward_star[vertex_index],
+          reverse_star[vertex_index]
+        )
+      )
+    })
+
+    return neighbours
+  }
+
   /**
    * @param {GraphEdge} edge
    * @returns {Graph}
