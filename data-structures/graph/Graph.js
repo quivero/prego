@@ -14,6 +14,7 @@ import {
   extendedVenn,
   removeArrayDuplicates,
   ones,
+  removeElements,
   getAllIndexes,
 } from '../../utils/arrays/arrays.js';
 
@@ -1143,7 +1144,7 @@ export default class Graph {
     return bridges;
   }
 
-  bridgeDict() {
+  bridgeEndInOutDict() {
     const bridges = this.bridges();
     const bridge_keys = _.uniq(_.flatten(bridges));
     const bridge_dict = initObject(bridge_keys, []);
@@ -1167,11 +1168,15 @@ export default class Graph {
   }
 
   islands() {
-    const bridge_dict = this.bridgeDict();
+    const bridge_dict = this.bridgeEndInOutDict();
     const bridge_ends = Object.keys(bridge_dict).map(
       (bridge_end) => Number(bridge_end),
     );
+    
+    const num_vertices = this.getNumVertices();
 
+    let unseen_vertices_indices = _.range(num_vertices);
+    
     const bridge_only_ends = _.difference(bridge_ends, this.articulationPoints());
 
     let is_end = false;
@@ -1182,11 +1187,10 @@ export default class Graph {
     let island_bridge_ends = [];
 
     let new_neighbours = [];
-    let outer_neighbours = [];
 
     const bridge_end_is_visited = initObject(bridge_only_ends, false);
-
-    let island_candidates = _.difference(_.range(this.getNumVertices()), bridge_ends);
+    
+    let island_candidates = _.difference(_.range(num_vertices), bridge_ends);
 
     this.articulationPoints().forEach((articulation_point) => {
       islands[articulation_point] = {
@@ -1195,14 +1199,16 @@ export default class Graph {
       };
     });
 
+    unseen_vertices_indices = removeElements(unseen_vertices_indices, this.articulationPoints())
+
     bridge_only_ends.forEach((bridge_end) => {
       if (bridge_end_is_visited[bridge_end] === false) {
         island_bridge_ends = [bridge_end];
         island_inner_nodes = [];
 
+        unseen_vertices_indices = removeElements(unseen_vertices_indices, [bridge_end])
+        
         is_end = false;
-
-        let i = 0;
 
         do {
           // Iteration current neighbours
