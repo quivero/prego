@@ -56,7 +56,7 @@ A glossary with implementation possibilities is available [here](https://en.wiki
     - [x] getReachibilityList(type = 0)
     - [x] getReachibilityVenn(type = 0)
     - [ ] volume(vertices_indices):
-    - [ ] islands()
+    - [x] islands()
 
 4. data-structures/utils/graph/graph.js -> {petersonCycles}
 
