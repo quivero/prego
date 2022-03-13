@@ -14,12 +14,12 @@ import {
   extendedVenn,
   removeArrayDuplicates,
   ones,
-  getAllIndexes,
-  sort
+  getAllIndexes
 } from '../../utils/arrays/arrays.js';
 
 import {
   objectMap,
+  objectFilter,
   initObject,
 } from '../../utils/objects/objects.js';
 
