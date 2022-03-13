@@ -14,7 +14,7 @@ import {
   extendedVenn,
   removeArrayDuplicates,
   ones,
-  getAllIndexes
+  getAllIndexes,
 } from '../../utils/arrays/arrays.js';
 
 import {
@@ -267,25 +267,23 @@ export default class Graph {
 
   /**
    * @param {GraphEdge} edge
-   * @returns {Array[Integer]} 
+   * @returns {Array[Integer]}
    */
   convertEdgeToVerticesIndices(edge) {
-    const keys_to_indices = this.getVerticesKeystoIndices()
+    const keys_to_indices = this.getVerticesKeystoIndices();
 
     return [
       keys_to_indices[edge.startVertex.getKey()],
-      keys_to_indices[edge.endVertex.getKey()]
-    ]
+      keys_to_indices[edge.endVertex.getKey()],
+    ];
   }
 
   /**
    * @param {GraphEdge} edge
-   * @returns {Array[Integer]} 
+   * @returns {Array[Integer]}
    */
-   convertEdgesToVerticesIndices(edges) {
-    return edges.map((edge) => {
-      return this.convertEdgeToVerticesIndices(edge)
-    })
+  convertEdgesToVerticesIndices(edges) {
+    return edges.map((edge) => this.convertEdgeToVerticesIndices(edge));
   }
 
   /**
@@ -430,20 +428,20 @@ export default class Graph {
   }
 
   getVerticesNeighbours(vertices_indices) {
-    let forward_star = this.getAdjacencyList(0)
-    let reverse_star = this.getAdjacencyList(1)
-    let neighbours = initObject(vertices_indices, []) 
-    
+    const forward_star = this.getAdjacencyList(0);
+    const reverse_star = this.getAdjacencyList(1);
+    const neighbours = initObject(vertices_indices, []);
+
     vertices_indices.forEach((vertex_index) => {
       neighbours[vertex_index] = _.uniq(
         _.union(
           forward_star[vertex_index],
-          reverse_star[vertex_index]
-        )
-      )
-    })
+          reverse_star[vertex_index],
+        ),
+      );
+    });
 
-    return neighbours
+    return neighbours;
   }
 
   /**
@@ -523,11 +521,11 @@ export default class Graph {
   /**
    * @param {Array[GraphEdge]} edges
    */
-   deleteEdges(edges) {
+  deleteEdges(edges) {
     edges.forEach((edge) => {
-      this.deleteEdge(edge)
-    })
-   }
+      this.deleteEdge(edge);
+    });
+  }
 
   /**
    * @param {GraphVertex} startVertex
@@ -847,35 +845,29 @@ export default class Graph {
    * @abstract returns an object with key as SCC index and value as vertices indices
    * @return {Array} SC_components
    */
-   getStronglyConnectedComponentsIndices() {
-    const bridgeEdges = this.getBridgeEdges()
-    
-    this.deleteEdges(bridgeEdges)
-    const SCC = this.getStronglyConnectedComponents()
-    this.addEdges(bridgeEdges)
+  getStronglyConnectedComponentsIndices() {
+    const bridgeEdges = this.getBridgeEdges();
+
+    this.deleteEdges(bridgeEdges);
+    const SCC = this.getStronglyConnectedComponents();
+    this.addEdges(bridgeEdges);
 
     return objectMap(
       initObject(_.range(SCC.length), []),
-      (key, value) => {
-        return SCC[Number(key)]
-      }
-    )
+      (key, value) => SCC[Number(key)],
+    );
   }
 
   getMapSCCToBindingPoints() {
     const binding_points = this.bindingPoints();
     let SCC_indices = this.getStronglyConnectedComponentsIndices();
-    
+
     SCC_indices = objectMap(
-      SCC_indices, 
-      (key, SCC_vertices) => {
-        return SCC_vertices.filter((SCC_vertex_id) => {
-          return binding_points.includes(SCC_vertex_id)
-        })
-      }
-    )
-    
-    return SCC_indices
+      SCC_indices,
+      (key, SCC_vertices) => SCC_vertices.filter((SCC_vertex_id) => binding_points.includes(SCC_vertex_id)),
+    );
+
+    return SCC_indices;
   }
 
   /**
@@ -1134,7 +1126,7 @@ export default class Graph {
   bridges() {
     // Mark all the vertices as not visited
     const n_vertices = this.getNumVertices();
-    let bridges = [];
+    const bridges = [];
     const counter = 0;
 
     // pre[v]: order in which dfs examines v
@@ -1147,173 +1139,151 @@ export default class Graph {
         this.bridgesUtil(v, v, preorder, low, counter, bridges);
       }
     }
-    
-    return bridges
+
+    return bridges;
   }
 
   bridgeDict() {
-    let bridges = this.bridges()
-    const bridge_keys = _.uniq(_.flatten(bridges))
-    let bridge_dict = initObject(bridge_keys, []);
-    let forward_star = this.getAdjacencyList(0)
-    let inverse_star = this.getAdjacencyList(1)
-    let neighbours = []
-    
+    const bridges = this.bridges();
+    const bridge_keys = _.uniq(_.flatten(bridges));
+    const bridge_dict = initObject(bridge_keys, []);
+    const forward_star = this.getAdjacencyList(0);
+    const inverse_star = this.getAdjacencyList(1);
+    let neighbours = [];
+
     bridge_keys.forEach((bridgeEnd) => {
       neighbours = _.remove(
-        _.flatten(bridges.filter((bridge) => {
-          return bridge.includes(bridgeEnd)
-        })),
-        (elem) => { return elem !== bridgeEnd }
-      )
+        _.flatten(bridges.filter((bridge) => bridge.includes(bridgeEnd))),
+        (elem) => elem !== bridgeEnd,
+      );
 
       bridge_dict[bridgeEnd] = {
-        "out": neighbours.filter((neighbour) => {
-          return forward_star[bridgeEnd].includes(neighbour)
-        }),
-        "in": neighbours.filter((neighbour) => {
-          return inverse_star[bridgeEnd].includes(neighbour)
-        }) 
-      }
-    })
+        out: neighbours.filter((neighbour) => forward_star[bridgeEnd].includes(neighbour)),
+        in: neighbours.filter((neighbour) => inverse_star[bridgeEnd].includes(neighbour)),
+      };
+    });
 
-    return bridge_dict
+    return bridge_dict;
   }
 
   islands() {
-    let bridge_dict = this.bridgeDict();
-    let bridge_ends = Object.keys(bridge_dict).map(
-      (bridge_end) => { 
-        return Number(bridge_end)
-      }
+    const bridge_dict = this.bridgeDict();
+    const bridge_ends = Object.keys(bridge_dict).map(
+      (bridge_end) => Number(bridge_end),
     );
-    
-    const bridge_only_ends = _.difference(
-      bridge_ends, this.articulationPoints()
-    )
+
+    const bridge_only_ends = _.difference(bridge_ends, this.articulationPoints());
 
     let is_end = false;
-    
+
     let islands = initObject(bridge_ends, []);
-    
+
     let island_inner_nodes = [];
     let island_bridge_ends = [];
-    
+
     let new_neighbours = [];
-    let outer_neighbours = []
-    
-    let bridge_end_is_visited = initObject(bridge_only_ends, false)
-    
-    let island_candidates = _.difference(_.range(this.getNumVertices()), bridge_ends)
-    
+    let outer_neighbours = [];
+
+    const bridge_end_is_visited = initObject(bridge_only_ends, false);
+
+    let island_candidates = _.difference(_.range(this.getNumVertices()), bridge_ends);
+
     this.articulationPoints().forEach((articulation_point) => {
       islands[articulation_point] = {
-        'bridge_ends': [articulation_point],
-        'inner_vertices': []
-      }
-    })
-    
+        bridge_ends: [articulation_point],
+        inner_vertices: [],
+      };
+    });
+
     bridge_only_ends.forEach((bridge_end) => {
-      
-      if(bridge_end_is_visited[bridge_end] === false) {
+      if (bridge_end_is_visited[bridge_end] === false) {
         island_bridge_ends = [bridge_end];
         island_inner_nodes = [];
 
         is_end = false;
 
-        let i = 0
-        
-        do {          
+        let i = 0;
+
+        do {
           // Iteration current neighbours
           new_neighbours = _.uniq(
             _.difference(
               _.flatten(
                 Object.values(
-                  this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends))
-                )
+                  this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends)),
+                ),
               ),
               _.flatten(
                 island_bridge_ends.map(
-                  (island_bridge_end) => {
-                    return _.union(
-                      bridge_dict[island_bridge_end]['out'],
-                      bridge_dict[island_bridge_end]['in']
-                    )
-                  }
-                )
+                  (island_bridge_end) => _.union(
+                    bridge_dict[island_bridge_end].out,
+                    bridge_dict[island_bridge_end].in,
+                  ),
+                ),
               ),
-              _.union(island_inner_nodes, island_bridge_ends)
-            )
-          )
+              _.union(island_inner_nodes, island_bridge_ends),
+            ),
+          );
 
           // Add new bridge ends to island
           island_bridge_ends = _.uniq(
             island_bridge_ends.concat(
               new_neighbours.filter(
-                (neighbour) => {
-                  return bridge_only_ends.includes(neighbour)
-                }
-              )
-            )
-          )
-          
+                (neighbour) => bridge_only_ends.includes(neighbour),
+              ),
+            ),
+          );
+
           // Add new inner nodes to island
           island_inner_nodes = _.uniq(
             island_inner_nodes.concat(
               new_neighbours.filter(
-                (neighbour) => {
-                  return !bridge_only_ends.includes(neighbour)
-                }
-              )
-            )
-          )
-          
+                (neighbour) => !bridge_only_ends.includes(neighbour),
+              ),
+            ),
+          );
+
           // Update island_candidates by removing its current island_inner_nodes
-          island_candidates = _.difference(island_candidates, island_inner_nodes)
-          
+          island_candidates = _.difference(island_candidates, island_inner_nodes);
+
           // Obtain outre neighbours of current blob
           outer_neighbours = _.uniq(
-            _.flatten(
-              Object.values(
-                this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends))
-              ), _.union(island_inner_nodes, island_bridge_ends)
-            )
-          )
-          
-          i += 1
-          
-          is_end = new_neighbours.length === 0
+            _.flatten(Object.values(
+              this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends)),
+            ), _.union(island_inner_nodes, island_bridge_ends)),
+          );
+
+          i += 1;
+
+          is_end = new_neighbours.length === 0;
 
         // Stop in case outer neighbours are only bridge ends or articulation points
-        } while(!is_end)
+        } while (!is_end);
 
-
-        // All bridge ends already visited 
+        // All bridge ends already visited
         island_bridge_ends.forEach(
           (island_bridge_end) => {
-            bridge_end_is_visited[island_bridge_end] = true
-          }
-        )
-        
+            bridge_end_is_visited[island_bridge_end] = true;
+          },
+        );
+
         islands[bridge_end] = {
-          'bridge_ends': island_bridge_ends,
-          'inner_vertices': island_inner_nodes
-        }
+          bridge_ends: island_bridge_ends,
+          inner_vertices: island_inner_nodes,
+        };
       }
-    
-      bridge_end_is_visited[bridge_end] === true
-    })
-    
-    islands = objectFilter(islands, (key, value) => {
-      return value.length === 0
-    })
+
+      bridge_end_is_visited[bridge_end] === true;
+    });
+
+    islands = objectFilter(islands, (key, value) => value.length === 0);
 
     return Object.fromEntries(
       _.zip(
         _.range(Object.keys(islands).length),
-        Object.values(islands)
-      )
-    )
+        Object.values(islands),
+      ),
+    );
   }
 
   /**
@@ -1321,24 +1291,24 @@ export default class Graph {
    * @return {Array}
    */
   bridgeEnds() {
-    return _.uniq(_.flatten(this.bridges()).sort())
+    return _.uniq(_.flatten(this.bridges()).sort());
   }
-  
+
   /**
    * @abstract A binding point is either an articulation point or a bridge end
    * @return {Array}
    */
   bindingPoints() {
     return _.uniq(
-      this.bridgeEnds().concat(this.articulationPoints())
-    )
+      this.bridgeEnds().concat(this.articulationPoints()),
+    );
   }
 
   bridgeEndAndArticulationVenn() {
     return extendedVenn({
-      'articulation': this.articulationPoints(),
-      'bridge_end': this.bridgeEnds()
-    })
+      articulation: this.articulationPoints(),
+      bridge_end: this.bridgeEnds(),
+    });
   }
 
   /**
@@ -1346,7 +1316,7 @@ export default class Graph {
    * @return {Array}
    */
   getBridgeEdges() {
-    return this.getEdgesByVertexIndexes(this.bindingPoints())
+    return this.getEdgesByVertexIndexes(this.bindingPoints());
   }
 
   /**
@@ -1761,16 +1731,16 @@ export default class Graph {
 
     if (type == 0) {
       return reachability_list;
-    } 
+    }
 
     for (const from_vertex_id of vertices_indices) {
       for (const to_vertex_id of reachability_list[from_vertex_id]) {
-        if(!incoming_list[to_vertex_id].includes(Number(from_vertex_id))) {
+        if (!incoming_list[to_vertex_id].includes(Number(from_vertex_id))) {
           incoming_list[to_vertex_id].push(Number(from_vertex_id));
         }
       }
     }
-    
+
     return incoming_list;
   }
 

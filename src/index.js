@@ -6,7 +6,7 @@ import fs from 'fs';
 import _ from 'lodash';
 
 import {
-  sort
+  sort,
 } from '../utils/arrays/arrays.js';
 
 import {

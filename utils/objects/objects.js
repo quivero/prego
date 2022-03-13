@@ -8,14 +8,14 @@ export const objectMap = (object, mapFn) => Object.keys(object).reduce((result, 
 export const objectFilter = (object, filterFn) => {
   Object.entries(object).forEach(
     ([key, value]) => {
-      if(filterFn(key, value)) {
-        delete object[key]
+      if (filterFn(key, value)) {
+        delete object[key];
       }
-    }
-  )
-  
-  return object
-}
+    },
+  );
+
+  return object;
+};
 
 export const initObject = (keys, init_value) => {
   const a = [];
