@@ -60,7 +60,6 @@ app.get('/', (req, res) => {
         blueprints: paths,
       },
     );
-  
   } else {
     const blueprint_fname = 'DemandasEspontaneas.json';
 
@@ -68,35 +67,13 @@ app.get('/', (req, res) => {
     const blueprint = require(fname);
     const graph = parseBlueprintToGraph(blueprint);
 
-    console.log('Interested vertices: ')
+    console.log('Islands: ');
+
     console.log(
-      _.difference(
-        _.range(graph.getNumVertices()), 
-        graph.bindingPoints()
-      )
-    );
-    
-    console.log('Bridge ends: ')
-    console.log(
-      sort(graph.bridges())
+      graph.islands(),
     );
 
-    console.log('Articulation points: ')
-    console.log(
-      sort(graph.articulationPoints())
-    );
-    
-    console.log('Binding points: ')
-    console.log(
-      sort(graph.bindingPoints())
-    );
-    
-    console.log('Bridge ends / Articulation points: ')
-    console.log(
-      graph.bridgeEndAndArticulationVenn()
-    );
-        
-    res.send(graph.cyclicCircuits());
+    res.send('Hi!');
   }
 });
 // [END app]
