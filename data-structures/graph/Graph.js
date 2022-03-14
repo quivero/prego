@@ -20,8 +20,8 @@ import {
 
 import {
   objectMap,
-  objectFilter,
-  initObject,
+  objectKeyFind,
+  objectInit,
 } from '../../utils/objects/objects.js';
 
 import GraphVertex from './GraphVertex.js';
@@ -431,7 +431,7 @@ export default class Graph {
   getVerticesNeighbours(vertices_indices) {
     const forward_star = this.getAdjacencyList(0);
     const reverse_star = this.getAdjacencyList(1);
-    const neighbours = initObject(vertices_indices, []);
+    const neighbours = objectInit(vertices_indices, []);
 
     vertices_indices.forEach((vertex_index) => {
       neighbours[vertex_index] = _.uniq(
@@ -854,7 +854,7 @@ export default class Graph {
     this.addEdges(bridgeEdges);
 
     return objectMap(
-      initObject(_.range(SCC.length), []),
+      objectInit(_.range(SCC.length), []),
       (key, value) => SCC[Number(key)],
     );
   }
@@ -1144,10 +1144,14 @@ export default class Graph {
     return bridges;
   }
 
-  bridgeEndInOutDict() {
+  /**
+   * @abstract 
+   * @return {Array}
+   */
+  getBridgeEndInOutDict() {
     const bridges = this.bridges();
     const bridge_keys = _.uniq(_.flatten(bridges));
-    const bridge_dict = initObject(bridge_keys, []);
+    const bridge_dict = objectInit(bridge_keys, []);
     const forward_star = this.getAdjacencyList(0);
     const inverse_star = this.getAdjacencyList(1);
     let neighbours = [];
@@ -1159,16 +1163,20 @@ export default class Graph {
       );
 
       bridge_dict[bridgeEnd] = {
-        out: neighbours.filter((neighbour) => forward_star[bridgeEnd].includes(neighbour)),
-        in: neighbours.filter((neighbour) => inverse_star[bridgeEnd].includes(neighbour)),
+        to: neighbours.filter((neighbour) => forward_star[bridgeEnd].includes(neighbour)),
+        from: neighbours.filter((neighbour) => inverse_star[bridgeEnd].includes(neighbour)),
       };
     });
 
     return bridge_dict;
   }
 
+  /**
+   * @abstract 
+   * @return {object}
+   */
   islands() {
-    const bridge_dict = this.bridgeEndInOutDict();
+    const bridge_dict = this.getBridgeEndInOutDict();
     const bridge_ends = Object.keys(bridge_dict).map(
       (bridge_end) => Number(bridge_end),
     );

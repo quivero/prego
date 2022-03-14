@@ -1148,12 +1148,12 @@ describe('Graph', () => {
     graph.addEdges([AB, BC]);
     
     expect(
-      JSON.stringify(graph.bridgeEndInOutDict())
+      JSON.stringify(graph.getBridgeEndInOutDict())
     ).toEqual(JSON.stringify(
       {
-        '0': {'out': [1], 'in': []},
-        '1': {'out': [2], 'in': [0]},
-        '2': {'out': [], 'in': [1]}
+        '0': {'to': [1], 'from': []},
+        '1': {'to': [2], 'from': [0]},
+        '2': {'to': [], 'from': [1]}
       }
     ));
   });
