@@ -55,7 +55,7 @@ A glossary with implementation possibilities is available [here](https://en.wiki
     - [x] isPredecessor(vertex, candidate):
     - [x] getReachibilityList(type = 0)
     - [x] getReachibilityVenn(type = 0)
-    - [ ] volume(vertices_indices):
+    - [x] volume(vertices_indices):
     - [x] islands()
 
 4. data-structures/utils/graph/graph.js -> {petersonCycles}
