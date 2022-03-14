@@ -10,6 +10,10 @@ import {
 } from '../utils/arrays/arrays.js';
 
 import {
+  objectMap,
+} from '../utils/objects/objects.js';
+
+import {
   parseBlueprintToGraph,
   fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
@@ -66,12 +70,9 @@ app.get('/', (req, res) => {
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
     const graph = parseBlueprintToGraph(blueprint);
-
-    console.log('Islands: ');
-
-    console.log(
-      graph.islands(),
-    );
+    
+    console.log('Islands: ')
+    console.log(graph.islands())
 
     res.send('Hi!');
   }

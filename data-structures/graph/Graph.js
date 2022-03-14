@@ -675,7 +675,7 @@ export default class Graph {
         }
       });
     } else {
-      console.warn('Warning: This is an UNDIRECTED graph!');
+      console.warn('The reverse of an undirected graph is identical to itself!');
     }
 
     return this;
@@ -1173,123 +1173,25 @@ export default class Graph {
       (bridge_end) => Number(bridge_end),
     );
     
-    const num_vertices = this.getNumVertices();
-
-    let unseen_vertices_indices = _.range(num_vertices);
+    const islands_dict = this.retrieveUndirected().getStronglyConnectedComponentsIndices();
     
-    const bridge_only_ends = _.difference(bridge_ends, this.articulationPoints());
-
-    let is_end = false;
-
-    let islands = initObject(bridge_ends, []);
-
-    let island_inner_nodes = [];
-    let island_bridge_ends = [];
-
-    let new_neighbours = [];
-
-    const bridge_end_is_visited = initObject(bridge_only_ends, false);
-    
-    let island_candidates = _.difference(_.range(num_vertices), bridge_ends);
-
-    this.articulationPoints().forEach((articulation_point) => {
-      islands[articulation_point] = {
-        bridge_ends: [articulation_point],
-        inner_vertices: [],
-      };
-    });
-
-    unseen_vertices_indices = removeElements(unseen_vertices_indices, this.articulationPoints())
-
-    bridge_only_ends.forEach((bridge_end) => {
-      if (bridge_end_is_visited[bridge_end] === false) {
-        island_bridge_ends = [bridge_end];
-        island_inner_nodes = [];
-
-        unseen_vertices_indices = removeElements(unseen_vertices_indices, [bridge_end])
-        
-        is_end = false;
-
-        do {
-          // Iteration current neighbours
-          new_neighbours = _.uniq(
-            _.difference(
-              _.flatten(
-                Object.values(
-                  this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends)),
-                ),
-              ),
-              _.flatten(
-                island_bridge_ends.map(
-                  (island_bridge_end) => _.union(
-                    bridge_dict[island_bridge_end].out,
-                    bridge_dict[island_bridge_end].in,
-                  ),
-                ),
-              ),
-              _.union(island_inner_nodes, island_bridge_ends),
-            ),
-          );
-
-          // Add new bridge ends to island
-          island_bridge_ends = _.uniq(
-            island_bridge_ends.concat(
-              new_neighbours.filter(
-                (neighbour) => bridge_only_ends.includes(neighbour),
-              ),
-            ),
-          );
-
-          // Add new inner nodes to island
-          island_inner_nodes = _.uniq(
-            island_inner_nodes.concat(
-              new_neighbours.filter(
-                (neighbour) => !bridge_only_ends.includes(neighbour),
-              ),
-            ),
-          );
-
-          // Update island_candidates by removing its current island_inner_nodes
-          island_candidates = _.difference(island_candidates, island_inner_nodes);
-
-          // Obtain outre neighbours of current blob
-          outer_neighbours = _.uniq(
-            _.flatten(Object.values(
-              this.getVerticesNeighbours(_.union(island_inner_nodes, island_bridge_ends)),
-            ), _.union(island_inner_nodes, island_bridge_ends)),
-          );
-
-          i += 1;
-
-          is_end = new_neighbours.length === 0;
-
-        // Stop in case outer neighbours are only bridge ends or articulation points
-        } while (!is_end);
-
-        // All bridge ends already visited
-        island_bridge_ends.forEach(
-          (island_bridge_end) => {
-            bridge_end_is_visited[island_bridge_end] = true;
-          },
-        );
-
-        islands[bridge_end] = {
-          bridge_ends: island_bridge_ends,
-          inner_vertices: island_inner_nodes,
-        };
+    return objectMap(
+      islands_dict, 
+      (key, habitants) => {
+        return {
+          bridge_ends: habitants.filter(
+            (habitant) => {
+              return bridge_ends.includes(habitant)
+            }
+          ),
+          inner_vertices: habitants.filter(
+            (habitant) => {
+              return !bridge_ends.includes(habitant)
+            }
+          )
+        }
       }
-
-      bridge_end_is_visited[bridge_end] === true;
-    });
-
-    islands = objectFilter(islands, (key, value) => value.length === 0);
-
-    return Object.fromEntries(
-      _.zip(
-        _.range(Object.keys(islands).length),
-        Object.values(islands),
-      ),
-    );
+    )
   }
 
   /**
@@ -1537,12 +1439,27 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns the graph girph, defined by the smallest sycle length
+   * @abstract returns the graph girph, defined by the smallest cycle length
    *
    * @return {Array[Array]} cycle
    */
   girph() {
     return Math.min(...this.cyclicCircuits().map((cycle) => cycle.length));
+  }
+
+  /**
+   * @abstract returns the in-out volume of certain vertices, 
+   * defined by the sum of in-out degrees
+   *
+   * @return {Array[Array]} cycle
+   */
+   volume(vertices_indices, type = 0) {
+    let degree_list = this.getInOutDegreeList(type)
+    
+    return vertices_indices.reduce(
+      (id_1, id_2) => {
+        return degree_list[id_1]+degree_list[id_2]
+      }, 0);
   }
 
   /**
