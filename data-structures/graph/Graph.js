@@ -1163,11 +1163,15 @@ export default class Graph {
     return objectMap(
       islands_dict,
       (key, habitants) => ({
-        bridge_ends: habitants.filter(
-          (habitant) => bridge_ends.includes(habitant),
+        bridge_ends: sort(
+          habitants.filter(
+            (habitant) => bridge_ends.includes(habitant),
+          ), 1
         ),
-        inner_vertices: habitants.filter(
-          (habitant) => !bridge_ends.includes(habitant),
+        inner_vertices: sort(
+          habitants.filter(
+            (habitant) => !bridge_ends.includes(habitant),
+          ), 1
         ),
       }),
     );
@@ -1191,7 +1195,7 @@ export default class Graph {
       (result, island_id, bridge_ends) => {
         bridge_ends.forEach(
           (bridge_end) => {
-            result[bridge_end] = island_id;
+            result[bridge_end] = Number(island_id);
           },
         );
 
