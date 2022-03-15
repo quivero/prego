@@ -1251,54 +1251,120 @@ export default class Graph {
   }
 
   /**
-   * @abstract
+   * @abstract returns a map from the bridge end id to its island
    * @return {Number}
    */
   getBridgeEndToIsland() {
-    const index_candidates = objectKeyFind(
-      this.islands(),
-      (key, habitants) => habitants.bridge_ends.includes(bridge_end_index),
-    );
-
-    if (index_candidates.length !== 1) {
-      throw Error('A bridge_end MUST belong only to one island!');
-    }
-
-    return Number(index_candidates[0]);
+    return objectReduce(
+      this.getIslandToBridgeEndList(),
+      (result, island_id, bridge_end_ids) => {
+        bridge_end_ids.forEach(
+          (bridge_end_id) => {
+            result[bridge_end_id] = Number(island_id)
+          }
+        )
+        
+        return result
+      }, {});
   }
 
   /**
-   * @abstract
+   * @abstract returns a map from islands to islands
    * @return {Array}
    */
   getIslandsAdjacencyList() {
-    const bridge_to_island_list = this.getBridgeEndToIslandList();
+    const island_bridge_end_list = this.getIslandToBridgeEndList();
+    const bridge_end_to_island = this.getBridgeEndToIsland();
     const bridge_in_out_list = this.getBridgeEndInOutDict();
-
-    let islandAdjList = objectInit(
-      Object.values(bridge_to_island_list),
-      [],
-    );
-
-    islandAdjList = objectReduce(
-      islandAdjList,
-      (final_obj, key, to_list) => {
-        // To islands ids
-        to_list = to_list.concat(
-          bridge_in_out_list[key].to.map(
-            (opposite_bridge_end_id) => Number(bridge_to_island_list[opposite_bridge_end_id]),
-          ),
-        );
-
-        final_obj[key] = to_list;
-
-        return final_obj;
-      },
-      {},
-    );
-
-    return islandAdjList;
+    
+    let to_list = []
+    
+    return objectReduce(
+      island_bridge_end_list,
+      (result, island_id, bridge_ends) => {
+        to_list = [];
+        
+        bridge_ends.forEach(
+          (bridge_end) => {
+            to_list = _.uniq(to_list.concat(
+              bridge_in_out_list[bridge_end]['to'].map(
+                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end])
+              )
+            ))
+          }
+        )
+        
+        result[island_id] = to_list
+        return result
+      }, {})
   }
+
+  /**
+   * @abstract returns a map from island ids to from-to bridge end ids
+   * @return {Array}
+   */
+  getIslandsInOutBridgeEnd() {
+  const island_bridge_end_list = this.getIslandToBridgeEndList();
+  const bridge_in_out_list = this.getBridgeEndInOutDict();
+  let from_to = {}
+
+  return objectReduce(
+    island_bridge_end_list,
+    (result, island_id, bridge_ends) => {
+      from_to = {
+        from: [],
+        to: []
+      }
+      
+      bridge_ends.forEach(
+        (bridge_end) => {
+          from_to['from'] = _.uniq(from_to['from'].concat(bridge_in_out_list[bridge_end]['from']))
+          from_to['to'] = _.uniq(from_to['to'].concat(bridge_in_out_list[bridge_end]['to']))
+        }
+      )
+      
+      result[island_id] = from_to
+      return result
+    }, {})
+  }
+
+  /**
+   * @abstract returns a map from islands to from-to islands
+   * @return {Array}
+   */
+   getIslandsFromToIslands() {
+    const island_bridge_end_list = this.getIslandToBridgeEndList();
+    const bridge_end_to_island = this.getBridgeEndToIsland();
+    const bridge_in_out_list = this.getBridgeEndInOutDict();
+    let from_to = {}
+  
+    return objectReduce(
+      island_bridge_end_list,
+      (result, island_id, bridge_ends) => {
+        from_to = {
+          from: [],
+          to: []
+        }
+        
+        bridge_ends.forEach(
+          (bridge_end) => {
+            from_to['from'] = _.uniq(from_to['from'].concat(
+              bridge_in_out_list[bridge_end]['from'].map(
+                (from_bridge_end) => Number(bridge_end_to_island[from_bridge_end])
+              )
+            ))
+            from_to['to'] = _.uniq(from_to['to'].concat(
+              bridge_in_out_list[bridge_end]['to'].map(
+                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end])
+              )
+            ))
+          }
+        )
+        
+        result[island_id] = from_to
+        return result
+      }, {})
+    }
 
   /**
    * @abstract A bridge end is either a bridge head or tail
