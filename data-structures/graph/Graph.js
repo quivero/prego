@@ -465,16 +465,25 @@ export default class Graph {
     this.edges[edge.getKey()] = edge;
 
     const startVertex = this.getVertexByKey(edge.startVertex.getKey());
-    const endVertex = this.getVertexByKey(edge.endVertex.getKey());
 
-    // Insert start vertex if it wasn't inserted.
-    if (startVertex === undefined) {
-      this.addVertex(edge.startVertex);
-    }
+    if(edge.startVertex.getKey() === edge.endVertex.getKey()) {
+      // Insert start vertex if it wasn't inserted.
+      if (startVertex === undefined) {
+        this.addVertex(edge.startVertex);
+      }
 
-    // Insert end vertex if it wasn't inserted.
-    if (endVertex === undefined) {
-      this.addVertex(edge.endVertex);
+    } else {
+      const endVertex = this.getVertexByKey(edge.endVertex.getKey());
+
+      // Insert start vertex if it wasn't inserted.
+      if (startVertex === undefined) {
+        this.addVertex(edge.startVertex);
+      }
+
+      // Insert end vertex if it wasn't inserted.
+      if (endVertex === undefined) {
+        this.addVertex(edge.endVertex);
+      }
     }
 
     // Add edge to the vertices.
