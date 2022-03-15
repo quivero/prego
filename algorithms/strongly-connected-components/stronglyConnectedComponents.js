@@ -125,8 +125,10 @@ export default function stronglyConnectedComponents(graph) {
   // vertex that has been finished last will be at the top of the stack.
   const verticesByFinishTime = getVerticesSortedByDfsFinishTime(graph);
 
-  // Reverse the graph.
-  graph.reverse();
+  // Reverse the graph if directed
+  if(graph.isDirected) {
+    graph = graph.reverse()
+  }
 
   // Do DFS once again on reversed graph.
   return getSCCSets(graph, verticesByFinishTime);

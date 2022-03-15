@@ -943,7 +943,11 @@ export default class Graph {
     }
 
     // Step 3: Create a reversed graph
-    const gr = this.copy().reverse();
+    const gr = this.copy();
+
+    if(this.isDirected) {
+      gr = gr.reverse()
+    }
 
     // Step 4: Mark all the vertices as not visited (For second DFS)
     for (let i = 0; i < n_vertices; i += 1) { visited[i] = false; }
