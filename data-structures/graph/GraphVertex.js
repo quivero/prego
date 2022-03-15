@@ -153,13 +153,3 @@ export default class GraphVertex {
   }
 }
 
-export const createVertices = (labels) => {
-  const vertices = [];
-
-  labels.forEach((label) => {
-    const vertex = new GraphVertex(label);
-    vertices.push(vertex);
-  });
-
-  return vertices;
-};

@@ -9,13 +9,19 @@ import hamiltonianCycle from '../../algorithms/hamiltonian-cycle/hamiltonianCycl
 import depthFirstSearch from '../../algorithms/depth-first-search/depthFirstSearch.js';
 import VisitMetadata from './VisitMetadata.js';
 
+import graphBridges from '../../algorithms/bridges/graphBridges.js';
+
 import {
   cartesianProduct,
   extendedVenn,
   removeArrayDuplicates,
-  ones,
   getAllIndexes,
+  sort,
 } from '../../utils/arrays/arrays.js';
+
+import { 
+  createEdgesFromVerticesValues
+} from './utils/graph.js' 
 
 import {
   objectInit,
@@ -694,11 +700,7 @@ export default class Graph {
    */
   retrieveUndirected() {
     const undirected_graph = new Graph(false);
-    const edges = this.getAllEdges();
-
-    for (let i = 0; i < edges.length; i += 1) {
-      undirected_graph.addEdge(_.cloneDeep(edges[i]));
-    }
+    undirected_graph.addEdges(_.cloneDeep(this.getAllEdges()));
 
     return undirected_graph;
   }

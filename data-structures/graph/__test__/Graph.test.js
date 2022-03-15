@@ -1,7 +1,12 @@
 import _ from 'lodash';
 import Graph from '../Graph';
-import GraphVertex, { createVertices } from '../GraphVertex';
-import GraphEdge, { createEdges } from '../GraphEdge';
+import GraphVertex from '../GraphVertex';
+import GraphEdge from '../GraphEdge';
+
+import {
+  createVertices,
+  createEdges, 
+} from '../utils/graph.js' 
 
 import {
   arraysEqual,
