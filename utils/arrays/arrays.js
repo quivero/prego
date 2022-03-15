@@ -78,6 +78,16 @@ export const hasElement = (arr, elem) => {
   return false;
 };
 
+export const removeElements = (arr, elems_to_del) => {
+  elems_to_del.forEach(
+    (elem_to_del) => {
+      arr = arr.filter((elem) => elem_to_del !== elem)
+    }
+  )
+  
+  return arr
+} 
+
 // Cartesian product of arrays
 export const cartesianProduct = (a, b, ...c) => {
   const f = (a, b) => [].concat(...a.map((a) => b.map((b) => [].concat(a, b))));

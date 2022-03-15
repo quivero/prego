@@ -21,8 +21,7 @@ export const objectReduce = (object, reduceFn, init_val) => {
     (result, 
      [key, value]) => {
       return reduceFn(result, key, value)
-     }, 
-     init_val
+     }, init_val
   )
 }
 

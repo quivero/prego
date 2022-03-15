@@ -14,14 +14,14 @@ import {
   extendedVenn,
   removeArrayDuplicates,
   ones,
-  removeElements,
   getAllIndexes,
 } from '../../utils/arrays/arrays.js';
 
 import {
+  objectInit,
   objectMap,
   objectKeyFind,
-  objectInit,
+  objectReduce
 } from '../../utils/objects/objects.js';
 
 import GraphVertex from './GraphVertex.js';
@@ -1207,6 +1207,109 @@ export default class Graph {
   }
 
   /**
+   * @abstract returns an object map from an island id to an array of bridge end indexes
+   * @return {Object}
+   */
+  getIslandToBridgeEndList() {
+    return objectMap(
+      this.islands(), (key, habitants) => habitants['bridge_ends']
+    )
+  }
+
+  /**
+   * @abstract returns an object map from an bridge end index to an island id 
+   * @return {Object}
+   */
+   getBridgeEndToIslandList() {
+    return objectReduce(
+      this.getIslandToBridgeEndList(),
+      (result, island_id, bridge_ends) => {
+        bridge_ends.forEach(
+          (bridge_end) => {
+            result[bridge_end] = island_id
+          }
+        )
+
+        return result
+      },
+      {}
+    )
+  }
+
+  /**
+   * @abstract 
+   * @return {Number}
+   */
+  getIslandFromBridgeEnd(bridge_end_index) {
+    let index_candidates = objectKeyFind(
+      this.islands(),
+      (key, habitants) => {
+        return habitants['bridge_ends'].includes(bridge_end_index)
+      }
+    )
+
+    if(index_candidates.length !== 1) {
+      throw Error('A bridge_end MUST belong only to one island!')
+    }
+
+    return Number(index_candidates[0])
+  }
+
+  /**
+   * @abstract 
+   * @return {Number}
+   */
+   getBridgeEndToIsland() {
+    let index_candidates = objectKeyFind(
+      this.islands(),
+      (key, habitants) => {
+        return habitants['bridge_ends'].includes(bridge_end_index)
+      }
+    )
+
+    if(index_candidates.length !== 1) {
+      throw Error('A bridge_end MUST belong only to one island!')
+    }
+
+    return Number(index_candidates[0])
+  }
+
+  /**
+   * @abstract 
+   * @return {Array}
+   */ 
+  getIslandsAdjacencyList() {
+    const bridge_to_island_list = this.getBridgeEndToIslandList()
+    let bridge_in_out_list = this.getBridgeEndInOutDict()
+    
+    let islandAdjList = objectInit(
+      Object.values(bridge_to_island_list), 
+      []
+    )
+    
+    islandAdjList = 
+      objectReduce(
+        islandAdjList,
+        (final_obj, key, to_list) => {
+          // To islands ids
+          to_list = to_list.concat(
+            bridge_in_out_list[key]['to'].map(
+              (opposite_bridge_end_id) => {
+                return Number(bridge_to_island_list[opposite_bridge_end_id])
+              }
+            )
+          )
+          
+          final_obj[key] = to_list
+            
+          return final_obj
+        }, {}
+      )
+
+    return islandAdjList
+  }
+  
+  /**
    * @abstract A bridge end is either a bridge head or tail
    * @return {Array}
    */
@@ -1655,8 +1758,8 @@ export default class Graph {
    */
   getReachabilityList(type = 0) {
     const vertices_indices = Object.keys(this.getAdjacencyList());
-    const reachability_list = initObject(vertices_indices, []);
-    const incoming_list = initObject(vertices_indices, []);
+    const reachability_list = objectInit(vertices_indices, []);
+    const incoming_list = objectInit(vertices_indices, []);
 
     vertices_indices.forEach((vertex_index) => {
       reachability_list[vertex_index] = this.reachableNodes(
