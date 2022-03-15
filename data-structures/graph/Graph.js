@@ -1104,63 +1104,25 @@ export default class Graph {
   }
 
   /**
-   * @abstract finds and prints bridges using DFS traversal
-   * @param {Integer} u      : The original vertex
-   * @param {Integer} v      : --> The vertex to be visited next
-   * @param {Array} pre[v]   : order in which dfs examines v
-   * @param {Array} low[v]   : lowest preorder of any vertex connected to v
-   * @param {Array} parent[] : Stores parent vertices in DFS tree
-   */
-  bridgesUtil(u, v, preorder, low, counter, bridges) {
-    const adjList = this.getAdjacencyList();
-
-    preorder[v] = counter += 1;
-    low[v] = preorder[v];
-
-    for (let i = 0; i < adjList[v].length; i += 1) {
-      const w = adjList[v][i];
-      if (preorder[w] === -1) {
-        this.bridgesUtil(v, w, preorder, low, counter, bridges);
-
-        low[v] = Math.min(low[v], low[w]);
-
-        if (low[w] === preorder[w]) {
-          bridges.push([v, w]);
-        }
-      } else {
-      // update low number - ignore reverse of edge leading to v
-
-        if (w !== u) { low[v] = Math.min(low[v], preorder[w]); }
-      }
-    }
-  }
-
-  /**
    * @abstract find all bridges. It uses recursive function bridgeUtil()
    * @return {Array}
    */
   bridges() {
-    // Mark all the vertices as not visited
-    const n_vertices = this.getNumVertices();
-    const bridges = [];
-    const counter = 0;
+    const bridges = graphBridges(this)
+    const vertices_keys_to_indices = this.getVerticesKeystoIndices() 
 
-    // pre[v]: order in which dfs examines v
-    // low[v]: lowest preorder of any vertex connected to v
-    const preorder = ones(n_vertices).map((x) => -x);
-    const low = ones(n_vertices).map((x) => -x);
-
-    for (const v of _.range(n_vertices)) {
-      if (preorder[v] === -1) {
-        this.bridgesUtil(v, v, preorder, low, counter, bridges);
+    return Object.values(bridges).map(
+      (bridge_edge) => {
+        return [
+          vertices_keys_to_indices[bridge_edge.startVertex.getKey()],
+          vertices_keys_to_indices[bridge_edge.endVertex.getKey()]
+        ]
       }
-    }
-
-    return bridges;
+    );
   }
 
   /**
-   * @abstract
+   * @abstract returns a map from bridge-ends to from-to bridge end object
    * @return {Array}
    */
   getBridgeEndInOutDict() {
