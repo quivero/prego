@@ -21,7 +21,7 @@ import {
   objectInit,
   objectMap,
   objectKeyFind,
-  objectReduce
+  objectReduce,
 } from '../../utils/objects/objects.js';
 
 import GraphVertex from './GraphVertex.js';
@@ -945,8 +945,8 @@ export default class Graph {
     // Step 3: Create a reversed graph
     const gr = this.copy();
 
-    if(this.isDirected) {
-      gr = gr.reverse()
+    if (this.isDirected) {
+      gr = gr.reverse();
     }
 
     // Step 4: Mark all the vertices as not visited (For second DFS)
@@ -1149,7 +1149,7 @@ export default class Graph {
   }
 
   /**
-   * @abstract 
+   * @abstract
    * @return {Array}
    */
   getBridgeEndInOutDict() {
@@ -1176,7 +1176,7 @@ export default class Graph {
   }
 
   /**
-   * @abstract 
+   * @abstract
    * @return {object}
    */
   islands() {
@@ -1184,26 +1184,20 @@ export default class Graph {
     const bridge_ends = Object.keys(bridge_dict).map(
       (bridge_end) => Number(bridge_end),
     );
-    
+
     const islands_dict = this.retrieveUndirected().getStronglyConnectedComponentsIndices();
-    
+
     return objectMap(
-      islands_dict, 
-      (key, habitants) => {
-        return {
-          bridge_ends: habitants.filter(
-            (habitant) => {
-              return bridge_ends.includes(habitant)
-            }
-          ),
-          inner_vertices: habitants.filter(
-            (habitant) => {
-              return !bridge_ends.includes(habitant)
-            }
-          )
-        }
-      }
-    )
+      islands_dict,
+      (key, habitants) => ({
+        bridge_ends: habitants.filter(
+          (habitant) => bridge_ends.includes(habitant),
+        ),
+        inner_vertices: habitants.filter(
+          (habitant) => !bridge_ends.includes(habitant),
+        ),
+      }),
+    );
   }
 
   /**
@@ -1211,104 +1205,96 @@ export default class Graph {
    * @return {Object}
    */
   getIslandToBridgeEndList() {
-    return objectMap(
-      this.islands(), (key, habitants) => habitants['bridge_ends']
-    )
+    return objectMap(this.islands(), (key, habitants) => habitants.bridge_ends);
   }
 
   /**
-   * @abstract returns an object map from an bridge end index to an island id 
+   * @abstract returns an object map from an bridge end index to an island id
    * @return {Object}
    */
-   getBridgeEndToIslandList() {
+  getBridgeEndToIslandList() {
     return objectReduce(
       this.getIslandToBridgeEndList(),
       (result, island_id, bridge_ends) => {
         bridge_ends.forEach(
           (bridge_end) => {
-            result[bridge_end] = island_id
-          }
-        )
+            result[bridge_end] = island_id;
+          },
+        );
 
-        return result
+        return result;
       },
-      {}
-    )
+      {},
+    );
   }
 
   /**
-   * @abstract 
+   * @abstract
    * @return {Number}
    */
   getIslandFromBridgeEnd(bridge_end_index) {
-    let index_candidates = objectKeyFind(
+    const index_candidates = objectKeyFind(
       this.islands(),
-      (key, habitants) => {
-        return habitants['bridge_ends'].includes(bridge_end_index)
-      }
-    )
+      (key, habitants) => habitants.bridge_ends.includes(bridge_end_index),
+    );
 
-    if(index_candidates.length !== 1) {
-      throw Error('A bridge_end MUST belong only to one island!')
+    if (index_candidates.length !== 1) {
+      throw Error('A bridge_end MUST belong only to one island!');
     }
 
-    return Number(index_candidates[0])
+    return Number(index_candidates[0]);
   }
 
   /**
-   * @abstract 
+   * @abstract
    * @return {Number}
    */
-   getBridgeEndToIsland() {
-    let index_candidates = objectKeyFind(
+  getBridgeEndToIsland() {
+    const index_candidates = objectKeyFind(
       this.islands(),
-      (key, habitants) => {
-        return habitants['bridge_ends'].includes(bridge_end_index)
-      }
-    )
+      (key, habitants) => habitants.bridge_ends.includes(bridge_end_index),
+    );
 
-    if(index_candidates.length !== 1) {
-      throw Error('A bridge_end MUST belong only to one island!')
+    if (index_candidates.length !== 1) {
+      throw Error('A bridge_end MUST belong only to one island!');
     }
 
-    return Number(index_candidates[0])
+    return Number(index_candidates[0]);
   }
 
   /**
-   * @abstract 
+   * @abstract
    * @return {Array}
-   */ 
+   */
   getIslandsAdjacencyList() {
-    const bridge_to_island_list = this.getBridgeEndToIslandList()
-    let bridge_in_out_list = this.getBridgeEndInOutDict()
-    
-    let islandAdjList = objectInit(
-      Object.values(bridge_to_island_list), 
-      []
-    )
-    
-    islandAdjList = 
-      objectReduce(
-        islandAdjList,
-        (final_obj, key, to_list) => {
-          // To islands ids
-          to_list = to_list.concat(
-            bridge_in_out_list[key]['to'].map(
-              (opposite_bridge_end_id) => {
-                return Number(bridge_to_island_list[opposite_bridge_end_id])
-              }
-            )
-          )
-          
-          final_obj[key] = to_list
-            
-          return final_obj
-        }, {}
-      )
+    const bridge_to_island_list = this.getBridgeEndToIslandList();
+    const bridge_in_out_list = this.getBridgeEndInOutDict();
 
-    return islandAdjList
+    let islandAdjList = objectInit(
+      Object.values(bridge_to_island_list),
+      [],
+    );
+
+    islandAdjList = objectReduce(
+      islandAdjList,
+      (final_obj, key, to_list) => {
+        // To islands ids
+        to_list = to_list.concat(
+          bridge_in_out_list[key].to.map(
+            (opposite_bridge_end_id) => Number(bridge_to_island_list[opposite_bridge_end_id]),
+          ),
+        );
+
+        final_obj[key] = to_list;
+
+        return final_obj;
+      },
+      {},
+    );
+
+    return islandAdjList;
   }
-  
+
   /**
    * @abstract A bridge end is either a bridge head or tail
    * @return {Array}
@@ -1563,18 +1549,15 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns the in-out volume of certain vertices, 
+   * @abstract returns the in-out volume of certain vertices,
    * defined by the sum of in-out degrees
    *
    * @return {Array[Array]} cycle
    */
-   volume(vertices_indices, type = 0) {
-    let degree_list = this.getInOutDegreeList(type)
-    
-    return vertices_indices.reduce(
-      (id_1, id_2) => {
-        return degree_list[id_1]+degree_list[id_2]
-      }, 0);
+  volume(vertices_indices, type = 0) {
+    const degree_list = this.getInOutDegreeList(type);
+
+    return vertices_indices.reduce((id_1, id_2) => degree_list[id_1] + degree_list[id_2], 0);
   }
 
   /**

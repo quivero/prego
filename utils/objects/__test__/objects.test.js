@@ -15,7 +15,7 @@ describe('objects', () => {
 
     expect(arraysEqual(Object.keys(newObject), ['a', 'b'])).toBe(true);
   });
-  
+
   it('should return twice the object value', () => {
     const myObject = { a: 1, b: 2, c: 3 };
     const newObject = objectMap(myObject, (key, value) => value * 2);
@@ -27,16 +27,14 @@ describe('objects', () => {
 
   it('should return filtered object', () => {
     const object_ = objectInit(['a', 'b'], 1);
-    object_['a'] = 2
+    object_.a = 2;
 
     const newObject = objectFilter(
       object_,
-      (key, value) => {
-        return value === 2
-      }
-    )
-    
-    expect(JSON.stringify(newObject)).toBe(JSON.stringify({'a': 2}));
+      (key, value) => value === 2,
+    );
+
+    expect(JSON.stringify(newObject)).toBe(JSON.stringify({ a: 2 }));
   });
 
   it('should return reduced object by certain function', () => {
@@ -45,15 +43,16 @@ describe('objects', () => {
     const newObject = objectReduce(
       object_,
       (result, key, value) => {
-        result[key] = 2*value
-        return result
-      }, {}
-    )
-    
+        result[key] = 2 * value;
+        return result;
+      },
+      {},
+    );
+
     expect(
-      JSON.stringify(newObject)
+      JSON.stringify(newObject),
     ).toBe(
-      JSON.stringify({'a': 2, 'b': 2})
+      JSON.stringify({ a: 2, b: 2 }),
     );
   });
 });

@@ -126,8 +126,8 @@ export default function stronglyConnectedComponents(graph) {
   const verticesByFinishTime = getVerticesSortedByDfsFinishTime(graph);
 
   // Reverse the graph if directed
-  if(graph.isDirected) {
-    graph = graph.reverse()
+  if (graph.isDirected) {
+    graph = graph.reverse();
   }
 
   // Do DFS once again on reversed graph.

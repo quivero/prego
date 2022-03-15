@@ -241,7 +241,7 @@ describe('Graph', () => {
 
   it('should add edges to directed graph', () => {
     const graph = new Graph(true);
-    
+
     const [vertexA, vertexB] = createVertices(['A', 'B']);
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
@@ -791,7 +791,7 @@ describe('Graph', () => {
 
     expect(arraysEqual(ids, [0, 1, 2, 3])).toBe(true);
   });
-  
+
   it('should return vertices indices from edge', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
@@ -879,7 +879,7 @@ describe('Graph', () => {
     expect(articulationPointsSet.length).toBe(1);
     expect(articulationPointsSet[0]).toBe(vertices_indices[vertexC.getKey()]);
   });
-  
+
   it('should find articulation points in graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
@@ -1030,7 +1030,7 @@ describe('Graph', () => {
 
     expect(vertices).toEqual(['A', 'B']);
   });
-  
+
   it('should return false for a non-connected graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
@@ -1090,11 +1090,12 @@ describe('Graph', () => {
       AB, AC, CD, BD,
       EF, EG, FH, GH,
       DE] = createEdges(
-        [
-          [A, B], [B, C], [C, D], [D, A],
-          [E, F], [F, G], [G, H], [H, E],
-          [D, E]
-        ]);
+      [
+        [A, B], [B, C], [C, D], [D, A],
+        [E, F], [F, G], [G, H], [H, E],
+        [D, E],
+      ],
+    );
 
     const graph = new Graph(true);
 
@@ -1134,7 +1135,7 @@ describe('Graph', () => {
   it('should return bridges dictionary', () => {
     // A directed graph
     const graph = new Graph(true);
-    
+
     // Nodes
     const A = new GraphVertex('A');
     const B = new GraphVertex('B');
@@ -1146,15 +1147,15 @@ describe('Graph', () => {
 
     // Add edges
     graph.addEdges([AB, BC]);
-    
+
     expect(
-      JSON.stringify(graph.getBridgeEndInOutDict())
+      JSON.stringify(graph.getBridgeEndInOutDict()),
     ).toEqual(JSON.stringify(
       {
-        '0': {'to': [1], 'from': []},
-        '1': {'to': [2], 'from': [0]},
-        '2': {'to': [], 'from': [1]}
-      }
+        0: { to: [1], from: [] },
+        1: { to: [2], from: [0] },
+        2: { to: [], from: [1] },
+      },
     ));
   });
 
@@ -1282,7 +1283,7 @@ describe('Graph', () => {
     graph.addEdges([edgeAB, edgeAC]);
 
     const neighbors = graph.getVerticesNeighbours([0]);
-    
+
     expect(neighbors[0].length).toBe(2);
     expect(arraysEqual(neighbors[0], [1, 2])).toBe(true);
   });
@@ -1344,7 +1345,7 @@ describe('Graph', () => {
     graph.addEdges([edgeAB, edgeAC]);
 
     graph.addVertex(vertexD);
-    
+
     expect(graph.getReachabilityList(1)).toEqual(
       {
         0: [],
@@ -1561,9 +1562,9 @@ describe('Graph', () => {
     expect(graph.getAllEdges().length).toBe(2);
     expect(graph.getAllEdges()[0].getKey()).toBe(edgeBC.getKey());
     expect(graph.getAllEdges()[1].getKey()).toBe(edgeAC.getKey());
-    
-    graph.deleteEdges(graph.getAllEdges())
-    expect(JSON.stringify(graph.edges)).toBe('{}')
+
+    graph.deleteEdges(graph.getAllEdges());
+    expect(JSON.stringify(graph.edges)).toBe('{}');
   });
 
   it('should throw an error when trying to delete not existing edge', () => {

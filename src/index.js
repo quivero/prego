@@ -10,7 +10,7 @@ import {
 } from '../utils/arrays/arrays.js';
 
 import {
-  objectMap,
+  objectKeyFind,
 } from '../utils/objects/objects.js';
 
 import {

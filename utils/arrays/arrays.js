@@ -81,12 +81,12 @@ export const hasElement = (arr, elem) => {
 export const removeElements = (arr, elems_to_del) => {
   elems_to_del.forEach(
     (elem_to_del) => {
-      arr = arr.filter((elem) => elem_to_del !== elem)
-    }
-  )
-  
-  return arr
-} 
+      arr = arr.filter((elem) => elem_to_del !== elem);
+    },
+  );
+
+  return arr;
+};
 
 // Cartesian product of arrays
 export const cartesianProduct = (a, b, ...c) => {

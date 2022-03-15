@@ -49,12 +49,12 @@ describe('Array', () => {
 
   it('should Error for unexpected type', () => {
     function sortThrowForUnexpectedType() {
-      sort([3, 2, 1], 2)
+      sort([3, 2, 1], 2);
     }
-    
+
     expect(sortThrowForUnexpectedType).toThrow();
   });
-  
+
   it('should return remove elements from array', () => {
     expect(arraysEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(true);
   });
