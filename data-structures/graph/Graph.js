@@ -690,7 +690,7 @@ export default class Graph {
         }
       });
     } else {
-      console.warn('The reverse of an undirected graph is identical to itself!');
+      console.warn('Warning: The reverse of an undirected graph is identical to itself!');
     }
 
     return this;
@@ -1187,7 +1187,7 @@ export default class Graph {
   }
 
   /**
-   * @abstract
+   * @abstract returns a map from island id to object with its bridge ends and inner vertices 
    * @return {object}
    */
   islands() {
@@ -1239,8 +1239,36 @@ export default class Graph {
     );
   }
 
+  getIslandGraph() {
+    const islandAdjList = this.getIslandsAdjacencyList();
+    
+    let island_graph = new Graph(this.isDirected)
+    
+    island_graph.addEdges(
+      createEdgesFromVerticesValues(
+        objectReduce(
+          islandAdjList,
+          (result, island_id, to_island_ids) => {
+            
+            to_island_ids.forEach(
+              (to_island_id) => {
+                result.push([
+                  String(island_id), 
+                  String(to_island_id)
+                ])
+              }
+            )
+            console.log(result)
+            return result
+          }, [])
+      )
+    );
+
+    return island_graph;
+  }
+
   /**
-   * @abstract
+   * @abstract returns a map from island id to bridge end id
    * @return {Number}
    */
   getIslandFromBridgeEnd(bridge_end_index) {
