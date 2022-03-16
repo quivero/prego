@@ -823,10 +823,17 @@ export default class Graph {
    * @abstract returns true if graph is hamiltonian
    * @return {Array} hamiltonian_paths
    */
-  * isCyclicHamiltonian() {
+  isCyclicHamiltonian() {
+    let cycles = []
+
     for (const hamiltonian_cycle of hamiltonianCycle(this)) {
-      return hamiltonian_cycle.length !== 0;
+      if(hamiltonian_cycle !== undefined) {
+        cycles.push(hamiltonian_cycle)
+        break;
+      }
     }
+    
+    return cycles.length !== 0
   }
 
   /**

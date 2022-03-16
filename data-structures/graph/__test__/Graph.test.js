@@ -1871,6 +1871,43 @@ describe('Graph', () => {
     expect(hamiltonianCycleSet[3][4]).toBe(keysToIds[vertexC.getKey()]);
   });
 
+  it('should return true for hamiltonian graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAE = new GraphEdge(vertexA, vertexE);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+    const edgeBE = new GraphEdge(vertexB, vertexE);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeBD = new GraphEdge(vertexB, vertexD);
+    const edgeCD = new GraphEdge(vertexC, vertexD);
+    const edgeDE = new GraphEdge(vertexD, vertexE);
+
+    const graph = new Graph();
+    graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
+      edgeBC, edgeBD, edgeCD, edgeDE]);
+    
+    expect(graph.isCyclicHamiltonian()).toBe(true);
+  });
+
+  it('should find hamiltonian paths in graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+
+    const graph = new Graph();
+    graph.addEdges([edgeAB]);
+    graph.addVertex(vertexC)
+
+    expect(graph.isCyclicHamiltonian()).toBe(false);
+  });
+
   it('should find hamiltonian paths in graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
