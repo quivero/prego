@@ -10,7 +10,8 @@
     "url": "git+https://github.com/brunolnetto/dot-quiver.git"
   },
   "keywords": [
-    "data-structures"
+    "data-structures",
+    "algorithms"
   ],
   "author": "brunolnetto",
   "license": "MIT",
