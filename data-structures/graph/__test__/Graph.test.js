@@ -1838,7 +1838,11 @@ describe('Graph', () => {
 
     const keysToIds = graph.getVerticesKeystoIndices();
 
-    const hamiltonianCycleSet = graph.getHamiltonianCycles();
+    const hamiltonianCycleSet = [];
+
+    for(const h_cycle of graph.getHamiltonianCycles()) {
+      hamiltonianCycleSet.push(h_cycle)
+    }
 
     expect(hamiltonianCycleSet.length).toBe(8);
 
@@ -1887,7 +1891,12 @@ describe('Graph', () => {
     graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
       edgeBC, edgeBD, edgeCD, edgeDE]);
 
-    const assertHamiltonianCycles = graph.getHamiltonianCycles();
+    const assertHamiltonianCycles = [];
+    
+    for(const h_cycle of graph.getHamiltonianCycles()) {
+      assertHamiltonianCycles.push(h_cycle)
+    }
+
     const hamiltonianCycleSet = graph.allPaths('C');
 
     expect(hamiltonianCycleSet.length).toBe(8);

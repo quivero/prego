@@ -2105,11 +2105,16 @@ export default class Graph {
 
     let acyclic_paths = [];
     if (from_key === to_key) {
-      const hamiltonian_cycles = this.getHamiltonianCycles();
+      const hamiltonian_cycles = [];
 
+      for(const h_cycle of this.getHamiltonianCycles()) {
+        hamiltonian_cycles.push(h_cycle)
+      }
+      
       if (hamiltonian_cycles.length === 0) {
         return [];
       }
+
       return hamiltonian_cycles.map((hamiltonian_cycle) => {
         let id = getAllIndexes(hamiltonian_cycle, from_id);
 
