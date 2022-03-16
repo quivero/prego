@@ -19,9 +19,9 @@ import {
   sort,
 } from '../../utils/arrays/arrays.js';
 
-import { 
-  createEdgesFromVerticesValues
-} from './utils/graph.js' 
+import {
+  createEdgesFromVerticesValues,
+} from './utils/graph.js';
 
 import {
   objectInit,
@@ -466,12 +466,11 @@ export default class Graph {
 
     const startVertex = this.getVertexByKey(edge.startVertex.getKey());
 
-    if(edge.startVertex.getKey() === edge.endVertex.getKey()) {
+    if (edge.startVertex.getKey() === edge.endVertex.getKey()) {
       // Insert start vertex if it wasn't inserted.
       if (startVertex === undefined) {
         this.addVertex(edge.startVertex);
       }
-
     } else {
       const endVertex = this.getVertexByKey(edge.endVertex.getKey());
 
@@ -814,9 +813,9 @@ export default class Graph {
    * @abstract returns hamiltonian walks
    * @return {Array} hamiltonian_paths
    */
-  *getHamiltonianCycles() {
-    for(const hamiltonian_cycle of hamiltonianCycle(this)) {
-      yield this.convertVerticestoVerticesIndices(hamiltonian_cycle) 
+  * getHamiltonianCycles() {
+    for (const hamiltonian_cycle of hamiltonianCycle(this)) {
+      yield this.convertVerticestoVerticesIndices(hamiltonian_cycle);
     }
   }
 
@@ -824,9 +823,9 @@ export default class Graph {
    * @abstract returns true if graph is hamiltonian
    * @return {Array} hamiltonian_paths
    */
-  *isCyclicHamiltonian() {
-    for(const hamiltonian_cycle of hamiltonianCycle(this)) {
-      return hamiltonian_cycle.length !== 0
+  * isCyclicHamiltonian() {
+    for (const hamiltonian_cycle of hamiltonianCycle(this)) {
+      return hamiltonian_cycle.length !== 0;
     }
   }
 
@@ -960,7 +959,7 @@ export default class Graph {
     }
 
     // Step 3: Create a reversed graph
-    let gr = this.copy();
+    const gr = this.copy();
 
     if (this.isDirected) {
       gr.reverse();
@@ -1114,16 +1113,14 @@ export default class Graph {
    * @return {Array}
    */
   bridges() {
-    const bridges = graphBridges(this)
-    const vertices_keys_to_indices = this.getVerticesKeystoIndices() 
+    const bridges = graphBridges(this);
+    const vertices_keys_to_indices = this.getVerticesKeystoIndices();
 
     return Object.values(bridges).map(
-      (bridge_edge) => {
-        return [
-          vertices_keys_to_indices[bridge_edge.startVertex.getKey()],
-          vertices_keys_to_indices[bridge_edge.endVertex.getKey()]
-        ]
-      }
+      (bridge_edge) => [
+        vertices_keys_to_indices[bridge_edge.startVertex.getKey()],
+        vertices_keys_to_indices[bridge_edge.endVertex.getKey()],
+      ],
     );
   }
 
@@ -1155,7 +1152,7 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns a map from island id to object with its bridge ends and inner vertices 
+   * @abstract returns a map from island id to object with its bridge ends and inner vertices
    * @return {object}
    */
   islands() {
@@ -1169,16 +1166,12 @@ export default class Graph {
     return objectMap(
       islands_dict,
       (key, habitants) => ({
-        bridge_ends: sort(
-          habitants.filter(
-            (habitant) => bridge_ends.includes(habitant),
-          ), 1
-        ),
-        inner_vertices: sort(
-          habitants.filter(
-            (habitant) => !bridge_ends.includes(habitant),
-          ), 1
-        ),
+        bridge_ends: sort(habitants.filter(
+          (habitant) => bridge_ends.includes(habitant),
+        ), 1),
+        inner_vertices: sort(habitants.filter(
+          (habitant) => !bridge_ends.includes(habitant),
+        ), 1),
       }),
     );
   }
@@ -1213,27 +1206,28 @@ export default class Graph {
 
   getIslandGraph() {
     const islandAdjList = this.getIslandsAdjacencyList();
-    
-    let island_graph = new Graph(this.isDirected)
-    
+
+    const island_graph = new Graph(this.isDirected);
+
     island_graph.addEdges(
       createEdgesFromVerticesValues(
         objectReduce(
           islandAdjList,
           (result, island_id, to_island_ids) => {
-            
             to_island_ids.forEach(
               (to_island_id) => {
                 result.push([
-                  String(island_id), 
-                  String(to_island_id)
-                ])
-              }
-            )
-            console.log(result)
-            return result
-          }, [])
-      )
+                  String(island_id),
+                  String(to_island_id),
+                ]);
+              },
+            );
+            console.log(result);
+            return result;
+          },
+          [],
+        ),
+      ),
     );
 
     return island_graph;
@@ -1266,12 +1260,14 @@ export default class Graph {
       (result, island_id, bridge_end_ids) => {
         bridge_end_ids.forEach(
           (bridge_end_id) => {
-            result[bridge_end_id] = Number(island_id)
-          }
-        )
-        
-        return result
-      }, {});
+            result[bridge_end_id] = Number(island_id);
+          },
+        );
+
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1282,27 +1278,29 @@ export default class Graph {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
     const bridge_end_to_island = this.getBridgeEndToIsland();
     const bridge_in_out_list = this.getBridgeEndInOutDict();
-    
-    let to_list = []
-    
+
+    let to_list = [];
+
     return objectReduce(
       island_bridge_end_list,
       (result, island_id, bridge_ends) => {
         to_list = [];
-        
+
         bridge_ends.forEach(
           (bridge_end) => {
             to_list = _.uniq(to_list.concat(
-              bridge_in_out_list[bridge_end]['to'].map(
-                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end])
-              )
-            ))
-          }
-        )
-        
-        result[island_id] = to_list
-        return result
-      }, {})
+              bridge_in_out_list[bridge_end].to.map(
+                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end]),
+              ),
+            ));
+          },
+        );
+
+        result[island_id] = to_list;
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1310,67 +1308,71 @@ export default class Graph {
    * @return {Array}
    */
   getIslandsInOutBridgeEnd() {
-  const island_bridge_end_list = this.getIslandToBridgeEndList();
-  const bridge_in_out_list = this.getBridgeEndInOutDict();
-  let from_to = {}
+    const island_bridge_end_list = this.getIslandToBridgeEndList();
+    const bridge_in_out_list = this.getBridgeEndInOutDict();
+    let from_to = {};
 
-  return objectReduce(
-    island_bridge_end_list,
-    (result, island_id, bridge_ends) => {
-      from_to = {
-        from: [],
-        to: []
-      }
-      
-      bridge_ends.forEach(
-        (bridge_end) => {
-          from_to['from'] = _.uniq(from_to['from'].concat(bridge_in_out_list[bridge_end]['from']))
-          from_to['to'] = _.uniq(from_to['to'].concat(bridge_in_out_list[bridge_end]['to']))
-        }
-      )
-      
-      result[island_id] = from_to
-      return result
-    }, {})
+    return objectReduce(
+      island_bridge_end_list,
+      (result, island_id, bridge_ends) => {
+        from_to = {
+          from: [],
+          to: [],
+        };
+
+        bridge_ends.forEach(
+          (bridge_end) => {
+            from_to.from = _.uniq(from_to.from.concat(bridge_in_out_list[bridge_end].from));
+            from_to.to = _.uniq(from_to.to.concat(bridge_in_out_list[bridge_end].to));
+          },
+        );
+
+        result[island_id] = from_to;
+        return result;
+      },
+      {},
+    );
   }
 
   /**
    * @abstract returns a map from islands to from-to islands
    * @return {Array}
    */
-   getIslandsFromToIslands() {
+  getIslandsFromToIslands() {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
     const bridge_end_to_island = this.getBridgeEndToIsland();
     const bridge_in_out_list = this.getBridgeEndInOutDict();
-    let from_to = {}
-  
+    let from_to = {};
+
     return objectReduce(
       island_bridge_end_list,
       (result, island_id, bridge_ends) => {
         from_to = {
           from: [],
-          to: []
-        }
-        
+          to: [],
+        };
+
         bridge_ends.forEach(
           (bridge_end) => {
-            from_to['from'] = _.uniq(from_to['from'].concat(
-              bridge_in_out_list[bridge_end]['from'].map(
-                (from_bridge_end) => Number(bridge_end_to_island[from_bridge_end])
-              )
-            ))
-            from_to['to'] = _.uniq(from_to['to'].concat(
-              bridge_in_out_list[bridge_end]['to'].map(
-                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end])
-              )
-            ))
-          }
-        )
-        
-        result[island_id] = from_to
-        return result
-      }, {})
-    }
+            from_to.from = _.uniq(from_to.from.concat(
+              bridge_in_out_list[bridge_end].from.map(
+                (from_bridge_end) => Number(bridge_end_to_island[from_bridge_end]),
+              ),
+            ));
+            from_to.to = _.uniq(from_to.to.concat(
+              bridge_in_out_list[bridge_end].to.map(
+                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end]),
+              ),
+            ));
+          },
+        );
+
+        result[island_id] = from_to;
+        return result;
+      },
+      {},
+    );
+  }
 
   /**
    * @abstract A bridge end is either a bridge head or tail
@@ -2105,10 +2107,10 @@ export default class Graph {
     if (from_key === to_key) {
       const hamiltonian_cycles = [];
 
-      for(const h_cycle of this.getHamiltonianCycles()) {
-        hamiltonian_cycles.push(h_cycle)
+      for (const h_cycle of this.getHamiltonianCycles()) {
+        hamiltonian_cycles.push(h_cycle);
       }
-      
+
       if (hamiltonian_cycles.length === 0) {
         return [];
       }

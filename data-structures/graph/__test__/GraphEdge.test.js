@@ -2,7 +2,7 @@ import GraphEdge from '../GraphEdge';
 
 import {
   createVertices,
-} from '../utils/graph.js' 
+} from '../utils/graph.js';
 
 describe('GraphEdge', () => {
   it('should create graph edge with default weight', () => {

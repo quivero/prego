@@ -1,7 +1,7 @@
-import { 
-  createVertices, 
-  createEdges, 
-} from '../utils/graph.js' 
+import {
+  createVertices,
+  createEdges,
+} from '../utils/graph.js';
 
 import GraphVertex from '../GraphVertex';
 import GraphEdge from '../GraphEdge';

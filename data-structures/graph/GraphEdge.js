@@ -38,4 +38,3 @@ export default class GraphEdge {
     return this.getKey();
   }
 }
-

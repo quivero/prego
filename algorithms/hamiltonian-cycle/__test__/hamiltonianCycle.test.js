@@ -26,8 +26,8 @@ describe('hamiltonianCycle', () => {
 
     const hamiltonianCycleSet = [];
 
-    for(const h_cycle of hamiltonianCycle(graph)) {
-      hamiltonianCycleSet.push(h_cycle)
+    for (const h_cycle of hamiltonianCycle(graph)) {
+      hamiltonianCycleSet.push(h_cycle);
     }
 
     expect(hamiltonianCycleSet.length).toBe(8);
@@ -77,8 +77,8 @@ describe('hamiltonianCycle', () => {
 
     const hamiltonianCycleSet = [];
 
-    for(const h_cycle of hamiltonianCycle(graph)) {
-      hamiltonianCycleSet.push(h_cycle)
+    for (const h_cycle of hamiltonianCycle(graph)) {
+      hamiltonianCycleSet.push(h_cycle);
     }
 
     expect(hamiltonianCycleSet.length).toBe(0);

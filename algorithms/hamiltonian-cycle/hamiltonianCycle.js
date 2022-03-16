@@ -67,8 +67,7 @@ function* hamiltonianCycleRecursive({
     // Now we need to check if it is cycle or not.
     if (isCycle(adjacencyMatrix, verticesKeystoIndices, currentCycle)) {
       // Another solution has been found. Save it.
-      yield currentCycle
-      //cycles.push(currentCycle);
+      yield currentCycle;
     }
     return;
   }
@@ -83,7 +82,7 @@ function* hamiltonianCycleRecursive({
       currentCycle.push(vertexCandidate);
 
       // Try to find other vertices in cycle.
-      for(
+      for (
         const cycle_ of
         hamiltonianCycleRecursive({
           adjacencyMatrix,
@@ -92,7 +91,7 @@ function* hamiltonianCycleRecursive({
           cycle: currentCycle,
         })
       ) {
-        yield cycle_
+        yield cycle_;
       }
 
       // BACKTRACKING.
@@ -125,7 +124,7 @@ export default function* hamiltonianCycle(graph) {
   const cycle = [startVertex];
 
   // Try to find cycles recursively in Depth First Search order.
-  for(const cycle_ of 
+  for (const cycle_ of
     hamiltonianCycleRecursive({
       adjacencyMatrix,
       vertices,
@@ -133,6 +132,6 @@ export default function* hamiltonianCycle(graph) {
       cycles,
       cycle,
     })) {
-      yield cycle_
+    yield cycle_;
   }
 }

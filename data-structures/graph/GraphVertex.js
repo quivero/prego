@@ -152,4 +152,3 @@ export default class GraphVertex {
     return callback ? callback(this.value) : `${this.value}`;
   }
 }
-

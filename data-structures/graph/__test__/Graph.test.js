@@ -5,8 +5,8 @@ import GraphEdge from '../GraphEdge';
 
 import {
   createVertices,
-  createEdges, 
-} from '../utils/graph.js' 
+  createEdges,
+} from '../utils/graph.js';
 
 import {
   arraysEqual,
@@ -1840,8 +1840,8 @@ describe('Graph', () => {
 
     const hamiltonianCycleSet = [];
 
-    for(const h_cycle of graph.getHamiltonianCycles()) {
-      hamiltonianCycleSet.push(h_cycle)
+    for (const h_cycle of graph.getHamiltonianCycles()) {
+      hamiltonianCycleSet.push(h_cycle);
     }
 
     expect(hamiltonianCycleSet.length).toBe(8);
@@ -1892,9 +1892,9 @@ describe('Graph', () => {
       edgeBC, edgeBD, edgeCD, edgeDE]);
 
     const assertHamiltonianCycles = [];
-    
-    for(const h_cycle of graph.getHamiltonianCycles()) {
-      assertHamiltonianCycles.push(h_cycle)
+
+    for (const h_cycle of graph.getHamiltonianCycles()) {
+      assertHamiltonianCycles.push(h_cycle);
     }
 
     const hamiltonianCycleSet = graph.allPaths('C');
