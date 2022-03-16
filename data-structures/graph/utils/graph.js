@@ -1,11 +1,13 @@
 import GraphVertex from '../GraphVertex.js'
 import GraphEdge from '../GraphEdge.js'
+import Graph from '../Graph.js'
 
 import { 
   objectInit,
   objectMap,
  } from '../../../utils/objects/objects.js';
 
+import 'lodash.combinations';
 import _ from 'lodash';
 
 export const createVertices = (labels) => {
@@ -51,3 +53,11 @@ export const createEdges = (vertices_tuples) => {
         })
     )
   };
+
+  export const createCompleteUndirectedGraph = (vertices_keys) => {
+    const graph = new Graph(false)
+    
+    graph.addEdges(createEdgesFromVerticesValues(_.combinations(vertices_keys, 2)))
+
+    return graph
+  }
