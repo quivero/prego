@@ -816,9 +816,7 @@ export default class Graph {
    */
   *getHamiltonianCycles() {
     for(const hamiltonian_cycle of hamiltonianCycle(this)) {
-      yield this.convertVerticesKeystoIndexes(
-        this.convertVerticestoVerticesKeys(hamiltonian_cycle),
-      )
+      yield this.convertVerticestoVerticesIndices(hamiltonian_cycle) 
     }
   }
 
