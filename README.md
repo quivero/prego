@@ -51,7 +51,7 @@ A glossary with implementation possibilities is available [here](https://en.wiki
     - [x] girth()
     - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
     - [x] isReachable(from_vertex, to_vertex):
-    - [ ] isHamiltonian(): 
+    - [x] isCyclicHamiltonian(): 
     - [x] isPredecessor(vertex, candidate):
     - [x] getReachibilityList(type = 0)
     - [x] getReachibilityVenn(type = 0)
