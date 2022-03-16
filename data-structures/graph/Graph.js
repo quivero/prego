@@ -814,14 +814,12 @@ export default class Graph {
    * @abstract returns hamiltonian walks
    * @return {Array} hamiltonian_paths
    */
-  getHamiltonianCycles() {
-    const hamiltonian_cycles = hamiltonianCycle(this);
-
-    return hamiltonian_cycles.map(
-      (hamiltonian_cycle) => this.convertVerticesKeystoIndexes(
+  *getHamiltonianCycles() {
+    for(const hamiltonian_cycle of hamiltonianCycle(this)) {
+      yield this.convertVerticesKeystoIndexes(
         this.convertVerticestoVerticesKeys(hamiltonian_cycle),
-      ),
-    );
+      )
+    }
   }
 
   /**
