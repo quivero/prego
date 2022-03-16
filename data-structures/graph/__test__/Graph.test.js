@@ -198,6 +198,18 @@ describe('Graph', () => {
     expect(edge_keys).toEqual(['A_B', 'B_C']);
   });
 
+  it('should add edge to the same vertex', () => {
+    const graph = new Graph();
+    const keys = ['A'];
+
+    const [A] = createVertices(keys);
+    const [AA] = createEdges([[A, A]]);
+
+    graph.addEdges([AA]);
+
+    expect(Object.keys(graph.edges)).toEqual(['A_A']);
+  });
+
   it('should get edges by vertex keys', () => {
     const graph = new Graph();
     const keys = ['A', 'B', 'C'];
