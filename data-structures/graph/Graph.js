@@ -823,6 +823,16 @@ export default class Graph {
   }
 
   /**
+   * @abstract returns true if graph is hamiltonian
+   * @return {Array} hamiltonian_paths
+   */
+   *isCyclicHamiltonian() {
+    for(const hamiltonian_cycle of hamiltonianCycle(this)) {
+      return hamiltonian_cycle.length !== 0
+    }
+   }
+
+  /**
    * @abstract returns strongly connected components (vertes-sets with possible
    * from-to paths)
    * @return {Array} SC_components
