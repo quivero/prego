@@ -1707,10 +1707,10 @@ export default class Graph {
    *
    * @return {object}
    */
-  getCyclesVenn(cycle_indices) {
-    return extendedVenn(cycle_indices);
+  * getCyclesVenn(cycle_indices) {
+    yield* extendedVenn(cycle_indices);
   }
-
+  
   /**
    * @abstract returns a subgraph with vertices indexes specified by input
    *
@@ -2169,39 +2169,30 @@ export default class Graph {
     acyclic_paths = this.acyclicPaths(from_key, to_key);
 
     const cycle_indices = this.getCycleIndices();
-    const cycles_venn = this.getCyclesVenn(cycle_indices);
 
     let cyclic_paths = [];
-
-    const cycles_connections = Object.keys(cycles_venn);
+    
     let cycle_nodes_arr = [];
     let connected_cycles_indexes = [];
     let acyclic_path = [];
-
-    const cycles_connections_len = cycles_connections.length;
+    
     let cycles_connection = [];
-    const eval_len = acyclic_paths.length * cycles_connections_len;
 
     acyclic_paths = removeArrayDuplicates(acyclic_paths);
-
-    console.warn(`Warning: Evaluation intersections between acyclic routes and cycle ${eval_len}`);
 
     // For each acyclic path, it finds if a cyclic connection brings new paths
     for (const path_index in acyclic_paths) {
       acyclic_path = acyclic_paths[path_index];
 
-      for (const cycles_connection_index in cycles_connections) {
-        cycles_connection = cycles_connections[cycles_connection_index];
-
-        connected_cycles_indexes = _.split(cycles_connection, ',');
-
+      for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
+        console.log(cycles_connection)
+        connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
+        
         const cycle_nodes = new Set();
-        connected_cycles_indexes.forEach((cycle_index) => {
-          cycle_index = Number(cycle_index);
-
-          cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes);
-        });
-
+        connected_cycles_indexes.forEach(
+          (cycle_index) => cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes)
+        );
+        
         cycle_nodes_arr = [...cycle_nodes];
 
         let cyclic_paths_i = [];
