@@ -558,6 +558,37 @@ export default class Graph {
   }
 
   /**
+   * @param {GraphVertex} startVertex
+   * @param {GraphVertex} endVertex
+   * @return {(GraphEdge|null)}
+   */
+   findEdgeByVertexIndices(startVertex_index, endVertex_index) {
+    const vertex = this.getVertexByIndex(startVertex_index);
+
+    if (!vertex) {
+      return null;
+    }
+
+    return vertex.findEdge(this.getVertexByIndex(endVertex_index));
+  }
+
+  /**
+   * @param {GraphVertex} startVertex
+   * @param {GraphVertex} endVertex
+   * @return {(GraphEdge|null)}
+   */
+   findEdgesByVertexIndices(vertex_indexes_tuples) {
+    return vertex_indexes_tuples.map(
+      (vertex_indexes_tuple) => {
+        return this.findEdgeByVertexIndices(
+          vertex_indexes_tuple[0], 
+          vertex_indexes_tuple[1]  
+        )
+      }
+    )
+  }
+
+  /**
    * @return {number}
    */
   getWeight() {
