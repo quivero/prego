@@ -732,6 +732,72 @@ describe('Graph', () => {
     expect(graph.cyclicCircuits()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
+  it('should return strongly connected dictionary in a graph', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CA = new GraphEdge(C, A);
+    const BD = new GraphEdge(B, D);
+    const DE = new GraphEdge(D, E);
+    const EF = new GraphEdge(E, F);
+    const FD = new GraphEdge(F, D);
+
+    // Add edges
+    graph.addEdges([AB, BC, CA, BD, DE, EF, FD]);
+    
+    let str1 = JSON.stringify(graph.getStronglyConnectedComponentsIndices())
+    let str2 = JSON.stringify({'0': [0, 2, 1],
+                               '1': [3, 5, 4]})
+    
+    expect(str1 === str2).toEqual(true);
+  });
+
+  it('should return strongly connected dictionary in a graph', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const CA = new GraphEdge(C, A);
+    const BD = new GraphEdge(B, D);
+    const DE = new GraphEdge(D, E);
+    const EF = new GraphEdge(E, F);
+    const FD = new GraphEdge(F, D);
+
+    // Add edges
+    graph.addEdges([AB, BC, CA, BD, DE, EF, FD]);
+    
+    let str1 = JSON.stringify(graph.getMapSCCToBindingPoints())
+    let str2 = JSON.stringify(
+      {
+        '0': [1],
+        '1': [3]
+      }
+    )
+
+    expect(str1 === str2).toBe(true);
+  });
+
   it('should return articulation points in a graph', () => {
     // A directed graph
     const graph = new Graph(false);
