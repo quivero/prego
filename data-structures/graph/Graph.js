@@ -855,18 +855,18 @@ export default class Graph {
    * @return {Array} hamiltonian_paths
    */
   isCyclicHamiltonian() {
-    let cycles = []
+    const cycles = [];
 
     for (const hamiltonian_cycle of hamiltonianCycle(this)) {
-      if(hamiltonian_cycle !== undefined) {
-        cycles.push(hamiltonian_cycle)
+      if (hamiltonian_cycle !== undefined) {
+        cycles.push(hamiltonian_cycle);
         break;
       }
     }
-    
-    return cycles.length !== 0
-  }
 
+    return cycles.length !== 0;
+  }
+  
   /**
    * @abstract returns strongly connected components (vertes-sets with possible
    * from-to paths)
