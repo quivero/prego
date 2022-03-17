@@ -116,40 +116,36 @@ export const removeArrayDuplicates = (list) => {
 export const getUniques = (vec) => Array.from(new Set(vec));
 
 export function* extendedVenn(sets) {
-  const keys = Object.keys(sets);
+  const keys = Object.keys(sets).map((key) => Number(key));
   
   let comb_sets_inter = {};
-  let comb_sets_union = {};
   let comb_sets_excl = {};
 
   let cum_union_sofar = []
-
+  let prev_group_card = 0
+  
   for (const i of _.rangeRight(1, keys.length + 1)) {
-    for (const comb_keys of new _.combinations(keys, i)) {
-      const comb_sets = comb_keys.map((key) => sets[key]);
-
+    for (const comb_keys of new _.combinations(keys, i)) {      
       // Intersection of elements
-      comb_sets_inter = Object
-        .values(comb_sets)
-        .reduce((acc, arr) => arr.filter(
-          Set.prototype.has,
-          new Set(acc),
-        ));
+      comb_sets_inter = _.intersection(...comb_keys.map(
+        (key) => sets[Number(key)]
+        )
+      )
 
       // No intersection means no exclusive value
       if (comb_sets_inter.length === 0) {
-        break;
+        continue;
       }
 
       comb_sets_excl = _.difference(comb_sets_inter, cum_union_sofar);
-      cum_union_sofar = _.uniq(
-        _.union(cum_union_sofar, comb_sets_excl)
-      )
+      cum_union_sofar = _.uniq(_.union(cum_union_sofar, comb_sets_excl))
 
       if (comb_sets_excl.length !== 0) {
         yield [comb_keys.toString(), comb_sets_excl];
         
       }
     }
+
+    prev_group_card = cum_union_sofar.length
   }
 };
