@@ -120,8 +120,6 @@ export const removeArrayDuplicates = (list) => {
 export const getUniques = (vec) => Array.from(new Set(vec));
 
 export function* extendedVenn(sets) {
-  console.log(sets)
-
   const keys_fun = (sets_) => {
     return Object.keys(sets_).map(
       (key) => Number(key)
@@ -167,6 +165,7 @@ export function* extendedVenn(sets) {
           return result
         }, {}
       )
+
     } else {
       continue;
     }
