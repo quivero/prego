@@ -44,7 +44,7 @@ You must follow the instructions below
 
 I may apologize the reader for the author's envy for similar python library [networkx](https://networkx.org/documentation/stable/reference/classes/index.html). They provide multiple concepts for graph formalization and defition whose author's knowledge lacks. Hence, it seems reasonable to offer similar features in this directions.
 
-Likewise, the library [Dracula](https://www.graphdracula.net/) offers a graphical manner to visualize graphs. It may be a future feature in the future.
+Likewise, the library [Dracula](https://www.graphdracula.net/) offers a graphical manner to visualize graphs. It may be a future feature.
 
 ### As a Package
 
