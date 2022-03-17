@@ -3,7 +3,7 @@ import GraphEdge from '../GraphEdge';
 import {
   createVertices,
   createEdgesFromVerticesValues,
-  createCompleteUndirectedGraph
+  createCompleteUndirectedGraph,
 } from '../utils/graph.js';
 
 describe('GraphEdge', () => {
@@ -44,7 +44,7 @@ describe('GraphEdge', () => {
 
   it('should be possible to do edge reverse', () => {
     const [edgeAB] = createEdgesFromVerticesValues([['A', 'B']]);
-    
+
     expect(edgeAB.startVertex.getKey()).toEqual('A');
     expect(edgeAB.endVertex.getKey()).toEqual('B');
     expect(edgeAB.weight).toEqual(0);
@@ -52,7 +52,7 @@ describe('GraphEdge', () => {
 
   it('should be possible to do edge reverse', () => {
     const graph = createCompleteUndirectedGraph(['A', 'B', 'C']);
-    
+
     expect(Object.keys(graph.edges).length).toEqual(3);
   });
 });

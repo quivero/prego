@@ -1968,7 +1968,7 @@ describe('Graph', () => {
     const graph = new Graph();
     graph.addEdges([edgeAB, edgeAE, edgeAC, edgeBE,
       edgeBC, edgeBD, edgeCD, edgeDE]);
-    
+
     expect(graph.isCyclicHamiltonian()).toBe(true);
   });
 
@@ -1981,7 +1981,7 @@ describe('Graph', () => {
 
     const graph = new Graph();
     graph.addEdges([edgeAB]);
-    graph.addVertex(vertexC)
+    graph.addVertex(vertexC);
 
     expect(graph.isCyclicHamiltonian()).toBe(false);
   });
