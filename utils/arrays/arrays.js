@@ -1,6 +1,10 @@
 import 'lodash.combinations';
 import _ from 'lodash';
 
+import {
+  objectReduce
+} from '../objects/objects.js'
+
 export const ones = (n) => Array(n).fill(1);
 
 export const getAllIndexes = (arr, val) => {
@@ -116,36 +120,55 @@ export const removeArrayDuplicates = (list) => {
 export const getUniques = (vec) => Array.from(new Set(vec));
 
 export function* extendedVenn(sets) {
-  const keys = Object.keys(sets).map((key) => Number(key));
+  console.log(sets)
+
+  const keys_fun = (sets_) => {
+    return Object.keys(sets_).map(
+      (key) => Number(key)
+    ).filter(
+      (key) => sets_[key].length !== 0
+    );
+  }
+
+  let keys = keys_fun(sets)
   
   let comb_sets_inter = {};
   let comb_sets_excl = {};
-
-  let cum_union_sofar = []
-  let prev_group_card = 0
   
+  let cum_union_sofar = []
+
   for (const i of _.rangeRight(1, keys.length + 1)) {
-    for (const comb_keys of new _.combinations(keys, i)) {      
-      // Intersection of elements
-      comb_sets_inter = _.intersection(...comb_keys.map(
-        (key) => sets[Number(key)]
+    keys = keys_fun(sets)
+    
+    if(keys.length >= i) {
+      for (const comb_keys of new _.combinations(keys, i)) {      
+        // Intersection of elements
+        comb_sets_inter = _.intersection(...comb_keys.map(
+          (key) => sets[Number(key)]
+          )
         )
-      )
-
-      // No intersection means no exclusive value
-      if (comb_sets_inter.length === 0) {
-        continue;
-      }
-
-      comb_sets_excl = _.difference(comb_sets_inter, cum_union_sofar);
-      cum_union_sofar = _.uniq(_.union(cum_union_sofar, comb_sets_excl))
-
-      if (comb_sets_excl.length !== 0) {
-        yield [comb_keys.toString(), comb_sets_excl];
         
+        // No intersection means no exclusive value
+        if (comb_sets_inter.length === 0) continue;
+  
+        comb_sets_excl = _.difference(comb_sets_inter, cum_union_sofar);
+        cum_union_sofar = _.uniq(_.union(cum_union_sofar, comb_sets_excl))
+  
+        if (comb_sets_excl.length !== 0) {
+          yield [comb_keys.toString(), comb_sets_excl];
+          
+        }
       }
+      
+      sets = objectReduce(
+        sets, 
+        (result, key, set_) => {
+          result[key] = _.difference(set_, cum_union_sofar)
+          return result
+        }, {}
+      )
+    } else {
+      continue;
     }
-
-    prev_group_card = cum_union_sofar.length
   }
 };
