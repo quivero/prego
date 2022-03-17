@@ -1194,12 +1194,22 @@ export default class Graph {
    * @return {object}
    */
   islands() {
-    const bridge_dict = this.getBridgeEndInOutDict();
-    const bridge_ends = Object.keys(bridge_dict).map(
+    throw Error('Under maintenance!')
+
+    const cp_graph = this.copy()
+    const cp_bridge_edges = cp_graph.findEdgesByVertexIndices(cp_graph.bridges())
+    
+    const bridge_ends = Object.keys(this.getBridgeEndInOutDict()).map(
       (bridge_end) => Number(bridge_end),
     );
-
-    const islands_dict = this.retrieveUndirected().getStronglyConnectedComponentsIndices();
+    
+    // Remove bridges to obtain strongly connected components
+    cp_graph.deleteEdges(cp_bridge_edges)
+    
+    let islands_dict = cp_graph.retrieveUndirected().getStronglyConnectedComponentsIndices();
+    
+    // Add bridges back
+    cp_graph.addEdges(cp_bridge_edges)
 
     return objectMap(
       islands_dict,
