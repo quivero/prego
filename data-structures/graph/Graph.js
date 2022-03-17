@@ -1440,13 +1440,6 @@ export default class Graph {
     );
   }
 
-  bridgeEndAndArticulationVenn() {
-    return extendedVenn({
-      articulation: this.articulationPoints(),
-      bridge_end: this.bridgeEnds(),
-    });
-  }
-
   /**
    * @abstract find all bridge edges.
    * @return {Array}
