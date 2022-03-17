@@ -198,6 +198,20 @@ describe('Graph', () => {
     expect(edge_keys).toEqual(['A_B', 'B_C']);
   });
 
+  it('should get edges by vertex keys', () => {
+    const graph = new Graph();
+    const keys = ['A', 'B', 'C'];
+
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+
+    graph.addEdges([AB, BC]);
+
+    const edge = graph.findEdgeByVertexIndices(0, 1);
+
+    expect(edge.getKey()).toEqual('A_B');
+  });
+
   it('should add edge to the same vertex', () => {
     const graph = new Graph();
     const keys = ['A'];
@@ -1886,14 +1900,14 @@ describe('Graph', () => {
 
     // Add edges
     graph_.addEdges(createEdges(edge_vertices));
-
+    
     expect(graph_.allPaths(A, D)).toStrictEqual([
       [0, 1, 2, 3],
       [0, 1, 2, 4, 1, 2, 3],
       [0, 1, 2, 5, 1, 2, 3],
     ]);
   });
-
+  
   it('should find hamiltonian paths in graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
