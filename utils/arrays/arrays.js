@@ -5,8 +5,21 @@ import {
   objectReduce
 } from '../objects/objects.js'
 
+/**
+ * @abstract returns an array of ones with length n
+ *
+ * @param {Integer} n
+ * @return {Array} ones
+ */
 export const ones = (n) => Array(n).fill(1);
 
+/**
+ * @abstract returns an array of indexes with val
+ *
+ * @param {Array} arr
+ * @param {Number} val
+ * @return {Array} indexes
+ */
 export const getAllIndexes = (arr, val) => {
   const indexes = [];
   let i;
@@ -20,6 +33,13 @@ export const getAllIndexes = (arr, val) => {
   return indexes;
 };
 
+/**
+ * @abstract returns a shifted word cyclily
+ *
+ * @param {Array} array
+ * @param {Integer} index
+ * @return {Array} shifted_array
+ */
 export const cyclicSort = (array, index) => {
   if (array.length < index) {
     const category = 'Error';
@@ -35,6 +55,13 @@ export const cyclicSort = (array, index) => {
   return head.concat(tail);
 };
 
+/**
+ * @abstract returns a shifted cyclicly word 
+ *
+ * @param {Array} array
+ * @param {Integer} index
+ * @return {Array} shifted_array
+ */
 export const isCyclicEqual = (control_, treatment_) => {
   if (control_.length !== treatment_.length) {
     return false;
@@ -49,6 +76,13 @@ export const isCyclicEqual = (control_, treatment_) => {
   return false;
 };
 
+/**
+ * @abstract returns true for equal arrays 
+ *
+ * @param {Array} array_a
+ * @param {Array} array_b
+ * @return {boolean} is_equal
+ */
 export const arraysEqual = (a, b) => {
   const type_equality_clause = typeof (a) === typeof (b);
 
@@ -58,6 +92,13 @@ export const arraysEqual = (a, b) => {
   return false;
 };
 
+/**
+ * @abstract returns a sorted array of integers
+ *
+ * @param {Array} array
+ * @param {Integer} type
+ * @return {Array} sorted_array
+ */
 export const sort = (arr, sort_type = 0) => {
   arr.sort((a, b) => a - b);
 
@@ -72,6 +113,13 @@ export const sort = (arr, sort_type = 0) => {
   return arr;
 };
 
+/**
+ * @abstract returns true if array has provided element
+ *
+ * @param {Array} array
+ * @param {Object} elem
+ * @return {boolean} has_element
+ */
 export const hasElement = (arr, elem) => {
   for (let i = 0; i <= arr.length; i += 1) {
     if (arraysEqual(arr[i], elem)) {
@@ -82,6 +130,13 @@ export const hasElement = (arr, elem) => {
   return false;
 };
 
+/**
+ * @abstract returns array with removed provided elements 
+ *
+ * @param {Array} arr
+ * @param {Object} elems
+ * @return {Array} arr_without_elems
+ */
 export const removeElements = (arr, elems_to_del) => {
   elems_to_del.forEach(
     (elem_to_del) => {
@@ -117,8 +172,21 @@ export const removeArrayDuplicates = (list) => {
   return unique;
 };
 
+/**
+ * @abstract returns 
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
 export const getUniques = (vec) => Array.from(new Set(vec));
 
+/**
+ * @abstract returns each tuple [key, elems] of the extended venn
+ * systematic in a generator-wise fashion
+ *
+ * @param {Array} sets
+ * @return {Array} keys_elems
+ */
 export function* extendedVenn(sets) {
   const keys_fun = (sets_) => {
     return Object.keys(sets_).map(
