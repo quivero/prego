@@ -1403,6 +1403,41 @@ describe('Graph', () => {
     expect(graph.reachableNodes('A')).toEqual([2, 3]);
   });
 
+  it('should return true for reachable node from_vertex_key to to_vertex_key', () => {
+    const graph = new Graph(true);
+
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    graph.addVertex(vertexD);
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC]);
+
+    expect(graph.isReachable('A', 'C')).toBe(true);
+    expect(graph.isReachable('A', 'D')).toBe(false);
+  });
+
+  it('should return true for predecessor node', () => {
+    const graph = new Graph(true);
+    
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexB, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC]);
+
+    expect(graph.isPredecessor('B', 'A')).toBe(true);
+    expect(graph.isPredecessor('C', 'A')).toBe(false);
+  });
+
   it('should return from-reachability list of all nodes', () => {
     const graph = new Graph(true);
 
@@ -1418,6 +1453,35 @@ describe('Graph', () => {
 
     graph.addVertex(vertexD);
 
+    expect(graph.getReachabilityList(0)).toEqual(
+      {
+        0: [1, 2],
+        1: [],
+        2: [],
+        3: [],
+      },
+    );
+  });
+
+  it('should return from-reachability list of all nodes', () => {
+    const graph = new Graph(true);
+
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexA, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC]);
+    graph.addVertex(vertexD);
+    let reachables = {};
+
+    for(const reach_tuple of graph.reachabilityVenn()) {
+      reachables[reach_tuple[0]] = reach_tuple[1]
+    }
+    
     expect(graph.getReachabilityList(0)).toEqual(
       {
         0: [1, 2],

@@ -1894,7 +1894,7 @@ export default class Graph {
   isReachable(from_vertex_key, to_vertex_key) {
     const vertices_keys_to_indices = this.getVerticesKeystoIndices();
     const to_vertex_id = vertices_keys_to_indices[to_vertex_key];
-    const r_nodes_ids = reachableNodes(from_vertex_key);
+    const r_nodes_ids = this.reachableNodes(from_vertex_key);
 
     return r_nodes_ids.includes(to_vertex_id);
   }
