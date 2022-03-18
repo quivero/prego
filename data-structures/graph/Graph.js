@@ -1880,8 +1880,8 @@ export default class Graph {
    * @param {string} type
    * @return {object} reachabilityVenn
    */
-  reachabilityVenn(type = 0) {
-    return extendedVenn(this.getReachabilityList(type));
+  * reachabilityVenn(type = 0) {
+    yield* extendedVenn(this.getReachabilityList(type));
   }
 
   /**
