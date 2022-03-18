@@ -1232,7 +1232,7 @@ describe('Graph', () => {
     expect(SCComponents).toEqual([[0, 3, 2, 1], [4, 7, 6, 5]]);
   });
 
-  it('should return vertex by index', () => {
+  it('should return bridges', () => {
     // A directed graph
     const graph = new Graph(false);
 
@@ -1487,6 +1487,23 @@ describe('Graph', () => {
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
 
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeAC = new GraphEdge(vertexB, vertexC);
+
+    graph.addEdges([edgeAB, edgeAC]);
+
+    expect(graph.isPredecessor('B', 'A')).toBe(true);
+    expect(graph.isPredecessor('C', 'A')).toBe(false);
+  });
+
+  it('should return true for predecessor node', () => {
+    const graph = new Graph(true);
+    
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexB, vertexC);
 
