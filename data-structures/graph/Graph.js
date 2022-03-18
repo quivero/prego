@@ -1874,17 +1874,6 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns the reachability venn diagram as a dict.
-   *  - type := 0 : reachable nodes from vertex id as dict key
-   *  - type := 1 : reachable nodes to vertex id as dict key
-   * @param {string} type
-   * @return {object} reachabilityVenn
-   */
-  * reachabilityVenn(type = 0) {
-    yield* extendedVenn(this.getReachabilityList(type));
-  }
-
-  /**
    * @abstract returns true if to_vertex_key is reachable from from_vertex_key
    *
    * @param {string} from_vertex_key: source node
