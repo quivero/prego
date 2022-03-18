@@ -1442,7 +1442,7 @@ export default class Graph {
    * @return {Array}
    */
   getBridgeEdges() {
-    return this.getEdgesByVertexIndexes(this.bindingPoints());
+    return this.findEdgesByVertexIndices(this.bridges());
   }
 
   /**
