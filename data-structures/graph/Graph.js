@@ -1191,7 +1191,7 @@ export default class Graph {
    * @return {object}
    */
   islands() {
-    throw Error('Under maintenance!')
+    throw Error('TODO: Under maintenance!')
 
     const cp_graph = this.copy()
     const cp_bridge_edges = cp_graph.findEdgesByVertexIndices(cp_graph.bridges())
@@ -1698,7 +1698,7 @@ export default class Graph {
   * getCyclesVenn(cycle_indices) {
     yield* extendedVenn(cycle_indices);
   }
-  
+
   /**
    * @abstract returns a subgraph with vertices indexes specified by input
    *
@@ -1706,7 +1706,7 @@ export default class Graph {
    * @return {object}
    */
   buildSubgraph(subgraph_vertex_indexes) {
-    // Construct the cycle appendix anew
+    // Construct a graph from indices anew
     const subgraph_edges = this.getEdgesByVertexIndexes(subgraph_vertex_indexes, true);
 
     const new_vertices = {};
@@ -2162,7 +2162,6 @@ export default class Graph {
       acyclic_path = acyclic_paths[path_index];
 
       for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
-        console.log(cycles_connection)
         connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
         
         const cycle_nodes = new Set();
@@ -2226,7 +2225,7 @@ export default class Graph {
     for (let i = 0; i < n_vertices; i += 1) {
       nodes_to_cycles[i] = [];
     }
-
+    
     let cnodes_temp = [];
     for (let i = 0; i < cycles.length; i += 1) {
       cnodes_temp = cnodes_temp.concat(cycles[i]);
