@@ -8,7 +8,13 @@ import {
   sort,
 } from '../arrays/arrays.js';
 
-// Function to generate all unique partitions of an integer
+/**
+ * @abstract returns all unique partitions of an integer
+ * 
+ * @param {Integer} n_points
+ * @param {Integer} n_blobs
+ * @return {Array} partitions
+ */
 export const partitions = (n_points, n_blobs) => {
   if (n_points < 0 || n_blobs < 0) {
     throw Error('Number of points and blobs MUST be greater than 0.');
@@ -54,6 +60,13 @@ export const partitions = (n_points, n_blobs) => {
   return partitions;
 };
 
+/**
+ * @abstract returns 
+ * 
+ * @param {Array} points
+ * @param {Array} card_vec
+ * @return {Array} blob_combs
+ */
 export const cardvecCombinations = (points, card_vec) => {
   const elem_0 = card_vec[0];
   const blob_combs = [];
