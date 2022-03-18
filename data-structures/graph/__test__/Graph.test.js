@@ -212,6 +212,35 @@ describe('Graph', () => {
     expect(edge.getKey()).toEqual('A_B');
   });
 
+  it('should get edges by vertex keys', () => {
+    const graph = new Graph();
+    const keys = ['A', 'B', 'C'];
+
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+
+    graph.addEdges([AB, BC]);
+
+    const edge = graph.findEdgeByVertexIndices(0, 3);
+    
+    expect(edge).toBe(null);
+  });
+
+  it('should get edges by vertex keys', () => {
+    const graph = new Graph();
+    const keys = ['A', 'B', 'C'];
+
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+
+    graph.addEdges([AB, BC]);
+
+    const edges = graph.findEdgesByVertexIndices([[0, 1], [1, 2]]);
+
+    expect(edges[0].getKey()).toEqual('A_B');
+    expect(edges[1].getKey()).toEqual('B_C');
+  });
+
   it('should add edge to the same vertex', () => {
     const graph = new Graph();
     const keys = ['A'];
@@ -1227,6 +1256,35 @@ describe('Graph', () => {
     graph.addEdges([AB, BC, BD, CE, DE, EF]);
 
     expect(graph.bridges()).toEqual([[4, 5], [0, 1]]);
+  });
+
+  it('should return bridges ends', () => {
+    // A directed graph
+    const graph = new Graph(false);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const BC = new GraphEdge(B, C);
+    const BD = new GraphEdge(B, D);
+    const CE = new GraphEdge(C, E);
+    const DE = new GraphEdge(D, E);
+    const EF = new GraphEdge(E, F);
+
+    // Add edges
+    graph.addEdges([AB, BC, BD, CE, DE, EF]);
+
+    let edges = graph.getBridgeEdges();
+    
+    expect(edges[0].getKey()).toEqual('E_F');
+    expect(edges[1].getKey()).toEqual('A_B');
   });
 
   it('should return bridges dictionary', () => {
