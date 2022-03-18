@@ -1551,12 +1551,7 @@ describe('Graph', () => {
 
     graph.addEdges([edgeAB, edgeAC]);
     graph.addVertex(vertexD);
-    let reachables = {};
-
-    for(const reach_tuple of graph.reachabilityVenn()) {
-      reachables[reach_tuple[0]] = reach_tuple[1]
-    }
-    
+       
     expect(graph.getReachabilityList(0)).toEqual(
       {
         0: [1, 2],
