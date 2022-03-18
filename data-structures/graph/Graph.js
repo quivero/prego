@@ -902,11 +902,7 @@ export default class Graph {
    * @return {Array} SC_components
    */
   getStronglyConnectedComponentsIndices() {
-    const bridgeEdges = this.getBridgeEdges();
-
-    this.deleteEdges(bridgeEdges);
     const SCC = this.getStronglyConnectedComponents();
-    this.addEdges(bridgeEdges);
 
     return objectMap(
       objectInit(_.range(SCC.length), []),
