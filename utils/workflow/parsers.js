@@ -4,6 +4,12 @@ import GraphVertex from '../../data-structures/graph/GraphVertex.js';
 import GraphEdge from '../../data-structures/graph/GraphEdge.js';
 import { getUniques, getAllIndexes } from '../arrays/arrays.js';
 
+/**
+ * @abstract returns an object with a rich description of given blueprint
+ * 
+ * @param {Object} blueprint
+ * @param {Object} description
+ */
 export const describeBlueprint = (blueprint) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
   const node_ids_per_type = {};
@@ -55,6 +61,13 @@ export const describeBlueprint = (blueprint) => {
   };
 };
 
+/**
+ * @abstract returns an object with all nodes specified by type as keys
+ * 
+ * @param {Object} blueprint
+ * @param {Integer} type
+ * @param {Object} nodes_per_type
+ */
 export const getBlueprintNodesByType = (blueprint, type) => {
   const { nodes } = blueprint.blueprint_spec;
   const nodes_per_type = [];
@@ -68,6 +81,12 @@ export const getBlueprintNodesByType = (blueprint, type) => {
   return nodes_per_type;
 };
 
+/**
+ * @abstract returns a Graph instance of the blueprint spectrum
+ * 
+ * @param {Object} blueprint
+ * @param {Graph} graph
+ */
 export const parseBlueprintToGraph = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const graph = new Graph(true);
@@ -110,6 +129,12 @@ export const parseBlueprintToGraph = (blueprint) => {
   return graph;
 };
 
+/**
+ * @abstract returns start and finish nodes object of given blueprint
+ * 
+ * @param {Object} blueprint
+ * @param {Graph} 
+ */
 export const startAndFinishNodes = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const startNodes = [];
@@ -128,6 +153,12 @@ export const startAndFinishNodes = (blueprint) => {
   return { start_nodes: [...startNodes], finish_nodes: [...finishNodes] };
 };
 
+/**
+ * @abstract returns start and finish nodes object of given blueprint
+ * 
+ * @param {Object} blueprint
+ * @param {Graph} 
+ */ 
 export const nodeToLane = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const node_to_lane = {};
@@ -161,6 +192,14 @@ export const nodeRouteToLaneRoute = (
   return lane_route;
 };
 
+/**
+ * @abstract returns all paths from certain start_key to finish_key
+ * 
+ * @param {Object} blueprint
+ * @param {String} start_key
+ * @param {String} finish_key
+ * @return {object} all_paths
+ */
 export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
   const node_id_to_lane = nodeToLane(blueprint);
@@ -223,6 +262,12 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   return route_describe;
 };
 
+/**
+ * @abstract returns all paths between all start nodes and finish nodes
+ * 
+ * @param {Object} blueprint
+ * @return {object} all_paths
+ */
 export const fromStartToFinishCombsAllPaths = (blueprint) => {
   const sf_nodes = startAndFinishNodes(blueprint);
 
