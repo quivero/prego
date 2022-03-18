@@ -16,6 +16,7 @@ import {
   extendedVenn,
   removeArrayDuplicates,
   getAllIndexes,
+  hasElement,
   sort,
 } from '../../utils/arrays/arrays.js';
 
@@ -1581,16 +1582,7 @@ export default class Graph {
           if (this.#cycles.length === 0) {
             this.#cycles.push(candidate);
           } else {
-            candidate = [...points];
-
-            let contains_candidate = false;
-            for (let i = 0; i < this.#cycles.length; i += 1) {
-              if (_.isEqual(candidate, this.#cycles[i])) {
-                contains_candidate = true;
-              }
-            }
-
-            if (!contains_candidate) this.#cycles.push(candidate);
+            if (!hasElement(this.#cycles, [...points])) this.#cycles.push(candidate);
           }
 
           f = true;
