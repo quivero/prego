@@ -134,30 +134,31 @@ export function* extendedVenn(sets) {
   let comb_sets_excl = {};
   
   let cum_union_sofar = []
+  let prev_keys_len = -1
+  let curr_keys_len = -1
 
   for (const i of _.rangeRight(1, keys.length + 1)) {
     keys = keys_fun(sets)
-    
-    if(keys.length >= i) {
-      for (const comb_keys of new _.combinations(keys, i)) {      
-        // Intersection of elements
-        comb_sets_inter = _.intersection(...comb_keys.map(
-          (key) => sets[Number(key)]
-          )
-        )
-        
-        // No intersection means no exclusive value
-        if (comb_sets_inter.length === 0) continue;
-  
-        comb_sets_excl = _.difference(comb_sets_inter, cum_union_sofar);
-        cum_union_sofar = _.uniq(_.union(cum_union_sofar, comb_sets_excl))
-  
-        if (comb_sets_excl.length !== 0) {
-          yield [comb_keys.toString(), comb_sets_excl];
-          
-        }
-      }
+    prev_keys_len = keys.length;
+
+    for (const comb_keys of new _.combinations(keys, i)) {      
+      // Intersection of elements
+      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]))
       
+      // No intersection means no exclusive value
+      if (comb_sets_inter.length === 0) continue;
+
+      comb_sets_excl = _.difference(comb_sets_inter, cum_union_sofar);
+      cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl)
+      
+      if (comb_sets_excl.length !== 0) {
+        yield [comb_keys.toString(), comb_sets_excl];
+        
+      }
+
+      // Verify if there is some empty set 
+      prev_keys_len = keys.length;  
+
       sets = objectReduce(
         sets, 
         (result, key, set_) => {
@@ -166,8 +167,13 @@ export function* extendedVenn(sets) {
         }, {}
       )
 
-    } else {
-      continue;
+      keys = keys_fun(sets)
+      
+      curr_keys_len = keys.length;
+      
+      if(curr_keys_len < prev_keys_len && curr_keys_len < i) {
+        break;
+      }
     }
   }
 };
