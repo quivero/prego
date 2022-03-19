@@ -10,6 +10,10 @@ import {
   fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
+import {
+  sort
+} from '../utils/arrays/arrays.js';
+
 const require = createRequire(import.meta.url);
 const app = express();
 
@@ -63,6 +67,24 @@ app.get('/', (req, res) => {
     const blueprint = require(fname);
     const graph = parseBlueprintToGraph(blueprint);
 
+    const edges = graph.findEdgesByVertexIndicesTuples(graph.bridges());
+    const bridge_ends = _.uniq(_.flatten(
+      edges.map((edge) => graph.convertEdgeToVerticesIndices(edge))
+    ))
+    
+    console.log(sort(_.uniq(_.flatten(
+      graph.convertEdgesToVerticesIndices(graph.getAllEdges())
+     ))).length)
+
+    // Remove bridges to obtain strongly connected components
+    graph.deleteEdges(edges);
+    
+    // Dictionary with islads
+    const islands_dict = graph.retrieveUndirected().getStronglyConnectedComponentsIndices()
+    
+    // Add edges to obtain strongly connected components
+    graph.addEdges(edges);
+    
     res.send('Hi!');
   }
 });
