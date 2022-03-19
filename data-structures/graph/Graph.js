@@ -1202,26 +1202,32 @@ export default class Graph {
    * @return {object}
    */
   islands() {
-    const edges = this.findEdgesByVertexIndicesTuples(this.bridges());
-    const bridge_ends = _.uniq(_.flatten(
-      edges.map((edge) => this.convertEdgeToVerticesIndices(edge))
-    ))
+    let graph_copy = this.copy()
+    const bridge_edges = graph_copy.getBridgeEdges();
+    
+    const bridge_ends = _.uniq(
+      _.flatten(
+        this.convertEdgesToVerticesIndices(bridge_edges)
+      )
+    )
     
     // Remove bridges to obtain strongly connected components
-    this.deleteEdges(edges);
-
+    graph_copy.deleteEdges(bridge_edges);
+    
     // Dictionary with islads
-    const islands_dict = this.retrieveUndirected().getStronglyConnectedComponentsIndices()
-
+    const islands_dict = graph_copy.retrieveUndirected().getStronglyConnectedComponentsIndices()
+    
     // edegs bridges back
-    this.addEdges(edges);
-
+    graph_copy.addEdges(bridge_edges);
+    
     return objectMap(
       islands_dict,
       (key, habitants) => ({
-        bridge_ends: sort(habitants.filter(
-          (habitant) => bridge_ends.includes(habitant),
-        ), 1),
+        bridge_ends: sort(
+          habitants.filter(
+            (habitant) => bridge_ends.includes(habitant),
+          ), 1
+        ),
         inner_vertices: sort(habitants.filter(
           (habitant) => !bridge_ends.includes(habitant),
         ), 1),
@@ -1234,7 +1240,10 @@ export default class Graph {
    * @return {Object}
    */
   getIslandToBridgeEndList() {
-    return objectMap(this.islands(), (key, habitants) => habitants.bridge_ends);
+    return objectMap(
+      this.islands(), 
+      (key, habitants) => habitants['bridge_ends']
+    );
   }
 
   /**
