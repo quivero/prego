@@ -162,7 +162,7 @@ export default class Graph {
   }
 
   /**
-   * @return {*[string]}
+   * @return {Array[string]}
    */
   getVerticesKeys() {
     return Object.keys(this.vertices);
@@ -279,7 +279,7 @@ export default class Graph {
    */
   convertEdgeToVerticesIndices(edge) {
     const keys_to_indices = this.getVerticesKeystoIndices();
-
+    
     return [
       keys_to_indices[edge.startVertex.getKey()],
       keys_to_indices[edge.endVertex.getKey()],
