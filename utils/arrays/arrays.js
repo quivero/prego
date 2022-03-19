@@ -2,8 +2,8 @@ import 'lodash.combinations';
 import _ from 'lodash';
 
 import {
-  objectReduce
-} from '../objects/objects.js'
+  objectReduce,
+} from '../objects/objects.js';
 
 /**
  * @abstract returns an array of ones with length n
@@ -56,7 +56,7 @@ export const cyclicSort = (array, index) => {
 };
 
 /**
- * @abstract returns a shifted cyclicly word 
+ * @abstract returns a shifted cyclicly word
  *
  * @param {Array} array
  * @param {Integer} index
@@ -77,7 +77,7 @@ export const isCyclicEqual = (control_, treatment_) => {
 };
 
 /**
- * @abstract returns true for equal arrays 
+ * @abstract returns true for equal arrays
  *
  * @param {Array} array_a
  * @param {Array} array_b
@@ -131,7 +131,7 @@ export const hasElement = (arr, elem) => {
 };
 
 /**
- * @abstract returns array with removed provided elements 
+ * @abstract returns array with removed provided elements
  *
  * @param {Array} arr
  * @param {Object} elems
@@ -173,7 +173,7 @@ export const removeArrayDuplicates = (list) => {
 };
 
 /**
- * @abstract returns 
+ * @abstract returns
  *
  * @param {Array} vec
  * @return {Array} arr_with_uniques
@@ -188,68 +188,67 @@ export const getUniques = (vec) => Array.from(new Set(vec));
  * @return {Array} keys_elems
  */
 export function* extendedVenn(sets) {
-  const keys_fun = (sets_) => {
-    return Object.keys(sets_).map(
-      (key) => Number(key)
-    ).filter(
-      (key) => sets_[key].length !== 0
-    );
-  }
+  const keys_fun = (sets_) => Object.keys(sets_).map(
+    (key) => Number(key),
+  ).filter(
+    (key) => sets_[key].length !== 0,
+  );
 
-  let keys = keys_fun(sets)
-  
+  let keys = keys_fun(sets);
+
   let comb_sets_inter = {};
   let comb_sets_excl = {};
-  
-  let cum_union_sofar = []
-  let compl_set_elems = []
-  let prev_keys_len = -1
-  let curr_keys_len = -1
+
+  let cum_union_sofar = [];
+  let compl_set_elems = [];
+  let prev_keys_len = -1;
+  let curr_keys_len = -1;
 
   for (const chunk_card of _.range(1, keys.length + 1)) {
-    keys = keys_fun(sets)
+    keys = keys_fun(sets);
     prev_keys_len = keys.length;
 
-    for (const comb_keys of new _.combinations(keys, chunk_card)) {      
-      if(_.difference(comb_keys, keys).length !== 0) {
+    for (const comb_keys of new _.combinations(keys, chunk_card)) {
+      if (_.difference(comb_keys, keys).length !== 0) {
         break;
       }
-      
+
       // Intersection of elements
-      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]))
+      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]));
 
       // Empty array
       if (comb_sets_inter.length === 0) continue;
-      
+
       compl_set_elems = _.uniq(_.flatten(
-        _.difference(keys, comb_keys).map((set_key) => sets[set_key])
-      ))
-      
+        _.difference(keys, comb_keys).map((set_key) => sets[set_key]),
+      ));
+
       comb_sets_excl = _.difference(comb_sets_inter, compl_set_elems);
-      cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl)
-      
+      cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl);
+
       if (comb_sets_excl.length !== 0) {
-        yield [comb_keys.toString(), comb_sets_excl];  
+        yield [comb_keys.toString(), comb_sets_excl];
       }
 
-      // Verify if there is some empty set 
-      prev_keys_len = keys.length;  
+      // Verify if there is some empty set
+      prev_keys_len = keys.length;
 
       sets = objectReduce(
-        sets, 
+        sets,
         (result, key, set_) => {
-          result[key] = _.difference(set_, cum_union_sofar)
-          return result
-        }, {}
-      )
+          result[key] = _.difference(set_, cum_union_sofar);
+          return result;
+        },
+        {},
+      );
 
-      keys = keys_fun(sets)
-      
+      keys = keys_fun(sets);
+
       curr_keys_len = keys.length;
-      
-      if(curr_keys_len < prev_keys_len && curr_keys_len < chunk_card) {
+
+      if (curr_keys_len < prev_keys_len && curr_keys_len < chunk_card) {
         break;
       }
     }
   }
-};
+}

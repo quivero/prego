@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 /**
  * @abstract returns an object with given keys and initial value
- * 
+ *
  * @param {Array} keys
  * @param {Object} initial_value
  * @param {Object} init_object
@@ -20,7 +20,7 @@ export const objectInit = (keys, init_value) => {
 
 /**
  * @abstract returns an object mapped values for keys and value
- * 
+ *
  * @param {Object} object
  * @param {function} mapFn
  * @param {Object} mapped_object
@@ -37,7 +37,7 @@ export const objectReduce = (object, reduceFn, init_val) => Object.entries(_.clo
 
 /**
  * @abstract returns a filtered object
- * 
+ *
  * @param {Object} object
  * @param {function} filterFn
  * @param {Object} filtered_object
@@ -58,7 +58,7 @@ export const objectFilter = (object, filterFn) => {
 
 /**
  * @abstract returns the keys of a filtered object
- * 
+ *
  * @param {Object} object
  * @param {function} filterFn
  * @param {Object} filtered_object

@@ -102,7 +102,7 @@ describe('Extended venn diagram', () => {
   it('should validate information from Extended Venn Diagram', () => {
     const list_1 = [1, 2, 3, 4, 5];
     const list_2 = [4, 5, 6, 7];
-    
+
     expect(Object.fromEntries([...extendedVenn([list_1, list_2])])).toEqual({
       '0,1': [4, 5],
       0: [1, 2, 3],

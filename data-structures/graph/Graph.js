@@ -563,7 +563,7 @@ export default class Graph {
    * @param {GraphVertex} endVertex
    * @return {(GraphEdge|null)}
    */
-   findEdgeByVertexIndices(startVertex_index, endVertex_index) {
+  findEdgeByVertexIndices(startVertex_index, endVertex_index) {
     const vertex = this.getVertexByIndex(startVertex_index);
 
     if (!vertex) {
@@ -578,15 +578,13 @@ export default class Graph {
    * @param {GraphVertex} endVertex
    * @return {(GraphEdge|null)}
    */
-   findEdgesByVertexIndices(vertex_indexes_tuples) {
+  findEdgesByVertexIndices(vertex_indexes_tuples) {
     return vertex_indexes_tuples.map(
-      (vertex_indexes_tuple) => {
-        return this.findEdgeByVertexIndices(
-          vertex_indexes_tuple[0], 
-          vertex_indexes_tuple[1]  
-        )
-      }
-    )
+      (vertex_indexes_tuple) => this.findEdgeByVertexIndices(
+        vertex_indexes_tuple[0],
+        vertex_indexes_tuple[1],
+      ),
+    );
   }
 
   /**
@@ -867,7 +865,7 @@ export default class Graph {
 
     return cycles.length !== 0;
   }
-  
+
   /**
    * @abstract returns strongly connected components (vertes-sets with possible
    * from-to paths)
@@ -1191,22 +1189,22 @@ export default class Graph {
    * @return {object}
    */
   islands() {
-    throw Error('TODO: Under maintenance!')
+    throw Error('TODO: Under maintenance!');
 
-    const cp_graph = this.copy()
-    const cp_bridge_edges = cp_graph.findEdgesByVertexIndices(cp_graph.bridges())
-    
+    const cp_graph = this.copy();
+    const cp_bridge_edges = cp_graph.findEdgesByVertexIndices(cp_graph.bridges());
+
     const bridge_ends = Object.keys(this.getBridgeEndInOutDict()).map(
       (bridge_end) => Number(bridge_end),
     );
-    
+
     // Remove bridges to obtain strongly connected components
-    cp_graph.deleteEdges(cp_bridge_edges)
-    
-    let islands_dict = cp_graph.retrieveUndirected().getStronglyConnectedComponentsIndices();
-    
+    cp_graph.deleteEdges(cp_bridge_edges);
+
+    const islands_dict = cp_graph.retrieveUndirected().getStronglyConnectedComponentsIndices();
+
     // Add bridges back
-    cp_graph.addEdges(cp_bridge_edges)
+    cp_graph.addEdges(cp_bridge_edges);
 
     return objectMap(
       islands_dict,
@@ -1571,15 +1569,13 @@ export default class Graph {
       } else {
         // Cycle (!): Next node is equal do origin
         if (w === origin_index) {
-          let candidate = [...points];
+          const candidate = [...points];
 
           // Add cycle candidates if list is empty or
           // it is not in the list already
           if (this.#cycles.length === 0) {
             this.#cycles.push(candidate);
-          } else {
-            if (!hasElement(this.#cycles, [...points])) this.#cycles.push(candidate);
-          }
+          } else if (!hasElement(this.#cycles, [...points])) this.#cycles.push(candidate);
 
           f = true;
         } else {
@@ -2148,12 +2144,12 @@ export default class Graph {
     const cycle_indices = this.getCycleIndices();
 
     let cyclic_paths = [];
-    
+
     let cycle_nodes_arr = [];
     let connected_cycles_indexes = [];
     let acyclic_path = [];
-    
-    let cycles_connection = [];
+
+    const cycles_connection = [];
 
     acyclic_paths = removeArrayDuplicates(acyclic_paths);
 
@@ -2163,12 +2159,12 @@ export default class Graph {
 
       for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
         connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
-        
+
         const cycle_nodes = new Set();
         connected_cycles_indexes.forEach(
-          (cycle_index) => cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes)
+          (cycle_index) => cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes),
         );
-        
+
         cycle_nodes_arr = [...cycle_nodes];
 
         let cyclic_paths_i = [];
@@ -2225,7 +2221,7 @@ export default class Graph {
     for (let i = 0; i < n_vertices; i += 1) {
       nodes_to_cycles[i] = [];
     }
-    
+
     let cnodes_temp = [];
     for (let i = 0; i < cycles.length; i += 1) {
       cnodes_temp = cnodes_temp.concat(cycles[i]);

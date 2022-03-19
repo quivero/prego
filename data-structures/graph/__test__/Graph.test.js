@@ -222,7 +222,7 @@ describe('Graph', () => {
     graph.addEdges([AB, BC]);
 
     const edge = graph.findEdgeByVertexIndices(0, 3);
-    
+
     expect(edge).toBe(null);
   });
 
@@ -798,11 +798,13 @@ describe('Graph', () => {
 
     // Add edges
     graph.addEdges([AB, BC, CA, BD, DE, EF, FD]);
-    
-    let str1 = JSON.stringify(graph.getStronglyConnectedComponentsIndices())
-    let str2 = JSON.stringify({'0': [0, 2, 1],
-                               '1': [3, 5, 4]})
-    
+
+    const str1 = JSON.stringify(graph.getStronglyConnectedComponentsIndices());
+    const str2 = JSON.stringify({
+      0: [0, 2, 1],
+      1: [3, 5, 4],
+    });
+
     expect(str1 === str2).toEqual(true);
   });
 
@@ -829,14 +831,14 @@ describe('Graph', () => {
 
     // Add edges
     graph.addEdges([AB, BC, CA, BD, DE, EF, FD]);
-    
-    let str1 = JSON.stringify(graph.getMapSCCToBindingPoints())
-    let str2 = JSON.stringify(
+
+    const str1 = JSON.stringify(graph.getMapSCCToBindingPoints());
+    const str2 = JSON.stringify(
       {
-        '0': [1],
-        '1': [3]
-      }
-    )
+        0: [1],
+        1: [3],
+      },
+    );
 
     expect(str1 === str2).toBe(true);
   });
@@ -1281,8 +1283,8 @@ describe('Graph', () => {
     // Add edges
     graph.addEdges([AB, BC, BD, CE, DE, EF]);
 
-    let edges = graph.getBridgeEdges();
-    
+    const edges = graph.getBridgeEdges();
+
     expect(edges[0].getKey()).toEqual('E_F');
     expect(edges[1].getKey()).toEqual('A_B');
   });
@@ -1482,7 +1484,7 @@ describe('Graph', () => {
 
   it('should return true for predecessor node', () => {
     const graph = new Graph(true);
-    
+
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
@@ -1498,12 +1500,12 @@ describe('Graph', () => {
 
   it('should return true for predecessor node', () => {
     const graph = new Graph(true);
-    
+
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
     const vertexD = new GraphVertex('D');
-    
+
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexB, vertexC);
 
@@ -1551,7 +1553,7 @@ describe('Graph', () => {
 
     graph.addEdges([edgeAB, edgeAC]);
     graph.addVertex(vertexD);
-       
+
     expect(graph.getReachabilityList(0)).toEqual(
       {
         0: [1, 2],
@@ -2034,14 +2036,14 @@ describe('Graph', () => {
 
     // Add edges
     graph_.addEdges(createEdges(edge_vertices));
-    
+
     expect(graph_.allPaths(A, D)).toStrictEqual([
       [0, 1, 2, 3],
       [0, 1, 2, 4, 1, 2, 3],
       [0, 1, 2, 5, 1, 2, 3],
     ]);
   });
-  
+
   it('should find hamiltonian paths in graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');

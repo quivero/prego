@@ -6,7 +6,7 @@ import { getUniques, getAllIndexes } from '../arrays/arrays.js';
 
 /**
  * @abstract returns an object with a rich description of given blueprint
- * 
+ *
  * @param {Object} blueprint
  * @param {Object} description
  */
@@ -63,7 +63,7 @@ export const describeBlueprint = (blueprint) => {
 
 /**
  * @abstract returns an object with all nodes specified by type as keys
- * 
+ *
  * @param {Object} blueprint
  * @param {Integer} type
  * @param {Object} nodes_per_type
@@ -83,7 +83,7 @@ export const getBlueprintNodesByType = (blueprint, type) => {
 
 /**
  * @abstract returns a Graph instance of the blueprint spectrum
- * 
+ *
  * @param {Object} blueprint
  * @param {Graph} graph
  */
@@ -131,9 +131,9 @@ export const parseBlueprintToGraph = (blueprint) => {
 
 /**
  * @abstract returns start and finish nodes object of given blueprint
- * 
+ *
  * @param {Object} blueprint
- * @param {Graph} 
+ * @param {Graph}
  */
 export const startAndFinishNodes = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
@@ -155,10 +155,10 @@ export const startAndFinishNodes = (blueprint) => {
 
 /**
  * @abstract returns start and finish nodes object of given blueprint
- * 
+ *
  * @param {Object} blueprint
- * @param {Graph} 
- */ 
+ * @param {Graph}
+ */
 export const nodeToLane = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const node_to_lane = {};
@@ -194,7 +194,7 @@ export const nodeRouteToLaneRoute = (
 
 /**
  * @abstract returns all paths from certain start_key to finish_key
- * 
+ *
  * @param {Object} blueprint
  * @param {String} start_key
  * @param {String} finish_key
@@ -264,7 +264,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
 /**
  * @abstract returns all paths between all start nodes and finish nodes
- * 
+ *
  * @param {Object} blueprint
  * @return {object} all_paths
  */

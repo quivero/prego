@@ -2,7 +2,7 @@ import fs from 'fs';
 
 /**
  * @abstract saves json to file
- * 
+ *
  * @param {Array} path
  * @param {Object} json_object
  * @param {String} name
@@ -23,7 +23,7 @@ export const saveJSONtoFile = (path, json_object, name) => {
 
 /**
  * @abstract loads json to file
- * 
+ *
  * @param {Array} path
  * @param {Object} name
  */

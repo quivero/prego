@@ -62,9 +62,6 @@ app.get('/', (req, res) => {
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
     const graph = parseBlueprintToGraph(blueprint);
-    
-    console.log('Islands: ')
-    console.log(graph.islands())
 
     res.send('Hi!');
   }

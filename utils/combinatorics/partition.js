@@ -10,7 +10,7 @@ import {
 
 /**
  * @abstract returns all unique partitions of an integer
- * 
+ *
  * @param {Integer} n_points
  * @param {Integer} n_blobs
  * @return {Array} partitions
@@ -61,8 +61,8 @@ export const partitions = (n_points, n_blobs) => {
 };
 
 /**
- * @abstract returns 
- * 
+ * @abstract returns
+ *
  * @param {Array} points
  * @param {Array} card_vec
  * @return {Array} blob_combs
