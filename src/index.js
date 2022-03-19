@@ -71,20 +71,10 @@ app.get('/', (req, res) => {
     const bridge_ends = _.uniq(_.flatten(
       edges.map((edge) => graph.convertEdgeToVerticesIndices(edge))
     ))
-    
-    console.log(sort(_.uniq(_.flatten(
-      graph.convertEdgesToVerticesIndices(graph.getAllEdges())
-     ))).length)
-
-    // Remove bridges to obtain strongly connected components
-    graph.deleteEdges(edges);
-    
+        
     // Dictionary with islads
-    const islands_dict = graph.retrieveUndirected().getStronglyConnectedComponentsIndices()
-    
-    // Add edges to obtain strongly connected components
-    graph.addEdges(edges);
-    
+    console.log(graph.islands())
+
     res.send('Hi!');
   }
 });
