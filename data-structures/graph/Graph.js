@@ -2201,6 +2201,17 @@ export default class Graph {
   }
 
   /**
+   * @abstract returns the same graph without edges
+   *
+   * @return {Graoh} graph
+   */
+   empty() {
+    this.deleteEdges(this.getAllEdges())
+
+    return this;
+  }
+
+  /**
    * @abstract returns true if a graph has no edge
    *
    * @param {Array} chain_candidate
