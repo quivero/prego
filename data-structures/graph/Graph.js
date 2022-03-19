@@ -738,8 +738,21 @@ export default class Graph {
    */
   retrieveUndirected() {
     const undirected_graph = new Graph(false);
-    undirected_graph.addEdges(_.cloneDeep(this.getAllEdges()));
 
+    undirected_graph.addVertices(_.cloneDeep(this.getAllVertices()));
+
+    undirected_graph.addEdges(
+      this.getAllEdges().map(
+        (edge) => {
+          return new GraphEdge(
+            undirected_graph.vertices[edge.startVertex.getKey()],
+            undirected_graph.vertices[edge.endVertex.getKey()],
+            edge.weight
+          )
+        }
+      )
+    )
+    
     return undirected_graph;
   }
 
