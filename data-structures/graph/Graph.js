@@ -578,7 +578,7 @@ export default class Graph {
    * @param {GraphVertex} endVertex
    * @return {(GraphEdge|null)}
    */
-  findEdgesByVertexIndices(vertex_indexes_tuples) {
+  findEdgesByVertexIndicesTuples(vertex_indexes_tuples) {
     return vertex_indexes_tuples.map(
       (vertex_indexes_tuple) => this.findEdgeByVertexIndices(
         vertex_indexes_tuple[0],
@@ -1189,22 +1189,19 @@ export default class Graph {
    * @return {object}
    */
   islands() {
-    throw Error('TODO: Under maintenance!');
-
-    const cp_graph = this.copy();
-    const cp_bridge_edges = cp_graph.findEdgesByVertexIndices(cp_graph.bridges());
-
-    const bridge_ends = Object.keys(this.getBridgeEndInOutDict()).map(
-      (bridge_end) => Number(bridge_end),
-    );
-
+    const edges = this.findEdgesByVertexIndicesTuples(this.bridges());
+    const bridge_ends = _.uniq(_.flatten(
+      edges.map((edge) => this.convertEdgeToVerticesIndices(edge))
+    ))
+    
     // Remove bridges to obtain strongly connected components
-    cp_graph.deleteEdges(cp_bridge_edges);
+    this.deleteEdges(edges);
 
-    const islands_dict = cp_graph.retrieveUndirected().getStronglyConnectedComponentsIndices();
+    // Dictionary with islads
+    const islands_dict = this.retrieveUndirected().getStronglyConnectedComponentsIndices()
 
-    // Add bridges back
-    cp_graph.addEdges(cp_bridge_edges);
+    // edegs bridges back
+    this.addEdges(edges);
 
     return objectMap(
       islands_dict,
@@ -1440,9 +1437,9 @@ export default class Graph {
    * @return {Array}
    */
   getBridgeEdges() {
-    return this.findEdgesByVertexIndices(this.bridges());
+    return this.findEdgesByVertexIndicesTuples(this.bridges());
   }
-
+  
   /**
   * @abstract Tarjan's algorithm for finding articulation points in graph.
   *

@@ -234,8 +234,8 @@ describe('Graph', () => {
     const [AB, BC] = createEdges([[A, B], [B, C]]);
 
     graph.addEdges([AB, BC]);
-
-    const edges = graph.findEdgesByVertexIndices([[0, 1], [1, 2]]);
+    
+    const edges = graph.findEdgesByVertexIndicesTuples([[0, 1], [1, 2]]);
 
     expect(edges[0].getKey()).toEqual('A_B');
     expect(edges[1].getKey()).toEqual('B_C');
