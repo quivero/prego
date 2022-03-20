@@ -188,14 +188,29 @@ describe('Graph', () => {
 
     graph.addEdges([AB, BC]);
 
-    const edges = graph.getEdgesByVertexKeys(keys);
-
-    const edge_keys = [];
+    let edges = graph.getEdgesByVertexKeys(['A', 'B'], false);
+    
+    let edge_keys = [];
     edges.forEach((edge) => {
       edge_keys.push(edge.getKey());
     });
-
+    
     expect(edge_keys).toEqual(['A_B', 'B_C']);
+    expect(
+      graph.getEdgesKeysByVertexKeys(['A', 'B'], false)
+    ).toEqual(['A_B', 'B_C']);
+
+    edges = graph.getEdgesByVertexKeys(['A', 'B'], true);
+    
+    edge_keys = [];
+    edges.forEach((edge) => {
+      edge_keys.push(edge.getKey());
+    });
+    
+    expect(edge_keys).toEqual(['A_B']);
+    expect(
+      graph.getEdgesKeysByVertexKeys(['A', 'B'], true)
+    ).toEqual(['A_B']);
   });
 
   it('should get edges by vertex keys', () => {
@@ -580,6 +595,21 @@ describe('Graph', () => {
     expect(graph.isEulerian()).toStrictEqual(0);
   });
 
+  it('should return 0 for non-eulerian graph', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
+    
+    const graph = new Graph();
+
+    graph.addEdges([edgeAB, edgeBC]);
+
+    expect(graph.empty().getAllEdges().length).toStrictEqual(0);
+  });
+
   it('should return 1 for an eulerian path of directed graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
@@ -654,7 +684,7 @@ describe('Graph', () => {
     });
   });
 
-  it('should return reverse star representation of a graph', () => {
+  it('should return reverse star representation of a graph and volume of graph', () => {
     const vertexA = new GraphVertex('A');
     const vertexB = new GraphVertex('B');
     const vertexC = new GraphVertex('C');
@@ -691,6 +721,11 @@ describe('Graph', () => {
       4: 1,
       5: 1,
     });
+
+    const n_vertices = graph.getNumVertices()
+    
+    expect(graph.volume(_.range(n_vertices), 0)).toEqual(6);
+    expect(graph.volume(_.range(n_vertices), 1)).toEqual(6);
   });
 
   it('should return true for bipartite graph', () => {
@@ -1432,8 +1467,58 @@ describe('Graph', () => {
     
     expect(graph.getIslandFromBridgeEnd(3)).toBe(0);
     expect(graph.getIslandFromBridgeEnd(1)).toBe(1);
+
+    expect(
+      JSON.stringify(
+        graph.getIslandsToFromBridgeEnd()
+      )
+    ).toBe(
+      JSON.stringify(
+        {
+          '0': {
+            'from': [1],
+            'to': []
+          },
+          '1': {
+            'from': [],
+            'to': [3]
+          }
+        }
+      )
+    );
+
+    expect(JSON.stringify(graph.getIslandsAdjacencyList())).toBe(
+      JSON.stringify(
+        {
+          '0': [],
+          '1': [0]
+        }
+      )
+    );
     
+    expect(
+      JSON.stringify(graph.getIslandsFromToIslands())
+    ).toBe(
+      JSON.stringify(
+        {
+          '0': {
+            'to': [],
+            'from': [1]
+          },
+          '1': {
+            'to': [0],
+            'from': []
+          }
+        }
+      )
+    );
     
+    expect(
+      graph.getIslandGraph()
+           .getAllEdges()
+           .map((edge) => edge.getKey())
+          ).toStrictEqual(['1_0']);
+
   });
 
   it('Cycles in a finite graph must be finite', () => {
