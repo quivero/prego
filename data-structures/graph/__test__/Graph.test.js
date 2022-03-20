@@ -1374,6 +1374,68 @@ describe('Graph', () => {
     expect(graph.getVertexByIndex(0)).toStrictEqual(A);
   });
 
+  it('should return islands properties', () => {
+    // A directed graph
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    const C = new GraphVertex('C');
+    const D = new GraphVertex('D');
+    const E = new GraphVertex('E');
+    const F = new GraphVertex('F');
+
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    const AC = new GraphEdge(A, C);
+    const CB = new GraphEdge(C, B);
+    const BD = new GraphEdge(B, D);
+    const DE = new GraphEdge(D, E);
+    const DF = new GraphEdge(D, F);
+    const EF = new GraphEdge(E, F);
+
+    // Add edges
+    graph.addEdges([AB, AC, CB, BD, DE, DF, EF]);
+    
+    expect(JSON.stringify(graph.islands())).toBe(
+      JSON.stringify(
+        {
+          "0":{
+              "bridge_ends":[
+                  3
+              ],
+              "inner_vertices":[4, 5]
+          },
+          "1":{
+              "bridge_ends":[1],
+              "inner_vertices":[0,2]
+          }
+      })
+    );
+
+    expect(JSON.stringify(graph.getIslandToBridgeEndList())).toBe(
+      JSON.stringify(
+        {
+          "0": [3],
+          "1": [1]
+      })
+    );
+
+    expect(JSON.stringify(graph.getBridgeEndToIsland())).toBe(
+      JSON.stringify(
+        {
+          "3": 0,
+          "1": 1
+      })
+    );
+    
+    expect(graph.getIslandFromBridgeEnd(3)).toBe(0);
+    expect(graph.getIslandFromBridgeEnd(1)).toBe(1);
+    
+    
+  });
+
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
     const graph = new Graph(true);
@@ -2058,7 +2120,7 @@ describe('Graph', () => {
     // Nodes
     const node_labels = ['A', 'B', 'C', 'D', 'E', 'F'];
     const [A, B, C, D, E, F] = createVertices(node_labels);
-    
+
     // Vertices
     const edge_vertices = [[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]];
 

@@ -1162,10 +1162,10 @@ export default class Graph {
    * @abstract find all bridges. It uses recursive function bridgeUtil()
    * @return {Array}
    */
-  bridges() {
-    const bridges = graphBridges(this);
+  bridges(undirect = false) {
+    const bridges = graphBridges(undirect ? this.retrieveUndirected() : this);
     const vertices_keys_to_indices = this.getVerticesKeystoIndices();
-
+    
     return Object.values(bridges).map(
       (bridge_edge) => [
         vertices_keys_to_indices[bridge_edge.startVertex.getKey()],
@@ -1249,10 +1249,10 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns an object map from an bridge end index to an island id
+   * @abstract returns an object map from a bridge end index to an island id
    * @return {Object}
    */
-  getBridgeEndToIslandList() {
+  getBridgeEndToIsland() {
     return objectReduce(
       this.getIslandToBridgeEndList(),
       (result, island_id, bridge_ends) => {
@@ -1315,19 +1315,32 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns a map from the bridge end id to its island
-   * @return {Number}
+   * @abstract returns a map from island ids to from-to bridge end ids
+   * @return {Array}
    */
-  getBridgeEndToIsland() {
+   getIslandsToFromBridgeEnd() {
+    const island_bridge_end_list = this.getIslandToBridgeEndList();
+    const bridges = this.retrieveUndirected().bridges();
+    const bridge_in_out_list = this.getBridgeEndInOutDict();
+    
+    let from_to = {};
+
     return objectReduce(
-      this.getIslandToBridgeEndList(),
-      (result, island_id, bridge_end_ids) => {
-        bridge_end_ids.forEach(
-          (bridge_end_id) => {
-            result[bridge_end_id] = Number(island_id);
+      island_bridge_end_list,
+      (result, island_id, bridge_ends) => {
+        from_to = {
+          from: [],
+          to: [],
+        };
+        
+        bridge_ends.forEach(
+          (bridge_end) => {
+            from_to['from'] = _.uniq(from_to['from'].concat(bridge_in_out_list[bridge_end]['from']));
+            from_to['to'] = _.uniq(from_to['to'].concat(bridge_in_out_list[bridge_end]['to']));
           },
         );
 
+        result[island_id] = from_to;
         return result;
       },
       {},
@@ -1340,62 +1353,20 @@ export default class Graph {
    */
   getIslandsAdjacencyList() {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
-    const bridge_end_to_island = this.getBridgeEndToIsland();
     const bridge_in_out_list = this.getBridgeEndInOutDict();
-
+    
     let to_list = [];
-
+    
     return objectReduce(
       island_bridge_end_list,
       (result, island_id, bridge_ends) => {
-        to_list = [];
+        to_list = bridge_ends.map(
+          (bridge_end) => bridge_in_out_list[bridge_end]
+        )
 
-        bridge_ends.forEach(
-          (bridge_end) => {
-            to_list = _.uniq(to_list.concat(
-              bridge_in_out_list[bridge_end].to.map(
-                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end]),
-              ),
-            ));
-          },
-        );
-
-        result[island_id] = to_list;
-        return result;
-      },
-      {},
-    );
-  }
-
-  /**
-   * @abstract returns a map from island ids to from-to bridge end ids
-   * @return {Array}
-   */
-  getIslandsInOutBridgeEnd() {
-    const island_bridge_end_list = this.getIslandToBridgeEndList();
-    const bridge_in_out_list = this.getBridgeEndInOutDict();
-    let from_to = {};
-
-    return objectReduce(
-      island_bridge_end_list,
-      (result, island_id, bridge_ends) => {
-        from_to = {
-          from: [],
-          to: [],
-        };
-
-        bridge_ends.forEach(
-          (bridge_end) => {
-            from_to.from = _.uniq(from_to.from.concat(bridge_in_out_list[bridge_end].from));
-            from_to.to = _.uniq(from_to.to.concat(bridge_in_out_list[bridge_end].to));
-          },
-        );
-
-        result[island_id] = from_to;
-        return result;
-      },
-      {},
-    );
+        return result
+      }, {}
+    )
   }
 
   /**
@@ -1418,13 +1389,13 @@ export default class Graph {
 
         bridge_ends.forEach(
           (bridge_end) => {
-            from_to.from = _.uniq(from_to.from.concat(
-              bridge_in_out_list[bridge_end].from.map(
+            from_to.from = _.uniq(from_to['from'].concat(
+              bridge_in_out_list[bridge_end]['from'].map(
                 (from_bridge_end) => Number(bridge_end_to_island[from_bridge_end]),
               ),
             ));
-            from_to.to = _.uniq(from_to.to.concat(
-              bridge_in_out_list[bridge_end].to.map(
+            from_to.to = _.uniq(from_to['to'].concat(
+              bridge_in_out_list[bridge_end]['to'].map(
                 (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end]),
               ),
             ));
