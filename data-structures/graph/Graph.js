@@ -1178,27 +1178,36 @@ export default class Graph {
    * @abstract returns a map from bridge-ends to from-to bridge end object
    * @return {Array}
    */
-  getBridgeEndInOutDict() {
+  getBridgeEndInOutDict() { 
     const bridges = this.bridges();
     const bridge_keys = _.uniq(_.flatten(bridges));
-    const bridge_dict = objectInit(bridge_keys, []);
+    
     const forward_star = this.getAdjacencyList(0);
     const inverse_star = this.getAdjacencyList(1);
     let neighbours = [];
 
     bridge_keys.forEach((bridgeEnd) => {
-      neighbours = _.remove(
-        _.flatten(bridges.filter((bridge) => bridge.includes(bridgeEnd))),
-        (elem) => elem !== bridgeEnd,
-      );
-
-      bridge_dict[bridgeEnd] = {
-        to: neighbours.filter((neighbour) => forward_star[bridgeEnd].includes(neighbour)),
-        from: neighbours.filter((neighbour) => inverse_star[bridgeEnd].includes(neighbour)),
-      };
+      
     });
 
-    return bridge_dict;
+    return objectReduce(
+      bridge_keys,
+      (bridge_dict, __, bridge_end_key) => {
+        
+        neighbours = _.remove(
+          _.flatten(bridges.filter((bridge) => bridge.includes(bridge_end_key))),
+          (elem) => elem !== bridge_end_key,
+        );
+  
+        bridge_dict[bridge_end_key] = {
+          to: neighbours.filter((neighbour) => forward_star[bridge_end_key].includes(neighbour)),
+          from: neighbours.filter((neighbour) => inverse_star[bridge_end_key].includes(neighbour)),
+        };
+
+        return bridge_dict
+      }
+      , {}
+    );
   }
 
   /**
@@ -1268,6 +1277,98 @@ export default class Graph {
     );
   }
 
+  /**
+   * @abstract returns a map from island id to bridge end id
+   * @return {Number}
+   */
+  getIslandFromBridgeEnd(bridge_end_index) {
+    const index_candidates = objectKeyFind(
+      this.islands(),
+      (key, habitants) => habitants.bridge_ends.includes(bridge_end_index),
+    );
+
+    return Number(index_candidates[0]);
+  }
+
+  /**
+   * @abstract returns a map from island ids to from-to bridge end ids
+   * @return {Array}
+   */
+   getIslandsToFromBridgeEnd() {
+    const island_bridge_end_list = this.getIslandToBridgeEndList();
+    
+    const bridges = this.bridges(true);
+    const bridge_ends = _.uniq(_.flatten(bridges));
+    
+    const forward_star = this.getAdjacencyList(0);
+    const reverse_star = this.getAdjacencyList(1);
+    
+    let from_to = {};
+
+    return objectReduce(
+      island_bridge_end_list,
+      (result, island_id, bridge_ends_) => {
+        
+        bridge_ends_.forEach(
+          (bridge_end) => {
+            from_to = {'from': [], 'to': []}
+            
+            from_to['to'] = from_to['to'].concat(
+              _.intersection(
+                bridge_ends,
+                forward_star[bridge_end]
+              )
+            )
+            
+            from_to['from'] = from_to['from'].concat(
+              _.intersection(
+                bridge_ends, 
+                reverse_star[bridge_end]
+              )
+            )
+            
+            result[island_id] = from_to
+          }
+        )
+        
+        return result;
+      }, {}
+    );
+  }
+
+  /**
+   * @abstract returns a map from islands to islands
+   * @return {Array}
+   */
+  getIslandsAdjacencyList() {
+    const bridge_end_to_island = this.getBridgeEndToIsland()
+    
+    return objectMap(
+      this.getIslandsToFromBridgeEnd(),
+      (island_id, from_to_dict) => from_to_dict['to'].map(
+        (to_bridge_end) => bridge_end_to_island[to_bridge_end]
+      )
+    )
+  }
+
+  /**
+   * @abstract returns a map from islands to from-to islands
+   * @return {Array}
+   */
+   getIslandsFromToIslands() {
+    const bridge_end_to_island = this.getBridgeEndToIsland()
+    
+    return objectMap(
+      this.getIslandsToFromBridgeEnd(),
+      (island_id, from_to_dict) => {
+        return {
+          to:   from_to_dict['to'].map((to_bridge_end) => bridge_end_to_island[to_bridge_end]),
+          from: from_to_dict['from'].map((to_bridge_end) => bridge_end_to_island[to_bridge_end])
+        }
+      }
+    )
+  }
+
   getIslandGraph() {
     const islandAdjList = this.getIslandsAdjacencyList();
 
@@ -1295,118 +1396,6 @@ export default class Graph {
     );
 
     return island_graph;
-  }
-
-  /**
-   * @abstract returns a map from island id to bridge end id
-   * @return {Number}
-   */
-  getIslandFromBridgeEnd(bridge_end_index) {
-    const index_candidates = objectKeyFind(
-      this.islands(),
-      (key, habitants) => habitants.bridge_ends.includes(bridge_end_index),
-    );
-
-    if (index_candidates.length !== 1) {
-      throw Error('A bridge_end MUST belong only to one island!');
-    }
-
-    return Number(index_candidates[0]);
-  }
-
-  /**
-   * @abstract returns a map from island ids to from-to bridge end ids
-   * @return {Array}
-   */
-   getIslandsToFromBridgeEnd() {
-    const island_bridge_end_list = this.getIslandToBridgeEndList();
-    const bridges = this.retrieveUndirected().bridges();
-    const bridge_in_out_list = this.getBridgeEndInOutDict();
-    
-    let from_to = {};
-
-    return objectReduce(
-      island_bridge_end_list,
-      (result, island_id, bridge_ends) => {
-        from_to = {
-          from: [],
-          to: [],
-        };
-        
-        bridge_ends.forEach(
-          (bridge_end) => {
-            from_to['from'] = _.uniq(from_to['from'].concat(bridge_in_out_list[bridge_end]['from']));
-            from_to['to'] = _.uniq(from_to['to'].concat(bridge_in_out_list[bridge_end]['to']));
-          },
-        );
-
-        result[island_id] = from_to;
-        return result;
-      },
-      {},
-    );
-  }
-
-  /**
-   * @abstract returns a map from islands to islands
-   * @return {Array}
-   */
-  getIslandsAdjacencyList() {
-    const island_bridge_end_list = this.getIslandToBridgeEndList();
-    const bridge_in_out_list = this.getBridgeEndInOutDict();
-    
-    let to_list = [];
-    
-    return objectReduce(
-      island_bridge_end_list,
-      (result, island_id, bridge_ends) => {
-        to_list = bridge_ends.map(
-          (bridge_end) => bridge_in_out_list[bridge_end]
-        )
-
-        return result
-      }, {}
-    )
-  }
-
-  /**
-   * @abstract returns a map from islands to from-to islands
-   * @return {Array}
-   */
-  getIslandsFromToIslands() {
-    const island_bridge_end_list = this.getIslandToBridgeEndList();
-    const bridge_end_to_island = this.getBridgeEndToIsland();
-    const bridge_in_out_list = this.getBridgeEndInOutDict();
-    let from_to = {};
-
-    return objectReduce(
-      island_bridge_end_list,
-      (result, island_id, bridge_ends) => {
-        from_to = {
-          from: [],
-          to: [],
-        };
-
-        bridge_ends.forEach(
-          (bridge_end) => {
-            from_to.from = _.uniq(from_to['from'].concat(
-              bridge_in_out_list[bridge_end]['from'].map(
-                (from_bridge_end) => Number(bridge_end_to_island[from_bridge_end]),
-              ),
-            ));
-            from_to.to = _.uniq(from_to['to'].concat(
-              bridge_in_out_list[bridge_end]['to'].map(
-                (to_bridge_end) => Number(bridge_end_to_island[to_bridge_end]),
-              ),
-            ));
-          },
-        );
-
-        result[island_id] = from_to;
-        return result;
-      },
-      {},
-    );
   }
 
   /**
@@ -1647,13 +1636,18 @@ export default class Graph {
   /**
    * @abstract returns the in-out volume of certain vertices,
    * defined by the sum of in-out degrees
-   *
+   * - out: 0
+   * - in: 1
+   * 
    * @return {Array[Array]} cycle
    */
   volume(vertices_indices, type = 0) {
     const degree_list = this.getInOutDegreeList(type);
-
-    return vertices_indices.reduce((id_1, id_2) => degree_list[id_1] + degree_list[id_2], 0);
+    
+    return vertices_indices.reduce(
+      (vol, id_) => vol + degree_list[id_],
+      0
+    );
   }
 
   /**
