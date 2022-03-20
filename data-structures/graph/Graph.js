@@ -215,8 +215,8 @@ export default class Graph {
           return null
         }
       }
-    )
-    .filter((copied_edge) => copied_edge !== null);
+    ).filter((copied_edge) => copied_edge !== null
+    );
   }
 
   /**
