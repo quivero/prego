@@ -936,54 +936,11 @@ export default class Graph {
   }
 
   /**
-   * @abstract checks if all non-zero degree vertices are
-   * connected. It mainly does DFS traversal starting from all vertices
+   * @abstract returns true if there is only one component on the graph
    * @return {Boolean} is_connected
    */
   isConnected() {
-    const n_vertices = this.getNumVertices();
-    const adjList = this.getAdjacencyList();
-    const edges = this.getAllEdges();
-
-    // If there are no edges in the graph, return false
-    if (edges.length === 0) {
-      return false;
-    }
-
-    // Mark all the vertices as not visited
-    const visited = new Array(n_vertices);
-    for (let i = 0; i < n_vertices; i += 1) {
-      visited[i] = false;
-    }
-
-    const forward_degrees = this.getForwardDegrees();
-    const reverse_degrees = this.getReverseDegrees();
-
-    const summedDegrees = [];
-    for (let i = 0; i < n_vertices; i += 1) {
-      summedDegrees[i] = reverse_degrees[i] + forward_degrees[i];
-    }
-
-    const zero_summed_degrees = summedDegrees.filter((summedDegree) => summedDegree === 0);
-
-    if (zero_summed_degrees.length !== 0) { return false; }
-
-    // Find a vertex with non-zero degree
-    for (let i = 0; i < n_vertices; i += 1) {
-      if (adjList[i].length !== 0) {
-        // Start DFS traversal from a vertex with non-zero degree
-        this.DFSUtil(i, visited);
-
-        // Check if all non-zero degree vertices are visited
-        for (let j = 0; j < n_vertices; j += 1) {
-          if (visited[j] === false && adjList[i].length > 0) {
-            return false;
-          }
-        }
-      }
-    }
-
-    return true;
+    return this.retrieveUndirected().getStronglyConnectedComponents().length === 1;
   }
 
   /**
@@ -2255,12 +2212,12 @@ export default class Graph {
       loose_nodes: this.looseNodes(),
       orphan_nodes: this.orphanNodes(),
       articulation_nodes: this.articulationPoints(),
-      bridges: this.bridges(),
+      bridges: this.bridges(true),
       is_cyclic,
       ...is_cyclic && { all_cycles: this.cyclicCircuits() },
       is_eulerian,
       ...is_eulerian && { eulerian_path: this.getEulerianPath() },
-      is_connected: this.isConnected(),
+      is_connected: this.isConnected()
     };
   }
 
