@@ -196,29 +196,27 @@ export default class Graph {
     const edges_from_keys = [];
     const edges = this.getAllEdges();
     
-    for (let i = 0; i < edges.length; i += 1) {
-      const edge = edges[i];
+    let operator_fun = () => 42;
 
-      const startVertexKey = edge.startVertex.getKey();
-      const endVertexKey = edge.endVertex.getKey();
-
-      let operator_fun = () => 42;
-
-      if (exclusive) {
-        operator_fun = (left_operand, right_operand) => left_operand && right_operand;
-      } else {
-        operator_fun = (left_operand, right_operand) => left_operand || right_operand;
+    return edges.map(
+      (edge) => {
+        if (exclusive) {
+          operator_fun = (left_operand, right_operand) => left_operand && right_operand;
+        } else {
+          operator_fun = (left_operand, right_operand) => left_operand || right_operand;
+        }
+  
+        if (operator_fun(
+            vertexKeys.includes(edge.startVertex.getKey()), 
+            vertexKeys.includes(edge.endVertex.getKey())
+          )) {
+            return _.cloneDeep(edge);
+        } else {
+          return null
+        }
       }
-
-      if (operator_fun(
-          vertexKeys.includes(startVertexKey), 
-          vertexKeys.includes(endVertexKey)
-        )) {
-        edges_from_keys.push(_.cloneDeep(edge));
-      }
-    }
-
-    return edges_from_keys;
+    )
+    .filter((copied_edge) => copied_edge !== null);
   }
 
   /**
