@@ -1207,13 +1207,11 @@ export default class Graph {
    */
   islands() {
     let graph_copy = this.copy()
-    const bridge_edges = graph_copy.getBridgeEdges();
     
-    const bridge_ends = _.uniq(
-      _.flatten(
-        this.convertEdgesToVerticesIndices(bridge_edges)
-      )
-    )
+    const undirected_bridges = graph_copy.retrieveUndirected().bridges()
+    const bridge_ends = _.uniq(_.flatten(undirected_bridges))
+    
+    const bridge_edges = graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
     
     // Remove bridges to obtain strongly connected components
     graph_copy.deleteEdges(bridge_edges);
