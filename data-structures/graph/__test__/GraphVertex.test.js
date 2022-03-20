@@ -147,7 +147,7 @@ describe('GraphVertex', () => {
     A.addEdge(edgeAB);
 
     expect(A.findEdge(B)).toEqual(edgeAB);
-    expect(A.findEdge(C)).toBeNull();
+    expect(A.findEdge(C)).toBeUndefined();
   });
 
   it('should represent a vertex', () => {

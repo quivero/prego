@@ -195,7 +195,7 @@ export default class Graph {
   getEdgesByVertexKeys(vertexKeys, exclusive = false) {
     const edges_from_keys = [];
     const edges = this.getAllEdges();
-
+    
     for (let i = 0; i < edges.length; i += 1) {
       const edge = edges[i];
 
@@ -210,7 +210,10 @@ export default class Graph {
         operator_fun = (left_operand, right_operand) => left_operand || right_operand;
       }
 
-      if (operator_fun(vertexKeys.includes(startVertexKey), vertexKeys.includes(endVertexKey))) {
+      if (operator_fun(
+          vertexKeys.includes(startVertexKey), 
+          vertexKeys.includes(endVertexKey)
+        )) {
         edges_from_keys.push(_.cloneDeep(edge));
       }
     }
@@ -232,15 +235,14 @@ export default class Graph {
    * @param {Array[integer]} vertexIndexes
    * @returns GraphVertex
    */
-  getEdgesByVertexIndexes(vertexIndexes, exclusive = false) {
-    const vertexKeys = [];
+  getEdgesByVertexIndexes(verticesIndexes, exclusive = false) {
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
-
-    vertexIndexes.forEach((vertexIndex) => {
-      vertexKeys.push(vertices_indexes_to_keys[vertexIndex]);
-    });
-
-    return this.getEdgesByVertexKeys(vertexKeys, exclusive);
+    
+    return this.getEdgesByVertexKeys(
+      verticesIndexes.map(
+        (vertexIndexes) => vertices_indexes_to_keys[vertexIndexes]
+      ), 
+      exclusive);
   }
 
   /**
@@ -552,7 +554,7 @@ export default class Graph {
     const vertex = this.getVertexByKey(startVertex.getKey());
 
     if (!vertex) {
-      return null;
+      return undefined;
     }
 
     return vertex.findEdge(endVertex);
@@ -565,9 +567,9 @@ export default class Graph {
    */
   findEdgeByVertexIndices(startVertex_index, endVertex_index) {
     const vertex = this.getVertexByIndex(startVertex_index);
-
+    
     if (!vertex) {
-      return null;
+      return undefined;
     }
 
     return vertex.findEdge(this.getVertexByIndex(endVertex_index));
@@ -580,10 +582,12 @@ export default class Graph {
    */
   findEdgesByVertexIndicesTuples(vertex_indexes_tuples) {
     return vertex_indexes_tuples.map(
-      (vertex_indexes_tuple) => this.findEdgeByVertexIndices(
-        vertex_indexes_tuple[0],
-        vertex_indexes_tuple[1],
-      ),
+      (vertex_indexes_tuple) => {
+        return this.findEdgeByVertexIndices(
+          vertex_indexes_tuple[0],
+          vertex_indexes_tuple[1],
+        )
+      },
     );
   }
 
@@ -1284,7 +1288,7 @@ export default class Graph {
                 ]);
               },
             );
-            console.log(result);
+            
             return result;
           },
           [],
@@ -1723,7 +1727,7 @@ export default class Graph {
   buildSubgraph(subgraph_vertex_indexes) {
     // Construct a graph from indices anew
     const subgraph_edges = this.getEdgesByVertexIndexes(subgraph_vertex_indexes, true);
-
+    
     const new_vertices = {};
     subgraph_edges.forEach((edge) => {
       const keys_sofar = Object.keys(new_vertices);
@@ -1932,7 +1936,7 @@ export default class Graph {
    */
   #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
     const adj_list = this.getAdjacencyList();
-
+    
     const adj_len = adj_list[from_index].length;
 
     if (from_index === to_index) {
@@ -1998,7 +2002,7 @@ export default class Graph {
 
     // add source to path[]
     path_list.push(from_index);
-
+    
     // Call recursive utility
     this.#recurAcyclicPaths(from_index, to_index, is_visited, path_list, paths);
 
@@ -2052,7 +2056,8 @@ export default class Graph {
       // An outflow vertex has edges the do not belong to the acyclic path
       const to_vertices_indexes = _.intersection(forward_star[intersect_node_id], cycle_nodes_indexes);
 
-      const to_edges_candidates = this.convertVerticesIndexestoKeys(to_vertices_indexes)
+      const to_edges_candidates = 
+        this.convertVerticesIndexestoKeys(to_vertices_indexes)
         .map((vertex_key) => `${intersect_node_key}_${vertex_key}`);
 
       const to_edges = _.difference(to_edges_candidates, _.intersection(path_edges, to_edges_candidates));
@@ -2063,7 +2068,8 @@ export default class Graph {
 
       const from_vertices_indexes = _.intersection(reverse_star[intersect_node_id], cycle_nodes_indexes);
 
-      const from_edges_candidates = this.convertVerticesIndexestoKeys(from_vertices_indexes)
+      const from_edges_candidates = 
+        this.convertVerticesIndexestoKeys(from_vertices_indexes)
         .map((vertex_key) => `${vertex_key}_${intersect_node_key}`);
 
       const from_edges = _.difference(from_edges_candidates, _.intersection(path_edges, from_edges_candidates));
@@ -2076,6 +2082,7 @@ export default class Graph {
 
     // Construct the cycle appendix anew as a graph
     const cycle_subgraph = this.buildSubgraph(cycle_nodes_indexes);
+    
     const subgraph_edges = cycle_subgraph.getAllEdges();
 
     for (const subgraph_edge of subgraph_edges) {
@@ -2187,7 +2194,7 @@ export default class Graph {
         cycle_nodes_arr = [...cycle_nodes];
 
         let cyclic_paths_i = [];
-
+        
         if (_.intersection(acyclic_path, cycle_nodes_arr).length !== 0) {
           cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
           cyclic_paths = cyclic_paths.concat(cyclic_paths_i);

@@ -119,14 +119,14 @@ export default class GraphVertex {
 
   /**
    * @param {GraphVertex} vertex
-   * @returns {(GraphEdge|null)}
+   * @returns {(GraphEdge|undefined)}
    */
   findEdge(vertex) {
     const edgeFinder = (edge) => edge.startVertex === vertex || edge.endVertex === vertex;
 
     const edge = this.edges.find({ callback: edgeFinder });
 
-    return edge ? edge.value : null;
+    return edge ? edge.value : undefined;
   }
 
   /**

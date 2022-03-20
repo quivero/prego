@@ -223,7 +223,7 @@ describe('Graph', () => {
 
     const edge = graph.findEdgeByVertexIndices(0, 3);
 
-    expect(edge).toBe(null);
+    expect(edge).toBe(undefined);
   });
 
   it('should get edges by vertex keys', () => {
@@ -239,6 +239,34 @@ describe('Graph', () => {
 
     expect(edges[0].getKey()).toEqual('A_B');
     expect(edges[1].getKey()).toEqual('B_C');
+  });
+
+  it('should get undefined for undefined start vertex index', () => {
+    const graph = new Graph();
+    const keys = ['A', 'B', 'C'];
+
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+
+    graph.addEdges([AB, BC]);
+    
+    const edges = graph.findEdgesByVertexIndicesTuples([[3, 4]]);
+    
+    expect(edges[0]).toBe(undefined);
+  });
+
+  it('should get undefined for undefined start vertex index', () => {
+    const graph = new Graph();
+    const keys = ['A', 'B', 'C'];
+
+    const [A, B, C] = createVertices(keys);
+    const [AB, BC] = createEdges([[A, B], [B, C]]);
+
+    graph.addEdges([AB, BC]);
+    
+    const edges = graph.findEdgesByVertexIndicesTuples([[3, 4]]);
+    
+    expect(edges[0]).toBe(undefined);
   });
 
   it('should add edge to the same vertex', () => {
@@ -1237,7 +1265,7 @@ describe('Graph', () => {
   it('should return bridges', () => {
     // A directed graph
     const graph = new Graph(false);
-
+    
     // Nodes
     const A = new GraphVertex('A');
     const B = new GraphVertex('B');
@@ -1378,8 +1406,8 @@ describe('Graph', () => {
     const graphEdgeAC = graph.findEdge(vertexA, vertexC);
     const graphEdgeCA = graph.findEdge(vertexC, vertexA);
 
-    expect(graphEdgeAC).toBeNull();
-    expect(graphEdgeCA).toBeNull();
+    expect(graphEdgeAC).toBeUndefined();
+    expect(graphEdgeCA).toBeUndefined();
     expect(graphEdgeAB).toEqual(edgeAB);
     expect(graphEdgeBA).toEqual(edgeAB);
     expect(graphEdgeAB.weight).toBe(10);
@@ -1401,9 +1429,9 @@ describe('Graph', () => {
     const graphEdgeAC = graph.findEdge(vertexA, vertexC);
     const graphEdgeCA = graph.findEdge(vertexC, vertexA);
 
-    expect(graphEdgeAC).toBeNull();
-    expect(graphEdgeCA).toBeNull();
-    expect(graphEdgeBA).toBeNull();
+    expect(graphEdgeAC).toBeUndefined();
+    expect(graphEdgeCA).toBeUndefined();
+    expect(graphEdgeBA).toBeUndefined();
     expect(graphEdgeAB).toEqual(edgeAB);
     expect(graphEdgeAB.weight).toBe(10);
   });
@@ -2030,7 +2058,7 @@ describe('Graph', () => {
     // Nodes
     const node_labels = ['A', 'B', 'C', 'D', 'E', 'F'];
     const [A, B, C, D, E, F] = createVertices(node_labels);
-
+    
     // Vertices
     const edge_vertices = [[A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B]];
 
