@@ -435,6 +435,22 @@ describe('Graph', () => {
     expect(graph.cyclicCircuits()).toStrictEqual([[1, 2, 4], [1, 2, 5]]);
   });
 
+  it('should return self-cycles', () => {
+    // A directed graph
+    const graph = new Graph(true);
+    
+    // Vertices
+    const [A] = createVertices(['A']);
+
+    // Edges
+    const [AA] = createEdges([[A, A]]);
+
+    // Add edges
+    graph.addEdges([AA]);
+
+    expect(graph.cyclicCircuits()).toStrictEqual([[0]]);
+  });
+
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
     const graph = new Graph(true);
