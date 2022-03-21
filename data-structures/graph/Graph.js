@@ -1576,6 +1576,22 @@ export default class Graph {
       }
     }
 
+    this.#cycles = removeArrayDuplicates(
+      this.#cycles.concat(
+        objectReduce(
+          this.getAdjacencyList(0),
+          (result, node_id, to_neighbours) => {
+            if(to_neighbours.includes(Number(node_id))) {
+              result.push([Number(node_id)])
+            }
+  
+            return result
+          }
+          , []
+        )
+      )
+    )
+
     return this.#cycles;
   }
 
