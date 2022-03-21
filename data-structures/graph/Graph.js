@@ -1134,7 +1134,7 @@ export default class Graph {
    * @return {Array}
    */
   getBridgeEndInOutDict() { 
-    const bridges = this.bridges();
+    const bridges = this.bridges(true);
     const bridge_keys = _.uniq(_.flatten(bridges));
     
     const forward_star = this.getAdjacencyList(0);
@@ -1172,7 +1172,7 @@ export default class Graph {
   islands() {
     let graph_copy = this.copy()
     
-    const undirected_bridges = graph_copy.retrieveUndirected().bridges()
+    const undirected_bridges = graph_copy.bridges(true)
     const bridge_ends = _.uniq(_.flatten(undirected_bridges))
     
     const bridge_edges = graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
@@ -1251,6 +1251,7 @@ export default class Graph {
    */
    getIslandsToFromBridgeEnd() {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
+    const bridge_end_InOut = this.getBridgeEndInOutDict();
     
     const bridges = this.bridges(true);
     const bridge_ends = _.uniq(_.flatten(bridges));
@@ -1263,22 +1264,20 @@ export default class Graph {
     return objectReduce(
       island_bridge_end_list,
       (result, island_id, bridge_ends_) => {
+        from_to = {'from': [], 'to': []}
         
         bridge_ends_.forEach(
           (bridge_end) => {
-            from_to = {'from': [], 'to': []}
             
-            from_to['to'] = from_to['to'].concat(
-              _.intersection(
-                bridge_ends,
-                forward_star[bridge_end]
+            from_to['to'] = _.uniq(
+              from_to['to'].concat(
+                bridge_end_InOut[bridge_end]['to']
               )
             )
             
-            from_to['from'] = from_to['from'].concat(
-              _.intersection(
-                bridge_ends, 
-                reverse_star[bridge_end]
+            from_to['from'] = _.uniq(
+              from_to['from'].concat(
+                bridge_end_InOut[bridge_end]['from']
               )
             )
             
