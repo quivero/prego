@@ -140,7 +140,7 @@ describe('Graph', () => {
 
     // Add vertices
     graph.addEdges([AB, BC]);
-    console.log(graph.describe())
+    
     expect(
       _.isEqual(
         graph.describe(),
