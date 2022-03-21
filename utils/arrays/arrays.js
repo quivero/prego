@@ -208,7 +208,7 @@ export function* extendedVenn(sets) {
     keys = keys_fun(sets);
     prev_keys_len = keys.length;
 
-    for (const comb_keys of new _.combinations(keys, chunk_card)) { 
+    for (const comb_keys of new _.combinations(keys, chunk_card)) {
       if (_.difference(comb_keys, keys).length !== 0) {
         continue;
       }

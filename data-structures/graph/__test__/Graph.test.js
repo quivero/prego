@@ -140,7 +140,7 @@ describe('Graph', () => {
 
     // Add vertices
     graph.addEdges([AB, BC]);
-    
+
     expect(
       _.isEqual(
         graph.describe(),
@@ -148,16 +148,16 @@ describe('Graph', () => {
           vertices: 'A,B,C',
           edges: 'A_B,B_C',
           vertices_keys_to_indices: { A: 0, B: 1, C: 2 },
-          adjacency_list: { '0': [ 1 ], '1': [ 2 ], '2': [] },
-          loose_nodes: [ 2 ],
-          orphan_nodes: [ 0 ],
-          articulation_nodes: [ 1 ],
-          bridges: [ [ 1, 2 ], [ 0, 1 ] ],
+          adjacency_list: { 0: [1], 1: [2], 2: [] },
+          loose_nodes: [2],
+          orphan_nodes: [0],
+          articulation_nodes: [1],
+          bridges: [[1, 2], [0, 1]],
           is_cyclic: false,
           is_eulerian: false,
-          is_connected: true
-        }
-      )
+          is_connected: true,
+        },
+      ),
     ).toEqual(true);
   });
 
@@ -190,27 +190,27 @@ describe('Graph', () => {
     graph.addEdges([AB, BC]);
 
     let edges = graph.getEdgesByVertexKeys(['A', 'B'], false);
-    
+
     let edge_keys = [];
     edges.forEach((edge) => {
       edge_keys.push(edge.getKey());
     });
-    
+
     expect(edge_keys).toEqual(['A_B', 'B_C']);
     expect(
-      graph.getEdgesKeysByVertexKeys(['A', 'B'], false)
+      graph.getEdgesKeysByVertexKeys(['A', 'B'], false),
     ).toEqual(['A_B', 'B_C']);
 
     edges = graph.getEdgesByVertexKeys(['A', 'B'], true);
-    
+
     edge_keys = [];
     edges.forEach((edge) => {
       edge_keys.push(edge.getKey());
     });
-    
+
     expect(edge_keys).toEqual(['A_B']);
     expect(
-      graph.getEdgesKeysByVertexKeys(['A', 'B'], true)
+      graph.getEdgesKeysByVertexKeys(['A', 'B'], true),
     ).toEqual(['A_B']);
   });
 
@@ -250,7 +250,7 @@ describe('Graph', () => {
     const [AB, BC] = createEdges([[A, B], [B, C]]);
 
     graph.addEdges([AB, BC]);
-    
+
     const edges = graph.findEdgesByVertexIndicesTuples([[0, 1], [1, 2]]);
 
     expect(edges[0].getKey()).toEqual('A_B');
@@ -265,9 +265,9 @@ describe('Graph', () => {
     const [AB, BC] = createEdges([[A, B], [B, C]]);
 
     graph.addEdges([AB, BC]);
-    
+
     const edges = graph.findEdgesByVertexIndicesTuples([[3, 4]]);
-    
+
     expect(edges[0]).toBe(undefined);
   });
 
@@ -279,9 +279,9 @@ describe('Graph', () => {
     const [AB, BC] = createEdges([[A, B], [B, C]]);
 
     graph.addEdges([AB, BC]);
-    
+
     const edges = graph.findEdgesByVertexIndicesTuples([[3, 4]]);
-    
+
     expect(edges[0]).toBe(undefined);
   });
 
@@ -438,7 +438,7 @@ describe('Graph', () => {
   it('should return self-cycles', () => {
     // A directed graph
     const graph = new Graph(true);
-    
+
     // Vertices
     const [A] = createVertices(['A']);
 
@@ -619,7 +619,7 @@ describe('Graph', () => {
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
-    
+
     const graph = new Graph();
 
     graph.addEdges([edgeAB, edgeBC]);
@@ -738,11 +738,11 @@ describe('Graph', () => {
         3: 1,
         4: 1,
         5: 1,
-      }
+      },
     );
-    
-    const n_vertices = graph.getNumVertices()
-    
+
+    const n_vertices = graph.getNumVertices();
+
     expect(graph.volume(_.range(n_vertices), 0)).toEqual(6);
     expect(graph.volume(_.range(n_vertices), 1)).toEqual(6);
 
@@ -1313,7 +1313,7 @@ describe('Graph', () => {
     const graph = new Graph(true);
 
     graph.addEdges([AB, AC, CD, BD, EF, EG, FH, GH, DE]);
-    
+
     const SCComponents = graph.getStronglyConnectedComponents();
 
     expect(SCComponents).toEqual([[0, 3, 2, 1], [4, 7, 6, 5]]);
@@ -1322,7 +1322,7 @@ describe('Graph', () => {
   it('should return bridges', () => {
     // A directed graph
     const graph = new Graph(false);
-    
+
     // Nodes
     const A = new GraphVertex('A');
     const B = new GraphVertex('B');
@@ -1454,93 +1454,95 @@ describe('Graph', () => {
 
     // Add edges
     graph.addEdges([AB, AC, CB, BD, DE, DF, EF]);
-    
+
     expect(JSON.stringify(graph.islands())).toBe(
       JSON.stringify(
         {
-          "0":{
-              "bridge_ends":[
-                  3
-              ],
-              "inner_vertices":[4, 5]
+          0: {
+            bridge_ends: [
+              3,
+            ],
+            inner_vertices: [4, 5],
           },
-          "1":{
-              "bridge_ends":[1],
-              "inner_vertices":[0,2]
-          }
-      })
+          1: {
+            bridge_ends: [1],
+            inner_vertices: [0, 2],
+          },
+        },
+      ),
     );
 
     expect(JSON.stringify(graph.getIslandToBridgeEndList())).toBe(
       JSON.stringify(
         {
-          "0": [3],
-          "1": [1]
-      })
+          0: [3],
+          1: [1],
+        },
+      ),
     );
 
     expect(JSON.stringify(graph.getBridgeEndToIsland())).toBe(
       JSON.stringify(
         {
-          "3": 0,
-          "1": 1
-      })
+          3: 0,
+          1: 1,
+        },
+      ),
     );
-    
+
     expect(graph.getIslandFromBridgeEnd(3)).toBe(0);
     expect(graph.getIslandFromBridgeEnd(1)).toBe(1);
 
     expect(
       JSON.stringify(
-        graph.getIslandsToFromBridgeEnd()
-      )
+        graph.getIslandsToFromBridgeEnd(),
+      ),
     ).toBe(
       JSON.stringify(
         {
-          '0': {
-            'from': [1],
-            'to': []
+          0: {
+            from: [1],
+            to: [],
           },
-          '1': {
-            'from': [],
-            'to': [3]
-          }
-        }
-      )
+          1: {
+            from: [],
+            to: [3],
+          },
+        },
+      ),
     );
 
     expect(JSON.stringify(graph.getIslandsAdjacencyList())).toBe(
       JSON.stringify(
         {
-          '0': [],
-          '1': [0]
-        }
-      )
+          0: [],
+          1: [0],
+        },
+      ),
     );
-    
+
     expect(
-      JSON.stringify(graph.getIslandsFromToIslands())
+      JSON.stringify(graph.getIslandsFromToIslands()),
     ).toBe(
       JSON.stringify(
         {
-          '0': {
-            'to': [],
-            'from': [1]
+          0: {
+            to: [],
+            from: [1],
           },
-          '1': {
-            'to': [0],
-            'from': []
-          }
-        }
-      )
+          1: {
+            to: [0],
+            from: [],
+          },
+        },
+      ),
     );
-    
+
     expect(
       graph.getIslandGraph()
-           .getAllEdges()
-           .map((edge) => edge.getKey())
-          ).toStrictEqual(['1_0']);
-
+        .getAllEdges()
+        .map((edge) => edge.getKey()),
+    ).toStrictEqual(['1_0']);
   });
 
   it('Cycles in a finite graph must be finite', () => {

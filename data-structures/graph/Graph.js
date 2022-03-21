@@ -195,7 +195,7 @@ export default class Graph {
   getEdgesByVertexKeys(vertexKeys, exclusive = false) {
     const edges_from_keys = [];
     const edges = this.getAllEdges();
-    
+
     let operator_fun = () => 42;
 
     return edges.map(
@@ -205,18 +205,16 @@ export default class Graph {
         } else {
           operator_fun = (left_operand, right_operand) => left_operand || right_operand;
         }
-  
+
         if (operator_fun(
-            vertexKeys.includes(edge.startVertex.getKey()), 
-            vertexKeys.includes(edge.endVertex.getKey())
-          )) {
-            return _.cloneDeep(edge);
-        } else {
-          return null
+          vertexKeys.includes(edge.startVertex.getKey()),
+          vertexKeys.includes(edge.endVertex.getKey()),
+        )) {
+          return _.cloneDeep(edge);
         }
-      }
-    ).filter((copied_edge) => copied_edge !== null
-    );
+        return null;
+      },
+    ).filter((copied_edge) => copied_edge !== null);
   }
 
   /**
@@ -235,12 +233,13 @@ export default class Graph {
    */
   getEdgesByVertexIndexes(verticesIndexes, exclusive = false) {
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
-    
+
     return this.getEdgesByVertexKeys(
       verticesIndexes.map(
-        (vertexIndexes) => vertices_indexes_to_keys[vertexIndexes]
-      ), 
-      exclusive);
+        (vertexIndexes) => vertices_indexes_to_keys[vertexIndexes],
+      ),
+      exclusive,
+    );
   }
 
   /**
@@ -279,7 +278,7 @@ export default class Graph {
    */
   convertEdgeToVerticesIndices(edge) {
     const keys_to_indices = this.getVerticesKeystoIndices();
-    
+
     return [
       keys_to_indices[edge.startVertex.getKey()],
       keys_to_indices[edge.endVertex.getKey()],
@@ -565,7 +564,7 @@ export default class Graph {
    */
   findEdgeByVertexIndices(startVertex_index, endVertex_index) {
     const vertex = this.getVertexByIndex(startVertex_index);
-    
+
     if (!vertex) {
       return undefined;
     }
@@ -580,12 +579,10 @@ export default class Graph {
    */
   findEdgesByVertexIndicesTuples(vertex_indexes_tuples) {
     return vertex_indexes_tuples.map(
-      (vertex_indexes_tuple) => {
-        return this.findEdgeByVertexIndices(
-          vertex_indexes_tuple[0],
-          vertex_indexes_tuple[1],
-        )
-      },
+      (vertex_indexes_tuple) => this.findEdgeByVertexIndices(
+        vertex_indexes_tuple[0],
+        vertex_indexes_tuple[1],
+      ),
     );
   }
 
@@ -745,16 +742,14 @@ export default class Graph {
 
     undirected_graph.addEdges(
       this.getAllEdges().map(
-        (edge) => {
-          return new GraphEdge(
-            undirected_graph.vertices[edge.startVertex.getKey()],
-            undirected_graph.vertices[edge.endVertex.getKey()],
-            edge.weight
-          )
-        }
-      )
-    )
-    
+        (edge) => new GraphEdge(
+          undirected_graph.vertices[edge.startVertex.getKey()],
+          undirected_graph.vertices[edge.endVertex.getKey()],
+          edge.weight,
+        ),
+      ),
+    );
+
     return undirected_graph;
   }
 
@@ -1120,7 +1115,7 @@ export default class Graph {
   bridges(undirect = false) {
     const bridges = graphBridges(undirect ? this.retrieveUndirected() : this);
     const vertices_keys_to_indices = this.getVerticesKeystoIndices();
-    
+
     return Object.values(bridges).map(
       (bridge_edge) => [
         vertices_keys_to_indices[bridge_edge.startVertex.getKey()],
@@ -1133,35 +1128,34 @@ export default class Graph {
    * @abstract returns a map from bridge-ends to from-to bridge end object
    * @return {Array}
    */
-  getBridgeEndInOutDict() { 
+  getBridgeEndInOutDict() {
     const bridges = this.bridges(true);
     const bridge_keys = _.uniq(_.flatten(bridges));
-    
+
     const forward_star = this.getAdjacencyList(0);
     const inverse_star = this.getAdjacencyList(1);
     let neighbours = [];
 
     bridge_keys.forEach((bridgeEnd) => {
-      
+
     });
 
     return objectReduce(
       bridge_keys,
       (bridge_dict, __, bridge_end_key) => {
-        
         neighbours = _.remove(
           _.flatten(bridges.filter((bridge) => bridge.includes(bridge_end_key))),
           (elem) => elem !== bridge_end_key,
         );
-  
+
         bridge_dict[bridge_end_key] = {
           to: neighbours.filter((neighbour) => forward_star[bridge_end_key].includes(neighbour)),
           from: neighbours.filter((neighbour) => inverse_star[bridge_end_key].includes(neighbour)),
         };
 
-        return bridge_dict
-      }
-      , {}
+        return bridge_dict;
+      },
+      {},
     );
   }
 
@@ -1170,30 +1164,28 @@ export default class Graph {
    * @return {object}
    */
   islands() {
-    let graph_copy = this.copy()
-    
-    const undirected_bridges = graph_copy.bridges(true)
-    const bridge_ends = _.uniq(_.flatten(undirected_bridges))
-    
+    const graph_copy = this.copy();
+
+    const undirected_bridges = graph_copy.bridges(true);
+    const bridge_ends = _.uniq(_.flatten(undirected_bridges));
+
     const bridge_edges = graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
-    
+
     // Remove bridges to obtain strongly connected components
     graph_copy.deleteEdges(bridge_edges);
-    
+
     // Dictionary with islads
-    const islands_dict = graph_copy.retrieveUndirected().getStronglyConnectedComponentsIndices()
-    
+    const islands_dict = graph_copy.retrieveUndirected().getStronglyConnectedComponentsIndices();
+
     // edegs bridges back
     graph_copy.addEdges(bridge_edges);
-    
+
     return objectMap(
       islands_dict,
       (key, habitants) => ({
-        bridge_ends: sort(
-          habitants.filter(
-            (habitant) => bridge_ends.includes(habitant),
-          ), 1
-        ),
+        bridge_ends: sort(habitants.filter(
+          (habitant) => bridge_ends.includes(habitant),
+        ), 1),
         inner_vertices: sort(habitants.filter(
           (habitant) => !bridge_ends.includes(habitant),
         ), 1),
@@ -1207,8 +1199,8 @@ export default class Graph {
    */
   getIslandToBridgeEndList() {
     return objectMap(
-      this.islands(), 
-      (key, habitants) => habitants['bridge_ends']
+      this.islands(),
+      (key, habitants) => habitants.bridge_ends,
     );
   }
 
@@ -1249,44 +1241,44 @@ export default class Graph {
    * @abstract returns a map from island ids to from-to bridge end ids
    * @return {Array}
    */
-   getIslandsToFromBridgeEnd() {
+  getIslandsToFromBridgeEnd() {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
     const bridge_end_InOut = this.getBridgeEndInOutDict();
-    
+
     const bridges = this.bridges(true);
     const bridge_ends = _.uniq(_.flatten(bridges));
-    
+
     const forward_star = this.getAdjacencyList(0);
     const reverse_star = this.getAdjacencyList(1);
-    
+
     let from_to = {};
 
     return objectReduce(
       island_bridge_end_list,
       (result, island_id, bridge_ends_) => {
-        from_to = {'from': [], 'to': []}
-        
+        from_to = { from: [], to: [] };
+
         bridge_ends_.forEach(
           (bridge_end) => {
-            
-            from_to['to'] = _.uniq(
-              from_to['to'].concat(
-                bridge_end_InOut[bridge_end]['to']
-              )
-            )
-            
-            from_to['from'] = _.uniq(
-              from_to['from'].concat(
-                bridge_end_InOut[bridge_end]['from']
-              )
-            )
-            
-            result[island_id] = from_to
-          }
-        )
-        
+            from_to.to = _.uniq(
+              from_to.to.concat(
+                bridge_end_InOut[bridge_end].to,
+              ),
+            );
+
+            from_to.from = _.uniq(
+              from_to.from.concat(
+                bridge_end_InOut[bridge_end].from,
+              ),
+            );
+
+            result[island_id] = from_to;
+          },
+        );
+
         return result;
-      }, {}
+      },
+      {},
     );
   }
 
@@ -1295,37 +1287,34 @@ export default class Graph {
    * @return {Array}
    */
   getIslandsAdjacencyList() {
-    const bridge_end_to_island = this.getBridgeEndToIsland()
-    
+    const bridge_end_to_island = this.getBridgeEndToIsland();
+
     return objectMap(
       this.getIslandsToFromBridgeEnd(),
-      (island_id, from_to_dict) => from_to_dict['to'].map(
-        (to_bridge_end) => bridge_end_to_island[to_bridge_end]
-      )
-    )
+      (island_id, from_to_dict) => from_to_dict.to.map(
+        (to_bridge_end) => bridge_end_to_island[to_bridge_end],
+      ),
+    );
   }
 
   /**
    * @abstract returns a map from islands to from-to islands
    * @return {Array}
    */
-   getIslandsFromToIslands() {
-    const bridge_end_to_island = this.getBridgeEndToIsland()
-    
+  getIslandsFromToIslands() {
+    const bridge_end_to_island = this.getBridgeEndToIsland();
+
     return objectMap(
       this.getIslandsToFromBridgeEnd(),
-      (island_id, from_to_dict) => {
-        return {
-          to:   from_to_dict['to'].map((to_bridge_end) => bridge_end_to_island[to_bridge_end]),
-          from: from_to_dict['from'].map((to_bridge_end) => bridge_end_to_island[to_bridge_end])
-        }
-      }
-    )
+      (island_id, from_to_dict) => ({
+        to: from_to_dict.to.map((to_bridge_end) => bridge_end_to_island[to_bridge_end]),
+        from: from_to_dict.from.map((to_bridge_end) => bridge_end_to_island[to_bridge_end]),
+      }),
+    );
   }
 
   getIslandGraph() {
     const islandAdjList = this.getIslandsAdjacencyList();
-
     const island_graph = new Graph(this.isDirected);
 
     island_graph.addEdges(
@@ -1341,7 +1330,7 @@ export default class Graph {
                 ]);
               },
             );
-            
+
             return result;
           },
           [],
@@ -1377,7 +1366,7 @@ export default class Graph {
   getBridgeEdges() {
     return this.findEdgesByVertexIndicesTuples(this.bridges());
   }
-  
+
   /**
   * @abstract Tarjan's algorithm for finding articulation points in graph.
   *
@@ -1536,6 +1525,7 @@ export default class Graph {
       let u = marked_stack.pop();
 
       while (u !== curr_index) {
+        console.log('Hi!!');
         marked[u] = false;
         u = marked_stack.pop();
       }
@@ -1580,16 +1570,16 @@ export default class Graph {
         objectReduce(
           this.getAdjacencyList(0),
           (result, node_id, to_neighbours) => {
-            if(to_neighbours.includes(Number(node_id))) {
-              result.push([Number(node_id)])
+            if (to_neighbours.includes(Number(node_id))) {
+              result.push([Number(node_id)]);
             }
-  
-            return result
-          }
-          , []
-        )
-      )
-    )
+
+            return result;
+          },
+          [],
+        ),
+      ),
+    );
 
     return this.#cycles;
   }
@@ -1608,15 +1598,15 @@ export default class Graph {
    * defined by the sum of in-out degrees
    * - out: 0
    * - in: 1
-   * 
+   *
    * @return {Array[Array]} cycle
    */
   volume(vertices_indices, type = 0) {
     const degree_list = this.getInOutDegreeList(type);
-    
+
     return vertices_indices.reduce(
       (vol, id_) => vol + degree_list[id_],
-      0
+      0,
     );
   }
 
@@ -1660,7 +1650,7 @@ export default class Graph {
   buildSubgraph(subgraph_vertex_indexes) {
     // Construct a graph from indices anew
     const subgraph_edges = this.getEdgesByVertexIndexes(subgraph_vertex_indexes, true);
-    
+
     const new_vertices = {};
     subgraph_edges.forEach((edge) => {
       const keys_sofar = Object.keys(new_vertices);
@@ -1869,7 +1859,7 @@ export default class Graph {
    */
   #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
     const adj_list = this.getAdjacencyList();
-    
+
     const adj_len = adj_list[from_index].length;
 
     if (from_index === to_index) {
@@ -1935,7 +1925,7 @@ export default class Graph {
 
     // add source to path[]
     path_list.push(from_index);
-    
+
     // Call recursive utility
     this.#recurAcyclicPaths(from_index, to_index, is_visited, path_list, paths);
 
@@ -1989,8 +1979,7 @@ export default class Graph {
       // An outflow vertex has edges the do not belong to the acyclic path
       const to_vertices_indexes = _.intersection(forward_star[intersect_node_id], cycle_nodes_indexes);
 
-      const to_edges_candidates = 
-        this.convertVerticesIndexestoKeys(to_vertices_indexes)
+      const to_edges_candidates = this.convertVerticesIndexestoKeys(to_vertices_indexes)
         .map((vertex_key) => `${intersect_node_key}_${vertex_key}`);
 
       const to_edges = _.difference(to_edges_candidates, _.intersection(path_edges, to_edges_candidates));
@@ -2001,8 +1990,7 @@ export default class Graph {
 
       const from_vertices_indexes = _.intersection(reverse_star[intersect_node_id], cycle_nodes_indexes);
 
-      const from_edges_candidates = 
-        this.convertVerticesIndexestoKeys(from_vertices_indexes)
+      const from_edges_candidates = this.convertVerticesIndexestoKeys(from_vertices_indexes)
         .map((vertex_key) => `${vertex_key}_${intersect_node_key}`);
 
       const from_edges = _.difference(from_edges_candidates, _.intersection(path_edges, from_edges_candidates));
@@ -2015,7 +2003,7 @@ export default class Graph {
 
     // Construct the cycle appendix anew as a graph
     const cycle_subgraph = this.buildSubgraph(cycle_nodes_indexes);
-    
+
     const subgraph_edges = cycle_subgraph.getAllEdges();
 
     for (const subgraph_edge of subgraph_edges) {
@@ -2127,7 +2115,7 @@ export default class Graph {
         cycle_nodes_arr = [...cycle_nodes];
 
         let cyclic_paths_i = [];
-        
+
         if (_.intersection(acyclic_path, cycle_nodes_arr).length !== 0) {
           cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
           cyclic_paths = cyclic_paths.concat(cyclic_paths_i);
@@ -2145,8 +2133,8 @@ export default class Graph {
    *
    * @return {Graoh} graph
    */
-   empty() {
-    this.deleteEdges(this.getAllEdges())
+  empty() {
+    this.deleteEdges(this.getAllEdges());
 
     return this;
   }
@@ -2232,7 +2220,7 @@ export default class Graph {
       ...is_cyclic && { all_cycles: this.cyclicCircuits() },
       is_eulerian,
       ...is_eulerian && { eulerian_path: this.getEulerianPath() },
-      is_connected: this.isConnected()
+      is_connected: this.isConnected(),
     };
   }
 
