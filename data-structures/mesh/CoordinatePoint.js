@@ -2,9 +2,9 @@ export default class CoordinatePoint {
   /**
    * @param {boolean} isDirected
    */
-  constructor(label) {
+  constructor(label, coordinates) {
     this.label = label;
-    this.coordinate = [];
+    this.coordinates = coordinate;
   }
 
   toString() {

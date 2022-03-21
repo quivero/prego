@@ -1,15 +1,31 @@
 import Graph from '../Graph/graph.js';
+import CoordinatePoint from 'CoordinatePoint.js';
 
-export default class GraphicMesh extends Graph {
-  #distance_function;
+export default class Mesh extends Graph {
+  #metric;
 
   /**
    * @param {boolean} isDirected
    */
-  constructor(isDirected = false, distance_function) {
+  constructor(isDirected = false, metric_function, is_relaxed) {
     super(isDirected);
     this.coordinates = {};
-    this.distance_function = distance_function;
+
+    function metricIsValid(metric_function) {
+      let P0 = new CoordinatePoint('P0', [0, 0]);
+      let P1 = new CoordinatePoint('P1', [0, 1]);
+      let P2 = new CoordinatePoint('P2', [1, 0]);
+
+      return metric_function(P0, P0) === 0 &&
+             metric_function(P0, P1) === metric_function(P1, P0) &&
+             metric_function(P0, P2) <= metric_function(P0, P1) + metric_function(P1, P2)
+    }
+
+    if(!is_relaxed && metricIsValid(metric_function)) {
+      this.metric_function = metric_function;  
+    } else {
+      throw Error('Metric function is not valid. It must: \n 1. Be greater than ');
+    }
   }
 
   /**
