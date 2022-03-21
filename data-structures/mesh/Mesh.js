@@ -1,5 +1,4 @@
-import Graph from '../Graph/graph.js';
-import CoordinatePoint from 'CoordinatePoint.js';
+import Graph from '../graph/Graph';
 
 export default class Mesh extends Graph {
   #metric;
@@ -24,7 +23,12 @@ export default class Mesh extends Graph {
     if(!is_relaxed && metricIsValid(metric_function)) {
       this.metric_function = metric_function;  
     } else {
-      throw Error('Metric function is not valid. It must: \n 1. Be greater than ');
+      const statement = 'Metric function is not valid. It must obey :';
+      const condition_1 =  '1. Value 0 between identical vertices;';
+      const condition_2 =  '2. Symmetrical;';
+      const condition_3 =  '3. Triangular inequality';
+      
+      throw Error(statement+'\n'+condition_1+'\n'+condition_2+'\n'+condition_3);
     }
   }
 
