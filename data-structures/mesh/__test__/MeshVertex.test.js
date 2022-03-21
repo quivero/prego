@@ -1,11 +1,11 @@
-import GraphicMeshVertex from '../GraphicMeshVertex.js';
+import MeshVertex from '../MeshVertex.js';
 
 describe('GraphicMeshVertex', () => {
-  it('should throw an error when trying to create GraphicMeshVertex', () => {
+  it('should throw an error when trying to create MeshVertex', () => {
     let vertex = null;
 
     function createEmptyGVertex() {
-      vertex = new GraphicMeshVertex();
+      vertex = new MeshVertex();
     }
 
     expect(vertex).toBeNull();
@@ -13,10 +13,9 @@ describe('GraphicMeshVertex', () => {
   });
 
   it('should create graph vertex', () => {
-    const gvertex = new GraphicMeshVertex('A', [1, 2]);
+    const gvertex = new MeshVertex('A', [1, 2]);
 
     expect(gvertex).toBeDefined();
-    expect(gvertex.label).toBe('A');
     expect(gvertex.toString()).toBe('A');
     expect(gvertex.getKey()).toBe('A');
   });

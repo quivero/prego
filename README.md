@@ -40,6 +40,12 @@ You must follow the instructions below
 
 ## Backlog
 
+### As a solution
+
+I may apologize the reader for the author's envy for similar python library [networkx](https://networkx.org/documentation/stable/reference/classes/index.html). They provide multiple concepts for graph formalization and defition whose author's knowledge lacks. Hence, it seems reasonable to offer similar features in this directions.
+
+Likewise, the library [Dracula](https://www.graphdracula.net/) offers a graphical manner to visualize graphs. It may be a future feature.
+
 ### As a Package
 
 A glossary with implementation possibilities is available [here](https://en.wikipedia.org/wiki/Glossary_of_graph_theory). The author of this library is able sofar to obtain the following ideas from it:
@@ -51,7 +57,7 @@ A glossary with implementation possibilities is available [here](https://en.wiki
     - [x] girth()
     - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
     - [x] isReachable(from_vertex, to_vertex):
-    - [ ] isHamiltonian(): 
+    - [x] isCyclicHamiltonian(): 
     - [x] isPredecessor(vertex, candidate):
     - [x] getReachibilityList(type = 0)
     - [x] getReachibilityVenn(type = 0)

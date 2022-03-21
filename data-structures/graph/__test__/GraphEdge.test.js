@@ -2,7 +2,9 @@ import GraphEdge from '../GraphEdge';
 
 import {
   createVertices,
-} from '../utils/graph.js' 
+  createEdgesFromVerticesValues,
+  createCompleteUndirectedGraph,
+} from '../utils/graph.js';
 
 describe('GraphEdge', () => {
   it('should create graph edge with default weight', () => {
@@ -38,5 +40,19 @@ describe('GraphEdge', () => {
     expect(edge.startVertex).toEqual(vertexB);
     expect(edge.endVertex).toEqual(vertexA);
     expect(edge.weight).toEqual(10);
+  });
+
+  it('should be possible to do edge reverse', () => {
+    const [edgeAB] = createEdgesFromVerticesValues([['A', 'B']]);
+
+    expect(edgeAB.startVertex.getKey()).toEqual('A');
+    expect(edgeAB.endVertex.getKey()).toEqual('B');
+    expect(edgeAB.weight).toEqual(0);
+  });
+
+  it('should be possible to do edge reverse', () => {
+    const graph = createCompleteUndirectedGraph(['A', 'B', 'C']);
+
+    expect(Object.keys(graph.edges).length).toEqual(3);
   });
 });

@@ -1,27 +1,26 @@
 import GraphVertex from '../graph/GraphVertex.js';
-import CoordinatePoint from './CoordinatePoint.js';
 
-export default class GraphicMeshVertex extends CoordinatePoint {
+export default class MeshVertex extends GraphVertex {
   /**
      * @param {string} label
      */
   constructor(label, coordinate) {
-    super(label, coordinate);
-    this.vertex = new GraphVertex(label);
+    super(label);
+    this.coordinate = coordinate;
   }
 
   /**
      * @param {string} label
      */
   getKey() {
-    return this.label;
+    return this.value;
   }
 
   /**
      * @param {string} label
      */
   toString() {
-    return this.label;
+    return this.value;
   }
 }
 

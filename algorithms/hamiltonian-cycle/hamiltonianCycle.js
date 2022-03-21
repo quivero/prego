@@ -53,11 +53,10 @@ function isCycle(adjacencyMatrix, verticesKeystoIndices, cycle) {
  * @param {GraphVertex[][]} cycles
  * @param {GraphVertex[]} cycle
  */
-function hamiltonianCycleRecursive({
+function* hamiltonianCycleRecursive({
   adjacencyMatrix,
   vertices,
   verticesKeystoIndices,
-  cycles,
   cycle,
 }) {
   // Clone cycle in order to prevent it from modification by other DFS branches.
@@ -68,7 +67,7 @@ function hamiltonianCycleRecursive({
     // Now we need to check if it is cycle or not.
     if (isCycle(adjacencyMatrix, verticesKeystoIndices, currentCycle)) {
       // Another solution has been found. Save it.
-      cycles.push(currentCycle);
+      yield currentCycle;
     }
     return;
   }
@@ -83,13 +82,17 @@ function hamiltonianCycleRecursive({
       currentCycle.push(vertexCandidate);
 
       // Try to find other vertices in cycle.
-      hamiltonianCycleRecursive({
-        adjacencyMatrix,
-        vertices,
-        verticesKeystoIndices,
-        cycles,
-        cycle: currentCycle,
-      });
+      for (
+        const cycle_ of
+        hamiltonianCycleRecursive({
+          adjacencyMatrix,
+          vertices,
+          verticesKeystoIndices,
+          cycle: currentCycle,
+        })
+      ) {
+        yield cycle_;
+      }
 
       // BACKTRACKING.
       // Remove candidate vertex from cycle path in order to try another one.
@@ -102,7 +105,7 @@ function hamiltonianCycleRecursive({
  * @param {Graph} graph
  * @return {GraphVertex[][]}
  */
-export default function hamiltonianCycle(graph) {
+export default function* hamiltonianCycle(graph) {
   // Gather some information about the graph that we will need to during
   // the problem solving.
   const verticesKeystoIndices = graph.getVerticesKeystoIndices();
@@ -121,14 +124,14 @@ export default function hamiltonianCycle(graph) {
   const cycle = [startVertex];
 
   // Try to find cycles recursively in Depth First Search order.
-  hamiltonianCycleRecursive({
-    adjacencyMatrix,
-    vertices,
-    verticesKeystoIndices,
-    cycles,
-    cycle,
-  });
-
-  // Return found cycles.
-  return cycles;
+  for (const cycle_ of
+    hamiltonianCycleRecursive({
+      adjacencyMatrix,
+      vertices,
+      verticesKeystoIndices,
+      cycles,
+      cycle,
+    })) {
+    yield cycle_;
+  }
 }

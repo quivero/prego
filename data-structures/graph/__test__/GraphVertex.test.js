@@ -1,7 +1,7 @@
-import { 
-  createVertices, 
-  createEdges, 
-} from '../utils/graph.js' 
+import {
+  createVertices,
+  createEdges,
+} from '../utils/graph.js';
 
 import GraphVertex from '../GraphVertex';
 import GraphEdge from '../GraphEdge';
@@ -147,7 +147,7 @@ describe('GraphVertex', () => {
     A.addEdge(edgeAB);
 
     expect(A.findEdge(B)).toEqual(edgeAB);
-    expect(A.findEdge(C)).toBeNull();
+    expect(A.findEdge(C)).toBeUndefined();
   });
 
   it('should represent a vertex', () => {

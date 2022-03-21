@@ -10,6 +10,10 @@ import {
   fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
+import {
+  sort
+} from '../utils/arrays/arrays.js';
+
 const require = createRequire(import.meta.url);
 const app = express();
 
@@ -62,8 +66,13 @@ app.get('/', (req, res) => {
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
     const graph = parseBlueprintToGraph(blueprint);
-    
-    console.log('Islands: ')
+
+    const edges = graph.findEdgesByVertexIndicesTuples(graph.bridges());
+    const bridge_ends = _.uniq(_.flatten(
+      edges.map((edge) => graph.convertEdgeToVerticesIndices(edge))
+    ))
+        
+    // Dictionary with islads
     console.log(graph.islands())
 
     res.send('Hi!');
