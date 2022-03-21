@@ -11,6 +11,7 @@ export default class Mesh extends Graph {
     this.coordinates = {};
 
     function metricIsValid(metric_function) {
+      // TAKE NOTE: This validation is weak. A random generator may suit better than it 
       let P0 = new CoordinatePoint('P0', [0, 0]);
       let P1 = new CoordinatePoint('P1', [0, 1]);
       let P2 = new CoordinatePoint('P2', [1, 0]);
