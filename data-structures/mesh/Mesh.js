@@ -9,7 +9,6 @@ export default class Mesh extends Graph {
    */
   constructor(metric_function, isDirected = false, is_relaxed = false) {
     super(isDirected);
-    this.coordinates = {};
 
     function metricIsValid(metric_function) {
       // TAKE NOTE: This validation is weak. Either random generator or a user-provided validator function
@@ -21,7 +20,7 @@ export default class Mesh extends Graph {
       const is_positive = metric_function(P1, P1) === 0;
       const is_symmetric = metric_function(P0, P1) === metric_function(P1, P0);
       const is_triangular =  metric_function(P0, P2) <= metric_function(P0, P1) + metric_function(P1, P2);
-            
+
       return is_positive && is_symmetric && is_triangular;
     }
 
@@ -39,19 +38,25 @@ export default class Mesh extends Graph {
     }
   }
 
-  /**
-   * @param {GraphicMeshVertex}
-   */
-  addGVertex(gvertex) {
-    super.addVertex(gvertex.vertex);
-    this.coordinates[gvertex.label] = this.coordinates;
-  }
-
-  distance(gvertex_1, gvertex_2) {
-    return this.distance_function(gvertex_1, gvertex_2);
+  distance(vertex_1_key, vertex_2_key) {
+    return this.metric_function(this.vertices[vertex_1_key], this.vertices[vertex_2_key]);
   }
 
   getPathLength(path) {
-    return path.reduce((vertex_i, vertex_i_p_1) => this.distance_function(vertex_i, vertex_i_p_1), 0);
+    const indices_to_keys = this.getVerticesIndicestoKeys()
+    let path_length = 0
+
+    path.forEach(
+      (vertex_index, index) => {
+        if(index !== 0) {
+          path_length += this.distance(
+            indices_to_keys[path[index-1]], 
+            indices_to_keys[vertex_index]
+          )
+        }
+      }
+    )
+    
+    return path_length
   }
 }
