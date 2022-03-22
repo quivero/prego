@@ -22,7 +22,7 @@ describe('GraphVertex', () => {
     const vertex = new GraphVertex('A');
 
     expect(vertex).toBeDefined();
-    expect(vertex.value).toBe('A');
+    expect(vertex.label).toBe('A');
     expect(vertex.toString()).toBe('A');
     expect(vertex.getKey()).toBe('A');
     expect(vertex.edges.toString()).toBe('');

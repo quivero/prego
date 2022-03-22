@@ -77,11 +77,11 @@ export default class Graph {
    */
   addVertex(newVertex) {
     // Check if vertex has been already added.
-    if (Object.keys(this.vertices).includes(newVertex.value)) {
+    if (Object.keys(this.vertices).includes(newVertex.label)) {
       throw Error('Vertex has already been added before. Please, choose other key!');
     }
 
-    this.vertices[newVertex.value] = newVertex;
+    this.vertices[newVertex.label] = newVertex;
     return this;
   }
 
@@ -839,7 +839,7 @@ export default class Graph {
 
     for (let i = 0; i < eulerian_path.length; i += 1) {
       const vertex = eulerian_path[i];
-      epath.push(verticesIndices[vertex.value]);
+      epath.push(verticesIndices[vertex.label]);
     }
 
     if (epath.length !== 0) {
@@ -896,7 +896,7 @@ export default class Graph {
       for (let j = 0; j < SC_set.length; j += 1) {
         const vertex = SC_set[j];
 
-        SC_set_by_index.push(verticesIndices[vertex.value]);
+        SC_set_by_index.push(verticesIndices[vertex.label]);
       }
 
       SC_sets_by_index.push(SC_set_by_index);

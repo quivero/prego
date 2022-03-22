@@ -4,23 +4,24 @@ export default class MeshVertex extends GraphVertex {
   /**
      * @param {string} label
      */
-  constructor(label, coordinate) {
+  constructor(label, coordinates) {
     super(label);
-    this.coordinate = coordinate;
+
+    this.coordinates = coordinates;
   }
 
   /**
      * @param {string} label
      */
   getKey() {
-    return this.value;
+    return this.label;
   }
 
   /**
      * @param {string} label
      */
   toString() {
-    return this.value;
+    return this.label;
   }
 }
 

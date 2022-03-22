@@ -60,7 +60,7 @@ function* hamiltonianCycleRecursive({
   cycle,
 }) {
   // Clone cycle in order to prevent it from modification by other DFS branches.
-  const currentCycle = [...cycle].map((vertex) => new GraphVertex(vertex.value));
+  const currentCycle = [...cycle].map((vertex) => new GraphVertex(vertex.label));
 
   if (vertices.length === currentCycle.length) {
     // Hamiltonian path is found.

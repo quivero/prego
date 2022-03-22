@@ -4,8 +4,8 @@ export default class GraphVertex {
   /**
    * @param {*} value
    */
-  constructor(value) {
-    if (value === undefined) {
+  constructor(label, value = 0) {
+    if (label === undefined) {
       throw new Error('Graph vertex must have a value');
     }
 
@@ -23,6 +23,7 @@ export default class GraphVertex {
 
     // Normally you would store string value like vertex name.
     // But generally it may be any object as well
+    this.label = label;
     this.value = value;
     this.edges = new LinkedList(edgeComparator);
   }
@@ -133,7 +134,7 @@ export default class GraphVertex {
    * @returns {string}
    */
   getKey() {
-    return this.value;
+    return this.label;
   }
 
   /**
@@ -149,6 +150,6 @@ export default class GraphVertex {
    * @returns {string}
    */
   toString(callback) {
-    return callback ? callback(this.value) : `${this.value}`;
+    return callback ? callback(this.label) : `${this.label}`;
   }
 }
