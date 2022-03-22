@@ -1523,9 +1523,8 @@ export default class Graph {
     if (is_finish) {
       // Index v is now deleted from mark stacked, and has been called u unmark v
       let u = marked_stack.pop();
-
+      
       while (u !== curr_index) {
-        console.log('Hi!!');
         marked[u] = false;
         u = marked_stack.pop();
       }
