@@ -2,8 +2,8 @@ import Mesh from '../Mesh';
 import MeshVertex from '../MeshVertex';
 
 describe('Mesh', () => {
-  it('should return a defined object', () => {
-    let metric_fun = (coord_1, coord_2) => {
+  it('should return a defined object with metric validation', () => {
+    let valid_metric_fun = (coord_1, coord_2) => {
       return Math.sqrt(
         Math.pow(
           coord_2.coordinates[1]-coord_1.coordinates[1], 2) + 
@@ -13,9 +13,24 @@ describe('Mesh', () => {
         )
     }
 
-    let mesh = new Mesh(metric_fun)
+    let invalid_metric_fun = (coord_1, coord_2) => {
+      return -Math.sqrt(
+        Math.pow(
+          coord_2.coordinates[1]-coord_1.coordinates[1], 2) + 
+        Math.pow(
+          coord_2.coordinates[0]-coord_1.coordinates[0], 2
+        )
+        )
+    }
+
+    let mesh = new Mesh(valid_metric_fun, true)
     
     expect(mesh).toBeDefined();
+    expect(mesh.metricIsValid()).toBe(true);
+
+    mesh.metric_function = invalid_metric_fun
+
+    expect(mesh.metricIsValid()).toBe(false);
   });
 
   it('should throw an error for non valid metric', () => {
