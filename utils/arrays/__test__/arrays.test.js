@@ -4,6 +4,7 @@ import {
   isCyclicEqual,
   getUniques,
   extendedVenn,
+  spreadExtendedVenn,
   arraysEqual,
   removeElements,
   hasElement,
@@ -103,28 +104,39 @@ describe('Extended venn diagram', () => {
     const list_1 = [1, 2, 3, 4, 5];
     const list_2 = [4, 5, 6, 7];
 
-    expect(Object.fromEntries([...extendedVenn([list_1, list_2])])).toEqual({
+    expect(
+      spreadExtendedVenn([list_1, list_2])
+    ).toEqual({
       '0,1': [4, 5],
       0: [1, 2, 3],
       1: [6, 7],
     });
   });
 
-  it('should validate non-intersection from Extended Venn Diagram', () => {
+  it('should return a multiple set interactions', () => {
     const list_1 = [1, 2, 3];
-    const list_2 = [4, 5, 6];
-
-    expect(Object.fromEntries([...extendedVenn([list_1, list_2])])).toEqual({
-      0: [1, 2, 3],
-      1: [4, 5, 6],
-    });
+    const list_2 = [2, 4, 5];
+    const list_3 = [2, 6, 7];
+    
+    expect(
+      spreadExtendedVenn([list_1, list_2, list_3])
+    ).toEqual(
+      {
+        '0': [1, 3],
+        '1': [4, 5],
+        '2': [6, 7],
+        '0,1,2': [2],
+      }
+    );
   });
 
   it('should validate empty exclusivity from Extended Venn Diagram', () => {
     const list_1 = [1, 2, 3, 4, 5, 6];
     const list_2 = [4, 5, 6];
 
-    expect(Object.fromEntries([...extendedVenn([list_1, list_2])])).toEqual({
+    expect(
+      spreadExtendedVenn([list_1, list_2])
+    ).toEqual({
       0: [1, 2, 3],
       '0,1': [4, 5, 6],
     });

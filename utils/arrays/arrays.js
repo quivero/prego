@@ -209,11 +209,11 @@ export function* extendedVenn(sets) {
     prev_keys_len = keys.length;
 
     for (const comb_keys of new _.combinations(keys, chunk_card)) {
+      // In case any of the sets under analysis is empty 
+      if(hasElement([...comb_keys.map((key) => sets[Number(key)])], [])) continue;
+      
       // Intersection of elements
       comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]));
-
-      // Empty array
-      if (comb_sets_inter.length === 0) continue;
 
       compl_set_elems = _.uniq(_.flatten(
         _.difference(keys, comb_keys).map((set_key) => sets[set_key]),
@@ -248,3 +248,7 @@ export function* extendedVenn(sets) {
     }
   }
 }
+
+export const spreadExtendedVenn = (lists) => Object.fromEntries([...extendedVenn(lists)])
+
+
