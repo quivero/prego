@@ -2200,6 +2200,78 @@ export default class Graph {
   }
 
   /**
+   * @abstract returns a json representation of the current graph
+   *
+   * @return {Object} graph_json
+   */
+  serialize() {
+    return {
+      nodes: this.getAllVertices().map(
+        (vertex) => {
+          return {
+            id: vertex.label,
+            value: vertex.value
+          }
+        }
+      ),
+      edges: this.getAllEdges().map(
+        (edge) => {
+          return {
+            from: edge.startVertex.label,
+            to: edge.endVertex.label,
+            weight: edge.weight
+          }
+        }
+      )
+    }
+  }
+
+  /**
+   * @abstract returns this graph with added vertices and edges
+   * @param serialized_graph
+   * @return {Graph} this
+   */
+  deserialize(graph_json) {
+    this.addVertices(
+      objectFilter(
+        graph_json['nodes'].map(
+          (node_json) => {
+            const has_vertex = this.getVerticesKeys().includes(node_json['id']);
+            
+            if(!has_vertex) {
+              return new GraphVertex(
+                node_json['id'], node_json['value']
+              ) 
+            } else {
+              return null
+            }
+          }
+        ), (key, value) => value !== null
+      )
+    )
+    
+    this.addEdges(
+      objectFilter(
+        graph_json['edges'].map(
+          (edge_json) => {
+            const has_edge = this.getAllEdgesKeys().includes(
+              `${edge_json['from']}_${edge_json['to']}`
+            );
+            
+            if(!has_edge) {
+              return new GraphEdge(
+                edge_json['id'], edge_json['value']
+              ) 
+            } else {
+              return null
+            }
+          }
+        ), (key, value) => value !== null
+      )
+    )
+  }
+
+  /**
    * @return {object}
    */
   describe() {
