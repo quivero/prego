@@ -52,17 +52,7 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 
 1. data-structures/graph/Graph.js:
 
-    - [x] isChain(vertices_indices_path)
-    - [x] isEmpty()
-    - [x] girth()
     - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
-    - [x] isReachable(from_vertex, to_vertex):
-    - [x] isCyclicHamiltonian(): 
-    - [x] isPredecessor(vertex, candidate):
-    - [x] getReachibilityList(type = 0)
-    - [x] getReachibilityVenn(type = 0)
-    - [x] volume(vertices_indices):
-    - [x] islands()
 
 4. data-structures/utils/graph/graph.js -> {petersonCycles}
 
