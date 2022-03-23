@@ -303,3 +303,11 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
 export const parseWorkflowXMLToGraph = () => {
   throw Error('Not implemented');
 };
+
+/**
+ * @abstract returns workflow islands
+ * 
+ * @param {Object} blueprint
+ * @return {object} islands
+ */
+ export const workflowIslands = (blueprint) => parseBlueprintToGraph(blueprint).islands()
