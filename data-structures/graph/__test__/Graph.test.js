@@ -70,8 +70,8 @@ describe('Graph', () => {
             {'id': 'C', 'value': 0}
           ],
           'edges': [
-            {'from': 'A', 'to': 'B', 'weight': 0},
-            {'from': 'B', 'to': 'C', 'weight': 0}
+            {'source': 'A', 'target': 'B', 'weight': 0},
+            {'source': 'B', 'target': 'C', 'weight': 0}
           ]
         }
       )
@@ -80,8 +80,14 @@ describe('Graph', () => {
     graph.empty()
     graph.deserialize(graph_serialization)
 
+    const edges = graph.getAllEdges()
+
     expect(graph.getNumVertices()).toBe(3);
-    expect(graph.getAllEdges().length).toBe(2);
+    expect(edges.length).toBe(2);
+
+    expect(edges[0].toString()).toBe('A_B');
+    expect(edges[1].toString()).toBe('B_C');
+    expect(edges[2]).toBeUndefined();
   })
 
   it('should get vertices by indexes', () => {

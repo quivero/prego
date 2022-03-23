@@ -2219,8 +2219,8 @@ export default class Graph {
       edges: this.getAllEdges().map(
         (edge) => {
           return {
-            from: edge.startVertex.label,
-            to: edge.endVertex.label,
+            source: edge.startVertex.label,
+            target: edge.endVertex.label,
             weight: edge.weight
           }
         }
@@ -2263,14 +2263,13 @@ export default class Graph {
         graph_json['edges'].map(
           (edge_json) => {
             const has_edge = this.getAllEdgesKeys().includes(
-              `${edge_json['from']}_${edge_json['to']}`
+              `${edge_json['source']}_${edge_json['target']}`
             );
             
             if(!has_edge) {
-              console.log(this.vertices[edge_json['from']])
               return new GraphEdge(
-                this.vertices[edge_json['from']], 
-                this.vertices[edge_json['to']],
+                this.vertices[edge_json['source']], 
+                this.vertices[edge_json['target']],
                 edge_json['weight']
               ) 
             } else {
