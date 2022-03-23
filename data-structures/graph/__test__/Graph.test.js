@@ -1434,9 +1434,9 @@ describe('Graph', () => {
 
     // Add edges
     graph.addEdges([AB, BC]);
-
+    
     expect(
-      JSON.stringify(graph.getBridgeEndInOutDict()),
+      JSON.stringify(graph.getBridgeEndIODict()),
     ).toEqual(JSON.stringify(
       {
         0: { to: [1], from: [] },

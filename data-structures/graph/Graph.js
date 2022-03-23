@@ -1129,7 +1129,7 @@ export default class Graph {
    * @abstract returns a map from bridge-ends to from-to bridge end object
    * @return {Array}
    */
-  getBridgeEndInOutDict() {
+  getBridgeEndIODict() {
     const bridges = this.bridges(true);
     const bridge_keys = _.uniq(_.flatten(bridges));
 
@@ -1252,12 +1252,42 @@ export default class Graph {
   }
 
   /**
+   * @abstract returns an island map to input-output bridge ends
+   * @return {object}
+   */
+  getIslandBridgeEndIODict() {
+    const bridge_end_io_dict = this.getBridgeEndIODict(); 
+    
+    return objectReduce(
+      this.islands(),
+      (result, island_id, habitant_groups) => {
+        result[island_id] = objectReduce(
+          habitant_groups['bridge_ends'],
+          (result_, id_, bridge_end_id) => {
+            if(bridge_end_io_dict[bridge_end_id]['from'].length !== 0) {
+              result_['target'].push(bridge_end_id)
+            }
+
+            if(bridge_end_io_dict[bridge_end_id]['to'].length !== 0) {
+              result_['source'].push(bridge_end_id)
+            }
+            
+            return result_
+          }, {source: [], target: []}
+          )
+
+        return result
+      }, {}
+    );
+  }
+
+  /**
    * @abstract returns a map from island ids to from-to bridge end ids
    * @return {Array}
    */
   getIslandsToFromBridgeEnd() {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
-    const bridge_end_InOut = this.getBridgeEndInOutDict();
+    const bridge_end_InOut = this.getBridgeEndIODict();
 
     const bridges = this.bridges(true);
     const bridge_ends = _.uniq(_.flatten(bridges));
@@ -1294,6 +1324,50 @@ export default class Graph {
       },
       {},
     );
+  }
+
+  /**
+   * @abstract returns a map from islands to islands
+   * @return {Array}
+   */
+  getIslandInnerReachability() {
+    const islands = this.islandsHabitants();
+    const reachability_list = this.getReachabilityList();
+    
+    return objectReduce(
+      islands, 
+      (result, island_id, habitants) => {
+        if(habitants.length === 1) {
+          const reachables = {} 
+
+          reachables[habitants[0]] = [habitants[0]]
+          result[island_id] = reachables;
+
+        } else {
+          result[island_id] = objectReduce(
+            habitants,
+            (result_, __, habitant) => {
+              result_[habitant] = _.intersection(reachability_list[habitant], habitants)
+              return result_
+            }, 
+            {})
+        }
+
+        return result
+      }, {})
+  }
+
+  /**
+   * @abstract returns a map from islands to islands
+   * @return {Array}
+   */
+  getIslandsSubgraphs() {
+    return objectMap(
+      this.islandsHabitants(),
+      (island_id, habitants) => {
+        return this.buildSubgraph(habitants)
+      }
+    )
   }
 
   /**
