@@ -170,6 +170,12 @@ export const nodeToLane = (blueprint) => {
   return node_to_lane;
 };
 
+/**
+ * @abstract returns lane route from a node_route
+ *
+ * @param {Object} blueprint
+ * @param {Graph}
+ */
 export const nodeRouteToLaneRoute = (
   node_route,
   vertices_indices_to_keys,
