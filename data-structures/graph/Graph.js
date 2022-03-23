@@ -1167,19 +1167,15 @@ export default class Graph {
   islands() {
     const graph_copy = this.copy();
 
-    const undirected_bridges = graph_copy.bridges(true);
+    const undirected_bridges = this.bridges(true);
     const bridge_ends = _.uniq(_.flatten(undirected_bridges));
-
     const bridge_edges = graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
 
     // Remove bridges to obtain strongly connected components
     graph_copy.deleteEdges(bridge_edges);
-
+    
     // Dictionary with islads
     const islands_dict = graph_copy.retrieveUndirected().getStronglyConnectedComponentsIndices();
-
-    // edegs bridges back
-    graph_copy.addEdges(bridge_edges);
 
     return objectMap(
       islands_dict,
@@ -1192,6 +1188,23 @@ export default class Graph {
         ), 1),
       }),
     );
+  }
+
+  /**
+   * @abstract returns a map from island id to habitants object
+   * @return {object}
+   */
+  islandsHabitants() {
+    return objectReduce(
+      this.islands(),
+      (result, island_id, habitants_) => {
+        result[island_id] = _.union(
+          habitants_['bridge_ends'],
+          habitants_['inner_vertices']
+        )
+        
+        return result
+      }, {})
   }
 
   /**
