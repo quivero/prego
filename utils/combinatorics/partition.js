@@ -85,9 +85,8 @@ export const cardvecCombinations = (points, card_vec) => {
     blob_comb = [elem_0_comb];
 
     elem_1_combs = cardvecCombinations(_.difference(points, elem_0_comb), card_vec.slice(1));
-
+    
     blob_comb.push(elem_1_combs);
-
     blob_combs.push(blob_comb);
   }
 
@@ -95,19 +94,14 @@ export const cardvecCombinations = (points, card_vec) => {
 };
 
 /*
-export const constellationSeeker = (points, n_blobs, origin) => {
-  if (!points.includes(origin)) {
-    throw Error('Origin MUST be within points!');
-  }
-
+export const constellationSeeker = (points, n_blobs, origins) => {
   if (points.length < n_blobs) {
     throw Error('Number of points MUST be greater than number of blobs');
   }
-
-  const points_ = _.difference(points, origin);
+  
   let comb = [];
 
-  for (const comb_vec of partitions(points_.length, n_blobs)) {
+  for (const comb_vec of partitions(points.length, n_blobs)) {
     comb = cardvecCombinations(points_, comb_vec);
   }
 

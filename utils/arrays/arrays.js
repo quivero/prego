@@ -203,7 +203,8 @@ export function* extendedVenn(sets) {
   let compl_set_elems = [];
   let prev_keys_len = -1;
   let curr_keys_len = -1;
-
+  
+  // Traverse the combination lattice
   for (const chunk_card of _.range(1, keys.length + 1)) {
     keys = keys_fun(sets);
     prev_keys_len = keys.length;
