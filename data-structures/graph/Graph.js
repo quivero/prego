@@ -1361,6 +1361,30 @@ export default class Graph {
    * @abstract returns a map from islands to islands
    * @return {Array}
    */
+   getIslandIOReachability() {
+    const reachability_list = this.getReachabilityList();
+    
+    return objectReduce(
+      this.getIslandBridgeEndIODict(), 
+      (result, island_id, habitants) => {
+        result[island_id] = objectReduce(
+          habitants['target'],
+          (result_, id_, in_bridge_end) => {
+            result_[in_bridge_end] = _.intersection(
+              reachability_list[in_bridge_end], habitants['source']
+            )
+            
+            return result_
+          }, {})
+
+        return result
+      }, {})
+  }
+
+  /**
+   * @abstract returns a map from islands to islands
+   * @return {Array}
+   */
   getIslandsSubgraphs() {
     return objectMap(
       this.islandsHabitants(),
