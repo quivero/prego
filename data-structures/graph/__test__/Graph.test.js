@@ -6,6 +6,7 @@ import GraphEdge from '../GraphEdge';
 import {
   createVertices,
   createEdges,
+  createEdgesFromVerticesValues,
 } from '../utils/graph.js';
 
 import {
@@ -44,6 +45,44 @@ describe('Graph', () => {
 
     expect(vertex.getKey()).toEqual('A');
   });
+
+  it('should get graph serialization', () => {
+    let graph = new Graph(true);
+
+    const [AB, BC] = createEdgesFromVerticesValues(
+      [
+        ['A', 'B'], ['B', 'C']
+      ]
+    )
+    
+    graph.addEdges([AB, BC]);
+    
+    const graph_serialization = graph.serialize()
+    
+    expect(
+      _.isEqual(
+        graph_serialization,
+        {
+          'isDirected': true,
+          'nodes': [
+            {'id': 'A', 'value': 0},
+            {'id': 'B', 'value': 0},
+            {'id': 'C', 'value': 0}
+          ],
+          'edges': [
+            {'from': 'A', 'to': 'B', 'weight': 0},
+            {'from': 'B', 'to': 'C', 'weight': 0}
+          ]
+        }
+      )
+    ).toBe(true);
+
+    graph.empty()
+    graph.deserialize(graph_serialization)
+
+    expect(graph.getNumVertices()).toBe(3);
+    expect(graph.getAllEdges().length).toBe(2);
+  })
 
   it('should get vertices by indexes', () => {
     const graph = new Graph();

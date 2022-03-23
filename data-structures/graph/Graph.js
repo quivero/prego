@@ -27,6 +27,7 @@ import {
 import {
   objectInit,
   objectMap,
+  objectFilter,
   objectKeyFind,
   objectReduce,
 } from '../../utils/objects/objects.js';
@@ -2206,6 +2207,7 @@ export default class Graph {
    */
   serialize() {
     return {
+      isDirected: this.isDirected,
       nodes: this.getAllVertices().map(
         (vertex) => {
           return {
@@ -2232,6 +2234,12 @@ export default class Graph {
    * @return {Graph} this
    */
   deserialize(graph_json) {
+    if(graph_json['isDirected'] !== this.isDirected) {
+      throw Error('This direction is different from serialization direction.');
+    }
+
+    const vertices = this.getAllVertices()
+
     this.addVertices(
       objectFilter(
         graph_json['nodes'].map(
@@ -2259,8 +2267,11 @@ export default class Graph {
             );
             
             if(!has_edge) {
+              console.log(this.vertices[edge_json['from']])
               return new GraphEdge(
-                edge_json['id'], edge_json['value']
+                this.vertices[edge_json['from']], 
+                this.vertices[edge_json['to']],
+                edge_json['weight']
               ) 
             } else {
               return null
@@ -2269,6 +2280,8 @@ export default class Graph {
         ), (key, value) => value !== null
       )
     )
+
+    return this
   }
 
   /**
