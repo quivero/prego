@@ -194,8 +194,6 @@ export function* extendedVenn(sets) {
     (key) => sets_[key].length !== 0,
   );
 
-  let keys = keys_fun(sets);
-
   let comb_sets_inter = {};
   let comb_sets_excl = {};
 
@@ -203,23 +201,27 @@ export function* extendedVenn(sets) {
   let compl_set_elems = [];
   let prev_keys_len = -1;
   let curr_keys_len = -1;
+  let comb_key = '';
   
+  let keys = keys_fun(sets);
+  
+  let i = 0;
+
   // Traverse the combination lattice
   for (const chunk_card of _.range(1, keys.length + 1)) {
-    keys = keys_fun(sets);
-    prev_keys_len = keys.length;
-
     for (const comb_keys of new _.combinations(keys, chunk_card)) {
-      // In case any of the sets under analysis is empty 
+      // In case any of the sets under analysis is empty
       if(hasElement([...comb_keys.map((key) => sets[Number(key)])], [])) continue;
       
       // Intersection of elements
-      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]));
+      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]))
 
       compl_set_elems = _.uniq(_.flatten(
         _.difference(keys, comb_keys).map((set_key) => sets[set_key]),
       ));
-
+      
+      let comb_key = comb_keys.join(',')
+      
       comb_sets_excl = _.difference(comb_sets_inter, compl_set_elems);
       cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl);
 
@@ -242,7 +244,11 @@ export function* extendedVenn(sets) {
       keys = keys_fun(sets);
 
       curr_keys_len = keys.length;
-
+      
+      // If any set turned empty, break inner-loop. The chunk cardinality
+      // in the inner-loop may be greater than the available non-empty sets. 
+      // Therefore, it is also a necessary condition. Both together are 
+      // sufficient for integers
       if (curr_keys_len < prev_keys_len && curr_keys_len < chunk_card) {
         break;
       }
