@@ -3,13 +3,11 @@ import {
   cardvecCombinations,
 } from '../partition.js';
 
-import {
-  arraysEqual,
-} from '../../arrays/arrays.js';
+import _ from 'lodash';
 
 describe('combinatorics', () => {
   it('should return number k-partition summand terms', () => {
-    expect(arraysEqual(partitions(5, 2), [[4, 1], [3, 2]])).toStrictEqual(true);
+    expect(_.isEqual(partitions(5, 2), [[4, 1], [3, 2]])).toStrictEqual(true);
   });
 
   it('should throw an error for negative number of partitions', () => {
@@ -37,13 +35,13 @@ describe('combinatorics', () => {
   });
 
   it('should throw an error for negative number of partitions', () => {
-    expect(arraysEqual(partitions(10, 1), [10])).toBe(true);
+    expect(_.isEqual(partitions(10, 1), [10])).toBe(true);
   });
 });
 
 describe('cardvecCombinations', () => {
   it('should return combinations for given cardinality vector', () => {
-    expect(arraysEqual(
+    expect(_.isEqual(
       cardvecCombinations([1, 2, 3], [1, 2]),
       [
         [[1], [[2, 3]]],

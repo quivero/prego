@@ -5,11 +5,12 @@ import {
   getUniques,
   extendedVenn,
   spreadExtendedVenn,
-  arraysEqual,
   removeElements,
   hasElement,
   sort,
 } from '../arrays';
+
+import _ from 'lodash';
 
 console.error = jest.fn();
 
@@ -57,7 +58,7 @@ describe('Array', () => {
   });
 
   it('should return remove elements from array', () => {
-    expect(arraysEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(true);
+    expect(_.isEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(true);
   });
 
   it('should return the unique array elements', () => {
@@ -67,21 +68,6 @@ describe('Array', () => {
   it('should throw console.error in case the index exceeds array size', () => {
     cyclicSort('ABCD', 5);
     expect(console.error).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('arraysEqual', () => {
-  it('should return true for 2 equal arrays', () => {
-    expect(arraysEqual('abc', 'abc')).toStrictEqual(true);
-  });
-
-  it('should return false for null value', () => {
-    expect(arraysEqual(null, 42)).toStrictEqual(false);
-    expect(arraysEqual(42, null)).toStrictEqual(false);
-  });
-
-  it('should return false for arrays of different lengths', () => {
-    expect(arraysEqual([0, 1], [0, 1, 2])).toStrictEqual(false);
   });
 });
 

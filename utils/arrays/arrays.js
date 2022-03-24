@@ -68,7 +68,7 @@ export const isCyclicEqual = (control_, treatment_) => {
   }
 
   for (let i = 0; i < treatment_.length; i += 1) {
-    if (arraysEqual(cyclicSort(treatment_, i), control_)) {
+    if (_.isEqual(cyclicSort(treatment_, i), control_)) {
       return true;
     }
   }
@@ -122,7 +122,7 @@ export const sort = (arr, sort_type = 0) => {
  */
 export const hasElement = (arr, elem) => {
   for (let i = 0; i <= arr.length; i += 1) {
-    if (arraysEqual(arr[i], elem)) {
+    if (_.isEqual(arr[i], elem)) {
       return true;
     }
   }
@@ -161,7 +161,7 @@ export const removeArrayDuplicates = (list) => {
     let has_item = false;
 
     unique.forEach((unique_item) => {
-      has_item = has_item || arraysEqual(item, unique_item);
+      has_item = has_item || _.isEqual(item, unique_item);
     });
 
     if (!has_item) {

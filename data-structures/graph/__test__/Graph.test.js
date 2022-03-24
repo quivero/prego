@@ -11,7 +11,6 @@ import {
 
 import {
   ones,
-  arraysEqual,
   isCyclicEqual,
 } from '../../../utils/arrays/arrays';
 
@@ -1047,7 +1046,7 @@ describe('Graph', () => {
       vertexA, vertexB, vertexC, vertexD,
     ]);
 
-    expect(arraysEqual(ids, [0, 1, 2, 3])).toBe(true);
+    expect(_.isEqual(ids, [0, 1, 2, 3])).toBe(true);
   });
 
   it('should return vertices indices from edge', () => {
@@ -1067,7 +1066,7 @@ describe('Graph', () => {
 
     const ids = graph.convertEdgeToVerticesIndices(edgeAB);
 
-    expect(arraysEqual(ids, [0, 1])).toBe(true);
+    expect(_.isEqual(ids, [0, 1])).toBe(true);
   });
 
   it('should return vertices indices from edges', () => {
@@ -1087,7 +1086,7 @@ describe('Graph', () => {
 
     const ids = graph.convertEdgesToVerticesIndices([edgeAB, edgeBC, edgeCD]);
 
-    expect(arraysEqual(ids, [[0, 1], [1, 2], [2, 3]])).toBe(true);
+    expect(_.isEqual(ids, [[0, 1], [1, 2], [2, 3]])).toBe(true);
   });
 
   it('should find articulation points in simple graph with back edge', () => {
@@ -1686,7 +1685,7 @@ describe('Graph', () => {
     const neighbors = graph.getVerticesNeighbours([0]);
 
     expect(neighbors[0].length).toBe(2);
-    expect(arraysEqual(neighbors[0], [1, 2])).toBe(true);
+    expect(_.isEqual(neighbors[0], [1, 2])).toBe(true);
   });
 
   it('should return reachable nodes from from_vertex_key', () => {
@@ -2441,7 +2440,7 @@ describe('Graph', () => {
     const graph = new Graph();
     graph.addEdges([edgeAB, edgeBC, edgeCD]);
 
-    expect(arraysEqual(graph.allPaths('A'), [])).toBe(true);
+    expect(_.isEqual(graph.allPaths('A'), [])).toBe(true);
   });
 
   it('should return all eulerian paths for graph', () => {

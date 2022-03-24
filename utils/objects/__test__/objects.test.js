@@ -5,15 +5,13 @@ import {
   objectInit,
 } from '../objects.js';
 
-import {
-  arraysEqual,
-} from '../../arrays/arrays.js';
+import _ from 'lodash';
 
 describe('objects', () => {
   it('should return an object initializer', () => {
     const newObject = objectInit(['a', 'b'], []);
 
-    expect(arraysEqual(Object.keys(newObject), ['a', 'b'])).toBe(true);
+    expect(_.isEqual(Object.keys(newObject), ['a', 'b'])).toBe(true);
   });
 
   it('should return twice the object value', () => {
