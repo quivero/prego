@@ -1361,7 +1361,7 @@ export default class Graph {
    * @abstract returns a map from islands to islands
    * @return {Array}
    */
-   getIslandIOReachability() {
+  getIslandIOReachability() {
     const reachability_list = this.getReachabilityList();
     
     return objectReduce(
