@@ -8,10 +8,21 @@ import _ from 'lodash';
 import {
   parseBlueprintToGraph,
   fromStartToFinishCombsAllPaths,
+  workflowIslands
 } from '../utils/workflow/parsers.js';
 
 import {
-  sort
+  bigIntGenerator,
+} from '../utils/numbers/numbers.js';
+
+import {
+  objectReduce,
+} from '../utils/objects/objects.js';
+
+import {
+  spreadExtendedVenn,
+  arraysEqual,
+  sort,
 } from '../utils/arrays/arrays.js';
 
 const require = createRequire(import.meta.url);
@@ -91,8 +102,8 @@ app.get('/', (req, res) => {
     let j = [11, 12, 13, 14, 15, 16]
     let k = [10, 11, 14, 15, 18, 19]
     let l = [1, 5, 10, 15, 17, 20]
-    spreadExtendedVenn([a, b, c, d, e, f, g, h, i, j, k, l])
-    res.send(spreadExtendedVenn(graph.getReachabilityList()));
+    
+    res.send(spreadExtendedVenn([a, b, c, d, e, f, g, h, i, j, k, l]));
   }
 });
 // [END app]
