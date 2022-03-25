@@ -11,6 +11,7 @@ import {
 
 import {
   partitionTree,
+  partitions
 } from '../utils/combinatorics/partition.js';
 
 import {
@@ -95,10 +96,12 @@ app.get('/', (req, res) => {
     let j = [11, 12, 13, 14, 15, 16]
     let k = [10, 11, 14, 15, 18, 19]
     let l = [1, 5, 10, 15, 17, 20]
+    
+    for(const tree_tuple of partitionTree(10, 5)) {
+      console.log(tree_tuple)
+    }
 
-    a = 10;
-
-    res.send(partitionTree(8));
+    res.send(partitions(50, 5));
   }
 });
 // [END app]
