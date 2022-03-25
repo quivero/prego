@@ -17,7 +17,7 @@ import {
  * @return {Array} partitions
  */
 export const partitions = (number, num_summands) => {
- if (number < 0 || num_summands < 0) {
+ if (number <= 0 || num_summands <= 0) {
    throw Error('Number of points and summands MUST be greater than 0 and natural.');
  }
 
@@ -28,10 +28,10 @@ export const partitions = (number, num_summands) => {
  if (num_summands === 1) {
    return [number];
  }
-
+ 
  let program_counter = 0;
  let is_swap;
- const curr_partition = [number - num_summands + 1].concat(ones(num_summands - 1));
+ let curr_partition = [number - num_summands + 1].concat(ones(num_summands - 1));
  let curr_partition_uniques = getUniques(curr_partition);
  let hasNegativeElements = (arr) => arr.filter((elem) => elem <= 0).length > 0
  
@@ -73,7 +73,9 @@ export const partitions = (number, num_summands) => {
  * @return {Array} [partition, spread_possibilities]
  */
 export function* partitionTree(number, num_summands) {
-  if (number < 0 || num_summands < 0 || number - Math.floor(number) !== 0) {
+  
+  // Guard elements
+  if (number <= 0 || num_summands <= 0) {
     throw Error('Number of points and blobs MUST be greater than 0.');
   }
   
@@ -81,26 +83,29 @@ export function* partitionTree(number, num_summands) {
     throw Error('Number of points MUST be greater than number of blobs.');
   }
 
-  if(num_summands === 1 || number === 1) {
-    yield [[1], [number]]
-  }
-
-  let ith_partition_tree = {}
-  let element = -1;
-
-  for(const partition_ of partitions(number, num_summands)) {
-    ith_partition_tree = {};
+  if(num_summands === 1) {
+    yield [[1], [number], [number], [number]]
+  } else {
+    let element = -1;
+    let partition_uniques = []
     
-    for(let i = 0; i < partition_.length; i += 1) {
-      element = partition_[i];
-
-      ith_partition_tree[element] = {};
+    for(const partition_ of partitions(number, num_summands)) {
+      partition_uniques = getUniques(_.flatten([partition_]));
       
-      for(const id_ of _.range(1, element+1)) {
-        ith_partition_tree[element][id_] = Object.fromEntries([...partitionTree(element, id_)]);
+      for(let i = 1; i <= partition_uniques.length; i = i + 1) {
+        element = partition_uniques[i];
+        
+        for(let i = 1; i <= element; i = i + 1) {
+          for(const tree_node of partitionTree(element, i)) {
+            yield {
+              partition: partition_, 
+              element: element, 
+              size: i, 
+              tree_node: tree_node
+            };  
+          }
+        }
       }
-      
-      yield [partition_, ith_partition_tree];
     }
   }
 }
