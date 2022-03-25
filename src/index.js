@@ -10,6 +10,10 @@ import {
 } from '../utils/workflow/parsers.js';
 
 import {
+  partitionTree,
+} from '../utils/combinatorics/partition.js';
+
+import {
   spreadExtendedVenn,
   spreadVenn,
 } from '../utils/arrays/arrays.js';
@@ -91,8 +95,10 @@ app.get('/', (req, res) => {
     let j = [11, 12, 13, 14, 15, 16]
     let k = [10, 11, 14, 15, 18, 19]
     let l = [1, 5, 10, 15, 17, 20]
-    
-    res.send(spreadExtendedVenn([a, b, c, d, e, f, g, h, i, j, k, l]));
+
+    a = 10;
+
+    res.send(partitionTree(8));
   }
 });
 // [END app]

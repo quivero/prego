@@ -6,7 +6,64 @@ import {
   hasElement,
   ones,
   sort,
+  getUniques
 } from '../arrays/arrays.js';
+
+/*
+ * @abstract returns unique partitions of an integer with 
+ *
+ * @param {Integer} number
+ * @param {Integer} n_summands
+ * @return {Array} partitions
+ */
+export const partitions = (number, num_summands) => {
+ if (number < 0 || num_summands < 0) {
+   throw Error('Number of points and blobs MUST be greater than 0.');
+ }
+
+ if (number < num_summands) {
+   throw Error('Number of points MUST be greater than number of blobs.');
+ }
+
+ if (num_summands === 1) {
+   return [number];
+ }
+
+ let program_counter = 0;
+ let is_swap;
+ const curr_partition = [number - num_summands + 1].concat(ones(num_summands - 1));
+ let curr_partition_uniques = getUniques(curr_partition);
+ let hasNegativeElements = (arr) => arr.filter((elem) => elem <= 0).length > 0
+ 
+ const partitions = [[...curr_partition]];
+ let is_new_partition = false;
+
+ for (let i = 1; i < num_summands; i += 1) {
+   program_counter = 0;
+
+   while (program_counter <= i - 1) {
+     is_swap = false;
+
+     while (!is_swap) {
+       curr_partition[program_counter] -= 1;
+       curr_partition[program_counter + 1] += 1;
+
+       is_swap = curr_partition[program_counter + 1] >= curr_partition[program_counter];
+
+       is_new_partition = !hasElement(partitions, sort([...curr_partition]))
+                          && !hasNegativeElements(curr_partition);
+       if (is_new_partition) {
+         partitions.push(sort([...curr_partition]));
+       }
+     }
+
+     curr_partition_uniques = getUniques(curr_partition);
+     program_counter += 1;
+   }
+ }
+
+ return partitions;
+};
 
 /**
  * @abstract returns all unique partitions of an integer
@@ -15,50 +72,33 @@ import {
  * @param {Integer} n_blobs
  * @return {Array} partitions
  */
-export const partitions = (n_points, n_blobs) => {
-  if (n_points < 0 || n_blobs < 0) {
-    throw Error('Number of points and blobs MUST be greater than 0.');
+export const partitionTree = (num) => {
+  if (num < 0 || num - Math.floor(num) !== 0) {
+    throw Error('Number MUST be greater than 0 and natural.');
   }
 
-  if (n_points < n_blobs) {
-    throw Error('Number of points MUST be greater than number of blobs.');
+  if(num == 1) {
+    return {'1': [1]}
   }
 
-  if (n_blobs === 1) {
-    return [n_points];
-  }
+  let partition_tree = {}
+  let element = -1;
 
-  let program_counter = 0;
-  let is_swap;
-  const curr_partition = [n_points - n_blobs + 1].concat(ones(n_blobs - 1));
-  const partitions = [[...curr_partition]];
-  let is_new_partition = false;
-
-  for (let i = 1; i < n_blobs; i += 1) {
-    program_counter = 0;
-
-    while (program_counter <= i - 1) {
-      is_swap = false;
-
-      while (!is_swap) {
-        curr_partition[program_counter] -= 1;
-        curr_partition[program_counter + 1] += 1;
-
-        is_swap = curr_partition[program_counter + 1] >= curr_partition[program_counter];
-
-        is_new_partition = !hasElement(partitions, sort([...curr_partition]))
-                           && !curr_partition.includes(0);
-        if (is_new_partition) {
-          partitions.push(sort([...curr_partition]));
-        }
+  for(const chunk_card of _.range(1, num+1)) {
+    partition_tree[chunk_card] = {};
+    
+    for(const partition_ of partitions(num, chunk_card)) {
+      partition_tree[chunk_card][partition_] = {};
+      
+      for(let i = 0; i<partition_.length; i += 1) {
+        element = partition_[i];
+        partition_tree[chunk_card][partition_][element] = partitionTree(element);
       }
-
-      program_counter += 1;
     }
   }
 
-  return partitions;
-};
+  return partition_tree
+}
 
 /**
  * @abstract returns
