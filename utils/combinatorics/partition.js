@@ -99,8 +99,8 @@ export function* partitionTree(number, num_summands) {
       for(const id_ of _.range(1, element+1)) {
         ith_partition_tree[element][id_] = Object.fromEntries([...partitionTree(element, id_)]);
       }
-
-      yield [partition_, JSON.stringify(ith_partition_tree)];
+      
+      yield [partition_, ith_partition_tree];
     }
   }
 }
