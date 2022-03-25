@@ -83,18 +83,22 @@ export function* partitionTree(number, num_summands) {
     throw Error('Number of points MUST be greater than number of blobs.');
   }
 
+  // One summand term
   if(num_summands === 1) {
     yield [[1], [number], [number], [number]]
   } else {
     let element = -1;
     let partition_uniques = []
     
+    // For each partition
     for(const partition_ of partitions(number, num_summands)) {
       partition_uniques = getUniques(_.flatten([partition_]));
       
+      // Every unique element requires a spread term
       for(let i = 1; i <= partition_uniques.length; i = i + 1) {
         element = partition_uniques[i];
         
+        // Span lower terms than each partition element 
         for(let i = 1; i <= element; i = i + 1) {
           for(const tree_node of partitionTree(element, i)) {
             yield {
