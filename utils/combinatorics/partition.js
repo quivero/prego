@@ -18,7 +18,7 @@ import {
  */
 export const partitions = (number, num_summands) => {
  if (number < 0 || num_summands < 0) {
-   throw Error('Number of points and blobs MUST be greater than 0.');
+   throw Error('Number of points and summands MUST be greater than 0 and natural.');
  }
 
  if (number < num_summands) {
@@ -66,38 +66,43 @@ export const partitions = (number, num_summands) => {
 };
 
 /**
- * @abstract returns all unique partitions of an integer
+ * @abstract returns integer and subsequent elements partitions 
  *
  * @param {Integer} n_points
  * @param {Integer} n_blobs
- * @return {Array} partitions
+ * @return {Array} [partition, spread_possibilities]
  */
-export const partitionTree = (num) => {
-  if (num < 0 || num - Math.floor(num) !== 0) {
-    throw Error('Number MUST be greater than 0 and natural.');
+export function* partitionTree(number, num_summands) {
+  if (number < 0 || num_summands < 0 || number - Math.floor(number) !== 0) {
+    throw Error('Number of points and blobs MUST be greater than 0.');
+  }
+  
+  if (number < num_summands) {
+    throw Error('Number of points MUST be greater than number of blobs.');
   }
 
-  if(num == 1) {
-    return {'1': [1]}
+  if(num_summands === 1 || number === 1) {
+    yield [[1], [number]]
   }
 
-  let partition_tree = {}
+  let ith_partition_tree = {}
   let element = -1;
 
-  for(const chunk_card of _.range(1, num+1)) {
-    partition_tree[chunk_card] = {};
+  for(const partition_ of partitions(number, num_summands)) {
+    ith_partition_tree = {};
     
-    for(const partition_ of partitions(num, chunk_card)) {
-      partition_tree[chunk_card][partition_] = {};
+    for(let i = 0; i < partition_.length; i += 1) {
+      element = partition_[i];
+
+      ith_partition_tree[element] = {};
       
-      for(let i = 0; i<partition_.length; i += 1) {
-        element = partition_[i];
-        partition_tree[chunk_card][partition_][element] = partitionTree(element);
+      for(const id_ of _.range(1, element+1)) {
+        ith_partition_tree[element][id_] = Object.fromEntries([...partitionTree(element, id_)]);
       }
+
+      yield [partition_, JSON.stringify(ith_partition_tree)];
     }
   }
-
-  return partition_tree
 }
 
 /**

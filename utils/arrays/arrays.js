@@ -78,23 +78,9 @@ export const isCyclicEqual = (control_, treatment_) => {
 };
 
 /**
- * @abstract returns true for equal arrays
- *
- * @param {Array} array_a
- * @param {Array} array_b
- * @return {boolean} is_equal
- */
-export const arraysEqual = (a, b) => {
-  const type_equality_clause = typeof (a) === typeof (b);
-
-  if (type_equality_clause) {
-    return JSON.stringify(a) === JSON.stringify(b);
-  }
-  return false;
-};
-
-/**
- * @abstract returns a sorted array of integers
+ * @abstract returns a sorted array of integers. The possible types are below: 
+ * - 0: descending
+ * - 1: ascending
  *
  * @param {Array} array
  * @param {Integer} type
