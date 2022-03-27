@@ -13,10 +13,9 @@ Its objective is to provide a graph structure for application-suitable scenarios
 ## Table of contents
 
 1. [Preamble](#preamble)
-2. [How to install as a package](#how-to-install-as-a-package)
-3. [How to run as a service](#how-to-run-as-a-service)
-4. [Backlog](#backlog)
-5. [Prelude](#prelude)
+2. [How to run](#how-to-run)
+3. [Backlog](#backlog)
+4. [Prelude](#prelude)
 
 ## Preamble
 
@@ -26,7 +25,7 @@ Its objective is to provide a graph structure for application-suitable scenarios
 
 ### As a package
 
-The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link-use-case) of the library use case.
+The package allows to be used as a library. [Here is an example](https://github.com/dot-quiver/use-case) of the library use case.
 
 1) Go to your project path (for example, NodeJS or React);
 2) Install the library with the command ```npm install --save dot-quiver```;
