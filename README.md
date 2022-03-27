@@ -22,9 +22,9 @@ Its objective is to provide a graph structure for application-suitable scenarios
 
 For a beginner, a graph is a bunch of dots connected by either undirected lines or directed arrows. Take a look at the following URL: https://adrianmejia.com/data-structures-for-beginners-graphs-time-complexity-tutorial/
 
-## How to run as 
+## How to run
 
-### A package
+### As a package
 
 The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link-use-case) of the library use case.
 
@@ -32,7 +32,7 @@ The package allows to be used as a library. [Here is an example](https://github.
 2) Install the library with the command ```npm install --save dot-quiver```;
 3) Import in your project folder from project root folder, for example, '```import Graph from 'dot-quiver/data-structures/graph/Graph.js''```
 
-### A service
+### As a service
 
 You may utilize some cloud service to host the app, like AWS, Azure or GCloud, but in this case you might run locally.
 
