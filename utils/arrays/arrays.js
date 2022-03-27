@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import {
   objectReduce,
-  objectKeyFind,
+  objectMap,
 } from '../objects/objects.js';
 
 /**
@@ -174,7 +174,93 @@ export const getUniques = (vec) => Array.from(new Set(vec));
  * @param {Array} sets
  * @return {Array} keys_elems
  */
-export function* extendedVenn(sets) {
+export function* euler(sets) {
+  if(Object.values(sets).length === 1) yield Object.entries(sets)[0]
+  if(Object.values(sets).length === 0) throw Error('There must at least ONE set!')
+
+  sets = objectMap(sets, (set_key, set) => sort(set, 1))
+  
+  const sets_keys_fun = 
+  (sets_) => Object
+    .keys(sets_)
+    .filter((key) => sets_[key].length !== 0,);
+  
+  let compl_sets_keys = []
+  let comb_str = ''
+  let celements = []
+  let comb_intersec_key = ''
+  let comb_intersec = []
+  let comb_excl = []
+  
+  let sets_keys = sets_keys_fun(sets);
+
+  // Traverse the combination lattice
+  for(const set_key of sets_keys) {
+    compl_sets_keys = _.difference(sets_keys, [set_key])
+                       .filter((compl_set_key) => sets[compl_set_key].length !== 0)
+                       .map((compl_set_key) => String(compl_set_key))
+
+    if(compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
+      for(const comb_elements of euler(
+        objectReduce(
+          compl_sets_keys,
+          (result, __, compl_set_key) => {
+            result[compl_set_key] = sets[compl_set_key]
+            return result
+          }, {})
+        )
+      ) {
+        comb_str = comb_elements[0]
+        celements = comb_elements[1]
+        
+        comb_excl = _.difference(celements, sets[set_key])
+        if(comb_excl.length !== 0) {
+          // Exclusive elements of group except current analysis set
+          yield [comb_str, comb_excl]
+          
+          comb_str.split(',').forEach(
+            (ckey) => {
+              sets[ckey] = _.difference(sets[ckey], comb_excl)
+            }
+          )
+          
+          sets[set_key] = _.difference(sets[set_key], comb_excl)
+        }
+
+        comb_intersec = _.intersection(celements, sets[set_key])
+        if(comb_intersec.length !== 0) {
+          // Intersection of analysis element and exclusive group
+          comb_intersec_key = [set_key].concat(comb_str.split(',')).join(',')
+          
+          yield [comb_intersec_key, comb_intersec]
+          
+          comb_str.split(',').forEach(
+            (ckey) => {
+              sets[ckey] = _.difference(sets[ckey], comb_intersec)
+            }
+          )
+          
+          sets[set_key] = _.difference(sets[set_key], comb_intersec)
+        }
+
+        sets_keys = sets_keys_fun(sets);
+      }
+      
+      if(sets[set_key].length !== 0) {
+        yield [String(set_key), sets[set_key]]
+      } 
+    }
+  } 
+}
+
+/**
+ * @abstract returns each tuple [key, elems] of the extended venn
+ * systematic in a generator-wise fashion
+ *
+ * @param {Array} sets
+ * @return {Array} keys_elems
+ */
+ export function* extendedVenn(sets) {
   const keys_fun = (sets_) => Object.keys(sets_).map(
     (key) => Number(key),
   ).filter(
@@ -188,12 +274,9 @@ export function* extendedVenn(sets) {
   let compl_set_elems = [];
   let prev_keys_len = -1;
   let curr_keys_len = -1;
-  let comb_key = '';
   
   let keys = keys_fun(sets);
   
-  let i = 0;
-
   // Traverse the combination lattice
   for (const chunk_card of _.range(1, keys.length + 1)) {
     for (const comb_keys of new _.combinations(keys, chunk_card)) {
@@ -206,8 +289,6 @@ export function* extendedVenn(sets) {
       compl_set_elems = _.uniq(_.flatten(
         _.difference(keys, comb_keys).map((set_key) => sets[set_key]),
       ));
-      
-      let comb_key = comb_keys.join(',')
       
       comb_sets_excl = _.difference(comb_sets_inter, compl_set_elems);
       cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl);
@@ -242,6 +323,8 @@ export function* extendedVenn(sets) {
     }
   }
 }
+
+export const spreadEulerDiagram = (lists) => Object.fromEntries([...euler(lists)])
 
 export const spreadExtendedVenn = (lists) => Object.fromEntries([...extendedVenn(lists)])
 
