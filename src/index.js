@@ -5,18 +5,14 @@ import fs from 'fs';
 
 import _ from 'lodash';
 
+import date from 'date-and-time';
+
 import {
   parseBlueprintToGraph,
 } from '../utils/workflow/parsers.js';
 
 import {
-  partitionTree,
-  partitions
-} from '../utils/combinatorics/partition.js';
-
-import {
-  spreadExtendedVenn,
-  spreadVenn,
+  spreadEulerDiagram,
 } from '../utils/arrays/arrays.js';
 
 const require = createRequire(import.meta.url);
@@ -96,12 +92,8 @@ app.get('/', (req, res) => {
     let j = [11, 12, 13, 14, 15, 16]
     let k = [10, 11, 14, 15, 18, 19]
     let l = [1, 5, 10, 15, 17, 20]
-    
-    for(const tree_tuple of partitionTree(10, 5)) {
-      console.log(tree_tuple)
-    }
 
-    res.send(partitions(50, 5));
+    res.send(spreadEulerDiagram([a,b,c,d,e,f,g,h,i,j,k,l]));
   }
 });
 // [END app]
