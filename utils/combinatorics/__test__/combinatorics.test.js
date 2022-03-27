@@ -1,6 +1,7 @@
 import {
   partitions,
   cardvecCombinations,
+  partitionTree
 } from '../partition.js';
 
 import _ from 'lodash';
@@ -37,6 +38,29 @@ describe('combinatorics', () => {
   it('should throw an error for negative number of partitions', () => {
     expect(_.isEqual(partitions(10, 1), [10])).toBe(true);
   });
+
+  it('should throw an error for negative number of partitions', () => {
+    const ptree  = []
+    
+    for(const tree_node of partitionTree(2, 2)) {
+      ptree.push(tree_node)
+    }
+    
+    expect(ptree,).toEqual(
+      [{
+        "element": 1,
+        "partition": [ 1, 1, ],
+        "size": 1,
+        "tree_node": {
+          "element": [ 1, ],
+          "partition": [ 1, ],
+          "size": 1,
+          "tree_node": [ 1, ],
+        },
+      }]
+    );
+  });
+  
 });
 
 describe('cardvecCombinations', () => {

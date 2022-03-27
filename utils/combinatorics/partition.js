@@ -85,7 +85,12 @@ export function* partitionTree(number, num_summands) {
 
   // One summand term
   if(num_summands === 1) {
-    yield [[1], [number], [number], [number]]
+    yield {
+      partition: [1], 
+      element: [number], 
+      size: 1,
+      tree_node: [number]
+    }
   } else {
     let element = -1;
     let partition_uniques = []
@@ -95,16 +100,16 @@ export function* partitionTree(number, num_summands) {
       partition_uniques = getUniques(_.flatten([partition_]));
       
       // Every unique element requires a spread term
-      for(let i = 1; i <= partition_uniques.length; i = i + 1) {
+      for(let i = 0; i < partition_uniques.length; i = i + 1) {
         element = partition_uniques[i];
         
         // Span lower terms than each partition element 
-        for(let i = 1; i <= element; i = i + 1) {
-          for(const tree_node of partitionTree(element, i)) {
+        for(let j = 1; j <= element; j = j + 1) {
+          for(const tree_node of partitionTree(element, j)) {
             yield {
               partition: partition_, 
               element: element, 
-              size: i, 
+              size: j, 
               tree_node: tree_node
             };  
           }
