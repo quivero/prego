@@ -226,7 +226,7 @@ export function* euler(sets) {
           
           sets[set_key] = _.difference(sets[set_key], comb_excl)
         }
-
+        
         comb_intersec = _.intersection(celements, sets[set_key])
         if(comb_intersec.length !== 0) {
           // Intersection of analysis element and exclusive group
@@ -324,7 +324,7 @@ export function* euler(sets) {
   }
 }
 
-export const spreadEulerDiagram = (lists) => Object.fromEntries([...euler(lists)])
+export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)])
 
 export const spreadExtendedVenn = (lists) => Object.fromEntries([...extendedVenn(lists)])
 

@@ -3,11 +3,12 @@ import {
   cyclicSort,
   isCyclicEqual,
   getUniques,
-  extendedVenn,
+  spreadEuler,
   spreadExtendedVenn,
   removeElements,
   hasElement,
   sort,
+  spreadEulerDiagram,
 } from '../arrays';
 
 import _ from 'lodash';
@@ -97,6 +98,14 @@ describe('Extended venn diagram', () => {
       0: [1, 2, 3],
       1: [6, 7],
     });
+
+    expect(
+      spreadEuler([list_1, list_2])
+    ).toEqual({
+      '0,1': [4, 5],
+      0: [1, 2, 3],
+      1: [6, 7],
+    });
   });
 
   it('should return a multiple set interactions', () => {
@@ -104,27 +113,37 @@ describe('Extended venn diagram', () => {
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
     
+    const result = {
+      '0': [1, 3],
+      '1': [4, 5],
+      '2': [6, 7],
+      '0,1,2': [2],
+    }
+
+    expect(spreadExtendedVenn([list_1, list_2, list_3])).toEqual(result);
+
     expect(
-      spreadExtendedVenn([list_1, list_2, list_3])
-    ).toEqual(
-      {
-        '0': [1, 3],
-        '1': [4, 5],
-        '2': [6, 7],
-        '0,1,2': [2],
-      }
-    );
+      spreadEuler([list_1, list_2, list_3])
+    ).toEqual(result);
   });
 
   it('should validate empty exclusivity from Extended Venn Diagram', () => {
     const list_1 = [1, 2, 3, 4, 5, 6];
     const list_2 = [4, 5, 6];
 
-    expect(
-      spreadExtendedVenn([list_1, list_2])
-    ).toEqual({
+    const result = {
       0: [1, 2, 3],
       '0,1': [4, 5, 6],
-    });
+    }
+    
+    expect(spreadExtendedVenn([list_1, list_2])).toEqual(result);
+  });
+
+  it('should throw error for empty set provided Euler Diagram', () => {
+    function emptySetVenn() {
+      return spreadEuler([])
+    }
+
+    expect(emptySetVenn).toThrow();
   });
 });
