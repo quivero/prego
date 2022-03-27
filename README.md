@@ -14,7 +14,7 @@ Its objective is to provide a graph structure for application-suitable scenarios
 
 For a beginner, a graph is a bunch of dots connected by either undirected lines or directed arrows. Take a look at the following URL: https://adrianmejia.com/data-structures-for-beginners-graphs-time-complexity-tutorial/
 
-## How to install as a package
+## How to install as a package [#](#how-to-install-as-a-package)
 
 The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link-use-case) of the library use case.
 
