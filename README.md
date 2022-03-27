@@ -10,11 +10,21 @@ Hi, this may be interpreted as an app service or a library: The former is work i
 
 Its objective is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
 
+## Table of contents
+
+[1. Preamble](#preamble)
+[2. How to install as a package](#how-to-install-as-a-package)
+[3. How to run as a service](#how-to-run-as-a-service)
+[4. Backlog](#backlog)
+[5. Prelude](#prelude)
+
 ## Preamble
 
 For a beginner, a graph is a bunch of dots connected by either undirected lines or directed arrows. Take a look at the following URL: https://adrianmejia.com/data-structures-for-beginners-graphs-time-complexity-tutorial/
 
-## How to install as a package [#](#how-to-install-as-a-package)
+## How to run as 
+
+### A package
 
 The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link-use-case) of the library use case.
 
@@ -22,7 +32,7 @@ The package allows to be used as a library. [Here is an example](https://github.
 2) Install the library with the command ```npm install --save dot-quiver```;
 3) Import in your project folder from project root folder, for example, '```import Graph from 'dot-quiver/data-structures/graph/Graph.js''```
 
-## How to run as a service
+### A service
 
 You may utilize some cloud service to host the app, like AWS, Azure or GCloud, but in this case you might run locally.
 
