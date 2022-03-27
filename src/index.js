@@ -40,9 +40,8 @@ app.get('/', (req, res) => {
 
   if (READ_ALL_BPS) {
     const paths = {};
-    const islands = [];
     const total_paths_len = 0;
-
+    
     for (let i = 0; i < blueprints_fnames.length; i += 1) {
       const blueprint_i_name = blueprints_fnames[i];
       const fname = bps_root + blueprint_i_name;
@@ -53,26 +52,17 @@ app.get('/', (req, res) => {
 
         const graph = parseBlueprintToGraph(blueprint_i);
 
-        islands.push(
-          {
-            name: blueprints_fnames[i],
-            islands: graph.getIslandGraph().describe(),
-          },
-        );
-
-        // paths[blueprint_i_name] = fromStartToFinishCombsAllPaths(blueprint_i);
-        // total_paths_len += paths[blueprints_fnames[i]].length;
+        paths[blueprint_i_name] = fromStartToFinishCombsAllPaths(blueprint_i);
+        total_paths_len += paths[blueprints_fnames[i]].length;
       }
     }
 
-    res.send(islands);
-
-    /* res.send(
+    res.send(
       {
         length: total_paths_len,
         blueprints: paths,
       },
-    ); */
+    );
   } else {
     const blueprint_fname = 'propertiesCRUD.json';
 
