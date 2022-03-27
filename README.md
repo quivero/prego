@@ -12,15 +12,11 @@ Its objective is to provide a graph structure for application-suitable scenarios
 
 ## Table of contents
 
-[1. Preamble](#preamble)
-
-[2. How to install as a package](#how-to-install-as-a-package)
-
-[3. How to run as a service](#how-to-run-as-a-service)
-
-[4. Backlog](#backlog)
-
-[5. Prelude](#prelude)
+1. [Preamble](#preamble)
+2. [How to install as a package](#how-to-install-as-a-package)
+3. [How to run as a service](#how-to-run-as-a-service)
+4. [Backlog](#backlog)
+5. [Prelude](#prelude)
 
 ## Preamble
 
