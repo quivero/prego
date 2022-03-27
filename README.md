@@ -13,20 +13,19 @@ Its objective is to provide a graph structure for application-suitable scenarios
 ## Table of contents
 
 1. [Preamble](#preamble)
-2. [How to install as a package](#how-to-install-as-a-package)
-3. [How to run as a service](#how-to-run-as-a-service)
-4. [Backlog](#backlog)
-5. [Prelude](#prelude)
+2. [How to run](#how-to-run)
+3. [Backlog](#backlog)
+4. [Prelude](#prelude)
 
 ## Preamble
 
-For a beginner, a graph is a bunch of dots connected by either undirected lines or directed arrows. Take a look at the following URL: https://adrianmejia.com/data-structures-for-beginners-graphs-time-complexity-tutorial/
+"In computer science, a data structure is a data organization, management, and storage format that enables efficient access and modification. More precisely, a data structure is a collection of data values, the relationships among them, and the functions or operations that can be applied to the data i.e., it is an algebraic structure about data." [From wikipedia](https://en.wikipedia.org/wiki/Data_structure)
 
 ## How to run
 
 ### As a package
 
-The package allows to be used as a library. [Here is an example](https://github.com/brunolnetto/node-link-use-case) of the library use case.
+The package allows to be used as a library. [Here is an example](https://github.com/dot-quiver/use-case) of the library use case.
 
 1) Go to your project path (for example, NodeJS or React);
 2) Install the library with the command ```npm install --save dot-quiver```;
