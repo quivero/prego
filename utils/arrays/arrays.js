@@ -168,7 +168,7 @@ export const removeArrayDuplicates = (list) => {
 export const getUniques = (vec) => Array.from(new Set(vec));
 
 /**
- * @abstract returns each tuple [key, elems] of the extended venn
+ * @abstract returns each tuple [key, elems] of the Euler diagram
  * systematic in a generator-wise fashion
  *
  * @param {Array} sets
