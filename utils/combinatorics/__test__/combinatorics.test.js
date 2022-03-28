@@ -39,14 +39,14 @@ describe('combinatorics', () => {
     expect(_.isEqual(partitions(10, 1), [10])).toBe(true);
   });
 
-  it('should throw an error for negative number of partitions', () => {
+  it('should return the partition tree of number with certain number of summands', () => {
     const ptree  = []
     
     for(const tree_node of partitionTree(2, 2)) {
       ptree.push(tree_node)
     }
     
-    expect(ptree,).toEqual(
+    expect(ptree).toEqual(
       [{
         "element": 1,
         "partition": [ 1, 1, ],
@@ -59,6 +59,27 @@ describe('combinatorics', () => {
         },
       }]
     );
+  });
+
+  it('should throw an error for negative number of partitions', () => {
+    function negativeNumberForPartitionTree() {
+      return [...partitionTree(-1, 42)]
+    }
+
+    function negativeSummandNumberForPartitionTree() {
+      return [...partitionTree(42, -1)]
+    }
+    
+    expect(negativeNumberForPartitionTree).toThrow();
+    expect(negativeSummandNumberForPartitionTree).toThrow();
+  });
+
+  it('should throw an error for number of summands greater than the number', () => {
+    function summandsGreaterThanNumber() {
+      return [...partitionTree(41, 42)]
+    }
+    
+    expect(summandsGreaterThanNumber).toThrow();
   });
   
 });
