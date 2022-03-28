@@ -2274,8 +2274,8 @@ describe('Graph', () => {
 
     expect(graph_.allPaths(A, D)).toStrictEqual([
       [0, 1, 2, 3],
-      [0, 1, 2, 4, 1, 2, 3],
       [0, 1, 2, 5, 1, 2, 3],
+      [0, 1, 2, 4, 1, 2, 3],
     ]);
   });
 

@@ -4,7 +4,7 @@ import {
   isCyclicEqual,
   getUniques,
   spreadEuler,
-  spreadExtendedVenn,
+  spreadVenn,
   removeElements,
   hasElement,
   sort,
@@ -92,7 +92,7 @@ describe('Extended venn diagram', () => {
     const list_2 = [4, 5, 6, 7];
 
     expect(
-      spreadExtendedVenn([list_1, list_2])
+      spreadVenn([list_1, list_2])
     ).toEqual({
       '0,1': [4, 5],
       0: [1, 2, 3],
@@ -120,7 +120,7 @@ describe('Extended venn diagram', () => {
       '0,1,2': [2],
     }
 
-    expect(spreadExtendedVenn([list_1, list_2, list_3])).toEqual(result);
+    expect(spreadVenn([list_1, list_2, list_3])).toEqual(result);
 
     expect(
       spreadEuler([list_1, list_2, list_3])
@@ -136,7 +136,7 @@ describe('Extended venn diagram', () => {
       '0,1': [4, 5, 6],
     }
     
-    expect(spreadExtendedVenn([list_1, list_2])).toEqual(result);
+    expect(spreadVenn([list_1, list_2])).toEqual(result);
   });
 
   it('should throw error for empty set provided Euler Diagram', () => {
