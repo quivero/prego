@@ -13,7 +13,7 @@ import graphBridges from '../../algorithms/bridges/graphBridges.js';
 
 import {
   cartesianProduct,
-  extendedVenn,
+  euler,
   removeArrayDuplicates,
   getAllIndexes,
   hasElement,
@@ -1749,7 +1749,7 @@ export default class Graph {
    * @return {object}
    */
   * getCyclesVenn(cycle_indices) {
-    yield* extendedVenn(cycle_indices);
+    yield* euler(cycle_indices);
   }
 
   /**
@@ -1794,7 +1794,7 @@ export default class Graph {
 
     return subgraph;
   }
-
+  
   /**
    * @abstract Returns count of not reachable nodes from vertex v.
    * It uses recursive DFSUtil()

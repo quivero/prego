@@ -260,7 +260,7 @@ export function* euler(sets) {
  * @param {Array} sets
  * @return {Array} keys_elems
  */
- export function* extendedVenn(sets) {
+ export function* venn(sets) {
   const keys_fun = (sets_) => Object.keys(sets_).map(
     (key) => Number(key),
   ).filter(
@@ -326,6 +326,6 @@ export function* euler(sets) {
 
 export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)])
 
-export const spreadExtendedVenn = (lists) => Object.fromEntries([...extendedVenn(lists)])
+export const spreadVenn = (lists) => Object.fromEntries([...venn(lists)])
 
 
