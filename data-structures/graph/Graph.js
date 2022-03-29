@@ -1327,7 +1327,7 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns a map from islands to islands
+   * @abstract returns a map from inner island reachibility from vertex to vertex
    * @return {Array}
    */
   getIslandInnerReachability() {
@@ -1371,7 +1371,8 @@ export default class Graph {
           habitants['target'],
           (result_, id_, in_bridge_end) => {
             result_[in_bridge_end] = _.intersection(
-              reachability_list[in_bridge_end], habitants['source']
+              reachability_list[in_bridge_end], 
+              habitants['source']
             )
             
             return result_
@@ -1425,6 +1426,10 @@ export default class Graph {
     );
   }
 
+  /**
+   * @abstract returns an island graph
+   * @return {Array}
+   */
   getIslandGraph() {
     const islandAdjList = this.getIslandsAdjacencyList();
     const island_graph = new Graph(this.isDirected);

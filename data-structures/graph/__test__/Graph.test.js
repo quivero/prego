@@ -1477,6 +1477,8 @@ describe('Graph', () => {
 
   it('should return islands properties', () => {
     // A directed graph
+    //   C          E
+    // A -> B -> D -> F
     const graph = new Graph(true);
 
     // Nodes
@@ -1533,7 +1535,7 @@ describe('Graph', () => {
         },
       ),
     );
-
+    
     expect(graph.getIslandFromBridgeEnd(3)).toBe(0);
     expect(graph.getIslandFromBridgeEnd(1)).toBe(1);
 

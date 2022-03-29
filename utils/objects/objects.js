@@ -5,7 +5,7 @@ import _ from 'lodash';
  *
  * @param {Array} keys
  * @param {Object} initial_value
- * @param {Object} init_object
+ * @return {Object}
  */
 export const objectInit = (keys, init_value) => {
   const a = [];
@@ -23,13 +23,20 @@ export const objectInit = (keys, init_value) => {
  *
  * @param {Object} object
  * @param {function} mapFn
- * @param {Object} mapped_object
+ * @return {Object}
  */
 export const objectMap = (object, mapFn) => Object.keys(object).reduce((result, key) => {
   result[key] = mapFn(key, object[key]);
   return result;
 }, {});
 
+/**
+ * @abstract returns a reduced object
+ * 
+ * @param {Object} object
+ * @param {function} reduceFn
+ * @return {Object}
+ */
 export const objectReduce = (object, reduceFn, init_val) => Object.entries(_.cloneDeep(object)).reduce((
   result,
   [key, value],
@@ -40,7 +47,7 @@ export const objectReduce = (object, reduceFn, init_val) => Object.entries(_.clo
  *
  * @param {Object} object
  * @param {function} filterFn
- * @param {Object} filtered_object
+ * @return {Object}
  */
 export const objectFilter = (object, filterFn) => {
   const object_copy = _.cloneDeep(object);
