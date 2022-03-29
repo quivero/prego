@@ -1518,6 +1518,50 @@ describe('Graph', () => {
       ),
     );
 
+    expect(graph.islandsHabitants()).toEqual(
+      {
+        0:  [3, 4, 5],
+        1: [1, 0, 2],
+      }
+    )
+    
+    expect(graph.getIslandBridgeEndIODict()).toEqual(
+      {
+        0: {
+          'source': [],
+          'target': [3],
+        },
+        1: {
+          'source': [1],
+          'target': [],
+        },
+      }
+    )
+    
+    expect(graph.getIslandInnerReachability()).toEqual(
+      {
+        0: {
+          '3': [4, 5],
+          '4': [5],
+          '5': []
+        },
+        1: {
+          '0': [1, 2],
+          '1': [],
+          '2': [1],
+        },
+      }
+    )
+
+    expect(graph.getIslandIOReachability()).toEqual(
+      {
+        0: {
+          '3': []
+        },
+        1: {},
+      }
+    )
+
     expect(JSON.stringify(graph.getIslandToBridgeEndList())).toBe(
       JSON.stringify(
         {
@@ -1590,6 +1634,36 @@ describe('Graph', () => {
         .map((edge) => edge.getKey()),
     ).toStrictEqual(['1_0']);
   });
+
+  it('should return islands properties', () => {
+    // A directed graph
+    //   ,C,       ,E,
+    // A -> B -> D -> F
+    const graph = new Graph(true);
+
+    // Nodes
+    const A = new GraphVertex('A');
+    const B = new GraphVertex('B');
+    
+    // Vertices
+    const AB = new GraphEdge(A, B);
+    
+    // Add edges
+    graph.addEdges([AB]);
+
+    expect(
+      graph.getIslandInnerReachability()
+      ).toEqual(
+      {
+        0: {
+          '1': [1]
+        },
+        1: {
+         '0': [0]
+        },
+      }
+    )
+  })
 
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
