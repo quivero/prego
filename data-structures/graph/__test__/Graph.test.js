@@ -45,48 +45,74 @@ describe('Graph', () => {
     expect(vertex.getKey()).toEqual('A');
   });
 
-  it('should get graph serialization', () => {
+  it('should serialize and deserialize graph', () => {
     let graph = new Graph(true);
+    let graph_ = new Graph(true);
 
-    const [AB, BC] = createEdgesFromVerticesValues(
+    const [AB, BC, CD] = createEdgesFromVerticesValues(
       [
-        ['A', 'B'], ['B', 'C']
+        ['A', 'B'], ['B', 'C'], ['C', 'D']
       ]
     )
     
     graph.addEdges([AB, BC]);
     
-    const graph_serialization = graph.serialize()
+    let graph_serialization_ = graph.serialize()
+    let graph_serialization = graph.serialize()
     
-    expect(
-      _.isEqual(
-        graph_serialization,
-        {
-          'isDirected': true,
-          'nodes': [
-            {'id': 'A', 'value': 0},
-            {'id': 'B', 'value': 0},
-            {'id': 'C', 'value': 0}
-          ],
-          'edges': [
-            {'source': 'A', 'target': 'B', 'weight': 0},
-            {'source': 'B', 'target': 'C', 'weight': 0}
-          ]
-        }
-      )
-    ).toBe(true);
-
+    expect(graph_serialization).toEqual(
+      {
+        'isDirected': true,
+        'nodes': [
+          {'id': 'A', 'value': 0},
+          {'id': 'B', 'value': 0},
+          {'id': 'C', 'value': 0}
+        ],
+        'edges': [
+          {'source': 'A', 'target': 'B', 'weight': 0},
+          {'source': 'B', 'target': 'C', 'weight': 0}
+        ]
+      }
+    );
+    
+    // Deserialize graph serialization with its json representation
+    graph.addEdge(CD);
+    graph_serialization = graph.serialize()
     graph.empty()
+    graph.addEdges([AB, BC]);
     graph.deserialize(graph_serialization)
+    
+    expect(graph.getNumVertices()).toBe(4);
 
-    const edges = graph.getAllEdges()
+    graph_.deserialize(graph_serialization_)
+    const edges = graph_.getAllEdges()
 
-    expect(graph.getNumVertices()).toBe(3);
+    expect(graph_.getNumVertices()).toBe(3);
     expect(edges.length).toBe(2);
 
     expect(edges[0].toString()).toBe('A_B');
     expect(edges[1].toString()).toBe('B_C');
     expect(edges[2]).toBeUndefined();
+    
+  })
+
+  it('should throw error for graph in other direction than serialization', () => {
+    function deserializationWithDifferentDirection() {
+      let graph = new Graph(true);
+
+      const [AB, BC] = createEdgesFromVerticesValues(
+        [
+          ['A', 'B'], ['B', 'C']
+        ]
+      )
+      
+      graph.addEdges([AB, BC]);
+      
+      const mock_graph = {'isDIrected': false}
+      graph.deserialize(mock_graph)
+    }
+    
+    expect(deserializationWithDifferentDirection).toThrowError()
   })
 
   it('should get vertices by indexes', () => {
@@ -1633,6 +1659,16 @@ describe('Graph', () => {
         .getAllEdges()
         .map((edge) => edge.getKey()),
     ).toStrictEqual(['1_0']);
+    
+    const islands_graphs = graph.getIslandsSubgraphs()
+  
+    expect(
+      islands_graphs[0].getAllVerticesKeys()
+    ).toEqual(['D', 'E', 'F']) 
+    
+    expect(
+      islands_graphs[1].getAllVerticesKeys()
+    ).toEqual(['A', 'B', 'C']) 
   });
 
   it('should return islands properties', () => {
