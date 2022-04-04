@@ -57,7 +57,8 @@ export const cyclicSort = (array, index) => {
 };
 
 /**
- * @abstract returns a shifted cyclicly word
+ * @abstract returns true if control and treatment words are equal 
+ * in some sshifted way
  *
  * @param {Array} array
  * @param {Integer} index
@@ -134,13 +135,26 @@ export const removeElements = (arr, elems_to_del) => {
   return arr;
 };
 
-// Cartesian product of arrays
+/**
+ * @abstract returns true if array has provided element
+ *
+ * @param {Array} a
+ * @param {Array} b
+ * @param {Array} c
+ * @return {array} cartesian_product
+ */
 export const cartesianProduct = (a, b, ...c) => {
   const f = (a, b) => [].concat(...a.map((a) => b.map((b) => [].concat(a, b))));
 
   return b ? cartesianProduct(f(a, b), ...c) : a;
 };
 
+/**
+ * @abstract 
+ *
+ * @param {Array} list
+ * @return {Array} unique_list
+ */
 export const removeArrayDuplicates = (list) => {
   const unique = [];
 
@@ -160,7 +174,7 @@ export const removeArrayDuplicates = (list) => {
 };
 
 /**
- * @abstract returns
+ * @abstract returns array unique values
  *
  * @param {Array} vec
  * @return {Array} arr_with_uniques

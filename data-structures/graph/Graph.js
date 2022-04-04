@@ -554,7 +554,7 @@ export default class Graph {
     if (!vertex) {
       return undefined;
     }
-
+    
     return vertex.findEdge(endVertex);
   }
 
