@@ -15,6 +15,10 @@ import {
   spreadEuler,
 } from '../utils/arrays/arrays.js';
 
+import {
+  partitions,
+} from '../utils/combinatorics/partition.js';
+
 const require = createRequire(import.meta.url);
 const app = express();
 
