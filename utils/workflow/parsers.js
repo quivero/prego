@@ -306,8 +306,8 @@ export const parseWorkflowXMLToGraph = () => {
 
 /**
  * @abstract returns workflow islands
- * 
+ *
  * @param {Object} blueprint
  * @return {object} islands
  */
- export const workflowIslands = (blueprint) => parseBlueprintToGraph(blueprint).islands()
+export const workflowIslands = (blueprint) => parseBlueprintToGraph(blueprint).islands();

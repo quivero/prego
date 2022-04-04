@@ -1,3 +1,1 @@
-export const decimalPart = (number) => {
-    return number - Math.floor(number)
-}
+export const decimalPart = (number) => number - Math.floor(number);

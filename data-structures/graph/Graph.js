@@ -554,7 +554,7 @@ export default class Graph {
     if (!vertex) {
       return undefined;
     }
-    
+
     return vertex.findEdge(endVertex);
   }
 
@@ -1173,7 +1173,7 @@ export default class Graph {
 
     // Remove bridges to obtain strongly connected components
     graph_copy.deleteEdges(bridge_edges);
-    
+
     // Dictionary with islads
     const islands_dict = graph_copy.retrieveUndirected().getStronglyConnectedComponentsIndices();
 
@@ -1199,12 +1199,14 @@ export default class Graph {
       this.islands(),
       (result, island_id, habitants_) => {
         result[island_id] = _.union(
-          habitants_['bridge_ends'],
-          habitants_['inner_vertices']
-        )
-        
-        return result
-      }, {})
+          habitants_.bridge_ends,
+          habitants_.inner_vertices,
+        );
+
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1256,28 +1258,30 @@ export default class Graph {
    * @return {object}
    */
   getIslandBridgeEndIODict() {
-    const bridge_end_io_dict = this.getBridgeEndIODict(); 
-    
+    const bridge_end_io_dict = this.getBridgeEndIODict();
+
     return objectReduce(
       this.islands(),
       (result, island_id, habitant_groups) => {
         result[island_id] = objectReduce(
-          habitant_groups['bridge_ends'],
+          habitant_groups.bridge_ends,
           (result_, id_, bridge_end_id) => {
-            if(bridge_end_io_dict[bridge_end_id]['from'].length !== 0) {
-              result_['target'].push(bridge_end_id)
+            if (bridge_end_io_dict[bridge_end_id].from.length !== 0) {
+              result_.target.push(bridge_end_id);
             }
 
-            if(bridge_end_io_dict[bridge_end_id]['to'].length !== 0) {
-              result_['source'].push(bridge_end_id)
+            if (bridge_end_io_dict[bridge_end_id].to.length !== 0) {
+              result_.source.push(bridge_end_id);
             }
-            
-            return result_
-          }, {source: [], target: []}
-          )
 
-        return result
-      }, {}
+            return result_;
+          },
+          { source: [], target: [] },
+        );
+
+        return result;
+      },
+      {},
     );
   }
 
@@ -1333,28 +1337,30 @@ export default class Graph {
   getIslandInnerReachability() {
     const islands = this.islandsHabitants();
     const reachability_list = this.getReachabilityList();
-    
+
     return objectReduce(
-      islands, 
+      islands,
       (result, island_id, habitants) => {
-        if(habitants.length === 1) {
-          const reachables = {} 
+        if (habitants.length === 1) {
+          const reachables = {};
 
-          reachables[habitants[0]] = [habitants[0]]
+          reachables[habitants[0]] = [habitants[0]];
           result[island_id] = reachables;
-
         } else {
           result[island_id] = objectReduce(
             habitants,
             (result_, __, habitant) => {
-              result_[habitant] = _.intersection(reachability_list[habitant], habitants)
-              return result_
-            }, 
-            {})
+              result_[habitant] = _.intersection(reachability_list[habitant], habitants);
+              return result_;
+            },
+            {},
+          );
         }
 
-        return result
-      }, {})
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1363,23 +1369,27 @@ export default class Graph {
    */
   getIslandIOReachability() {
     const reachability_list = this.getReachabilityList();
-    
+
     return objectReduce(
-      this.getIslandBridgeEndIODict(), 
+      this.getIslandBridgeEndIODict(),
       (result, island_id, habitants) => {
         result[island_id] = objectReduce(
-          habitants['target'],
+          habitants.target,
           (result_, id_, in_bridge_end) => {
             result_[in_bridge_end] = _.intersection(
-              reachability_list[in_bridge_end], 
-              habitants['source']
-            )
-            
-            return result_
-          }, {})
+              reachability_list[in_bridge_end],
+              habitants.source,
+            );
 
-        return result
-      }, {})
+            return result_;
+          },
+          {},
+        );
+
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1389,10 +1399,8 @@ export default class Graph {
   getIslandsSubgraphs() {
     return objectMap(
       this.islandsHabitants(),
-      (island_id, habitants) => {
-        return this.buildSubgraph(habitants)
-      }
-    )
+      (island_id, habitants) => this.buildSubgraph(habitants),
+    );
   }
 
   /**
@@ -1640,7 +1648,7 @@ export default class Graph {
     if (is_finish) {
       // Index v is now deleted from mark stacked, and has been called u unmark v
       let u = marked_stack.pop();
-      
+
       while (u !== curr_index) {
         marked[u] = false;
         u = marked_stack.pop();
@@ -1799,7 +1807,7 @@ export default class Graph {
 
     return subgraph;
   }
-  
+
   /**
    * @abstract Returns count of not reachable nodes from vertex v.
    * It uses recursive DFSUtil()
@@ -2325,23 +2333,19 @@ export default class Graph {
     return {
       isDirected: this.isDirected,
       nodes: this.getAllVertices().map(
-        (vertex) => {
-          return {
-            id: vertex.label,
-            value: vertex.value
-          }
-        }
+        (vertex) => ({
+          id: vertex.label,
+          value: vertex.value,
+        }),
       ),
       edges: this.getAllEdges().map(
-        (edge) => {
-          return {
-            source: edge.startVertex.label,
-            target: edge.endVertex.label,
-            weight: edge.weight
-          }
-        }
-      )
-    }
+        (edge) => ({
+          source: edge.startVertex.label,
+          target: edge.endVertex.label,
+          weight: edge.weight,
+        }),
+      ),
+    };
   }
 
   /**
@@ -2350,53 +2354,45 @@ export default class Graph {
    * @return {Graph} this
    */
   deserialize(graph_json) {
-    if(graph_json['isDirected'] !== this.isDirected) {
+    if (graph_json.isDirected !== this.isDirected) {
       throw Error('This direction is different from serialization direction.');
     }
 
-    const vertices = this.getAllVertices()
+    const vertices = this.getAllVertices();
 
     this.addVertices(
-      objectFilter(
-        graph_json['nodes'].map(
-          (node_json) => {
-            const has_vertex = this.getVerticesKeys().includes(node_json['id']);
-            
-            if(!has_vertex) {
-              return new GraphVertex(
-                node_json['id'], node_json['value']
-              ) 
-            } else {
-              return null
-            }
-          }
-        ), (key, value) => value !== null
-      )
-    )
-    
-    this.addEdges(
-      objectFilter(
-        graph_json['edges'].map(
-          (edge_json) => {
-            const has_edge = this.getAllEdgesKeys().includes(
-              `${edge_json['source']}_${edge_json['target']}`
-            );
-            
-            if(!has_edge) {
-              return new GraphEdge(
-                this.vertices[edge_json['source']], 
-                this.vertices[edge_json['target']],
-                edge_json['weight']
-              ) 
-            } else {
-              return null
-            }
-          }
-        ), (key, value) => value !== null
-      )
-    )
+      objectFilter(graph_json.nodes.map(
+        (node_json) => {
+          const has_vertex = this.getVerticesKeys().includes(node_json.id);
 
-    return this
+          if (!has_vertex) {
+            return new GraphVertex(node_json.id, node_json.value);
+          }
+          return null;
+        },
+      ), (key, value) => value !== null),
+    );
+
+    this.addEdges(
+      objectFilter(graph_json.edges.map(
+        (edge_json) => {
+          const has_edge = this.getAllEdgesKeys().includes(
+            `${edge_json.source}_${edge_json.target}`,
+          );
+
+          if (!has_edge) {
+            return new GraphEdge(
+              this.vertices[edge_json.source],
+              this.vertices[edge_json.target],
+              edge_json.weight,
+            );
+          }
+          return null;
+        },
+      ), (key, value) => value !== null),
+    );
+
+    return this;
   }
 
   /**

@@ -126,7 +126,7 @@ export default class GraphVertex {
     const edgeFinder = (edge) => edge.startVertex === vertex || edge.endVertex === vertex;
 
     const edge = this.edges.find({ callback: edgeFinder });
-    
+
     return edge ? edge.value : undefined;
   }
 

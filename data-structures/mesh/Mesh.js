@@ -1,5 +1,5 @@
 import Graph from '../graph/Graph';
-import MeshVertex from '../mesh/MeshVertex';
+import MeshVertex from './MeshVertex';
 
 export default class Mesh extends Graph {
   #metric;
@@ -10,10 +10,10 @@ export default class Mesh extends Graph {
   constructor(metric_function, is_relaxed = false, isDirected = false) {
     super(isDirected);
 
-    this.metric_function = metric_function
-    
+    this.metric_function = metric_function;
+
     if (!is_relaxed) {
-      if(this.metricIsValid()) {
+      if (this.metricIsValid()) {
         this.metric_function = metric_function;
       } else {
         const statement = 'Metric function is not valid. It must obey :';
@@ -32,11 +32,10 @@ export default class Mesh extends Graph {
     const P0 = new MeshVertex('P0', [0, 0]);
     const P1 = new MeshVertex('P1', [0, 1]);
     const P2 = new MeshVertex('P2', [1, 0]);
-    
+
     const is_positive = this.metric_function(P1, P1) === 0;
     const is_symmetric = this.metric_function(P0, P1) === this.metric_function(P1, P0);
-    const is_triangular =  
-      this.metric_function(P0, P2) <= this.metric_function(P0, P1) + this.metric_function(P1, P2);
+    const is_triangular = this.metric_function(P0, P2) <= this.metric_function(P0, P1) + this.metric_function(P1, P2);
 
     return is_positive && is_symmetric && is_triangular;
   }
@@ -46,20 +45,20 @@ export default class Mesh extends Graph {
   }
 
   getPathLength(path) {
-    const indices_to_keys = this.getVerticesIndicestoKeys()
-    let path_length = 0
+    const indices_to_keys = this.getVerticesIndicestoKeys();
+    let path_length = 0;
 
     path.forEach(
       (vertex_index, index) => {
-        if(index !== 0) {
+        if (index !== 0) {
           path_length += this.distance(
-            indices_to_keys[path[index-1]], 
-            indices_to_keys[vertex_index]
-          )
+            indices_to_keys[path[index - 1]],
+            indices_to_keys[vertex_index],
+          );
         }
-      }
-    )
-    
-    return path_length
+      },
+    );
+
+    return path_length;
   }
 }

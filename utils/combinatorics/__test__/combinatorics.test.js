@@ -1,16 +1,14 @@
+import _ from 'lodash';
 import {
   partitions,
   cardvecCombinations,
-  partitionTree
+  partitionTree,
 } from '../partition.js';
-
-import _ from 'lodash';
 
 describe('combinatorics', () => {
   it('should return number k-partition summand terms', () => {
-    
     expect(partitions(3)).toEqual(
-      [[1, 1, 1], [2, 1], [3]]
+      [[1, 1, 1], [2, 1], [3]],
     );
   });
 

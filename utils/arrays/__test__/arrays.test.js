@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   getAllIndexes,
   cyclicSort,
@@ -10,8 +11,6 @@ import {
   sort,
   spreadEulerDiagram,
 } from '../arrays';
-
-import _ from 'lodash';
 
 console.error = jest.fn();
 
@@ -92,7 +91,7 @@ describe('Extended venn diagram', () => {
     const list_2 = [4, 5, 6, 7];
 
     expect(
-      spreadVenn([list_1, list_2])
+      spreadVenn([list_1, list_2]),
     ).toEqual({
       '0,1': [4, 5],
       0: [1, 2, 3],
@@ -100,7 +99,7 @@ describe('Extended venn diagram', () => {
     });
 
     expect(
-      spreadEuler([list_1, list_2])
+      spreadEuler([list_1, list_2]),
     ).toEqual({
       '0,1': [4, 5],
       0: [1, 2, 3],
@@ -112,18 +111,18 @@ describe('Extended venn diagram', () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
-    
+
     const result = {
-      '0': [1, 3],
-      '1': [4, 5],
-      '2': [6, 7],
+      0: [1, 3],
+      1: [4, 5],
+      2: [6, 7],
       '0,1,2': [2],
-    }
+    };
 
     expect(spreadVenn([list_1, list_2, list_3])).toEqual(result);
 
     expect(
-      spreadEuler([list_1, list_2, list_3])
+      spreadEuler([list_1, list_2, list_3]),
     ).toEqual(result);
   });
 
@@ -134,14 +133,14 @@ describe('Extended venn diagram', () => {
     const result = {
       0: [1, 2, 3],
       '0,1': [4, 5, 6],
-    }
-    
+    };
+
     expect(spreadVenn([list_1, list_2])).toEqual(result);
   });
 
   it('should throw error for empty set provided Euler Diagram', () => {
     function emptySetVenn() {
-      return spreadEuler([])
+      return spreadEuler([]);
     }
 
     expect(emptySetVenn).toThrow();
