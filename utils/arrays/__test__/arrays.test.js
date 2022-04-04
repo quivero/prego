@@ -10,6 +10,7 @@ import {
   hasElement,
   sort,
   spreadEulerDiagram,
+  mSetsOfnTuples
 } from '../arrays';
 
 console.error = jest.fn();
@@ -105,6 +106,18 @@ describe('Extended venn diagram', () => {
       0: [1, 2, 3],
       1: [6, 7],
     });
+  });
+
+  it('should return m n-tuples of the array given', () => {
+    expect(
+      [...mSetsOfnTuples([1, 2, 3, 4], 2, 2)],
+    ).toEqual(
+    [
+      [ [ 1, 2 ], [ 3, 4 ] ], [ [ 1, 3 ], [ 2, 4 ] ],
+      [ [ 1, 4 ], [ 2, 3 ] ], [ [ 2, 3 ], [ 1, 4 ] ],
+      [ [ 2, 4 ], [ 1, 3 ] ], [ [ 3, 4 ], [ 1, 2 ] ]
+    ]
+    );
   });
 
   it('should return a multiple set interactions', () => {

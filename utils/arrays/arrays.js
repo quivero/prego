@@ -173,6 +173,28 @@ export const removeArrayDuplicates = (list) => {
   return unique;
 };
 
+export function* mSetsOfnTuples(array, n, m) {
+  if(m > Math.floor(array.length/n)) {
+    throw Error('Size of array must be greater or equal to the product of n by m');
+  }
+
+  let curr_comb = [];
+
+  for (let head_comb of _.combinations(array, n)) {
+    curr_comb = [head_comb]
+    
+    if(m === 1) {
+      yield curr_comb
+    } else {
+      for (
+        let tail_comb of mSetsOfnTuples(_.difference(array, head_comb), n, m-1)
+      ) {
+        yield curr_comb.concat(tail_comb)
+      }
+    }
+  }
+}
+
 /**
  * @abstract returns array unique values
  *
