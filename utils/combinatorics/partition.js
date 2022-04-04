@@ -9,114 +9,37 @@ import {
   getUniques
 } from '../arrays/arrays.js';
 
+import { decimalPart } from '../math/math.js';
+
 /*
  * @abstract returns unique partitions of an integer with 
- *
+ * Source: https://cs.stackexchange.com/questions/150270/vector-of-1s-and-sum-of-elements
  * @param {Integer} number
  * @param {Integer} n_summands
  * @return {Array} partitions
  */
-export const partitions = (number, num_summands) => {
- if (number <= 0 || num_summands <= 0) {
-   throw Error('Number of points and summands MUST be greater than 0 and natural.');
- }
-
- if (number < num_summands) {
-   throw Error('Number of points MUST be greater than number of blobs.');
- }
-
- if (num_summands === 1) {
-   return [number];
- }
- 
- let program_counter = 0;
- let is_swap;
- let curr_partition = [number - num_summands + 1].concat(ones(num_summands - 1));
- let curr_partition_uniques = getUniques(curr_partition);
- let hasNegativeElements = (arr) => arr.filter((elem) => elem <= 0).length > 0
- 
- const partitions = [[...curr_partition]];
- let is_new_partition = false;
-
- for (let i = 1; i < num_summands; i += 1) {
-   program_counter = 0;
-
-   while (program_counter <= i - 1) {
-     is_swap = false;
-
-     while (!is_swap) {
-       curr_partition[program_counter] -= 1;
-       curr_partition[program_counter + 1] += 1;
-
-       is_swap = curr_partition[program_counter + 1] >= curr_partition[program_counter];
-
-       is_new_partition = !hasElement(partitions, sort([...curr_partition]))
-                          && !hasNegativeElements(curr_partition);
-       if (is_new_partition) {
-         partitions.push(sort([...curr_partition]));
-       }
-     }
-
-     curr_partition_uniques = getUniques(curr_partition);
-     program_counter += 1;
-   }
- }
-
- return partitions;
-};
-
-/**
- * @abstract returns integer and subsequent elements partitions 
- *
- * @param {Integer} n_points
- * @param {Integer} n_blobs
- * @return {Array} [partition, spread_possibilities]
- */
-export function* partitionTree(number, num_summands) {
-  
-  // Guard elements
-  if (number <= 0 || num_summands <= 0) {
-    throw Error('Number of points and blobs MUST be greater than 0.');
+export const partitions = (n) => {
+  if (decimalPart(n) !== 0 || n <= 0) {
+    throw Error('Given number must be positive and natural!');
   }
   
-  if (number < num_summands) {
-    throw Error('Number of points MUST be greater than number of blobs.');
-  }
+  let all_partitions = [];
+    let buffer = [..._.repeat(0, n)].map((str) => Number(str));
 
-  // One summand term
-  if(num_summands === 1) {
-    yield {
-      partition: [1], 
-      element: [number], 
-      size: 1,
-      tree_node: [number]
-    }
-  } else {
-    let element = -1;
-    let partition_uniques = []
-    
-    // For each partition
-    for(const partition_ of partitions(number, num_summands)) {
-      partition_uniques = getUniques(_.flatten([partition_]));
-      
-      // Every unique element requires a spread term
-      for(let i = 0; i < partition_uniques.length; i = i + 1) {
-        element = partition_uniques[i];
-        
-        // Span lower terms than each partition element 
-        for(let j = 1; j <= element; j = j + 1) {
-          for(const tree_node of partitionTree(element, j)) {
-            yield {
-              partition: partition_, 
-              element: element, 
-              size: j, 
-              tree_node: tree_node
-            };  
-          }
+    // sum(buffer[index:]) will be s. Each entry will be at most m
+    const partitions_recursive = (start, s, m) => {
+        if (s === 0) {
+            all_partitions.push([...buffer.slice(0, start)])
         }
-      }
+
+        for (let part of _.range(1, Math.min(s, m) + 1)) {
+            buffer[start] = part
+            partitions_recursive(start + 1, s - part, Math.min(m, part))
+        }
     }
-  }
+
+    partitions_recursive(0, n, n)
+    return all_partitions
 }
 
 /**
