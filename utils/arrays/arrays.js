@@ -209,23 +209,49 @@ export const getUniques = (vec) => Array.from(new Set(vec));
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* hyperIndexes(len, dim) {
-  if (len <= 0 || dim <= 0) {
+export function* fullPolytopeIndexesFn(curr_dim, dim) {
+  for (let i of _.range(0, dim)) {
+    if (curr_dim === 1) {
+      yield i
+    } else {
+      for (let tail_indexes of fullPolytopeIndexesFn(curr_dim-1, dim)) {
+        yield [i].concat(tail_indexes)
+      }
+    }
+  }
+}
+
+/**
+ * @abstract returns upper triangular indexes
+ * 
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* upperTriangularIndexesFn(curr_dim, dim, index = 0) {
+  for (let i of _.range(index, dim)) {
+    if (curr_dim === 1) {
+      yield i
+    } else {
+      for (let tail_indexes of upperTriangularIndexesFn(curr_dim-1, dim, i)) {
+        yield [i].concat(tail_indexes)
+      }
+    }
+  }
+}
+
+/**
+ * @abstract returns polytopic structure indexesfrmo formation function
+ * 
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* hyperIndexes(dim, formationFn) {
+  if (dim <= 0) {
     throw Error('Dimension and length must be positive natural numbers!');
   }
   
-  let triang_tuple = []
-
-  for(let ref_index of _.range(0, len)) {
-    if (dim === 1) {
-      yield ref_index
-    } else {
-      triang_tuple = [ref_index];
-      
-      for(let tail_triang_tuple of hyperIndexes(len, dim-1)) {
-        yield triang_tuple.concat(tail_triang_tuple);
-      }
-    }
+  for(let indexes of formationFn(dim, dim)) {
+    yield indexes;
   }
 }
 

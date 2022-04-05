@@ -11,6 +11,8 @@ import {
   sort,
   mSetsOfnTuples,
   hyperIndexes,
+  upperTriangularIndexesFn,
+  fullPolytopeIndexesFn
 } from '../arrays';
 
 console.error = jest.fn();
@@ -71,10 +73,24 @@ describe('Array', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw console.error in case the index exceeds array size', () => {
-    expect([...hyperIndexes(2, 2)]).toEqual([
+  it('should return full polytope hyper-indexes', () => {
+    expect([...hyperIndexes(2, fullPolytopeIndexesFn)]).toEqual([
       [0, 0], [0, 1], [1, 0], [1, 1]
     ]);
+  });
+
+  it('should return upper triangular polytope hyper-indexes', () => {
+    expect([...hyperIndexes(2, upperTriangularIndexesFn)]).toEqual([
+      [0, 0], [0, 1], [1, 1]
+    ]);
+  });
+
+  it('should throw error for negative length and dimension', () => {
+    function negativeDimensionLength() {
+      return [...hyperIndexes(-1, () => [42, 42])]
+    }
+    
+    expect(negativeDimensionLength).toThrow();
   });
 });
 
@@ -124,6 +140,14 @@ describe('Extended venn diagram', () => {
         [ [ 2, 4 ], [ 1, 3 ] ], [ [ 3, 4 ], [ 1, 2 ] ]
       ]
     );
+  });
+  
+  it('should throw for blob size greater than array', () => {
+    function blobSizeGreaterThanArray() {
+      return [...mSetsOfnTuples([1, 2, 3], 42, 2)]
+    }
+    
+    expect(blobSizeGreaterThanArray).toThrow();
   });
 
   it('should return a multiple set interactions', () => {
