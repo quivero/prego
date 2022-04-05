@@ -9,8 +9,8 @@ import {
   removeElements,
   hasElement,
   sort,
-  spreadEulerDiagram,
-  mSetsOfnTuples
+  mSetsOfnTuples,
+  hyperIndexes,
 } from '../arrays';
 
 console.error = jest.fn();
@@ -70,6 +70,12 @@ describe('Array', () => {
     cyclicSort('ABCD', 5);
     expect(console.error).toHaveBeenCalledTimes(1);
   });
+
+  it('should throw console.error in case the index exceeds array size', () => {
+    expect([...hyperIndexes(2, 2)]).toEqual([
+      [0, 0], [0, 1], [1, 0], [1, 1]
+    ]);
+  });
 });
 
 describe('hasElement', () => {
@@ -112,11 +118,11 @@ describe('Extended venn diagram', () => {
     expect(
       [...mSetsOfnTuples([1, 2, 3, 4], 2, 2)],
     ).toEqual(
-    [
-      [ [ 1, 2 ], [ 3, 4 ] ], [ [ 1, 3 ], [ 2, 4 ] ],
-      [ [ 1, 4 ], [ 2, 3 ] ], [ [ 2, 3 ], [ 1, 4 ] ],
-      [ [ 2, 4 ], [ 1, 3 ] ], [ [ 3, 4 ], [ 1, 2 ] ]
-    ]
+      [
+        [ [ 1, 2 ], [ 3, 4 ] ], [ [ 1, 3 ], [ 2, 4 ] ],
+        [ [ 1, 4 ], [ 2, 3 ] ], [ [ 2, 3 ], [ 1, 4 ] ],
+        [ [ 2, 4 ], [ 1, 3 ] ], [ [ 3, 4 ], [ 1, 2 ] ]
+      ]
     );
   });
 

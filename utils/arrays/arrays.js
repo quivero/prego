@@ -204,6 +204,32 @@ export function* mSetsOfnTuples(array, n, m) {
 export const getUniques = (vec) => Array.from(new Set(vec));
 
 /**
+ * @abstract returns upper triangular indexes
+ * 
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* hyperIndexes(len, dim) {
+  if (len <= 0 || dim <= 0) {
+    throw Error('Dimension and length must be positive natural numbers!');
+  }
+  
+  let triang_tuple = []
+
+  for(let ref_index of _.range(0, len)) {
+    if (dim === 1) {
+      yield ref_index
+    } else {
+      triang_tuple = [ref_index];
+      
+      for(let tail_triang_tuple of hyperIndexes(len, dim-1)) {
+        yield triang_tuple.concat(tail_triang_tuple);
+      }
+    }
+  }
+}
+
+/**
  * @abstract returns each tuple [key, elems] of the Euler diagram
  * systematic in a generator-wise fashion
  *
