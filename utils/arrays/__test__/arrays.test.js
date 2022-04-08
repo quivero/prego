@@ -74,23 +74,28 @@ describe('Array', () => {
   });
 
   it('should return full polytope hyper-indexes', () => {
-    expect([...hyperIndexes(2, fullPolytopeIndexesFn)]).toEqual([
+    expect([...hyperIndexes(2, 2, fullPolytopeIndexesFn)]).toEqual([
       [0, 0], [0, 1], [1, 0], [1, 1]
     ]);
   });
 
   it('should return upper triangular polytope hyper-indexes', () => {
-    expect([...hyperIndexes(2, upperTriangularIndexesFn)]).toEqual([
+    expect([...hyperIndexes(2, 2, upperTriangularIndexesFn)]).toEqual([
       [0, 0], [0, 1], [1, 1]
     ]);
   });
 
   it('should throw error for negative length and dimension', () => {
-    function negativeDimensionLength() {
-      return [...hyperIndexes(-1, () => [42, 42])]
+    function negativeDimension() {
+      return [...hyperIndexes(42, -1, () => [42, 42])]
+    }
+
+    function negativeLength() {
+      return [...hyperIndexes(42, -1, () => [42, 42])]
     }
     
-    expect(negativeDimensionLength).toThrow();
+    expect(negativeDimension).toThrow();
+    expect(negativeLength).toThrow();
   });
 });
 

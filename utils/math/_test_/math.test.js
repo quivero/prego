@@ -18,4 +18,12 @@ describe('combinatorics', () => {
         expect(xor(0, 1)).toEqual(1);
         expect(xor(1, 0)).toEqual(1);
     });
+
+    it('should throw error for xor with non 0/1 input', () => {
+      function non01XorInput() {
+        return xor(0, 2)
+      }
+
+      expect(non01XorInput).toThrow();
+  });
   });

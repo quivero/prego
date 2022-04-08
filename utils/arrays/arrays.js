@@ -209,12 +209,12 @@ export const getUniques = (vec) => Array.from(new Set(vec));
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* fullPolytopeIndexesFn(curr_dim, dim) {
-  for (let i of _.range(0, dim)) {
+export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
+  for (let i of _.range(0, length)) {
     if (curr_dim === 1) {
       yield i
     } else {
-      for (let tail_indexes of fullPolytopeIndexesFn(curr_dim-1, dim)) {
+      for (let tail_indexes of fullPolytopeIndexesFn(length, curr_dim-1, dim)) {
         yield [i].concat(tail_indexes)
       }
     }
@@ -227,12 +227,12 @@ export function* fullPolytopeIndexesFn(curr_dim, dim) {
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* upperTriangularIndexesFn(curr_dim, dim, index = 0) {
-  for (let i of _.range(index, dim)) {
+export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
+  for (let i of _.range(index, length)) {
     if (curr_dim === 1) {
       yield i
     } else {
-      for (let tail_indexes of upperTriangularIndexesFn(curr_dim-1, dim, i)) {
+      for (let tail_indexes of upperTriangularIndexesFn(length, curr_dim-1, dim, i)) {
         yield [i].concat(tail_indexes)
       }
     }
@@ -245,12 +245,12 @@ export function* upperTriangularIndexesFn(curr_dim, dim, index = 0) {
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* hyperIndexes(dim, formationFn) {
-  if (dim <= 0) {
+export function* hyperIndexes(length, dim, formationFn) {
+  if (dim <= 0 || length <= 0) {
     throw Error('Dimension and length must be positive natural numbers!');
   }
   
-  for(let indexes of formationFn(dim, dim)) {
+  for(let indexes of formationFn(length, dim, dim)) {
     yield indexes;
   }
 }
