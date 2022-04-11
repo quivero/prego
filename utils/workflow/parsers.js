@@ -220,7 +220,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
   let is_undefined = false;
   if (start_index === undefined) {
-    console.warn(`Warning: Claimed start vertex key ${start_key} is not available within nodes`);
+    console.Warning(`Warning: Claimed start vertex key ${start_key} is not available within nodes`);
     is_undefined = true;
   }
 
@@ -234,13 +234,13 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   }
 
   if (getAllIndexes(orphanNodes, start_index).length === 0) {
-    console.warn(`Vertex id ${start_index} is not a start node! Detected start nodes: ${orphanNodes}`);
+    console.warn(`Warning: Vertex id ${start_index} is not a start node! Detected start nodes: ${orphanNodes}`);
 
     return [];
   }
 
   if (getAllIndexes(looseNodes, finish_index).length === 0) {
-    console.warn(`Vertex id ${finish_index} is not a finish node! Detected finish nodes: ${looseNodes}`);
+    console.warn(`Warning: Vertex id ${finish_index} is not a finish node! Detected finish nodes: ${looseNodes}`);
 
     return [];
   }
@@ -259,8 +259,8 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
     route_describe.routes.push(
       {
-        nodes_path: bp_graph.convertVerticesIndexestoKeys(routes[i]),
-        lanes_path: lane_route_i,
+        node_path: bp_graph.convertVerticesIndexestoKeys(routes[i]),
+        lane_path: lane_route_i,
       },
     );
   }

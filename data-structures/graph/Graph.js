@@ -2213,41 +2213,40 @@ export default class Graph {
     acyclic_paths = this.acyclicPaths(from_key, to_key);
 
     const cycle_indices = this.getCycleIndices();
-
     let cyclic_paths = [];
 
-    let cycle_nodes_arr = [];
-    let connected_cycles_indexes = [];
-    let acyclic_path = [];
+    if(Object.keys(cycle_indices).length !== 0) {
+      let cycle_nodes_arr = [];
+      let connected_cycles_indexes = [];
+      let acyclic_path = [];
 
-    const cycles_connection = [];
+      acyclic_paths = removeArrayDuplicates(acyclic_paths);
 
-    acyclic_paths = removeArrayDuplicates(acyclic_paths);
+      // For each acyclic path, it finds if a cyclic connection brings new paths
+      for (const path_index in acyclic_paths) {
+        acyclic_path = acyclic_paths[path_index];
+        
+        for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
+          connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
 
-    // For each acyclic path, it finds if a cyclic connection brings new paths
-    for (const path_index in acyclic_paths) {
-      acyclic_path = acyclic_paths[path_index];
+          const cycle_nodes = new Set();
+          connected_cycles_indexes.forEach(
+            (cycle_index) => cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes),
+          );
 
-      for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
-        connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
+          cycle_nodes_arr = [...cycle_nodes];
 
-        const cycle_nodes = new Set();
-        connected_cycles_indexes.forEach(
-          (cycle_index) => cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes),
-        );
+          let cyclic_paths_i = [];
 
-        cycle_nodes_arr = [...cycle_nodes];
-
-        let cyclic_paths_i = [];
-
-        if (_.intersection(acyclic_path, cycle_nodes_arr).length !== 0) {
-          cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
-          cyclic_paths = cyclic_paths.concat(cyclic_paths_i);
+          if (_.intersection(acyclic_path, cycle_nodes_arr).length !== 0) {
+            cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
+            cyclic_paths = cyclic_paths.concat(cyclic_paths_i);
+          }
         }
       }
-    }
 
-    cyclic_paths = removeArrayDuplicates(cyclic_paths);
+      cyclic_paths = removeArrayDuplicates(cyclic_paths);    
+    }
 
     return acyclic_paths.concat(cyclic_paths);
   }

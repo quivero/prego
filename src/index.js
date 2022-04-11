@@ -19,6 +19,10 @@ import {
   partitions,
 } from '../utils/combinatorics/partition.js';
 
+import {
+  fromStartToFinishCombsAllPaths,
+} from '../utils/workflow/parsers.js';
+
 const require = createRequire(import.meta.url);
 const app = express();
 
@@ -40,11 +44,11 @@ app.get('/', (req, res) => {
   const bps_root = `${process.cwd()}/src/samples/blueprints/approva/`;
   const blueprints_fnames = fs.readdirSync(bps_root);
 
-  const READ_ALL_BPS = false;
+  const READ_ALL_BPS = true;
 
   if (READ_ALL_BPS) {
-    const paths = {};
-    const total_paths_len = 0;
+    let paths = {};
+    let total_paths_len = 0;
 
     for (let i = 0; i < blueprints_fnames.length; i += 1) {
       const blueprint_i_name = blueprints_fnames[i];
