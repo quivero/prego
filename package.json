@@ -27,6 +27,8 @@
     "express": "^4.17.3",
     "fs": "^0.0.2",
     "lodash": "^4.17.21",
+    "lodash.multicombinations": "^1.0.0",
+    "lodash.multipermutations": "^1.0.0",
     "nodemon": "^2.0.15",
     "np": "^7.0.0",
     "strongly-connected-components": "^1.0.1",
