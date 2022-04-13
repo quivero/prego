@@ -394,11 +394,11 @@ export default class Graph {
    */
   looseNodes() {
     const loose_nodes = [];
-    const adjList = this.getAdjacencyList();
+    const forward_star = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
 
     for (let i = 0; i < n_vertices; i += 1) {
-      if (adjList[i].length === 0) {
+      if (forward_star[i].length === 0) {
         loose_nodes.push(i);
       }
     }
@@ -412,25 +412,14 @@ export default class Graph {
    */
   orphanNodes() {
     const orphan_nodes = [];
-    const adjList = this.getAdjacencyList();
+    const inverse_star = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
 
-    const to_vertices = new Set();
-
     for (let i = 0; i < n_vertices; i += 1) {
-      const neighbors = adjList[i];
-      for (let j = 0; j < neighbors.length; j += 1) {
-        to_vertices.add(neighbors[j]);
+      if (inverse_star[i].length === 0) {
+        orphan_nodes.push(i);
       }
     }
-
-    this.getAllVertices().forEach((vertex) => {
-      const vertex_index = this.getVertexIndex(vertex);
-
-      if (!to_vertices.has(vertex_index)) {
-        orphan_nodes.push(vertex_index);
-      }
-    });
 
     return orphan_nodes;
   }
