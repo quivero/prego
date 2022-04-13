@@ -1,32 +1,54 @@
 import _ from 'lodash';
 import Graph from '../../data-structures/graph/Graph.js';
-import GraphVertex from '../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '../../data-structures/graph/GraphEdge.js';
-import { getUniques, getAllIndexes } from '../arrays/arrays.js';
+import {
+  createEdgesFromVerticesValues
+} from '../../data-structures/graph/utils/graph.js';
+import { getAllIndexes, removeArrayDuplicates } from '../arrays/arrays.js';
+import { 
+  objectReduce,
+  objectMap 
+} from '../objects/objects.js';
 
-/**
- * @abstract returns an object with a rich description of given blueprint
- *
- * @param {Object} blueprint
- * @param {Object} description
- */
-export const describeBlueprint = (blueprint) => {
-  const bp_graph = parseBlueprintToGraph(blueprint);
-  const node_ids_per_type = {};
+export const getBlueprintNextNodes = (blueprint) => {
+  const nodes = blueprint['blueprint_spec']['nodes'];
 
-  const types = ['start', 'finish', 'systemtask', 'subprocess',
-    'scripttask', 'flow', 'usertask'];
+  return objectReduce(
+    nodes,
+    (next_nodes, node_key, node_value) => {
+      if (node_value['type'].toLowerCase() === 'flow') {
+        next_nodes[node_value.id] = Object.values(node_value.next);
+      } else if(node_value['type'].toLowerCase() === 'finish') {
+      } else {
+        next_nodes[node_value.id] = [node_value.next];
+      }
 
-  for (const type of types) {
-    node_ids_per_type[type] = [];
+      return next_nodes;
+    }
+    , {}
+  )
+}
 
-    getBlueprintNodesByType(blueprint, type).forEach(
-      (node) => {
-        node_ids_per_type[type].push(node.id);
-      },
-    );
-  }
+export const getBlueprintFromToEdgeTuples = (blueprint) => {
+  const nodes = blueprint['blueprint_spec']['nodes'];
 
+  return objectReduce(
+    getBlueprintNextNodes(blueprint),
+    (edge_nodes, curr_node_key, curr_node_value) => {
+      
+      if(curr_node_value.length > 1) {
+        edge_nodes = edge_nodes.concat(
+          curr_node_value.map((next_node_key) => [curr_node_key, next_node_key])
+        )
+      } else {
+        edge_nodes.push([curr_node_key, curr_node_value[0]])
+      }
+      
+      return edge_nodes
+    }, []
+  )
+}
+
+export const reachableFinishFromStart = (blueprint) => {
   const start_finish_nodes = startAndFinishNodes(blueprint);
   const reachable_nodes = {};
   const non_reachable_nodes = {};
@@ -88,43 +110,17 @@ export const getBlueprintNodesByType = (blueprint, type) => {
  * @param {Graph} graph
  */
 export const parseBlueprintToGraph = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
+  const nodes = blueprint['blueprint_spec']['nodes'];
+  
   const graph = new Graph(true);
-  const vertices_dict = {};
-
-  for (let i = 0; i < nodes.length; i += 1) {
-    vertices_dict[nodes[i].id] = new GraphVertex(nodes[i].id);
-  }
-
-  const edges = [];
-
-  // Iterate along array elements
-  for (let i = 0; i < nodes.length; i += 1) {
-    if (nodes[i].next != null) {
-      // Flow case
-      if (typeof (nodes[i].next) === 'object') {
-        const next_values = getUniques(Object.values(nodes[i].next));
-
-        for (let j = 0; j < next_values.length; j += 1) {
-          const edge = new GraphEdge(
-            vertices_dict[nodes[i].id],
-            vertices_dict[next_values[j]],
-          );
-          edges.push(edge);
-        }
-      } else {
-      // Ordinary edge
-
-        const edge = new GraphEdge(
-          vertices_dict[nodes[i].id],
-          vertices_dict[nodes[i].next],
-        );
-        edges.push(edge);
-      }
-    }
-  }
-
-  graph.addEdges(edges);
+  
+  graph.addEdges(
+    removeArrayDuplicates(
+      createEdgesFromVerticesValues(
+        getBlueprintFromToEdgeTuples(blueprint)
+      )
+    )
+  );
 
   return graph;
 };
@@ -176,7 +172,7 @@ export const nodeToLane = (blueprint) => {
  * @param {Object} blueprint
  * @param {Graph}
  */
-export const nodeRouteToLaneRoute = (
+export const nodeToLaneRoute = (
   node_route,
   vertices_indices_to_keys,
   node_id_to_lane,
@@ -252,15 +248,24 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   };
 
   let lane_route_i = [];
+  let node_route_i = [] 
   const total_len = 0;
 
   for (const i in routes) {
-    lane_route_i = nodeRouteToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
+    lane_route_i = nodeToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
+
+    node_route_i = bp_graph.convertVerticesIndexestoKeys(routes[i]);
 
     route_describe.routes.push(
       {
-        node_path: bp_graph.convertVerticesIndexestoKeys(routes[i]),
-        lane_path: lane_route_i,
+        node_path: {
+          length: node_route_i.length,
+          trace: node_route_i
+        },
+        lane_path: {
+          length: lane_route_i.length,
+          trace: lane_route_i
+        },
       },
     );
   }

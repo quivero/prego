@@ -448,7 +448,7 @@ export default class Graph {
   addEdge(edge) {
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
-      console.warn('Warning: Edge has already been added before. Please, choose other key!');
+      console.warn(`Warning: Edge ${edge.getKey()} has already been added before. Please, choose other key!`);
       return;
     }
 
