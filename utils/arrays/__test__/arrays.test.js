@@ -12,7 +12,7 @@ import {
   mSetsOfnTuples,
   hyperIndexes,
   upperTriangularIndexesFn,
-  fullPolytopeIndexesFn
+  fullPolytopeIndexesFn,
 } from '../arrays';
 
 console.error = jest.fn();
@@ -75,25 +75,25 @@ describe('Array', () => {
 
   it('should return full polytope hyper-indexes', () => {
     expect([...hyperIndexes(2, 2, fullPolytopeIndexesFn)]).toEqual([
-      [0, 0], [0, 1], [1, 0], [1, 1]
+      [0, 0], [0, 1], [1, 0], [1, 1],
     ]);
   });
 
   it('should return upper triangular polytope hyper-indexes', () => {
     expect([...hyperIndexes(2, 2, upperTriangularIndexesFn)]).toEqual([
-      [0, 0], [0, 1], [1, 1]
+      [0, 0], [0, 1], [1, 1],
     ]);
   });
 
   it('should throw error for negative length and dimension', () => {
     function negativeDimension() {
-      return [...hyperIndexes(42, -1, () => [42, 42])]
+      return [...hyperIndexes(42, -1, () => [42, 42])];
     }
 
     function negativeLength() {
-      return [...hyperIndexes(42, -1, () => [42, 42])]
+      return [...hyperIndexes(42, -1, () => [42, 42])];
     }
-    
+
     expect(negativeDimension).toThrow();
     expect(negativeLength).toThrow();
   });
@@ -140,18 +140,18 @@ describe('Extended venn diagram', () => {
       [...mSetsOfnTuples([1, 2, 3, 4], 2, 2)],
     ).toEqual(
       [
-        [ [ 1, 2 ], [ 3, 4 ] ], [ [ 1, 3 ], [ 2, 4 ] ],
-        [ [ 1, 4 ], [ 2, 3 ] ], [ [ 2, 3 ], [ 1, 4 ] ],
-        [ [ 2, 4 ], [ 1, 3 ] ], [ [ 3, 4 ], [ 1, 2 ] ]
-      ]
+        [[1, 2], [3, 4]], [[1, 3], [2, 4]],
+        [[1, 4], [2, 3]], [[2, 3], [1, 4]],
+        [[2, 4], [1, 3]], [[3, 4], [1, 2]],
+      ],
     );
   });
-  
+
   it('should throw for blob size greater than array', () => {
     function blobSizeGreaterThanArray() {
-      return [...mSetsOfnTuples([1, 2, 3], 42, 2)]
+      return [...mSetsOfnTuples([1, 2, 3], 42, 2)];
     }
-    
+
     expect(blobSizeGreaterThanArray).toThrow();
   });
 

@@ -174,22 +174,22 @@ export const removeArrayDuplicates = (list) => {
 };
 
 export function* mSetsOfnTuples(array, n, m) {
-  if(m > Math.floor(array.length/n)) {
+  if (m > Math.floor(array.length / n)) {
     throw Error('Size of array must be greater or equal to the product of n by m');
   }
 
   let curr_comb = [];
 
-  for (let head_comb of _.combinations(array, n)) {
-    curr_comb = [head_comb]
-    
-    if(m === 1) {
-      yield curr_comb
+  for (const head_comb of _.combinations(array, n)) {
+    curr_comb = [head_comb];
+
+    if (m === 1) {
+      yield curr_comb;
     } else {
       for (
-        let tail_comb of mSetsOfnTuples(_.difference(array, head_comb), n, m-1)
+        const tail_comb of mSetsOfnTuples(_.difference(array, head_comb), n, m - 1)
       ) {
-        yield curr_comb.concat(tail_comb)
+        yield curr_comb.concat(tail_comb);
       }
     }
   }
@@ -205,17 +205,17 @@ export const getUniques = (vec) => Array.from(new Set(vec));
 
 /**
  * @abstract returns upper triangular indexes
- * 
+ *
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
 export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
-  for (let i of _.range(0, length)) {
+  for (const i of _.range(0, length)) {
     if (curr_dim === 1) {
-      yield i
+      yield i;
     } else {
-      for (let tail_indexes of fullPolytopeIndexesFn(length, curr_dim-1, dim)) {
-        yield [i].concat(tail_indexes)
+      for (const tail_indexes of fullPolytopeIndexesFn(length, curr_dim - 1, dim)) {
+        yield [i].concat(tail_indexes);
       }
     }
   }
@@ -223,17 +223,17 @@ export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
 
 /**
  * @abstract returns upper triangular indexes
- * 
+ *
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
 export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
-  for (let i of _.range(index, length)) {
+  for (const i of _.range(index, length)) {
     if (curr_dim === 1) {
-      yield i
+      yield i;
     } else {
-      for (let tail_indexes of upperTriangularIndexesFn(length, curr_dim-1, dim, i)) {
-        yield [i].concat(tail_indexes)
+      for (const tail_indexes of upperTriangularIndexesFn(length, curr_dim - 1, dim, i)) {
+        yield [i].concat(tail_indexes);
       }
     }
   }
@@ -241,7 +241,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
 
 /**
  * @abstract returns polytopic structure indexesfrmo formation function
- * 
+ *
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
@@ -249,8 +249,8 @@ export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
     throw Error('Dimension and length must be positive natural numbers!');
   }
-  
-  for(let indexes of formationFn(length, dim, dim)) {
+
+  for (const indexes of formationFn(length, dim, dim)) {
     yield indexes;
   }
 }

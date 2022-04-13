@@ -1,52 +1,52 @@
 import _ from 'lodash';
 import Graph from '../../data-structures/graph/Graph.js';
 import {
-  createEdgesFromVerticesValues
+  createEdgesFromVerticesValues,
 } from '../../data-structures/graph/utils/graph.js';
 import { getAllIndexes, removeArrayDuplicates } from '../arrays/arrays.js';
-import { 
+import {
   objectReduce,
-  objectMap 
+  objectMap,
 } from '../objects/objects.js';
 
 export const getBlueprintNextNodes = (blueprint) => {
-  const nodes = blueprint['blueprint_spec']['nodes'];
+  const { nodes } = blueprint.blueprint_spec;
 
   return objectReduce(
     nodes,
     (next_nodes, node_key, node_value) => {
-      if (node_value['type'].toLowerCase() === 'flow') {
+      if (node_value.type.toLowerCase() === 'flow') {
         next_nodes[node_value.id] = Object.values(node_value.next);
-      } else if(node_value['type'].toLowerCase() === 'finish') {
+      } else if (node_value.type.toLowerCase() === 'finish') {
       } else {
         next_nodes[node_value.id] = [node_value.next];
       }
 
       return next_nodes;
-    }
-    , {}
-  )
-}
+    },
+    {},
+  );
+};
 
 export const getBlueprintFromToEdgeTuples = (blueprint) => {
-  const nodes = blueprint['blueprint_spec']['nodes'];
+  const { nodes } = blueprint.blueprint_spec;
 
   return objectReduce(
     getBlueprintNextNodes(blueprint),
     (edge_nodes, curr_node_key, curr_node_value) => {
-      
-      if(curr_node_value.length > 1) {
+      if (curr_node_value.length > 1) {
         edge_nodes = edge_nodes.concat(
-          curr_node_value.map((next_node_key) => [curr_node_key, next_node_key])
-        )
+          curr_node_value.map((next_node_key) => [curr_node_key, next_node_key]),
+        );
       } else {
-        edge_nodes.push([curr_node_key, curr_node_value[0]])
+        edge_nodes.push([curr_node_key, curr_node_value[0]]);
       }
-      
-      return edge_nodes
-    }, []
-  )
-}
+
+      return edge_nodes;
+    },
+    [],
+  );
+};
 
 export const reachableFinishFromStart = (blueprint) => {
   const start_finish_nodes = startAndFinishNodes(blueprint);
@@ -72,8 +72,8 @@ export const reachableFinishFromStart = (blueprint) => {
     }
   }
 
-  return workflow_finish_reachability  
-}
+  return workflow_finish_reachability;
+};
 
 /**
  * @abstract returns an object with a rich description of given blueprint
@@ -136,16 +136,16 @@ export const getBlueprintNodesByType = (blueprint, type) => {
  * @param {Graph} graph
  */
 export const parseBlueprintToGraph = (blueprint) => {
-  const nodes = blueprint['blueprint_spec']['nodes'];
-  
+  const { nodes } = blueprint.blueprint_spec;
+
   const graph = new Graph(true);
-  
+
   graph.addEdges(
     removeArrayDuplicates(
       createEdgesFromVerticesValues(
-        getBlueprintFromToEdgeTuples(blueprint)
-      )
-    )
+        getBlueprintFromToEdgeTuples(blueprint),
+      ),
+    ),
   );
 
   return graph;
@@ -230,14 +230,14 @@ export const nodeToLaneRoute = (
  */
 export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
-  
+
   const node_id_to_lane = nodeToLane(blueprint);
 
   const looseNodes = bp_graph.looseNodes();
   const orphanNodes = bp_graph.orphanNodes();
   const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
   const vertices_indices_to_keys = bp_graph.getVerticesIndicestoKeys();
-  
+
   const start_index = vertices_keys_to_indices[start_key];
   const finish_index = vertices_keys_to_indices[finish_key];
 
@@ -255,7 +255,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   if (is_undefined) {
     return [];
   }
-  
+
   if (getAllIndexes(orphanNodes, start_index).length === 0) {
     console.warn(`Warning: Vertex id ${start_index}, key ${start_key}, is not a orphan node! Detected start nodes: ${orphanNodes}`);
 
@@ -286,11 +286,11 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
       {
         node_path: {
           length: node_route_i.length,
-          trace: node_route_i
+          trace: node_route_i,
         },
         lane_path: {
           length: lane_route_i.length,
-          trace: lane_route_i
+          trace: lane_route_i,
         },
       },
     );
@@ -307,7 +307,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
  */
 export const fromStartToFinishCombsAllPaths = (blueprint) => {
   const sf_nodes = startAndFinishNodes(blueprint);
-  
+
   const paths = {};
   let total_length = 0;
   let startNode;
@@ -324,7 +324,7 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
       total_length += paths[label].length;
     }
   }
-  
+
   return {
     length: total_length,
     from_to: paths,

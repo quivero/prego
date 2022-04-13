@@ -2204,7 +2204,7 @@ export default class Graph {
     const cycle_indices = this.getCycleIndices();
     let cyclic_paths = [];
 
-    if(Object.keys(cycle_indices).length !== 0) {
+    if (Object.keys(cycle_indices).length !== 0) {
       let cycle_nodes_arr = [];
       let connected_cycles_indexes = [];
       let acyclic_path = [];
@@ -2214,7 +2214,7 @@ export default class Graph {
       // For each acyclic path, it finds if a cyclic connection brings new paths
       for (const path_index in acyclic_paths) {
         acyclic_path = acyclic_paths[path_index];
-        
+
         for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
           connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
 
@@ -2234,7 +2234,7 @@ export default class Graph {
         }
       }
 
-      cyclic_paths = removeArrayDuplicates(cyclic_paths);    
+      cyclic_paths = removeArrayDuplicates(cyclic_paths);
     }
 
     return acyclic_paths.concat(cyclic_paths);

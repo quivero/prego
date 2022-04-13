@@ -4,13 +4,13 @@ import MeshVertex from '../MeshVertex';
 describe('Mesh', () => {
   it('should return a defined object with metric validation', () => {
     const valid_metric_fun = (coord_1, coord_2) => Math.sqrt(
-      (coord_2.coordinates[1] - coord_1.coordinates[1])**2
-        + (coord_2.coordinates[0] - coord_1.coordinates[0])**2,
+      (coord_2.coordinates[1] - coord_1.coordinates[1]) ** 2
+        + (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2,
     );
 
     const invalid_metric_fun = (coord_1, coord_2) => -Math.sqrt(
-      (coord_2.coordinates[1] - coord_1.coordinates[1])**2
-        + (coord_2.coordinates[0] - coord_1.coordinates[0])**2,
+      (coord_2.coordinates[1] - coord_1.coordinates[1]) ** 2
+        + (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2,
     );
 
     const mesh = new Mesh(valid_metric_fun, true);
@@ -26,8 +26,8 @@ describe('Mesh', () => {
   it('should throw an error for non valid metric', () => {
     function meshWithNotValidMetric() {
       const metric_fun = (coord_1, coord_2) => -Math.sqrt(
-        (coord_2.coordinates[1] - coord_1.coordinates[1])**2
-          + (coord_2.coordinates[0] - coord_1.coordinates[0])**2,
+        (coord_2.coordinates[1] - coord_1.coordinates[1]) ** 2
+          + (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2,
       );
 
       return new Mesh(metric_fun);
@@ -38,8 +38,8 @@ describe('Mesh', () => {
 
   it('should return two added vertices and the distance between them is one', () => {
     const metric_fun = (coord_1, coord_2) => Math.sqrt(
-      (coord_2.coordinates[1] - coord_1.coordinates[1])**2
-        + (coord_2.coordinates[0] - coord_1.coordinates[0])**2,
+      (coord_2.coordinates[1] - coord_1.coordinates[1]) ** 2
+        + (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2,
     );
 
     const mesh = new Mesh(metric_fun);
@@ -54,8 +54,8 @@ describe('Mesh', () => {
 
   it('should return two added vertices and the distance between them is one', () => {
     const metric_fun = (coord_1, coord_2) => Math.sqrt(
-      (coord_2.coordinates[1] - coord_1.coordinates[1])**2
-        + (coord_2.coordinates[0] - coord_1.coordinates[0])**2,
+      (coord_2.coordinates[1] - coord_1.coordinates[1]) ** 2
+        + (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2,
     );
 
     const mesh = new Mesh(metric_fun);

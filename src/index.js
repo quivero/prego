@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
     const j = [11, 12, 13, 14, 15, 16];
     const k = [10, 11, 14, 15, 18, 19];
     const l = [1, 5, 10, 15, 17, 20];
-    
+
     res.send(spreadEuler([a, b, c, d, e, f, g, h, i, j, k, l]));
   }
 });
