@@ -230,13 +230,14 @@ export const nodeToLaneRoute = (
  */
 export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
+  
   const node_id_to_lane = nodeToLane(blueprint);
 
   const looseNodes = bp_graph.looseNodes();
   const orphanNodes = bp_graph.orphanNodes();
   const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
   const vertices_indices_to_keys = bp_graph.getVerticesIndicestoKeys();
-
+  
   const start_index = vertices_keys_to_indices[start_key];
   const finish_index = vertices_keys_to_indices[finish_key];
 
@@ -274,8 +275,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   };
 
   let lane_route_i = [];
-  let node_route_i = [] 
-  const total_len = 0;
+  let node_route_i = [];
 
   for (const i in routes) {
     lane_route_i = nodeToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
