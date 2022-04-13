@@ -72,13 +72,39 @@ export const reachableFinishFromStart = (blueprint) => {
     }
   }
 
+  return workflow_finish_reachability  
+}
+
+/**
+ * @abstract returns an object with a rich description of given blueprint
+ *
+ * @param {Object} blueprint
+ * @param {Object} description
+ */
+export const describeBlueprint = (blueprint) => {
+  const bp_graph = parseBlueprintToGraph(blueprint);
+  const node_ids_per_type = {};
+
+  const types = ['start', 'finish', 'systemtask', 'subprocess',
+    'scripttask', 'flow', 'usertask'];
+
+  for (const type of types) {
+    node_ids_per_type[type] = [];
+
+    getBlueprintNodesByType(blueprint, type).forEach(
+      (node) => {
+        node_ids_per_type[type].push(node.id);
+      },
+    );
+  }
+
   return {
     name: blueprint.name,
     description: blueprint.description,
     node_ids_per_type,
     reachable_from_start: reachable_nodes,
     non_reachable_from_start: non_reachable_nodes,
-    reachable_finish_from_start: workflow_finish_reachability,
+    reachable_finish_from_start: reachableFinishFromStart(blueprint),
     graph: bp_graph.describe(),
   };
 };
@@ -228,15 +254,15 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   if (is_undefined) {
     return [];
   }
-
+  
   if (getAllIndexes(orphanNodes, start_index).length === 0) {
-    console.warn(`Warning: Vertex id ${start_index} is not a start node! Detected start nodes: ${orphanNodes}`);
+    console.warn(`Warning: Vertex id ${start_index}, key ${start_key}, is not a orphan node! Detected start nodes: ${orphanNodes}`);
 
     return [];
   }
 
   if (getAllIndexes(looseNodes, finish_index).length === 0) {
-    console.warn(`Warning: Vertex id ${finish_index} is not a finish node! Detected finish nodes: ${looseNodes}`);
+    console.warn(`Warning: Vertex id ${finish_index}, key ${finish_key}, is not a loose node! Detected finish nodes: ${looseNodes}`);
 
     return [];
   }
@@ -281,7 +307,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
  */
 export const fromStartToFinishCombsAllPaths = (blueprint) => {
   const sf_nodes = startAndFinishNodes(blueprint);
-
+  
   const paths = {};
   let total_length = 0;
   let startNode;
@@ -298,7 +324,7 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
       total_length += paths[label].length;
     }
   }
-
+  
   return {
     length: total_length,
     from_to: paths,
