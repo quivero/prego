@@ -4,16 +4,17 @@ import {
 } from '../math/math.js';
 
 export const nNormDistanceFn = (coordinate_1, coordinate_2, n) => {
-  if (n < 1 || decimalPart(n) !== 0) {
-    throw Error('The exponent n must be non-zero natural!');
-  }
+    const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
+        (coord_tuple) => Math.abs(coord_tuple[1] - coord_tuple[0]),
+    );
+    
+    if (n === Infinity) {
+        return Math.max(...coord_diffs);
+    }   
 
-  const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
-    (coord_tuple) => Math.abs(coord_tuple[1] - coord_tuple[0]),
-  );
+    if (n < 1 || decimalPart(n) !== 0) {
+        throw Error('The exponent n must be non-zero natural!');
+    }
 
-  if (n === Infinity) {
-    return Math.max(coord_diffs);
-  }
-  return coord_diffs.reduce((curr_dist, coord_diff) => curr_dist + Math.abs(coord_diff) ** n, 0) ** (1 / n);
+    return coord_diffs.reduce((curr_dist, coord_diff) => curr_dist + Math.abs(coord_diff) ** n, 0) ** (1 / n);
 };
