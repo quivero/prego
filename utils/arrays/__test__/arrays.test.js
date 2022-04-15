@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {
   getAllIndexes,
+  countDict,
   cyclicSort,
   isCyclicEqual,
   getUniques,
@@ -12,6 +13,7 @@ import {
   mSetsOfnTuples,
   hyperIndexes,
   upperTriangularIndexesFn,
+  strictUpperTriangularIndexesFn,
   fullPolytopeIndexesFn,
 } from '../arrays';
 
@@ -62,6 +64,17 @@ describe('Array', () => {
 
   it('should return remove elements from array', () => {
     expect(_.isEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(true);
+  });
+
+  it('should return count dict', () => {
+    expect(countDict([1,1,2,2,2,3,4,4])).toEqual(
+      {
+        '1': 2,
+        '2': 3,
+        '3': 1,
+        '4': 2,
+      }
+    );
   });
 
   it('should return the unique array elements', () => {

@@ -34,6 +34,16 @@ export const getAllIndexes = (arr, val) => {
   return indexes;
 };
 
+export const countDict = (arr) => {
+  let obj = {};
+  
+  for (let i of _.range(arr.length)) {
+    obj[arr[i]] = (obj[arr[i]] || 0 ) +1;
+  }
+  
+  return obj
+}
+
 /**
  * @abstract returns a shifted word cyclily
  *
@@ -240,7 +250,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
 }
 
 /**
- * @abstract returns polytopic structure indexesfrmo formation function
+ * @abstract returns polytopic structure indexes from formation function
  *
  * @param {Array} vec
  * @return {Array} arr_with_uniques
@@ -253,6 +263,26 @@ export function* hyperIndexes(length, dim, formationFn) {
   for (const indexes of formationFn(length, dim, dim)) {
     yield indexes;
   }
+}
+
+/**
+ * @abstract returns full polytopic indexes
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* fullPolytopeHyperindexes(length, dim) {
+  yield* hyperIndexes(length, dim, fullPolytopeIndexesFn)
+}
+
+/**
+ * @abstract returns triangular polytopic indexes
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* upperTriangularHyperindexes(length, dim) {
+  yield* hyperIndexes(length, dim, upperTriangularIndexesFn)
 }
 
 /**
