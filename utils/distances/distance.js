@@ -3,7 +3,31 @@ import {
   decimalPart,
 } from '../math/math.js';
 
-export const nNormDistanceFn = (coordinate_1, coordinate_2, n) => {
+/**
+ * @abstract n-norm of a number
+ * 
+ * @param {Array} arr
+ * @param {Number} n
+ * @return {Number}
+ */
+export const nNorm = (arr, n) => {
+    return arr.reduce(
+        (dist, elem) => {
+            return dist + Math.abs(elem) ** n
+        }, 
+        0
+    ) ** (1 / n);
+}
+
+/**
+ * @abstract 
+ * 
+ * @param {Array} coordinate_1
+ * @param {Array} coordinate_2
+ * @param {Number} n
+ * @return {Number}
+ */
+export const nNormDistance = (coordinate_1, coordinate_2, n) => {
     const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
         (coord_tuple) => Math.abs(coord_tuple[1] - coord_tuple[0]),
     );
@@ -16,5 +40,5 @@ export const nNormDistanceFn = (coordinate_1, coordinate_2, n) => {
         throw Error('The exponent n must be non-zero natural!');
     }
 
-    return coord_diffs.reduce((curr_dist, coord_diff) => curr_dist + Math.abs(coord_diff) ** n, 0) ** (1 / n);
+    return nNorm(coord_diffs, n)
 };
