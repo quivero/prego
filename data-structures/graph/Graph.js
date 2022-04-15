@@ -2272,7 +2272,7 @@ export default class Graph {
     const adjList = this.getAdjacencyList(0);
 
     for (let i = 0; i < chain_candidate.length - 1; i += 1) {
-      is_chain &&= adjList[chain_candidate[i]].includes(chain_candidate[i + 1]);
+      is_chain &= adjList[chain_candidate[i]].includes(chain_candidate[i + 1]);
     }
 
     return is_chain;

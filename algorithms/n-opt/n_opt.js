@@ -33,12 +33,16 @@ const nopt = (tour, distance_fun, blob_card, compare_card) => {
     
     throw Error(error_msg);
   }
-
+  
   for (
-    const index_tuple_sets of mSetsOfnTuples(_.range(tour.length), compare_card, blob_card)
+    const index_tuple_sets of mSetsOfnTuples(
+      _.range(tour.length), compare_card, blob_card
+      )
     ) {
     for (
-      const index_tuple of upperTriangularHyperindexes(tour.length, compare_card)
+      const index_tuple of upperTriangularHyperindexes(
+        tour.length, compare_card
+        )
     ) {
       
     }
