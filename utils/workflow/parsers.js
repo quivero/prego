@@ -6,8 +6,15 @@ import {
 import { getAllIndexes, removeArrayDuplicates } from '../arrays/arrays.js';
 import {
   objectReduce,
-  objectMap,
+  objectKeyFind
 } from '../objects/objects.js';
+import {
+  getUniques,
+} from '../arrays/arrays.js';
+
+const node_types = [
+  'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask'
+];
 
 export const getBlueprintNextNodes = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
@@ -48,31 +55,45 @@ export const getBlueprintFromToEdgeTuples = (blueprint) => {
   );
 };
 
-export const reachableFinishFromStart = (blueprint) => {
+/**
+ * @abstract returns node reachability object from start nodes
+ *
+ * @param {Object} blueprint
+ * @param {Object} description
+ */
+export const reachableNodesFromStartNodes = (blueprint) => {
   const start_finish_nodes = startAndFinishNodes(blueprint);
   const reachable_nodes = {};
-  const non_reachable_nodes = {};
-
-  const workflow_finish_reachability = {};
-
+  
   for (const start_node_key of start_finish_nodes.start_nodes) {
     workflow_finish_reachability[start_node_key] = [];
 
-    reachable_nodes[start_node_key] = bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key));
-
-    const reachable_finish_nodes = _.intersection(
-      reachable_nodes[start_node_key],
-      start_finish_nodes.finish_nodes,
+    reachable_nodes[start_node_key] = bp_graph.convertVerticesIndexestoKeys(
+      bp_graph.reachableNodes(start_node_key)
     );
-
-    non_reachable_nodes[start_node_key] = _.difference(bp_graph.getAllVerticesKeys(), reachable_nodes[start_node_key]);
-
-    if (reachable_finish_nodes.length !== 0) {
-      workflow_finish_reachability[start_node_key] = reachable_finish_nodes;
-    }
   }
 
-  return workflow_finish_reachability;
+  return reachable_nodes;
+};
+
+/**
+ * @abstract returns finish node reachability object from start nodes
+ *
+ * @param {Object} blueprint
+ * @param {Object} description
+ */
+export const reachableFinishNodesFromStartNodes = (blueprint) => {
+  const start_finish_nodes = startAndFinishNodes(blueprint);
+  const reachable_nodes = reachableNodesFromStartNodes(blueprint);
+
+  for (const start_node_key of start_finish_nodes.start_nodes) {
+    reachable_nodes[start_node_key] = _.intersection(
+      reachable_nodes[start_node_key], 
+      start_finish_nodes.finish_nodes
+    )
+  }
+  
+  return reachable_nodes
 };
 
 /**
@@ -83,28 +104,12 @@ export const reachableFinishFromStart = (blueprint) => {
  */
 export const describeBlueprint = (blueprint) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
-  const node_ids_per_type = {};
-
-  const types = ['start', 'finish', 'systemtask', 'subprocess',
-    'scripttask', 'flow', 'usertask'];
-
-  for (const type of types) {
-    node_ids_per_type[type] = [];
-
-    getBlueprintNodesByType(blueprint, type).forEach(
-      (node) => {
-        node_ids_per_type[type].push(node.id);
-      },
-    );
-  }
-
+  
   return {
     name: blueprint.name,
     description: blueprint.description,
-    node_ids_per_type,
-    reachable_from_start: reachable_nodes,
-    non_reachable_from_start: non_reachable_nodes,
-    reachable_finish_from_start: reachableFinishFromStart(blueprint),
+    node_ids_per_type: getBlueprintAllNodesByType(blueprint),
+    reachable_finish_from_start: reachableFinishNodesFromStart(blueprint),
     graph: bp_graph.describe(),
   };
 };
@@ -122,12 +127,22 @@ export const getBlueprintNodesByType = (blueprint, type) => {
 
   for (const node of nodes) {
     if (node.type.toLowerCase() === type) {
-      nodes_per_type.push(node);
+      nodes_per_type.push(node.id);
     }
   }
 
   return nodes_per_type;
 };
+
+export const getBlueprintAllNodesByType = (blueprint) => {
+  const node_ids_per_type = {};
+
+  for (const type of node_types) {
+    node_ids_per_type[type] = getBlueprintNodesByType(blueprint, type);
+  }
+
+  return node_ids_per_type
+}
 
 /**
  * @abstract returns a Graph instance of the blueprint spectrum
@@ -147,9 +162,82 @@ export const parseBlueprintToGraph = (blueprint) => {
       ),
     ),
   );
-
+  
   return graph;
 };
+
+export const getBlueprintUnreachableNodes = (blueprint) => {
+  const graph = parseBlueprintToGraph(blueprint); 
+  const start_finish_nodes = startAndFinishNodes(blueprint);
+
+  const non_start_nodes = _.difference(
+    graph.getAllVerticesKeys(), start_finish_nodes.start_nodes
+  )
+
+  const reachable_nodes = _.uniq(
+    _.flatten(
+      Object.values(
+        getBlueprintAllNodesByType(blueprint)
+      )
+    )
+  )
+  
+  return _.difference(non_start_nodes, reachable_nodes)
+}
+
+export const blueprintValidity = (blueprint) => {
+  const graph = parseBlueprintToGraph(blueprint);
+  
+  const sf_nodes = startAndFinishNodes(blueprint);
+  const unreachable_non_start_nodes = getBlueprintUnreachableNodes(blueprint);
+  
+  const loose_nodes_keys = graph.convertVerticesIndexestoKeys(graph.looseNodes());
+  const orphan_nodes_keys = graph.convertVerticesIndexestoKeys(graph.orphanNodes());
+  
+  const loose_non_finish_nodes = _.difference(
+    orphan_nodes_keys, sf_nodes.start_nodes
+  )
+
+  const orphan_non_start_nodes = _.difference(
+    loose_nodes_keys, sf_nodes.finish_nodes
+  )
+  
+  let validity_decorate_obj = {
+    reachability: {
+      is_reachable: unreachable_non_start_nodes.length === 0,
+      unreachable_nodes: unreachable_non_start_nodes
+    },
+    contains_start_finish: {
+      has_start_finish: (sf_nodes.start_nodes.length !== 0) && (sf_nodes.finish_nodes.length !== 0)
+    },
+    all_loose_is_finish: {
+      is_all_loose_finish: loose_non_finish_nodes.length === 0,
+      loose_non_finish_nodes: loose_non_finish_nodes
+    },
+    all_orphan_is_start: {
+      is_all_orphan_start: orphan_non_start_nodes.length === 0,
+      orphan_non_start_nodes: orphan_non_start_nodes
+    }
+  };
+
+  let is_valid_key = true;
+  const is_valid = objectReduce(
+    validity_decorate_obj, 
+    (is_valid, validity_clause, validity_args) => {
+
+      is_valid_key = objectKeyFind(
+        validity_args, (reason, argument) => reason.includes('is_') || reason.includes('has_')
+      )
+      
+      return is_valid && validity_args[is_valid_key]
+    }, true
+  )
+  
+  return {
+    'is_valid': is_valid,
+    'validity_arguments': validity_decorate_obj
+  }
+}
 
 /**
  * @abstract returns start and finish nodes object of given blueprint
