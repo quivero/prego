@@ -272,7 +272,7 @@ export function* hyperIndexes(length, dim, formationFn) {
  * @return {Array} arr_with_uniques
  */
 export function* fullPolytopeHyperindexes(length, dim) {
-  yield* hyperIndexes(length, dim, fullPolytopeIndexesFn)
+  yield* hyperIndexes(length, dim, fullPolytopeIndexesFn);
 }
 
 /**
@@ -282,7 +282,7 @@ export function* fullPolytopeHyperindexes(length, dim) {
  * @return {Array} arr_with_uniques
  */
 export function* upperTriangularHyperindexes(length, dim) {
-  yield* hyperIndexes(length, dim, upperTriangularIndexesFn)
+  yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
 }
 
 /**
