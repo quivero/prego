@@ -5,40 +5,36 @@ import {
 
 /**
  * @abstract n-norm of a number
- * 
+ *
  * @param {Array} arr
  * @param {Number} n
  * @return {Number}
  */
-export const nNorm = (arr, n) => {
-    return arr.reduce(
-        (dist, elem) => {
-            return dist + Math.abs(elem) ** n
-        }, 
-        0
-    ) ** (1 / n);
-}
+export const nNorm = (arr, n) => arr.reduce(
+  (dist, elem) => dist + Math.abs(elem) ** n,
+  0,
+) ** (1 / n);
 
 /**
- * @abstract 
- * 
+ * @abstract
+ *
  * @param {Array} coordinate_1
  * @param {Array} coordinate_2
  * @param {Number} n
  * @return {Number}
  */
 export const nNormDistance = (coordinate_1, coordinate_2, n) => {
-    const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
-        (coord_tuple) => Math.abs(coord_tuple[1] - coord_tuple[0]),
-    );
-    
-    if (n === Infinity) {
-        return Math.max(...coord_diffs);
-    }   
+  if (n < 1) {
+    throw Error('The exponent n must be a number greater or equal to 1!');
+  }
+  
+  const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
+    (coord_tuple) => Math.abs(coord_tuple[1] - coord_tuple[0]),
+  );
 
-    if (n < 1 || decimalPart(n) !== 0) {
-        throw Error('The exponent n must be non-zero natural!');
-    }
+  if (n === Infinity) {
+    return Math.max(...coord_diffs);
+  }
 
-    return nNorm(coord_diffs, n)
+  return nNorm(coord_diffs, n);
 };
