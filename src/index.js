@@ -12,7 +12,7 @@ import {
   startAndFinishNodes,
   getBlueprintFromToEdgeTuples,
   getBlueprintNextNodes,
-
+  blueprintValidity,
   fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
@@ -46,41 +46,35 @@ app.get('/', (req, res) => {
   const blueprints_fnames = fs.readdirSync(bps_root);
 
   const READ_ALL_BPS = true;
-  let sf_nodes = {};
-  let loose_nodes = [];
-  let orphan_nodes = [];
+  const sf_nodes = {};
+  const loose_nodes = [];
+  const orphan_nodes = [];
 
   if (READ_ALL_BPS) {
-    let paths = {};
-    let total_paths_len = 0;
-
+    const magnify_blueprint = {};
+    
     for (let i = 0; i < blueprints_fnames.length; i += 1) {
-      let blueprint_i_name = blueprints_fnames[i];
-      let fname = bps_root + blueprint_i_name;
-      let tokens = fname.split('.');
+      const blueprint_i_name = blueprints_fnames[i];
+      const fname = bps_root + blueprint_i_name;
+      const tokens = fname.split('.');
 
       if (tokens[tokens.length - 1] === 'json') {
-        let blueprint_i = require(fname);
-        let graph = parseBlueprintToGraph(blueprint_i);
+        const blueprint_i = require(fname);
+        const graph = parseBlueprintToGraph(blueprint_i);
 
-        paths[blueprint_i_name] = fromStartToFinishCombsAllPaths(blueprint_i);
-        total_paths_len += paths[blueprints_fnames[i]].length;
+        magnify_blueprint[blueprint_i_name] = blueprintValidity(blueprint_i);
       }
     }
 
-    res.send(
-      {
-        length: total_paths_len,
-        blueprints: paths,
-      },
-    );
+    res.send(magnify_blueprint);
+    
   } else {
     const blueprint_fname = 'botMessage.json';
 
-    let fname = bps_root + blueprint_fname;
-    let blueprint = require(fname);
-
-    res.send(fromStartToFinishCombsAllPaths(blueprint));
+    const fname = bps_root + blueprint_fname;
+    const blueprint = require(fname);
+    
+    res.send(blueprintValidity(blueprint));
   }
 });
 // [END app]
