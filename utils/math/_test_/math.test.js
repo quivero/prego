@@ -34,16 +34,15 @@ describe('combinatorics', () => {
 
   it('should return cartesian coordinates', () => {
     expect(
-      nNorm(sphericalToCartesian([0, 0], 1), 2)
+      nNorm(sphericalToCartesian([0, 0], 1), 2),
     ).toBeCloseTo(1);
-    
+
     expect(
-      nNorm(sphericalToCartesian([Math.PI/2, 0], 1), 2)
+      nNorm(sphericalToCartesian([Math.PI / 2, 0], 1), 2),
     ).toBeCloseTo(1);
-    
+
     expect(
-      nNorm(sphericalToCartesian([Math.PI/2, Math.PI/2], 1), 2)
+      nNorm(sphericalToCartesian([Math.PI / 2, Math.PI / 2], 1), 2),
     ).toBeCloseTo(1);
   });
-
 });

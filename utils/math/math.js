@@ -23,30 +23,28 @@ export const xor = (a, b) => {
 
 /**
  * @abstract transformation map of spherical to cartesian coordinates
- * 
+ *
  * @param {boolean} a
  * @param {boolean} b
  * @return {boolean}
  */
 export const sphericalToCartesian = (coords, R) => {
-  let prodsin = (arr) => {
-    return arr.reduce((prod_, angle) => prod_*Math.sin(angle), 1)
-  };
-  
-  const s2cRecur = (index, coords, R) => {
-    let curr_coord = coords[index];
-    
-    return R*prodsin(coords.slice(0, index))*Math.cos(curr_coord)
-  }
+  const prodsin = (arr) => arr.reduce((prod_, angle) => prod_ * Math.sin(angle), 1);
 
-  let curr_coord = coords[coords.length-1];
-  
+  const s2cRecur = (index, coords, R) => {
+    const curr_coord = coords[index];
+
+    return R * prodsin(coords.slice(0, index)) * Math.cos(curr_coord);
+  };
+
+  const curr_coord = coords[coords.length - 1];
+
   return coords
     .map(
-      (coord, index) => s2cRecur(index, coords, R)
+      (coord, index) => s2cRecur(index, coords, R),
     ).concat(
       [
-        R*prodsin(coords.slice(0, coords.length-1))*Math.sin(curr_coord)
-      ]
+        R * prodsin(coords.slice(0, coords.length - 1)) * Math.sin(curr_coord),
+      ],
     );
-}
+};
