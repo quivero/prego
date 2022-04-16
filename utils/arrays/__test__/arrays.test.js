@@ -67,13 +67,13 @@ describe('Array', () => {
   });
 
   it('should return count dict', () => {
-    expect(countDict([1,1,2,2,2,3,4,4])).toEqual(
+    expect(countDict([1, 1, 2, 2, 2, 3, 4, 4])).toEqual(
       {
-        '1': 2,
-        '2': 3,
-        '3': 1,
-        '4': 2,
-      }
+        1: 2,
+        2: 3,
+        3: 1,
+        4: 2,
+      },
     );
   });
 

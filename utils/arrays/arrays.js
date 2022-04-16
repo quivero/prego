@@ -35,14 +35,14 @@ export const getAllIndexes = (arr, val) => {
 };
 
 export const countDict = (arr) => {
-  let obj = {};
-  
-  for (let i of _.range(arr.length)) {
-    obj[arr[i]] = (obj[arr[i]] || 0 ) +1;
+  const obj = {};
+
+  for (const i of _.range(arr.length)) {
+    obj[arr[i]] = (obj[arr[i]] || 0 ) + 1;
   }
-  
-  return obj
-}
+
+  return obj;
+};
 
 /**
  * @abstract returns a shifted word cyclily
