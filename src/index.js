@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 
   if (READ_ALL_BPS) {
     const magnify_blueprint = {};
-    
+
     for (let i = 0; i < blueprints_fnames.length; i += 1) {
       const blueprint_i_name = blueprints_fnames[i];
       const fname = bps_root + blueprint_i_name;
@@ -67,13 +67,12 @@ app.get('/', (req, res) => {
     }
 
     res.send(magnify_blueprint);
-    
   } else {
     const blueprint_fname = 'botMessage.json';
 
     const fname = bps_root + blueprint_fname;
     const blueprint = require(fname);
-    
+
     res.send(blueprintValidity(blueprint));
   }
 });

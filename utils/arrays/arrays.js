@@ -38,7 +38,7 @@ export const countDict = (arr) => {
   const obj = {};
 
   for (const i of _.range(arr.length)) {
-    obj[arr[i]] = (obj[arr[i]] || 0 ) + 1;
+    obj[arr[i]] = (obj[arr[i]] || 0) + 1;
   }
 
   return obj;

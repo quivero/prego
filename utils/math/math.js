@@ -1,6 +1,6 @@
 /**
  * @abstract decimal part of a number
- * 
+ *
  * @param {Number} number
  * @return {Number}
  */
@@ -8,7 +8,7 @@ export const decimalPart = (number) => number - Math.floor(number);
 
 /**
  * @abstract xor operator
- * 
+ *
  * @param {boolean} a
  * @param {boolean} b
  * @return {boolean}
