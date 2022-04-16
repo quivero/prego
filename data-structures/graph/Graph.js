@@ -2275,7 +2275,7 @@ export default class Graph {
       is_chain &= adjList[chain_candidate[i]].includes(chain_candidate[i + 1]);
     }
 
-    return is_chain;
+    return Boolean(is_chain);
   }
 
   /**
