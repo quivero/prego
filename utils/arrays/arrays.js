@@ -34,6 +34,12 @@ export const getAllIndexes = (arr, val) => {
   return indexes;
 };
 
+/**
+ * @abstract returns dictionary with number prime factors 
+ *
+ * @param {Integer} number
+ * @return {object}
+ */
 export const countDict = (arr) => {
   const obj = {};
 

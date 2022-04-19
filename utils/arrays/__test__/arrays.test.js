@@ -13,8 +13,9 @@ import {
   mSetsOfnTuples,
   hyperIndexes,
   upperTriangularIndexesFn,
-  strictUpperTriangularIndexesFn,
   fullPolytopeIndexesFn,
+  fullPolytopeHyperindexes,
+  upperTriangularHyperindexes
 } from '../arrays';
 
 console.error = jest.fn();
@@ -90,10 +91,18 @@ describe('Array', () => {
     expect([...hyperIndexes(2, 2, fullPolytopeIndexesFn)]).toEqual([
       [0, 0], [0, 1], [1, 0], [1, 1],
     ]);
+
+    expect([...fullPolytopeHyperindexes(2, 2)]).toEqual([
+      [0, 0], [0, 1], [1, 0], [1, 1],
+    ]);
   });
 
   it('should return upper triangular polytope hyper-indexes', () => {
     expect([...hyperIndexes(2, 2, upperTriangularIndexesFn)]).toEqual([
+      [0, 0], [0, 1], [1, 1],
+    ]);
+    
+    expect([...upperTriangularHyperindexes(2, 2)]).toEqual([
       [0, 0], [0, 1], [1, 1],
     ]);
   });

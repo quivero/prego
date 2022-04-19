@@ -25,4 +25,17 @@ describe('numbers', () => {
         }
       );
     });
+
+    it('should throw error for negative or non-natural number', () => {
+      function negativeNumberFactorization() {
+        return primeFactors(-1);
+      }
+
+      function decimalNumberFactorization() {
+        return primeFactors(4.2);
+      }
+
+      expect(negativeNumberFactorization).toThrowError();
+      expect(decimalNumberFactorization).toThrowError();
+    });
 });
