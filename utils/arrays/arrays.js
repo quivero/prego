@@ -35,7 +35,7 @@ export const getAllIndexes = (arr, val) => {
 };
 
 /**
- * @abstract returns dictionary with number prime factors 
+ * @abstract returns dictionary with number prime factors
  *
  * @param {Integer} number
  * @return {object}
