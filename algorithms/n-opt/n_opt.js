@@ -4,17 +4,14 @@ import 'lodash.multipermutations';
 import _ from 'lodash';
 
 import {
-  upperTriangularHyperindexes,
   mSetsOfnTuples,
+  countDict,
 } from '../../utils/arrays/arrays.js';
 
 import {
-  objectKeyFind,
-} from '../../utils/objects/objects.js';
+  throwError,
+} from '../../utils/sys/sys.js';
 
-import {
-  xor,
-} from '../../utils/math/math.js';
 
 /**
  * @abstract Iterative improvement based on 3 exchange.
