@@ -5,3 +5,4 @@ coverage/
 *.sig
 *.swp
 *.SHA256SUM
+src/blueprints/
