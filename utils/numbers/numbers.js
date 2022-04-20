@@ -41,6 +41,12 @@ export const primeFactors = (n) => {
   return countDict(factors);
 };
 
+/**
+ * @abstract returns true/false for prime/non-prime number
+ *
+ * @param {Number} number 
+ * @return {boolean} 
+ */
 export const isPrime = (number) => {
   return Object.keys(primeFactors(number)).length === 1 && 
          Object.values(primeFactors(number))[0] === 1;

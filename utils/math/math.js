@@ -23,6 +23,7 @@ export const xor = (a, b) => {
 
 /**
  * @abstract transformation map of spherical to cartesian coordinates
+ * The 3D representation order corresponds to (z, x, y)
  *
  * @param {boolean} a
  * @param {boolean} b
