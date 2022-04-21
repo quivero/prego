@@ -1,4 +1,4 @@
-FROM node:17-alpine
+FROM node:18-alpine
 RUN sudo mkdir -p /home/node/app/node_modules && sudo chown -R node:node /home/node/app
 WORKDIR /home/node/app
 COPY package*.json ./
