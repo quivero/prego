@@ -1,6 +1,8 @@
 import {
   nNormDistance,
   nNorm,
+  sphereCentralAngle,
+  greatCircleDistance,  
 } from '../distance.js';
 
 describe('distance', () => {
@@ -52,5 +54,24 @@ describe('distance', () => {
     }
 
     expect(negativeExponent).toThrowError();
+  });
+
+  it('should return distance between two coordinates on a sphere', () => {
+    const coord_1 = [0, 0];
+    const coord_2 = [0, Math.PI/2];
+    const coord_3 = [Math.PI/2, 0];
+    const radius = 1;
+
+    expect(
+      greatCircleDistance(coord_1, coord_2, radius),
+    ).toBeCloseTo(Math.PI/2);
+
+    expect(
+      greatCircleDistance(coord_1, coord_3, radius),
+    ).toBeCloseTo(Math.PI/2);
+
+    expect(
+      greatCircleDistance(coord_2, coord_3, radius),
+    ).toBeCloseTo(Math.PI/2);
   });
 });

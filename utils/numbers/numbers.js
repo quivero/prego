@@ -50,4 +50,28 @@ export const primeFactors = (n) => {
 export const isPrime = (number) => {
   return Object.keys(primeFactors(number)).length === 1 && 
          Object.values(primeFactors(number))[0] === 1;
-} 
+}
+
+/**
+ * @abstract converts randian to degree angle
+ *
+ * @param {Number} radian_angle
+ * @return {NUmber} 
+ */
+export const radianToDegree = (radian_angle) => 180*radian_angle/Math.PI;
+
+/**
+ * @abstract converts degree to randian angle
+ * 
+ * @param {Number} radian_angle
+ * @return {Number} 
+ */
+export const degreeToRadian = (degree_angle) => Math.PI*degree_angle/180;
+
+/**
+ * @abstract return haversine function sin^2(theta)
+ * 
+ * @param {Number} radian_angle
+ * @return {NUmber} 
+ */
+export const hav = (theta) => Math.sin(theta/2) ** 2
