@@ -35,6 +35,22 @@ export const getAllIndexes = (arr, val) => {
 };
 
 /**
+ * @abstract returns dictionary with number prime factors
+ *
+ * @param {Integer} number
+ * @return {object}
+ */
+export const countDict = (arr) => {
+  const obj = {};
+
+  for (const i of _.range(arr.length)) {
+    obj[arr[i]] = (obj[arr[i]] || 0) + 1;
+  }
+
+  return obj;
+};
+
+/**
  * @abstract returns a shifted word cyclily
  *
  * @param {Array} array
@@ -57,7 +73,8 @@ export const cyclicSort = (array, index) => {
 };
 
 /**
- * @abstract returns a shifted cyclicly word
+ * @abstract returns true if control and treatment words are equal
+ * in some sshifted way
  *
  * @param {Array} array
  * @param {Integer} index
@@ -78,7 +95,7 @@ export const isCyclicEqual = (control_, treatment_) => {
 };
 
 /**
- * @abstract returns a sorted array of integers. The possible types are below: 
+ * @abstract returns a sorted array of integers. The possible types are below:
  * - 0: descending
  * - 1: ascending
  *
@@ -134,13 +151,26 @@ export const removeElements = (arr, elems_to_del) => {
   return arr;
 };
 
-// Cartesian product of arrays
+/**
+ * @abstract returns true if array has provided element
+ *
+ * @param {Array} a
+ * @param {Array} b
+ * @param {Array} c
+ * @return {array} cartesian_product
+ */
 export const cartesianProduct = (a, b, ...c) => {
   const f = (a, b) => [].concat(...a.map((a) => b.map((b) => [].concat(a, b))));
 
   return b ? cartesianProduct(f(a, b), ...c) : a;
 };
 
+/**
+ * @abstract
+ *
+ * @param {Array} list
+ * @return {Array} unique_list
+ */
 export const removeArrayDuplicates = (list) => {
   const unique = [];
 
@@ -159,13 +189,107 @@ export const removeArrayDuplicates = (list) => {
   return unique;
 };
 
+export function* mSetsOfnTuples(array, n, m) {
+  if (m > Math.floor(array.length / n)) {
+    throw Error('Size of array must be greater or equal to the product of n by m');
+  }
+
+  let curr_comb = [];
+
+  for (const head_comb of _.combinations(array, n)) {
+    curr_comb = [head_comb];
+
+    if (m === 1) {
+      yield curr_comb;
+    } else {
+      for (
+        const tail_comb of mSetsOfnTuples(_.difference(array, head_comb), n, m - 1)
+      ) {
+        yield curr_comb.concat(tail_comb);
+      }
+    }
+  }
+}
+
 /**
- * @abstract returns
+ * @abstract returns array unique values
  *
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
 export const getUniques = (vec) => Array.from(new Set(vec));
+
+/**
+ * @abstract returns upper triangular indexes
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
+  for (const i of _.range(0, length)) {
+    if (curr_dim === 1) {
+      yield i;
+    } else {
+      for (const tail_indexes of fullPolytopeIndexesFn(length, curr_dim - 1, dim)) {
+        yield [i].concat(tail_indexes);
+      }
+    }
+  }
+}
+
+/**
+ * @abstract returns upper triangular indexes
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
+  for (const i of _.range(index, length)) {
+    if (curr_dim === 1) {
+      yield i;
+    } else {
+      for (const tail_indexes of upperTriangularIndexesFn(length, curr_dim - 1, dim, i)) {
+        yield [i].concat(tail_indexes);
+      }
+    }
+  }
+}
+
+/**
+ * @abstract returns polytopic structure indexes from formation function
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* hyperIndexes(length, dim, formationFn) {
+  if (dim <= 0 || length <= 0) {
+    throw Error('Dimension and length must be positive natural numbers!');
+  }
+
+  for (const indexes of formationFn(length, dim, dim)) {
+    yield indexes;
+  }
+}
+
+/**
+ * @abstract returns full polytopic indexes
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* fullPolytopeHyperindexes(length, dim) {
+  yield* hyperIndexes(length, dim, fullPolytopeIndexesFn);
+}
+
+/**
+ * @abstract returns triangular polytopic indexes
+ *
+ * @param {Array} vec
+ * @return {Array} arr_with_uniques
+ */
+export function* upperTriangularHyperindexes(length, dim) {
+  yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
+}
 
 /**
  * @abstract returns each tuple [key, elems] of the Euler diagram
@@ -175,82 +299,83 @@ export const getUniques = (vec) => Array.from(new Set(vec));
  * @return {Array} keys_elems
  */
 export function* euler(sets) {
-  if(Object.values(sets).length === 1) yield Object.entries(sets)[0]
-  if(Object.values(sets).length === 0) throw Error('There must at least ONE set!')
+  if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
+  if (Object.values(sets).length === 0) throw Error('There must at least ONE set!');
 
-  sets = objectMap(sets, (set_key, set) => sort(set, 1))
-  
-  const sets_keys_fun = 
-  (sets_) => Object
+  sets = objectMap(sets, (set_key, set) => sort(set, 1));
+
+  const sets_keys_fun = (sets_) => Object
     .keys(sets_)
-    .filter((key) => sets_[key].length !== 0,);
-  
-  let compl_sets_keys = []
-  let comb_str = ''
-  let celements = []
-  let comb_intersec_key = ''
-  let comb_intersec = []
-  let comb_excl = []
-  
+    .filter((key) => sets_[key].length !== 0);
+
+  let compl_sets_keys = [];
+  let comb_str = '';
+  let celements = [];
+  let comb_intersec_key = '';
+  let comb_intersec = [];
+  let comb_excl = [];
+
   let sets_keys = sets_keys_fun(sets);
 
   // Traverse the combination lattice
-  for(const set_key of sets_keys) {
+  for (const set_key of sets_keys) {
     compl_sets_keys = _.difference(sets_keys, [set_key])
-                       .filter((compl_set_key) => sets[compl_set_key].length !== 0)
-                       .map((compl_set_key) => String(compl_set_key))
+      .filter((compl_set_key) => sets[compl_set_key].length !== 0)
+      .map((compl_set_key) => String(compl_set_key));
 
-    if(compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
-      for(const comb_elements of euler(
+    if (compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
+      for (const comb_elements of euler(
         objectReduce(
           compl_sets_keys,
           (result, __, compl_set_key) => {
-            result[compl_set_key] = sets[compl_set_key]
-            return result
-          }, {})
-        )
+            result[compl_set_key] = sets[compl_set_key];
+            return result;
+          },
+          {},
+        ),
+      )
       ) {
-        comb_str = comb_elements[0]
-        celements = comb_elements[1]
-        
-        comb_excl = _.difference(celements, sets[set_key])
-        if(comb_excl.length !== 0) {
+        comb_str = comb_elements[0];
+        celements = comb_elements[1];
+
+        comb_excl = _.difference(celements, sets[set_key]);
+        if (comb_excl.length !== 0) {
           // Exclusive elements of group except current analysis set
-          yield [comb_str, comb_excl]
-          
+          yield [comb_str, comb_excl];
+
           comb_str.split(',').forEach(
             (ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_excl)
-            }
-          )
-          
-          sets[set_key] = _.difference(sets[set_key], comb_excl)
+              sets[ckey] = _.difference(sets[ckey], comb_excl);
+            },
+          );
+
+          sets[set_key] = _.difference(sets[set_key], comb_excl);
         }
-        
-        comb_intersec = _.intersection(celements, sets[set_key])
-        if(comb_intersec.length !== 0) {
+
+        comb_intersec = _.intersection(celements, sets[set_key]);
+        if (comb_intersec.length !== 0) {
           // Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key].concat(comb_str.split(',')).join(',')
-          
-          yield [comb_intersec_key, comb_intersec]
-          
+          comb_intersec_key = [set_key].concat(comb_str.split(',')).join(',');
+
+          yield [comb_intersec_key, comb_intersec];
+
           comb_str.split(',').forEach(
             (ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_intersec)
-            }
-          )
-          
-          sets[set_key] = _.difference(sets[set_key], comb_intersec)
+              sets[ckey] = _.difference(sets[ckey], comb_intersec);
+            },
+          );
+
+          sets[set_key] = _.difference(sets[set_key], comb_intersec);
         }
 
         sets_keys = sets_keys_fun(sets);
       }
-      
-      if(sets[set_key].length !== 0) {
-        yield [String(set_key), sets[set_key]]
-      } 
+
+      if (sets[set_key].length !== 0) {
+        yield [String(set_key), sets[set_key]];
+      }
     }
-  } 
+  }
 }
 
 /**
@@ -260,7 +385,7 @@ export function* euler(sets) {
  * @param {Array} sets
  * @return {Array} keys_elems
  */
- export function* venn(sets) {
+export function* venn(sets) {
   const keys_fun = (sets_) => Object.keys(sets_).map(
     (key) => Number(key),
   ).filter(
@@ -274,22 +399,22 @@ export function* euler(sets) {
   let compl_set_elems = [];
   let prev_keys_len = -1;
   let curr_keys_len = -1;
-  
+
   let keys = keys_fun(sets);
-  
+
   // Traverse the combination lattice
   for (const chunk_card of _.range(1, keys.length + 1)) {
     for (const comb_keys of new _.combinations(keys, chunk_card)) {
       // In case any of the sets under analysis is empty
-      if(hasElement([...comb_keys.map((key) => sets[Number(key)])], [])) continue;
-      
+      if (hasElement([...comb_keys.map((key) => sets[Number(key)])], [])) continue;
+
       // Intersection of elements
-      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]))
+      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]));
 
       compl_set_elems = _.uniq(_.flatten(
         _.difference(keys, comb_keys).map((set_key) => sets[set_key]),
       ));
-      
+
       comb_sets_excl = _.difference(comb_sets_inter, compl_set_elems);
       cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl);
 
@@ -312,10 +437,10 @@ export function* euler(sets) {
       keys = keys_fun(sets);
 
       curr_keys_len = keys.length;
-      
+
       // If any set turned empty, break inner-loop. The chunk cardinality
-      // in the inner-loop may be greater than the available non-empty sets. 
-      // Therefore, it is also a necessary condition. Both together are 
+      // in the inner-loop may be greater than the available non-empty sets.
+      // Therefore, it is also a necessary condition. Both together are
       // sufficient for integers
       if (curr_keys_len < prev_keys_len && curr_keys_len < chunk_card) {
         break;
@@ -324,8 +449,6 @@ export function* euler(sets) {
   }
 }
 
-export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)])
+export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)]);
 
-export const spreadVenn = (lists) => Object.fromEntries([...venn(lists)])
-
-
+export const spreadVenn = (lists) => Object.fromEntries([...venn(lists)]);

@@ -12,7 +12,7 @@ export const saveJSONtoFile = (path, json_object, name) => {
   const json_str = JSON.stringify(json_object, null, 2);
 
   // write JSON string to a file
-  fs.writeFile(`${name}.json`, json_str, (err) => {
+  fs.writeFile(`${path}/${name}.json`, json_str, (err) => {
     if (err) {
       throw err;
     }

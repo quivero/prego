@@ -394,11 +394,11 @@ export default class Graph {
    */
   looseNodes() {
     const loose_nodes = [];
-    const adjList = this.getAdjacencyList();
+    const forward_star = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
 
     for (let i = 0; i < n_vertices; i += 1) {
-      if (adjList[i].length === 0) {
+      if (forward_star[i].length === 0) {
         loose_nodes.push(i);
       }
     }
@@ -412,25 +412,14 @@ export default class Graph {
    */
   orphanNodes() {
     const orphan_nodes = [];
-    const adjList = this.getAdjacencyList();
+    const inverse_star = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
 
-    const to_vertices = new Set();
-
     for (let i = 0; i < n_vertices; i += 1) {
-      const neighbors = adjList[i];
-      for (let j = 0; j < neighbors.length; j += 1) {
-        to_vertices.add(neighbors[j]);
+      if (inverse_star[i].length === 0) {
+        orphan_nodes.push(i);
       }
     }
-
-    this.getAllVertices().forEach((vertex) => {
-      const vertex_index = this.getVertexIndex(vertex);
-
-      if (!to_vertices.has(vertex_index)) {
-        orphan_nodes.push(vertex_index);
-      }
-    });
 
     return orphan_nodes;
   }
@@ -459,7 +448,7 @@ export default class Graph {
   addEdge(edge) {
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
-      console.warn('Warning: Edge has already been added before. Please, choose other key!');
+      console.warn(`Warning: Edge ${edge.getKey()} has already been added before. Please, choose other key!`);
       return;
     }
 
@@ -1173,7 +1162,7 @@ export default class Graph {
 
     // Remove bridges to obtain strongly connected components
     graph_copy.deleteEdges(bridge_edges);
-    
+
     // Dictionary with islads
     const islands_dict = graph_copy.retrieveUndirected().getStronglyConnectedComponentsIndices();
 
@@ -1199,12 +1188,14 @@ export default class Graph {
       this.islands(),
       (result, island_id, habitants_) => {
         result[island_id] = _.union(
-          habitants_['bridge_ends'],
-          habitants_['inner_vertices']
-        )
-        
-        return result
-      }, {})
+          habitants_.bridge_ends,
+          habitants_.inner_vertices,
+        );
+
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1256,28 +1247,30 @@ export default class Graph {
    * @return {object}
    */
   getIslandBridgeEndIODict() {
-    const bridge_end_io_dict = this.getBridgeEndIODict(); 
-    
+    const bridge_end_io_dict = this.getBridgeEndIODict();
+
     return objectReduce(
       this.islands(),
       (result, island_id, habitant_groups) => {
         result[island_id] = objectReduce(
-          habitant_groups['bridge_ends'],
+          habitant_groups.bridge_ends,
           (result_, id_, bridge_end_id) => {
-            if(bridge_end_io_dict[bridge_end_id]['from'].length !== 0) {
-              result_['target'].push(bridge_end_id)
+            if (bridge_end_io_dict[bridge_end_id].from.length !== 0) {
+              result_.target.push(bridge_end_id);
             }
 
-            if(bridge_end_io_dict[bridge_end_id]['to'].length !== 0) {
-              result_['source'].push(bridge_end_id)
+            if (bridge_end_io_dict[bridge_end_id].to.length !== 0) {
+              result_.source.push(bridge_end_id);
             }
-            
-            return result_
-          }, {source: [], target: []}
-          )
 
-        return result
-      }, {}
+            return result_;
+          },
+          { source: [], target: [] },
+        );
+
+        return result;
+      },
+      {},
     );
   }
 
@@ -1327,34 +1320,36 @@ export default class Graph {
   }
 
   /**
-   * @abstract returns a map from islands to islands
+   * @abstract returns a map from inner island reachibility from vertex to vertex
    * @return {Array}
    */
   getIslandInnerReachability() {
     const islands = this.islandsHabitants();
     const reachability_list = this.getReachabilityList();
-    
+
     return objectReduce(
-      islands, 
+      islands,
       (result, island_id, habitants) => {
-        if(habitants.length === 1) {
-          const reachables = {} 
+        if (habitants.length === 1) {
+          const reachables = {};
 
-          reachables[habitants[0]] = [habitants[0]]
+          reachables[habitants[0]] = [habitants[0]];
           result[island_id] = reachables;
-
         } else {
           result[island_id] = objectReduce(
             habitants,
             (result_, __, habitant) => {
-              result_[habitant] = _.intersection(reachability_list[habitant], habitants)
-              return result_
-            }, 
-            {})
+              result_[habitant] = _.intersection(reachability_list[habitant], habitants);
+              return result_;
+            },
+            {},
+          );
         }
 
-        return result
-      }, {})
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1363,22 +1358,27 @@ export default class Graph {
    */
   getIslandIOReachability() {
     const reachability_list = this.getReachabilityList();
-    
+
     return objectReduce(
-      this.getIslandBridgeEndIODict(), 
+      this.getIslandBridgeEndIODict(),
       (result, island_id, habitants) => {
         result[island_id] = objectReduce(
-          habitants['target'],
+          habitants.target,
           (result_, id_, in_bridge_end) => {
             result_[in_bridge_end] = _.intersection(
-              reachability_list[in_bridge_end], habitants['source']
-            )
-            
-            return result_
-          }, {})
+              reachability_list[in_bridge_end],
+              habitants.source,
+            );
 
-        return result
-      }, {})
+            return result_;
+          },
+          {},
+        );
+
+        return result;
+      },
+      {},
+    );
   }
 
   /**
@@ -1388,10 +1388,8 @@ export default class Graph {
   getIslandsSubgraphs() {
     return objectMap(
       this.islandsHabitants(),
-      (island_id, habitants) => {
-        return this.buildSubgraph(habitants)
-      }
-    )
+      (island_id, habitants) => this.buildSubgraph(habitants),
+    );
   }
 
   /**
@@ -1425,6 +1423,10 @@ export default class Graph {
     );
   }
 
+  /**
+   * @abstract returns an island graph
+   * @return {Array}
+   */
   getIslandGraph() {
     const islandAdjList = this.getIslandsAdjacencyList();
     const island_graph = new Graph(this.isDirected);
@@ -1635,7 +1637,7 @@ export default class Graph {
     if (is_finish) {
       // Index v is now deleted from mark stacked, and has been called u unmark v
       let u = marked_stack.pop();
-      
+
       while (u !== curr_index) {
         marked[u] = false;
         u = marked_stack.pop();
@@ -1794,7 +1796,7 @@ export default class Graph {
 
     return subgraph;
   }
-  
+
   /**
    * @abstract Returns count of not reachable nodes from vertex v.
    * It uses recursive DFSUtil()
@@ -2200,41 +2202,40 @@ export default class Graph {
     acyclic_paths = this.acyclicPaths(from_key, to_key);
 
     const cycle_indices = this.getCycleIndices();
-
     let cyclic_paths = [];
 
-    let cycle_nodes_arr = [];
-    let connected_cycles_indexes = [];
-    let acyclic_path = [];
+    if (Object.keys(cycle_indices).length !== 0) {
+      let cycle_nodes_arr = [];
+      let connected_cycles_indexes = [];
+      let acyclic_path = [];
 
-    const cycles_connection = [];
+      acyclic_paths = removeArrayDuplicates(acyclic_paths);
 
-    acyclic_paths = removeArrayDuplicates(acyclic_paths);
+      // For each acyclic path, it finds if a cyclic connection brings new paths
+      for (const path_index in acyclic_paths) {
+        acyclic_path = acyclic_paths[path_index];
 
-    // For each acyclic path, it finds if a cyclic connection brings new paths
-    for (const path_index in acyclic_paths) {
-      acyclic_path = acyclic_paths[path_index];
+        for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
+          connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
 
-      for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
-        connected_cycles_indexes = _.split(cycles_connection[0], ',').map((cycle_index) => Number(cycle_index));
+          const cycle_nodes = new Set();
+          connected_cycles_indexes.forEach(
+            (cycle_index) => cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes),
+          );
 
-        const cycle_nodes = new Set();
-        connected_cycles_indexes.forEach(
-          (cycle_index) => cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes),
-        );
+          cycle_nodes_arr = [...cycle_nodes];
 
-        cycle_nodes_arr = [...cycle_nodes];
+          let cyclic_paths_i = [];
 
-        let cyclic_paths_i = [];
-
-        if (_.intersection(acyclic_path, cycle_nodes_arr).length !== 0) {
-          cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
-          cyclic_paths = cyclic_paths.concat(cyclic_paths_i);
+          if (_.intersection(acyclic_path, cycle_nodes_arr).length !== 0) {
+            cyclic_paths_i = this.#allPathsUtil(acyclic_path, cycle_nodes_arr);
+            cyclic_paths = cyclic_paths.concat(cyclic_paths_i);
+          }
         }
       }
-    }
 
-    cyclic_paths = removeArrayDuplicates(cyclic_paths);
+      cyclic_paths = removeArrayDuplicates(cyclic_paths);
+    }
 
     return acyclic_paths.concat(cyclic_paths);
   }
@@ -2271,10 +2272,10 @@ export default class Graph {
     const adjList = this.getAdjacencyList(0);
 
     for (let i = 0; i < chain_candidate.length - 1; i += 1) {
-      is_chain &&= adjList[chain_candidate[i]].includes(chain_candidate[i + 1]);
+      is_chain &= adjList[chain_candidate[i]].includes(chain_candidate[i + 1]);
     }
 
-    return is_chain;
+    return Boolean(is_chain);
   }
 
   /**
@@ -2320,23 +2321,19 @@ export default class Graph {
     return {
       isDirected: this.isDirected,
       nodes: this.getAllVertices().map(
-        (vertex) => {
-          return {
-            id: vertex.label,
-            value: vertex.value
-          }
-        }
+        (vertex) => ({
+          id: vertex.label,
+          value: vertex.value,
+        }),
       ),
       edges: this.getAllEdges().map(
-        (edge) => {
-          return {
-            source: edge.startVertex.label,
-            target: edge.endVertex.label,
-            weight: edge.weight
-          }
-        }
-      )
-    }
+        (edge) => ({
+          source: edge.startVertex.label,
+          target: edge.endVertex.label,
+          weight: edge.weight,
+        }),
+      ),
+    };
   }
 
   /**
@@ -2345,53 +2342,45 @@ export default class Graph {
    * @return {Graph} this
    */
   deserialize(graph_json) {
-    if(graph_json['isDirected'] !== this.isDirected) {
+    if (graph_json.isDirected !== this.isDirected) {
       throw Error('This direction is different from serialization direction.');
     }
 
-    const vertices = this.getAllVertices()
+    const vertices = this.getAllVertices();
 
     this.addVertices(
-      objectFilter(
-        graph_json['nodes'].map(
-          (node_json) => {
-            const has_vertex = this.getVerticesKeys().includes(node_json['id']);
-            
-            if(!has_vertex) {
-              return new GraphVertex(
-                node_json['id'], node_json['value']
-              ) 
-            } else {
-              return null
-            }
-          }
-        ), (key, value) => value !== null
-      )
-    )
-    
-    this.addEdges(
-      objectFilter(
-        graph_json['edges'].map(
-          (edge_json) => {
-            const has_edge = this.getAllEdgesKeys().includes(
-              `${edge_json['source']}_${edge_json['target']}`
-            );
-            
-            if(!has_edge) {
-              return new GraphEdge(
-                this.vertices[edge_json['source']], 
-                this.vertices[edge_json['target']],
-                edge_json['weight']
-              ) 
-            } else {
-              return null
-            }
-          }
-        ), (key, value) => value !== null
-      )
-    )
+      objectFilter(graph_json.nodes.map(
+        (node_json) => {
+          const has_vertex = this.getVerticesKeys().includes(node_json.id);
 
-    return this
+          if (!has_vertex) {
+            return new GraphVertex(node_json.id, node_json.value);
+          }
+          return null;
+        },
+      ), (key, value) => value !== null),
+    );
+
+    this.addEdges(
+      objectFilter(graph_json.edges.map(
+        (edge_json) => {
+          const has_edge = this.getAllEdgesKeys().includes(
+            `${edge_json.source}_${edge_json.target}`,
+          );
+
+          if (!has_edge) {
+            return new GraphEdge(
+              this.vertices[edge_json.source],
+              this.vertices[edge_json.target],
+              edge_json.weight,
+            );
+          }
+          return null;
+        },
+      ), (key, value) => value !== null),
+    );
+
+    return this;
   }
 
   /**

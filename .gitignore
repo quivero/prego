@@ -1,6 +1,8 @@
 node_modules
 coverage/
+.coverage/
 *.json
 *.sig
 *.swp
 *.SHA256SUM
+src/blueprints/

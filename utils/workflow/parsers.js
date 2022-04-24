@@ -1,8 +1,100 @@
 import _ from 'lodash';
 import Graph from '../../data-structures/graph/Graph.js';
-import GraphVertex from '../../data-structures/graph/GraphVertex.js';
-import GraphEdge from '../../data-structures/graph/GraphEdge.js';
-import { getUniques, getAllIndexes } from '../arrays/arrays.js';
+import {
+  createEdgesFromVerticesValues,
+} from '../../data-structures/graph/utils/graph.js';
+import {
+  getAllIndexes, removeArrayDuplicates,
+  getUniques,
+} from '../arrays/arrays.js';
+import {
+  objectReduce,
+  objectKeyFind,
+} from '../objects/objects.js';
+
+const node_types = [
+  'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
+];
+
+export const getBlueprintNextNodes = (blueprint) => {
+  const { nodes } = blueprint.blueprint_spec;
+
+  return objectReduce(
+    nodes,
+    (next_nodes, node_key, node_value) => {
+      if (node_value.type.toLowerCase() === 'flow') {
+        next_nodes[node_value.id] = Object.values(node_value.next);
+      } else if (node_value.type.toLowerCase() === 'finish') {
+      } else {
+        next_nodes[node_value.id] = [node_value.next];
+      }
+
+      return next_nodes;
+    },
+    {},
+  );
+};
+
+export const getBlueprintFromToEdgeTuples = (blueprint) => {
+  const { nodes } = blueprint.blueprint_spec;
+
+  return objectReduce(
+    getBlueprintNextNodes(blueprint),
+    (edge_nodes, curr_node_key, curr_node_value) => {
+      if (curr_node_value.length > 1) {
+        edge_nodes = edge_nodes.concat(
+          curr_node_value.map((next_node_key) => [curr_node_key, next_node_key]),
+        );
+      } else {
+        edge_nodes.push([curr_node_key, curr_node_value[0]]);
+      }
+
+      return edge_nodes;
+    },
+    [],
+  );
+};
+
+/**
+ * @abstract returns node reachability object from start nodes
+ *
+ * @param {Object} blueprint
+ * @param {Object} description
+ */
+export const reachableNodesFromStartNodes = (blueprint) => {
+  const start_finish_nodes = startAndFinishNodes(blueprint);
+  const reachable_nodes = {};
+
+  for (const start_node_key of start_finish_nodes.start_nodes) {
+    workflow_finish_reachability[start_node_key] = [];
+
+    reachable_nodes[start_node_key] = bp_graph.convertVerticesIndexestoKeys(
+      bp_graph.reachableNodes(start_node_key),
+    );
+  }
+
+  return reachable_nodes;
+};
+
+/**
+ * @abstract returns finish node reachability object from start nodes
+ *
+ * @param {Object} blueprint
+ * @param {Object} description
+ */
+export const reachableFinishNodesFromStartNodes = (blueprint) => {
+  const start_finish_nodes = startAndFinishNodes(blueprint);
+  const reachable_nodes = reachableNodesFromStartNodes(blueprint);
+
+  for (const start_node_key of start_finish_nodes.start_nodes) {
+    reachable_nodes[start_node_key] = _.intersection(
+      reachable_nodes[start_node_key],
+      start_finish_nodes.finish_nodes,
+    );
+  }
+
+  return reachable_nodes;
+};
 
 /**
  * @abstract returns an object with a rich description of given blueprint
@@ -12,51 +104,12 @@ import { getUniques, getAllIndexes } from '../arrays/arrays.js';
  */
 export const describeBlueprint = (blueprint) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
-  const node_ids_per_type = {};
-
-  const types = ['start', 'finish', 'systemtask', 'subprocess',
-    'scripttask', 'flow', 'usertask'];
-
-  for (const type of types) {
-    node_ids_per_type[type] = [];
-
-    getBlueprintNodesByType(blueprint, type).forEach(
-      (node) => {
-        node_ids_per_type[type].push(node.id);
-      },
-    );
-  }
-
-  const start_finish_nodes = startAndFinishNodes(blueprint);
-  const reachable_nodes = {};
-  const non_reachable_nodes = {};
-
-  const workflow_finish_reachability = {};
-
-  for (const start_node_key of start_finish_nodes.start_nodes) {
-    workflow_finish_reachability[start_node_key] = [];
-
-    reachable_nodes[start_node_key] = bp_graph.convertVerticesIndexestoKeys(bp_graph.reachableNodes(start_node_key));
-
-    const reachable_finish_nodes = _.intersection(
-      reachable_nodes[start_node_key],
-      start_finish_nodes.finish_nodes,
-    );
-
-    non_reachable_nodes[start_node_key] = _.difference(bp_graph.getAllVerticesKeys(), reachable_nodes[start_node_key]);
-
-    if (reachable_finish_nodes.length !== 0) {
-      workflow_finish_reachability[start_node_key] = reachable_finish_nodes;
-    }
-  }
 
   return {
     name: blueprint.name,
     description: blueprint.description,
-    node_ids_per_type,
-    reachable_from_start: reachable_nodes,
-    non_reachable_from_start: non_reachable_nodes,
-    reachable_finish_from_start: workflow_finish_reachability,
+    node_ids_per_type: getBlueprintAllNodesByType(blueprint),
+    reachable_finish_from_start: reachableFinishNodesFromStart(blueprint),
     graph: bp_graph.describe(),
   };
 };
@@ -74,11 +127,21 @@ export const getBlueprintNodesByType = (blueprint, type) => {
 
   for (const node of nodes) {
     if (node.type.toLowerCase() === type) {
-      nodes_per_type.push(node);
+      nodes_per_type.push(node.id);
     }
   }
 
   return nodes_per_type;
+};
+
+export const getBlueprintAllNodesByType = (blueprint) => {
+  const node_ids_per_type = {};
+
+  for (const type of node_types) {
+    node_ids_per_type[type] = getBlueprintNodesByType(blueprint, type);
+  }
+
+  return node_ids_per_type;
 };
 
 /**
@@ -89,44 +152,83 @@ export const getBlueprintNodesByType = (blueprint, type) => {
  */
 export const parseBlueprintToGraph = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
+
   const graph = new Graph(true);
-  const vertices_dict = {};
 
-  for (let i = 0; i < nodes.length; i += 1) {
-    vertices_dict[nodes[i].id] = new GraphVertex(nodes[i].id);
-  }
-
-  const edges = [];
-
-  // Iterate along array elements
-  for (let i = 0; i < nodes.length; i += 1) {
-    if (nodes[i].next != null) {
-      // Flow case
-      if (typeof (nodes[i].next) === 'object') {
-        const next_values = getUniques(Object.values(nodes[i].next));
-
-        for (let j = 0; j < next_values.length; j += 1) {
-          const edge = new GraphEdge(
-            vertices_dict[nodes[i].id],
-            vertices_dict[next_values[j]],
-          );
-          edges.push(edge);
-        }
-      } else {
-      // Ordinary edge
-
-        const edge = new GraphEdge(
-          vertices_dict[nodes[i].id],
-          vertices_dict[nodes[i].next],
-        );
-        edges.push(edge);
-      }
-    }
-  }
-
-  graph.addEdges(edges);
+  graph.addEdges(
+    removeArrayDuplicates(
+      createEdgesFromVerticesValues(
+        getBlueprintFromToEdgeTuples(blueprint),
+      ),
+    ),
+  );
 
   return graph;
+};
+
+export const getBlueprintUnreachableNodes = (blueprint) => {
+  const graph = parseBlueprintToGraph(blueprint);
+  const start_finish_nodes = startAndFinishNodes(blueprint);
+
+  const non_start_nodes = _.difference(graph.getAllVerticesKeys(), start_finish_nodes.start_nodes);
+
+  const reachable_nodes = _.uniq(
+    _.flatten(
+      Object.values(
+        getBlueprintAllNodesByType(blueprint),
+      ),
+    ),
+  );
+
+  return _.difference(non_start_nodes, reachable_nodes);
+};
+
+export const blueprintValidity = (blueprint) => {
+  const graph = parseBlueprintToGraph(blueprint);
+
+  const sf_nodes = startAndFinishNodes(blueprint);
+  const unreachable_non_start_nodes = getBlueprintUnreachableNodes(blueprint);
+
+  const loose_nodes_keys = graph.convertVerticesIndexestoKeys(graph.looseNodes());
+  const orphan_nodes_keys = graph.convertVerticesIndexestoKeys(graph.orphanNodes());
+
+  const loose_non_finish_nodes = _.difference(orphan_nodes_keys, sf_nodes.start_nodes);
+
+  const orphan_non_start_nodes = _.difference(loose_nodes_keys, sf_nodes.finish_nodes);
+
+  const validity_decorate_obj = {
+    reachability: {
+      is_reachable: unreachable_non_start_nodes.length === 0,
+      unreachable_nodes: unreachable_non_start_nodes,
+    },
+    contains_start_finish: {
+      has_start_finish: (sf_nodes.start_nodes.length !== 0) && (sf_nodes.finish_nodes.length !== 0),
+    },
+    all_loose_is_finish: {
+      is_all_loose_finish: loose_non_finish_nodes.length === 0,
+      loose_non_finish_nodes,
+    },
+    all_orphan_is_start: {
+      is_all_orphan_start: orphan_non_start_nodes.length === 0,
+      orphan_non_start_nodes,
+    },
+  };
+
+  let is_valid_key = true;
+  const is_valid = objectReduce(
+    validity_decorate_obj,
+    (is_valid, validity_clause, validity_args) => {
+      is_valid_key = objectKeyFind(validity_args, (reason, argument) => reason.includes('is_') || reason.includes('has_'));
+
+      return is_valid && validity_args[is_valid_key];
+    },
+    true,
+  );
+
+  return {
+    is_valid,
+    validity_arguments: validity_decorate_obj,
+  };
 };
 
 /**
@@ -176,7 +278,7 @@ export const nodeToLane = (blueprint) => {
  * @param {Object} blueprint
  * @param {Graph}
  */
-export const nodeRouteToLaneRoute = (
+export const nodeToLaneRoute = (
   node_route,
   vertices_indices_to_keys,
   node_id_to_lane,
@@ -208,6 +310,7 @@ export const nodeRouteToLaneRoute = (
  */
 export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
+
   const node_id_to_lane = nodeToLane(blueprint);
 
   const looseNodes = bp_graph.looseNodes();
@@ -220,7 +323,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
   let is_undefined = false;
   if (start_index === undefined) {
-    console.warn(`Warning: Claimed start vertex key ${start_key} is not available within nodes`);
+    console.Warning(`Warning: Claimed start vertex key ${start_key} is not available within nodes`);
     is_undefined = true;
   }
 
@@ -234,13 +337,13 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   }
 
   if (getAllIndexes(orphanNodes, start_index).length === 0) {
-    console.warn(`Vertex id ${start_index} is not a start node! Detected start nodes: ${orphanNodes}`);
+    console.warn(`Warning: Vertex id ${start_index}, key ${start_key}, is not a orphan node! Detected start nodes: ${orphanNodes}`);
 
     return [];
   }
 
   if (getAllIndexes(looseNodes, finish_index).length === 0) {
-    console.warn(`Vertex id ${finish_index} is not a finish node! Detected finish nodes: ${looseNodes}`);
+    console.warn(`Warning: Vertex id ${finish_index}, key ${finish_key}, is not a loose node! Detected finish nodes: ${looseNodes}`);
 
     return [];
   }
@@ -252,15 +355,23 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   };
 
   let lane_route_i = [];
-  const total_len = 0;
+  let node_route_i = [];
 
   for (const i in routes) {
-    lane_route_i = nodeRouteToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
+    lane_route_i = nodeToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
+
+    node_route_i = bp_graph.convertVerticesIndexestoKeys(routes[i]);
 
     route_describe.routes.push(
       {
-        nodes_path: bp_graph.convertVerticesIndexestoKeys(routes[i]),
-        lanes_path: lane_route_i,
+        node_path: {
+          length: node_route_i.length,
+          trace: node_route_i,
+        },
+        lane_path: {
+          length: lane_route_i.length,
+          trace: lane_route_i,
+        },
       },
     );
   }
@@ -306,8 +417,8 @@ export const parseWorkflowXMLToGraph = () => {
 
 /**
  * @abstract returns workflow islands
- * 
+ *
  * @param {Object} blueprint
  * @return {object} islands
  */
- export const workflowIslands = (blueprint) => parseBlueprintToGraph(blueprint).islands()
+export const workflowIslands = (blueprint) => parseBlueprintToGraph(blueprint).islands();

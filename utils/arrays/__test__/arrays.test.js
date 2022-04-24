@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import {
   getAllIndexes,
+  countDict,
   cyclicSort,
   isCyclicEqual,
   getUniques,
@@ -8,10 +10,13 @@ import {
   removeElements,
   hasElement,
   sort,
-  spreadEulerDiagram,
+  mSetsOfnTuples,
+  hyperIndexes,
+  upperTriangularIndexesFn,
+  fullPolytopeIndexesFn,
+  fullPolytopeHyperindexes,
+  upperTriangularHyperindexes,
 } from '../arrays';
-
-import _ from 'lodash';
 
 console.error = jest.fn();
 
@@ -62,6 +67,17 @@ describe('Array', () => {
     expect(_.isEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(true);
   });
 
+  it('should return count dict', () => {
+    expect(countDict([1, 1, 2, 2, 2, 3, 4, 4])).toEqual(
+      {
+        1: 2,
+        2: 3,
+        3: 1,
+        4: 2,
+      },
+    );
+  });
+
   it('should return the unique array elements', () => {
     expect(getUniques('ABCDA')).toEqual(['A', 'B', 'C', 'D']);
   });
@@ -69,6 +85,39 @@ describe('Array', () => {
   it('should throw console.error in case the index exceeds array size', () => {
     cyclicSort('ABCD', 5);
     expect(console.error).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return full polytope hyper-indexes', () => {
+    expect([...hyperIndexes(2, 2, fullPolytopeIndexesFn)]).toEqual([
+      [0, 0], [0, 1], [1, 0], [1, 1],
+    ]);
+
+    expect([...fullPolytopeHyperindexes(2, 2)]).toEqual([
+      [0, 0], [0, 1], [1, 0], [1, 1],
+    ]);
+  });
+
+  it('should return upper triangular polytope hyper-indexes', () => {
+    expect([...hyperIndexes(2, 2, upperTriangularIndexesFn)]).toEqual([
+      [0, 0], [0, 1], [1, 1],
+    ]);
+
+    expect([...upperTriangularHyperindexes(2, 2)]).toEqual([
+      [0, 0], [0, 1], [1, 1],
+    ]);
+  });
+
+  it('should throw error for negative length and dimension', () => {
+    function negativeDimension() {
+      return [...hyperIndexes(42, -1, () => [42, 42])];
+    }
+
+    function negativeLength() {
+      return [...hyperIndexes(42, -1, () => [42, 42])];
+    }
+
+    expect(negativeDimension).toThrow();
+    expect(negativeLength).toThrow();
   });
 });
 
@@ -92,7 +141,7 @@ describe('Extended venn diagram', () => {
     const list_2 = [4, 5, 6, 7];
 
     expect(
-      spreadVenn([list_1, list_2])
+      spreadVenn([list_1, list_2]),
     ).toEqual({
       '0,1': [4, 5],
       0: [1, 2, 3],
@@ -100,7 +149,7 @@ describe('Extended venn diagram', () => {
     });
 
     expect(
-      spreadEuler([list_1, list_2])
+      spreadEuler([list_1, list_2]),
     ).toEqual({
       '0,1': [4, 5],
       0: [1, 2, 3],
@@ -108,22 +157,42 @@ describe('Extended venn diagram', () => {
     });
   });
 
+  it('should return m n-tuples of the array given', () => {
+    expect(
+      [...mSetsOfnTuples([1, 2, 3, 4], 2, 2)],
+    ).toEqual(
+      [
+        [[1, 2], [3, 4]], [[1, 3], [2, 4]],
+        [[1, 4], [2, 3]], [[2, 3], [1, 4]],
+        [[2, 4], [1, 3]], [[3, 4], [1, 2]],
+      ],
+    );
+  });
+
+  it('should throw for blob size greater than array', () => {
+    function blobSizeGreaterThanArray() {
+      return [...mSetsOfnTuples([1, 2, 3], 42, 2)];
+    }
+
+    expect(blobSizeGreaterThanArray).toThrow();
+  });
+
   it('should return a multiple set interactions', () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
-    
+
     const result = {
-      '0': [1, 3],
-      '1': [4, 5],
-      '2': [6, 7],
+      0: [1, 3],
+      1: [4, 5],
+      2: [6, 7],
       '0,1,2': [2],
-    }
+    };
 
     expect(spreadVenn([list_1, list_2, list_3])).toEqual(result);
 
     expect(
-      spreadEuler([list_1, list_2, list_3])
+      spreadEuler([list_1, list_2, list_3]),
     ).toEqual(result);
   });
 
@@ -134,14 +203,14 @@ describe('Extended venn diagram', () => {
     const result = {
       0: [1, 2, 3],
       '0,1': [4, 5, 6],
-    }
-    
+    };
+
     expect(spreadVenn([list_1, list_2])).toEqual(result);
   });
 
   it('should throw error for empty set provided Euler Diagram', () => {
     function emptySetVenn() {
-      return spreadEuler([])
+      return spreadEuler([]);
     }
 
     expect(emptySetVenn).toThrow();

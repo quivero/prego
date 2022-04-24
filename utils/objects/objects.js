@@ -5,7 +5,7 @@ import _ from 'lodash';
  *
  * @param {Array} keys
  * @param {Object} initial_value
- * @param {Object} init_object
+ * @return {Object}
  */
 export const objectInit = (keys, init_value) => {
   const a = [];
@@ -23,13 +23,20 @@ export const objectInit = (keys, init_value) => {
  *
  * @param {Object} object
  * @param {function} mapFn
- * @param {Object} mapped_object
+ * @return {Object}
  */
 export const objectMap = (object, mapFn) => Object.keys(object).reduce((result, key) => {
   result[key] = mapFn(key, object[key]);
   return result;
 }, {});
 
+/**
+ * @abstract returns a reduced object
+ *
+ * @param {Object} object
+ * @param {function} reduceFn
+ * @return {Object}
+ */
 export const objectReduce = (object, reduceFn, init_val) => Object.entries(_.cloneDeep(object)).reduce((
   result,
   [key, value],
@@ -40,7 +47,7 @@ export const objectReduce = (object, reduceFn, init_val) => Object.entries(_.clo
  *
  * @param {Object} object
  * @param {function} filterFn
- * @param {Object} filtered_object
+ * @return {Object}
  */
 export const objectFilter = (object, filterFn) => {
   const object_copy = _.cloneDeep(object);
@@ -61,6 +68,91 @@ export const objectFilter = (object, filterFn) => {
  *
  * @param {Object} object
  * @param {function} filterFn
- * @param {Object} filtered_object
+ * @return {Object} filtered_object
  */
 export const objectKeyFind = (object, findFn) => Object.keys(objectFilter(object, findFn));
+
+/**
+ * @abstract iterates along an object
+ *
+ * @param {Object} object
+ * @param {function} forEachFn
+ */
+export const objectForEach = (object, forEachFn) => {
+  objectMap(object, forEachFn);
+};
+
+/**
+ * @abstract returns the difference between two json objects
+ *
+ * @param {Object} l_object
+ * @param {Object} r_object
+ * @param {function} equalFn
+ * @return {Object}
+ */
+export const objectDifference = (l_object, r_object, equalFn) => objectReduce(
+  r_object,
+  (curr_diff, r_key, r_value) => objectFilter(
+    curr_diff,
+    (l_key, l_value) => !equalFn(
+      r_key,
+      r_value,
+      l_key,
+      l_value,
+    ),
+  ),
+  l_object,
+);
+
+/**
+ * @abstract returns the intersection between two json objects
+ *
+ * @param {Object} l_object
+ * @param {Object} r_object
+ * @param {function} equalFn
+ * @return {Object}
+ */
+export const objectIntersection = (l_object, r_object, equalFn, keyFn, valueFn) => objectReduce(
+  r_object,
+  (curr_intersec, r_key, r_value) => {
+    objectForEach(
+      l_object,
+      (l_key, l_value) => {
+        if (equalFn(
+          r_key,
+          r_value,
+          l_key,
+          l_value,
+        )) {
+          curr_intersec[
+            keyFn(
+              r_key,
+              r_value,
+              l_key,
+              l_value,
+            )
+          ] = valueFn(
+            r_key,
+            r_value,
+            l_key,
+            l_value,
+          );
+        }
+      },
+      {},
+    );
+
+    return curr_intersec;
+  },
+  {},
+);
+
+/**
+ * @abstract returns true for two equal json objects
+ *
+ * @param {Object} l_object
+ * @param {Object} r_object
+ * @param {function} equalFn
+ * @return {Object}
+ */
+export const objectEqual = (l_object, r_object, equalFn) => equalFn(l_object, r_object);
