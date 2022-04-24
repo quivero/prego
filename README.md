@@ -63,13 +63,6 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 
     - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
 
-4. data-structures/utils/graph/graph.js -> {petersonCycles}
-
-### As a Service
-
-1. Add router to handle multiple use cases;
-2. Add a docker-compose.yaml to ```up``` application
-
 ## Prelude
 
 In case you run it as a service, nodemon may disappear from terminal. You may kill the process by run of command ```fuser -k 8080/tcp``` 
