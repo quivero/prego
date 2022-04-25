@@ -1,12 +1,17 @@
 import _ from 'lodash';
+import fs from 'fs';
+
 import Graph from '../../data-structures/graph/Graph.js';
+
 import {
   createEdgesFromVerticesValues,
 } from '../../data-structures/graph/utils/graph.js';
+
 import {
   getAllIndexes, removeArrayDuplicates,
   getUniques,
 } from '../arrays/arrays.js';
+
 import {
   objectReduce,
   objectKeyFind,
@@ -15,6 +20,37 @@ import {
 const node_types = [
   'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
 ];
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => {
+  let processed_blueprint = {};
+  const fname = bps_root_path + blueprint_name;
+  const tokens = fname.split('.');
+
+  if (tokens[tokens.length - 1] === 'json') {
+    const blueprint = require(fname);
+    processed_blueprint = blueprintFn(blueprint);
+  }
+  
+  return processed_blueprint;
+}
+
+export const processBlueprints = (bps_root_path, blueprintFn) => {
+  let processed_blueprints = {};
+  const blueprints_fnames = fs.readdirSync(bps_root_path);
+
+  for (let i = 0; i < blueprints_fnames.length; i += 1) {
+    const blueprint_i_name = blueprints_fnames[i];
+
+    processed_blueprints[blueprint_i_name] = processBlueprint(
+      bps_root_path, blueprint_i_name, blueprintFn
+    );
+  }
+
+  return processed_blueprints;
+}
 
 export const getBlueprintNextNodes = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
