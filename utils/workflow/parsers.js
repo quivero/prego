@@ -234,7 +234,7 @@ export const blueprintValidity = (blueprint) => {
 
   const validity_decorate_obj = {
     reachability: {
-      is_reachable: unreachable_non_start_nodes.length === 0,
+      is_reachable_from_start: unreachable_non_start_nodes.length === 0,
       unreachable_nodes: unreachable_non_start_nodes,
     },
     contains_start_finish: {
@@ -255,7 +255,7 @@ export const blueprintValidity = (blueprint) => {
     validity_decorate_obj,
     (is_valid, validity_clause, validity_args) => {
       is_valid_key = objectKeyFind(validity_args, (reason, argument) => reason.includes('is_') || reason.includes('has_'));
-
+      
       return is_valid && validity_args[is_valid_key];
     },
     true,

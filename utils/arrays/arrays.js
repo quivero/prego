@@ -401,7 +401,7 @@ export function* venn(sets) {
   let curr_keys_len = -1;
 
   let keys = keys_fun(sets);
-
+  
   // Traverse the combination lattice
   for (const chunk_card of _.range(1, keys.length + 1)) {
     for (const comb_keys of new _.combinations(keys, chunk_card)) {
