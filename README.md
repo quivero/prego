@@ -53,7 +53,7 @@ You must follow the instructions below
 
 I ask the reader apologies for the author's envy regarding similar python library [networkx](https://networkx.org/documentation/stable/reference/classes/index.html). They provide multiple concepts for graph formalization and defition whose author's knowledge lacks. Hence, it seems reasonable to offer similar features in this directions.
 
-Likewise, the library [Dracula](https://www.graphdracula.net/) offers a graphical manner to visualize graphs. It may be a future feature.
+Likewise, the library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It may be a future feature.
 
 ### As a Package
 
@@ -62,6 +62,10 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 1. data-structures/graph/Graph.js:
 
     - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
+
+2. Miscelaneous:
+
+    - [ ] Renderized graph diagrams.
 
 ## Prelude
 
