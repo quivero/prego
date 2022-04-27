@@ -1,4 +1,4 @@
-# A structure, many possibilities
+# Some structures, many possibilities
 
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 [![npm version](https://img.shields.io/npm/v/dot-quiver)](https://www.npmjs.com/package/dot-quiver)
