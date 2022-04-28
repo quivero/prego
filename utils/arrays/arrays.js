@@ -118,6 +118,41 @@ export const sort = (arr, sort_type = 0) => {
 };
 
 /**
+ * @abstract returns dictionary with found sequential blobs
+ *
+ * @param {Array} arr
+ * @return {object}
+ */
+ export const sequentialArrayBlobs = (arr) => {
+  const blobs = {};
+  let counter = 0;
+  let head_index = 0;
+
+  // Sort number array in ascending order
+  arr = sort(arr, 1);
+  
+  if(arr.length === 1) {
+    return {'0': arr};
+  } else {
+    for (let index of _.range(arr.length)) {
+      if(index > 0) {
+        if(arr[index] - arr[index-1] > 1) {
+          blobs[counter] = arr.slice(head_index, index);
+          head_index = index;
+          counter += 1;
+        }
+
+        if(index === arr.length - 1) {
+          blobs[counter] = arr.slice(head_index, index + 1);
+        }
+      }
+    }
+  }
+  
+  return blobs;
+};
+
+/**
  * @abstract returns true if array has provided element
  *
  * @param {Array} array
