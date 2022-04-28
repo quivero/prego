@@ -8,7 +8,7 @@
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
-Its objective is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
+Its objective is to provide some data structures for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
 
 ## Table of contents
 
