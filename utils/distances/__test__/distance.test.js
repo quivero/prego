@@ -30,7 +30,7 @@ describe('distance', () => {
 
   it('should return n-norm of a number array', () => {
     const coords = [1, 1, 1, 1, 1];
-
+    
     expect(nNorm(coords, 2)).toBeCloseTo(Math.sqrt(5));
   });
 
@@ -39,7 +39,7 @@ describe('distance', () => {
       const coord_1 = [1, -1];
       const coord_2 = [2, 2];
 
-      return nNormDistanceFn(coord_1, coord_2, -1);
+      return nNormDistance(coord_1, coord_2, -1);
     }
 
     expect(negativeExponent).toThrow();

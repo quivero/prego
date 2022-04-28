@@ -4,6 +4,10 @@ import {
   hav,
 } from '../numbers/numbers.js';
 
+import {
+  throwError
+} from '../sys/sys.js'
+
 /**
  * @abstract n-norm of a number
  *
@@ -26,7 +30,7 @@ export const nNorm = (arr, n) => arr.reduce(
  */
 export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   if (n < 1) {
-    throw Error('The exponent n must be a number greater or equal to 1!');
+    throwError('The exponent n must be a number greater or equal to 1!');
   }
 
   const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
