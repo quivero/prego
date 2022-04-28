@@ -16,3 +16,22 @@ export const generateToken = (length) => {
     
     return result;
  }
+
+/**
+ * @abstract convert string to hash code
+ *
+ * @param {String} str
+ *
+ * @return String
+ */
+export const codify = (str) => new Buffer(str).toString('base64');
+
+/**
+ * @abstract convert string to hash code
+ *
+ * @param {String} str
+ *
+ * @return String
+ */
+ export const decodify = (hash) =>  new Buffer(hash, 'base64').toString('ascii');;
+
