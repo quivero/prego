@@ -1,4 +1,4 @@
-# A structure, many possibilities
+# Some structures, many possibilities
 
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 [![npm version](https://img.shields.io/npm/v/dot-quiver)](https://www.npmjs.com/package/dot-quiver)
@@ -8,7 +8,7 @@
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
-Its objective is to provide a graph structure for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
+Its objective is to provide some data structures for application-suitable scenarios. It was bootstraped from this project: https://github.com/trekhleb/javascript-algorithms .
 
 ## Table of contents
 
@@ -29,7 +29,7 @@ The package allows to be used as a library. [Here is an example](https://github.
 
 1) Go to your project path (for example, NodeJS or React);
 2) Install the library with the command ```npm install --save dot-quiver```;
-3) Import in your project folder from project root folder, for example, '```import Graph from 'dot-quiver/data-structures/graph/Graph.js''```
+3) Import in your project folder from project root folder, for example, ```import Graph from 'dot-quiver/data-structures/graph/Graph.js'```
 
 ### As a service
 
@@ -53,7 +53,7 @@ You must follow the instructions below
 
 I ask the reader apologies for the author's envy regarding similar python library [networkx](https://networkx.org/documentation/stable/reference/classes/index.html). They provide multiple concepts for graph formalization and defition whose author's knowledge lacks. Hence, it seems reasonable to offer similar features in this directions.
 
-Likewise, the library [Dracula](https://www.graphdracula.net/) offers a graphical manner to visualize graphs. It may be a future feature.
+Likewise, the library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It may be a future feature.
 
 ### As a Package
 
@@ -62,6 +62,10 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 1. data-structures/graph/Graph.js:
 
     - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
+
+2. Miscelaneous:
+
+    - [ ] Renderized graph diagrams.
 
 ## Prelude
 

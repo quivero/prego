@@ -1,17 +1,19 @@
 import 'lodash.combinations';
-import 'lodash.multipermutations';
+import 'lodash.multicombinations';
 
 import _ from 'lodash';
 
 import {
   mSetsOfnTuples,
-  countDict,
 } from '../../utils/arrays/arrays.js';
 
 import {
   throwError,
 } from '../../utils/sys/sys.js';
 
+import {
+  primeFactors,
+} from '../../utils/numbers/numbers.js';
 
 /**
  * @abstract Iterative improvement based on 3 exchange.

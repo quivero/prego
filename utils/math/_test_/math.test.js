@@ -2,6 +2,7 @@ import {
   decimalPart,
   xor,
   sphericalToCartesian,
+  abRandom,
 } from '../math.js';
 
 import {
@@ -11,6 +12,19 @@ import {
 describe('combinatorics', () => {
   it('should return number decimal part', () => {
     expect(decimalPart(4.2)).toBeCloseTo(0.2);
+  });
+
+  it('should throw for unordered entries', () => {
+    function unorderedInputs() {
+      return abRandom(2, 1)
+    }
+    
+    expect(unorderedInputs).toThrowError();
+  });
+
+  it('should return a value between 1 and 2', () => {    
+    expect(Math.floor(abRandom(1, 2))).toBe(1);
+    expect(Math.ceil(abRandom(1, 2))).toBe(2);
   });
 
   it('should return 0 to integer decimal part', () => {

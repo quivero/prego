@@ -1,30 +1,18 @@
 // [START app]
 import express from 'express';
-import { createRequire } from 'module';
 import fs from 'fs';
 
 import _ from 'lodash';
-
-import date from 'date-and-time';
+import 'lodash.multicombinations';
 
 import {
-  parseBlueprintToGraph,
-  startAndFinishNodes,
-  getBlueprintFromToEdgeTuples,
-  getBlueprintNextNodes,
+  processBlueprint,
+  processBlueprints,
   blueprintValidity,
-  fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
-import {
-  spreadEuler,
-} from '../utils/arrays/arrays.js';
+import MeshVertex from '../data-structures/mesh/MeshVertex.js';
 
-import {
-  partitions,
-} from '../utils/combinatorics/partition.js';
-
-const require = createRequire(import.meta.url);
 const app = express();
 
 // [START enable_parser]
@@ -43,37 +31,14 @@ app.get('/', (req, res) => {
   // Driver program - Create a sample graph
 
   const bps_root = `${process.cwd()}/src/samples/blueprints/approva/`;
-  const blueprints_fnames = fs.readdirSync(bps_root);
-
-  const READ_ALL_BPS = true;
-  const sf_nodes = {};
-  const loose_nodes = [];
-  const orphan_nodes = [];
+  const READ_ALL_BPS = false;
 
   if (READ_ALL_BPS) {
-    const magnify_blueprint = {};
-
-    for (let i = 0; i < blueprints_fnames.length; i += 1) {
-      const blueprint_i_name = blueprints_fnames[i];
-      const fname = bps_root + blueprint_i_name;
-      const tokens = fname.split('.');
-
-      if (tokens[tokens.length - 1] === 'json') {
-        const blueprint_i = require(fname);
-        const graph = parseBlueprintToGraph(blueprint_i);
-
-        magnify_blueprint[blueprint_i_name] = blueprintValidity(blueprint_i);
-      }
-    }
-
-    res.send(magnify_blueprint);
+    res.send(processBlueprints(bps_root, blueprintValidity));
   } else {
     const blueprint_fname = 'botMessage.json';
 
-    const fname = bps_root + blueprint_fname;
-    const blueprint = require(fname);
-
-    res.send(blueprintValidity(blueprint));
+    res.send(processBlueprint(bps_root, blueprint_fname, blueprintValidity));
   }
 });
 // [END app]

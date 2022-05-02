@@ -16,6 +16,7 @@ import {
   fullPolytopeIndexesFn,
   fullPolytopeHyperindexes,
   upperTriangularHyperindexes,
+  sequentialArrayBlobs,
 } from '../arrays';
 
 console.error = jest.fn();
@@ -65,6 +66,37 @@ describe('Array', () => {
 
   it('should return remove elements from array', () => {
     expect(_.isEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(true);
+  });
+
+  it('should return sequential blobs of numbers in number array', () => {
+    expect(sequentialArrayBlobs([1])).toEqual(
+      {
+        '0': [1],
+      }
+    );
+    
+    expect(sequentialArrayBlobs([1, 2, 4, 5])).toEqual(
+      {
+        '0': [1, 2],
+        '1': [4, 5],
+      }
+    );
+    
+    expect(sequentialArrayBlobs([1, 2, 4, 5, 7, 8])).toEqual(
+      {
+        '0': [1, 2],
+        '1': [4, 5],
+        '2': [7, 8],
+      }
+    );
+
+    expect(sequentialArrayBlobs([1, 2, 4, 5, 5, 7, 8])).toEqual(
+      {
+        '0': [1, 2],
+        '1': [4, 5, 5],
+        '2': [7, 8],
+      }
+    );
   });
 
   it('should return count dict', () => {
