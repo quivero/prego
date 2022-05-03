@@ -2,6 +2,10 @@ import 'lodash.combinations';
 import _ from 'lodash';
 
 import {
+  throwError,
+} from '../sys/sys.js';
+
+import {
   objectReduce,
   objectMap,
 } from '../objects/objects.js';
@@ -111,7 +115,7 @@ export const sort = (arr, sort_type = 0) => {
   } else if (sort_type == 1) {
     // Do nothing
   } else {
-    throw Error('Sorting types are 0 and 1 for descending and ascending order.');
+    throwError('Sorting types are 0 and 1 for descending and ascending order.');
   }
 
   return arr;
@@ -226,7 +230,7 @@ export const removeArrayDuplicates = (list) => {
 
 export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
-    throw Error('Size of array must be greater or equal to the product of n by m');
+    throwError('Size of array must be greater or equal to the product of n by m');
   }
 
   let curr_comb = [];
@@ -298,7 +302,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
  */
 export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
-    throw Error('Dimension and length must be positive natural numbers!');
+    throwError('Dimension and length must be positive natural numbers!');
   }
 
   for (const indexes of formationFn(length, dim, dim)) {
@@ -335,7 +339,16 @@ export function* upperTriangularHyperindexes(length, dim) {
  */
 export function* euler(sets) {
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
-  if (Object.values(sets).length === 0) throw Error('There must at least ONE set!');
+  if (Object.values(sets).length === 0) throwError('There must at least ONE set!');
+
+  if (!objectReduce(
+    sets,
+    (result, elements_key, elements) => {
+      return result & removeArrayDuplicates(elements).length === elements.length
+    }, true
+  )) {
+    throwError('Each array must NOT have duplicates!');
+  }
 
   sets = objectMap(sets, (set_key, set) => sort(set, 1));
 

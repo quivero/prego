@@ -189,6 +189,14 @@ describe('Extended venn diagram', () => {
     });
   });
 
+  it('should throw error for empty set provided Euler Diagram', () => {
+    function repeatedElementsEuler() {
+      return spreadEuler([[1, 1], [1, 2]]);
+    }
+
+    expect(repeatedElementsEuler).toThrow();
+  });
+
   it('should return m n-tuples of the array given', () => {
     expect(
       [...mSetsOfnTuples([1, 2, 3, 4], 2, 2)],
