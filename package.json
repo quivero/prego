@@ -20,10 +20,8 @@
   },
   "homepage": "https://github.com/brunolnetto/dot-quiver#readme",
   "dependencies": {
-    "@babel/preset-env": "^7.16.11",
     "axios": "^0.27.0",
     "date-and-time": "^2.3.1",
-    "eslint-nibble": "^8.0.1",
     "express": "^4.17.3",
     "fs": "^0.0.2",
     "lodash": "^4.17.21",
@@ -31,7 +29,6 @@
     "lodash.multipermutations": "^1.0.0",
     "mermaid": "^9.0.1",
     "nodemon": "^2.0.15",
-    "np": "^7.6.1",
     "strongly-connected-components": "^1.0.1",
     "typescript": "^4.6.3",
     "winston": "^3.7.2"
@@ -48,7 +45,10 @@
     "update": "npm i -g npm-check-updates && ncu -u && npm update && git add . && git commit -m 'config/ package.json' && git push"
   },
   "devDependencies": {
+    "np": "^7.6.1",
+    "@babel/preset-env": "^7.16.11",
     "@babel/eslint-parser": "7.17.0",
+    "eslint-nibble": "^8.0.1",
     "@babel/plugin-transform-runtime": "7.17.10",
     "@types/jest": "27.5.0",
     "@typescript-eslint/eslint-plugin": "5.22.0",
