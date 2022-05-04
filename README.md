@@ -37,7 +37,7 @@ You may utilize some cloud service to host the app, like AWS, Azure or GCloud, b
 
 You must follow the instructions below
 
-1) Clone the repository typing on terminal `git clone git@github.com:brunolnetto/dot-quiver.git`;
+1) Clone the repository typing on terminal `git clone git@github.com:dot-quiver/dot-quiver-api.git`;
 2) Run the commands:
     
     2.1. `npm install`: install local dependencies;
