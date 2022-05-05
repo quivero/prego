@@ -1,6 +1,5 @@
 // [START app]
 import express from 'express';
-import fs from 'fs';
 
 import _ from 'lodash';
 import 'lodash.multicombinations';
@@ -11,7 +10,13 @@ import {
   blueprintValidity,
 } from '../utils/workflow/parsers.js';
 
-import MeshVertex from '../data-structures/mesh/MeshVertex.js';
+import {
+  generateRandomMeshVertices,
+} from '../data-structures/mesh/utils/mesh.js';
+
+import {
+  nNormDistance,
+} from '../utils/distances/distance.js';
 
 const app = express();
 
@@ -30,6 +35,7 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
 
+  /*
   const bps_root = `${process.cwd()}/src/samples/blueprints/approva/`;
   const READ_ALL_BPS = false;
 
@@ -40,5 +46,15 @@ app.get('/', (req, res) => {
 
     res.send(processBlueprint(bps_root, blueprint_fname, blueprintValidity));
   }
+  */
+  
+  const vertices = generateRandomMeshVertices(10, 2, [0, 10]);
+  const distance_fun = (coordinate_1, coordinate_2) => {
+    return nNormDistance(coordinate_1, coordinate_2, 2)
+  };
+  
+  console.log(distance_fun([0, 0], [1, 1]));
+  
+  res.send(':)');
 });
 // [END app]
