@@ -45,10 +45,10 @@
     "update": "npm i -g npm-check-updates && ncu -u && npm update && git add . && git commit -m 'config/ package.json' && git push"
   },
   "devDependencies": {
-    "np": "^7.6.1",
-    "@babel/preset-env": "^7.16.11",
+    "np": "7.6.1",
+    "@babel/preset-env": "7.17.10",
     "@babel/eslint-parser": "7.17.0",
-    "eslint-nibble": "^8.0.1",
+    "eslint-nibble": "8.0.2",
     "@babel/plugin-transform-runtime": "7.17.10",
     "@types/jest": "27.5.0",
     "@typescript-eslint/eslint-plugin": "5.22.0",
