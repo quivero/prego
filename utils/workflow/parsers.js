@@ -24,6 +24,16 @@ const node_types = [
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
+/**
+ * @abstract returns the output of processed blueprint blueprint_name 
+ * for given path bps_root_path to blueprints and blueprint process 
+ * function blueprintFn
+ *
+ * @param {Object} bps_root_path
+ * @param {Object} blueprint_name
+ * @param {Object} blueprintFn
+ * @return processed_blueprint
+ */
 export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => {
   let processed_blueprint = {};
   const fname = bps_root_path + blueprint_name;
@@ -52,6 +62,12 @@ export const processBlueprints = (bps_root_path, blueprintFn) => {
   return processed_blueprints;
 }
 
+/**
+ * @abstract returns object with current and next nodes given a blueprint
+ *
+ * @param {Object} blueprint
+ * @return next_ndoes
+ */
 export const getBlueprintNextNodes = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
 
@@ -71,6 +87,12 @@ export const getBlueprintNextNodes = (blueprint) => {
   );
 };
 
+/**
+ * @abstract returns object with edges current-to-next nodes given a blueprint
+ *
+ * @param {Object} blueprint
+ * @return edges
+ */
 export const getBlueprintFromToEdgeTuples = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
 
