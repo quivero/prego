@@ -1,6 +1,24 @@
 import fs from 'fs';
 
 /**
+ * @abstract saves string to file
+ *
+ * @param {Array} path
+ * @param {Object} json_object
+ * @param {String} name
+ */
+ export const saveStringtoFile = (path, name, string) => {
+  // write JSON string to a file
+  fs.writeFile(`${path}/${name}.txt`, string, (err) => {
+    if (err) {
+      throw err;
+    }
+
+    console.log('String is saved.');
+  });
+};
+
+/**
  * @abstract saves json to file
  *
  * @param {Array} path
