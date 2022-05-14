@@ -25,6 +25,28 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 /**
+ * @abstract 
+ *
+ * @param {Object} bps_root_path
+ * @param {Object} blueprint_name
+ * @param {Object} blueprintFn
+ * @return processed_blueprint
+ */
+ export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
+
+  const fname = bps_root_path + blueprint_name;
+  const tokens = fname.split('.');
+
+  if (tokens[tokens.length - 1] === 'json') {
+    const blueprint = require(fname);
+    
+    return blueprint;
+  } else {
+    return {}
+  }
+}
+
+/**
  * @abstract returns the output of processed blueprint blueprint_name 
  * for given path bps_root_path to blueprints and blueprint process 
  * function blueprintFn
@@ -35,9 +57,7 @@ const require = createRequire(import.meta.url);
  * @return processed_blueprint
  */
 export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => {
-  let processed_blueprint = {};
-  const fname = bps_root_path + blueprint_name;
-  const tokens = fname.split('.');
+  const blueprint = readBlueprintFromFile(bps_root_path, blueprint_name);
 
   if (tokens[tokens.length - 1] === 'json') {
     const blueprint = require(fname);
