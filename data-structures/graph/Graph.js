@@ -227,12 +227,40 @@ export default class Graph {
       (edge) => edge.getKey(),
     );
   }
+  
+  /**
+   * @param {Array[integer]} chain
+   * @returns GraphVertex
+   */
+  getEdgesFromChain(chain) {
+    let vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
+    let edges = [];
+    let from_edge_key = '';
+    let to_edge_key = '';
+    
+    if(!this.isChain(chain)) {
+      throw Error('Provided chain is not a valid for this graph!');
+    } else {
+      return chain.map(
+        (vertex, index) => {
+          from_edge_key = vertices_indexes_to_keys[chain[index]];
+          to_edge_key = vertices_indexes_to_keys[chain[index+1]];
+          
+          if(index !== chain.length-1) {
+            edges.push(this.edges[`${from_edge_key}_${to_edge_key}`])
+          } 
+
+          return edges;
+        }
+      )
+    }
+  }
 
   /**
    * @param {Array[integer]} vertexIndexes
    * @returns GraphVertex
    */
-  getEdgesByVertexIndexes(verticesIndexes, exclusive = false) {
+   getEdgesByVertexIndexes(verticesIndexes, exclusive = false) {
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
 
     return this.getEdgesByVertexKeys(

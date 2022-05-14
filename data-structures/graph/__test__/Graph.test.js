@@ -107,11 +107,41 @@ describe('Graph', () => {
 
       graph.addEdges([AB, BC]);
 
-      const mock_graph = { isDIrected: false };
+      const mock_graph = { isDirected: false };
       graph.deserialize(mock_graph);
     }
 
     expect(deserializationWithDifferentDirection).toThrowError();
+  });
+
+  it('should return edges from index chain', () => {
+    const graph = new Graph(true);
+    const [AB, BC] = createEdgesFromVerticesValues(
+      [
+        ['A', 'B'], ['B', 'C'],
+      ],
+    );
+    
+    graph.addEdges([AB, BC]);
+      
+    expect(graph.getEdgesFromChain([0, 1, 2]).length).toBe(3);
+  });
+
+  it('should return edges from index chain', () => {
+    function invalidChain() {
+      const graph = new Graph(true);
+      const [AB, BC] = createEdgesFromVerticesValues(
+        [
+          ['A', 'B'], ['B', 'C'],
+        ],
+      );
+      
+      graph.addEdges([AB, BC]);
+        
+      return graph.getEdgesFromChain([0, 2])
+    }
+      
+    expect(invalidChain).toThrowError();
   });
 
   it('should get vertices by indexes', () => {
