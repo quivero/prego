@@ -1,0 +1,129 @@
+{
+    "themes": {
+        "nodes": {
+            "style": {
+                "default": {},
+                "start": {
+                    "style": {
+                        "fill": "#3B1",
+                        "stroke": "#391",
+                        "stroke-width": "8px"
+                    },
+                    "border": {
+                        "left": "([",
+                        "right": "])"
+                    } 
+                },
+                "finish": {
+                    "style": {
+                        "fill": "#3B1",
+                        "stroke": "#391",
+                        "stroke-width": "8px"
+                    },
+                    "border": {
+                        "left": "((",
+                        "right": "))"
+                    } 
+                },
+                "active": {
+                    "style": {
+                        "fill": "#0CF",
+                        "stroke": "#09F",
+                        "stroke-width": "6px"
+                    },
+                    "border": {
+                        "left": "([",
+                        "right": "])"
+                    } 
+                },
+                "unactive": {
+                    "style": {
+                        "fill": "#e0e0e0",
+                        "stroke": "#bdbdbd",
+                        "stroke-width": "3px"
+                    },
+                    "border": {
+                        "left": "([",
+                        "right": "])"
+                    } 
+                },
+                "bugged": {
+                    "style": {
+                        "fill": "#F88",
+                        "stroke": "#F22",
+                        "stroke-width": "3px"
+                    },
+                    "border": {
+                        "left": "([",
+                        "right": "])"
+                    } 
+                }
+            }, 
+            "border": {
+                "default": {
+                    "left": "[",
+                    "right": "]"
+                },
+                "start": {
+                    "left": "([",
+                    "right": "])"
+                },
+                "finish": {
+                    "left": "((",
+                    "right": "))"
+                },
+                "flow": {
+                    "left": "{",
+                    "right": "}"
+                }
+            }
+        },
+        "edges": {
+            "directed": {
+                "default": {
+                    "link": {
+                        "head": "-->",
+                        "tail": "--",
+                        "body": "-->"    
+                    }, 
+                    "style": {}
+                },
+                "path": {
+                    "link": {
+                        "head": "==>",
+                        "tail": "==",
+                        "body": "==>"
+                    }, 
+                    "style": {
+                        "stroke": "gold", 
+                        "stroke-width": "4px"
+                    }
+                }
+            },
+            "undirected": {
+                "default": {
+                    "link": {
+                        "head": "---",
+                        "tail": "--",
+                        "body": "---"    
+                    }, 
+                    "style": {}
+                },
+                "path": {
+                    "link": {
+                        "head": "===",
+                        "tail": "==",
+                        "body": "==="
+                    }, 
+                    "style": {
+                        "stroke": "gold", 
+                        "stroke-width": "4px"
+                    }
+                }
+            }
+            
+        }
+        
+    }
+}
+
