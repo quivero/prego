@@ -8,8 +8,7 @@ import {
 } from '../../data-structures/graph/utils/graph.js';
 
 import {
-  getAllIndexes, removeArrayDuplicates,
-  getUniques,
+  getAllIndexes, removeArrayDuplicates, getUniques,
 } from '../arrays/arrays.js';
 
 import {
@@ -58,15 +57,22 @@ const require = createRequire(import.meta.url);
  */
 export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => {
   const blueprint = readBlueprintFromFile(bps_root_path, blueprint_name);
-
-  if (tokens[tokens.length - 1] === 'json') {
-    const blueprint = require(fname);
-    processed_blueprint = blueprintFn(blueprint);
-  }
   
-  return processed_blueprint;
+  if (Object.keys(blueprint).length !== 0) {
+    return blueprintFn(blueprint);
+  } else {
+    return {};
+  }
 }
 
+/**
+ * @abstract return the result of function blueprintFn respective to path bps_root_path 
+ *
+ * @param {Object} bps_root_path
+ * @param {Object} blueprint_name
+ * @param {Object} blueprintFn
+ * @return processed_blueprint
+ */
 export const processBlueprints = (bps_root_path, blueprintFn) => {
   let processed_blueprints = {};
   const blueprints_fnames = fs.readdirSync(bps_root_path);
