@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 
+import { createRequire } from 'module';
 import Graph from '../../data-structures/graph/Graph.js';
 
 import {
@@ -8,46 +9,46 @@ import {
 } from '../../data-structures/graph/utils/graph.js';
 
 import {
-  getAllIndexes, removeArrayDuplicates, getUniques,
+  getAllIndexes,
+  removeArrayDuplicates,
+  hasElement,
 } from '../arrays/arrays.js';
 
 import {
   objectReduce,
+  objectFilter,
+  objectFlatten,
   objectKeyFind,
 } from '../objects/objects.js';
 
 const node_types = [
   'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
 ];
-
-import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 /**
- * @abstract 
+ * @abstract
  *
  * @param {Object} bps_root_path
  * @param {Object} blueprint_name
  * @param {Object} blueprintFn
  * @return processed_blueprint
  */
- export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
-
+export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
   const fname = bps_root_path + blueprint_name;
   const tokens = fname.split('.');
 
   if (tokens[tokens.length - 1] === 'json') {
     const blueprint = require(fname);
-    
+
     return blueprint;
-  } else {
-    return {}
   }
-}
+  return {};
+};
 
 /**
- * @abstract returns the output of processed blueprint blueprint_name 
- * for given path bps_root_path to blueprints and blueprint process 
+ * @abstract returns the output of processed blueprint blueprint_name
+ * for given path bps_root_path to blueprints and blueprint process
  * function blueprintFn
  *
  * @param {Object} bps_root_path
@@ -57,16 +58,15 @@ const require = createRequire(import.meta.url);
  */
 export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => {
   const blueprint = readBlueprintFromFile(bps_root_path, blueprint_name);
-  
+
   if (Object.keys(blueprint).length !== 0) {
     return blueprintFn(blueprint);
-  } else {
-    return {};
   }
-}
+  return {};
+};
 
 /**
- * @abstract return the result of function blueprintFn respective to path bps_root_path 
+ * @abstract return the result of function blueprintFn respective to path bps_root_path
  *
  * @param {Object} bps_root_path
  * @param {Object} blueprint_name
@@ -74,19 +74,17 @@ export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => 
  * @return processed_blueprint
  */
 export const processBlueprints = (bps_root_path, blueprintFn) => {
-  let processed_blueprints = {};
+  const processed_blueprints = {};
   const blueprints_fnames = fs.readdirSync(bps_root_path);
 
   for (let i = 0; i < blueprints_fnames.length; i += 1) {
     const blueprint_i_name = blueprints_fnames[i];
 
-    processed_blueprints[blueprint_i_name] = processBlueprint(
-      bps_root_path, blueprint_i_name, blueprintFn
-    );
+    processed_blueprints[blueprint_i_name] = processBlueprint(bps_root_path, blueprint_i_name, blueprintFn);
   }
 
   return processed_blueprints;
-}
+};
 
 /**
  * @abstract returns object with current and next nodes given a blueprint
@@ -228,6 +226,21 @@ export const getBlueprintAllNodesByType = (blueprint) => {
   return node_ids_per_type;
 };
 
+export const getNodeToTypeMap = (blueprint) => {
+  const node_type_map = {};
+  const nodes = [];
+
+  for (const type of node_types) {
+    getBlueprintNodesByType(blueprint, type).forEach(
+      (node_key) => {
+        node_type_map[node_key] = type;
+      },
+    );
+  }
+
+  return node_type_map;
+};
+
 /**
  * @abstract returns a Graph instance of the blueprint spectrum
  *
@@ -267,6 +280,20 @@ export const getBlueprintUnreachableNodes = (blueprint) => {
   return _.difference(non_start_nodes, reachable_nodes);
 };
 
+export const getBlueprintInvalidNodes = (blueprint) => _.flatten(
+  Object.values(
+    objectFilter(objectFlatten(
+      blueprintValidity(blueprint),
+    ), (key, value) => key.includes('nodes')),
+  ),
+);
+
+/**
+ * @abstract returns a structure with valid nodes
+ *
+ * @param {Object} blueprint
+ * @param {Graph} graph
+ */
 export const blueprintValidity = (blueprint) => {
   const graph = parseBlueprintToGraph(blueprint);
 
@@ -303,7 +330,7 @@ export const blueprintValidity = (blueprint) => {
     validity_decorate_obj,
     (is_valid, validity_clause, validity_args) => {
       is_valid_key = objectKeyFind(validity_args, (reason, argument) => reason.includes('is_') || reason.includes('has_'));
-      
+
       return is_valid && validity_args[is_valid_key];
     },
     true,
