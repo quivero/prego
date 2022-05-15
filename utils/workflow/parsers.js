@@ -528,6 +528,132 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
   };
 };
 
+export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
+  // Required variables
+  const nodesConfig = diagramConfig['themes'].nodes;
+  const edgesConfig = diagramConfig['themes'].edges;
+  
+  let from_node_key = '';
+  let to_node_key = '';
+
+  let left_node_border = '';
+  let right_node_border = '';
+  let node_type = '';
+
+  let link_str = '';
+  let string_tmp = '';
+
+  const nodeToType = getBlueprintNodeToTypeMap(blueprint);
+  const blueprint_graph = parseBlueprintToGraph(blueprint);
+
+  const path_edges = blueprint_graph.convertEdgesToVerticesIndices(
+    blueprint_graph.getEdgesFromChain(path),
+  );
+  
+  const invalid_nodes = getBlueprintInvalidNodes(blueprint);
+
+  const path_vertex_keys = blueprint_graph.convertVerticesIndexestoKeys(path);
+  
+  const styleFormatter = (str) => str.replace('{', '').replace(/['"]+/g, '').replace('}', '');
+  let path_line_numbers = path_edges.map((path_edge) => Object.keys(blueprint_graph.edges).indexOf(path_edge));
+  
+  const breakline = '\n';
+  const spacing = '      ';
+  let diagram_body = `graph TD${breakline}`;
+  
+  let diagramNodeType = {};
+  
+  // Classification of nodes according to diagram
+  Object.keys(blueprint_graph.vertices).forEach(
+    (node_key) => {
+      node_type = nodeToType[node_key].toLowerCase();
+
+      if (node_type.includes('start')) {
+        diagramNodeType[node_key] = 'start_node';
+      } else if (node_type.includes('finish')) {
+        diagramNodeType[node_key] = 'finish_node';
+      } else if (path_vertex_keys.includes(node_key)) {
+        diagramNodeType[node_key] = 'active_node';
+      } else if (invalid_nodes.includes(node_key)) {
+        diagramNodeType[node_key] = 'bugged_node';
+      } else if (!path_vertex_keys.includes(node_key)) {
+        diagramNodeType[node_key] = 'default';
+      }
+    }
+  )
+  
+  // Edges lines definition
+  Object.values(blueprint_graph.edges).forEach(
+    (edge) => {
+      // From node
+      from_node_key = edge.startVertex.getKey();
+      node_type = diagramNodeType[from_node_key];
+      
+      left_node_border = nodesConfig[node_type].border.left;
+      right_node_border = nodesConfig[node_type].border.right;
+      from_node_key = `${from_node_key}${left_node_border}${from_node_key}${right_node_border}`;
+
+      // To node
+      to_node_key = edge.endVertex.getKey();
+      node_type = diagramNodeType[to_node_key];
+      
+      left_node_border = nodesConfig[node_type].border.left;
+      right_node_border = nodesConfig[node_type].border.right;
+      to_node_key = `${to_node_key}${left_node_border}${to_node_key}${right_node_border}`;
+      
+      // Arrow
+      if (hasElement(path_edges, edge.getKeyTuple())) {
+        link_str = edgesConfig.trail.link;
+      } else {
+        link_str = edgesConfig.default.link;
+      }
+
+      link_str += '>';
+
+      string_tmp = from_node_key + ' ' + link_str + ' ' + to_node_key;
+      diagram_body += spacing + string_tmp + breakline;
+    },
+  );
+
+  diagram_body += breakline;
+
+  // Edges style definition
+  path_line_numbers.forEach(
+    (path_line_number) => {
+      string_tmp = styleFormatter(JSON.stringify(edgesConfig['trail'].style));
+      
+      string_tmp = `linkStyle ${path_line_number} ${string_tmp}`;
+      diagram_body += spacing + string_tmp + breakline;
+    }
+  )
+  
+  diagram_body += breakline;
+  
+  // Add node classes
+  Object.keys(nodesConfig).forEach(
+    (node_type) => {
+      string_tmp = styleFormatter(JSON.stringify(nodesConfig[node_type]['style']));
+      
+      string_tmp = `classDef ${node_type} ${string_tmp}`;
+      diagram_body += spacing + string_tmp + breakline;
+    }
+  )
+
+  diagram_body += breakline;
+  
+  // Add node classes
+  Object.keys(diagramNodeType).forEach(
+    (node_key) => {
+      if(diagramNodeType[node_key] !== 'default') {
+        string_tmp = `class ${node_key} ${diagramNodeType[node_key]}`;
+        diagram_body += spacing + string_tmp + breakline;
+      }
+    }
+  )
+  
+  return diagram_body;
+};
+
 export const parseWorkflowXMLToGraph = () => {
   throw Error('Not implemented');
 };
