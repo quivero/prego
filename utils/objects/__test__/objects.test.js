@@ -7,6 +7,7 @@ import {
   objectIntersection,
   objectEqual,
   objectInit,
+  objectFlatten,
 } from '../objects.js';
 
 describe('objects', () => {
@@ -35,6 +36,36 @@ describe('objects', () => {
     );
 
     expect(JSON.stringify(newObject)).toBe(JSON.stringify({ a: 2 }));
+  });
+
+  it('should return filtered object', () => {
+    
+
+    expect().toEqual();
+  });
+
+  it('should return filtered object', () => {
+    expect(
+      objectFlatten(
+        {
+          "a": 1,
+          "b": {
+            "c": 3,
+            "d": {
+              "e": 4,
+              "f": 5
+            }
+          }
+        }
+      )
+    ).toEqual(
+      {
+        "a": 1,
+        "b.c": 3,
+        "b.d.e": 4,
+        "b.d.f": 5
+      }
+    );
   });
 
   it('should return reduced object by certain function', () => {
