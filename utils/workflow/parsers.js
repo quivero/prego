@@ -226,7 +226,7 @@ export const getBlueprintAllNodesByType = (blueprint) => {
   return node_ids_per_type;
 };
 
-export const getNodeToTypeMap = (blueprint) => {
+export const getBlueprintNodeToTypeMap = (blueprint) => {
   const node_type_map = {};
   const nodes = [];
 
@@ -279,14 +279,6 @@ export const getBlueprintUnreachableNodes = (blueprint) => {
 
   return _.difference(non_start_nodes, reachable_nodes);
 };
-
-export const getBlueprintInvalidNodes = (blueprint) => _.flatten(
-  Object.values(
-    objectFilter(objectFlatten(
-      blueprintValidity(blueprint),
-    ), (key, value) => key.includes('nodes')),
-  ),
-);
 
 /**
  * @abstract returns a structure with valid nodes
@@ -341,6 +333,20 @@ export const blueprintValidity = (blueprint) => {
     validity_arguments: validity_decorate_obj,
   };
 };
+
+/**
+ * @abstract returns valid nodes
+ *
+ * @param {Object} blueprint
+ * @param {Array} valid_nodes
+ */
+ export const getBlueprintInvalidNodes = (blueprint) => _.flatten(
+  Object.values(
+    objectFilter(objectFlatten(
+      blueprintValidity(blueprint),
+    ), (key, value) => key.includes('nodes')),
+  ),
+);
 
 /**
  * @abstract returns start and finish nodes object of given blueprint
