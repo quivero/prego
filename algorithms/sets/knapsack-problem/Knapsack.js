@@ -72,9 +72,7 @@ export default class Knapsack {
     // Create knapsack values matrix.
     const numberOfRows = this.possibleItems.length;
     const numberOfColumns = this.weightLimit;
-    const knapsackMatrix = Array(numberOfRows).fill(null).map(() => {
-      return Array(numberOfColumns + 1).fill(null);
-    });
+    const knapsackMatrix = Array(numberOfRows).fill(null).map(() => Array(numberOfColumns + 1).fill(null));
 
     // Fill the first column with zeros since it would mean that there is
     // no items we can add to knapsack in case if weight limitation is zero.
@@ -181,15 +179,11 @@ export default class Knapsack {
 
   get totalValue() {
     /** @var {KnapsackItem} item */
-    return this.selectedItems.reduce((accumulator, item) => {
-      return accumulator + item.totalValue;
-    }, 0);
+    return this.selectedItems.reduce((accumulator, item) => accumulator + item.totalValue, 0);
   }
 
   get totalWeight() {
     /** @var {KnapsackItem} item */
-    return this.selectedItems.reduce((accumulator, item) => {
-      return accumulator + item.totalWeight;
-    }, 0);
+    return this.selectedItems.reduce((accumulator, item) => accumulator + item.totalWeight, 0);
   }
 }

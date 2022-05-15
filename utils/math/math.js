@@ -1,6 +1,6 @@
 import {
-  throwError
-} from '../sys/sys.js'
+  throwError,
+} from '../sys/sys.js';
 
 /**
  * @abstract decimal part of a number
@@ -33,12 +33,12 @@ export const xor = (a, b) => {
  * @return {Number}
  */
 export const abRandom = (min, max) => {
-  if(min >= max) {
+  if (min >= max) {
     throwError('The latter number must be greater than the former.');
   }
-  
-  return min + (max - min)*Math.random();
-}
+
+  return min + (max - min) * Math.random();
+};
 
 /**
  * @abstract transformation map of spherical to cartesian coordinates

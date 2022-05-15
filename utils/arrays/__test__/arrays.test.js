@@ -71,31 +71,31 @@ describe('Array', () => {
   it('should return sequential blobs of numbers in number array', () => {
     expect(sequentialArrayBlobs([1])).toEqual(
       {
-        '0': [1],
-      }
+        0: [1],
+      },
     );
-    
+
     expect(sequentialArrayBlobs([1, 2, 4, 5])).toEqual(
       {
-        '0': [1, 2],
-        '1': [4, 5],
-      }
+        0: [1, 2],
+        1: [4, 5],
+      },
     );
-    
+
     expect(sequentialArrayBlobs([1, 2, 4, 5, 7, 8])).toEqual(
       {
-        '0': [1, 2],
-        '1': [4, 5],
-        '2': [7, 8],
-      }
+        0: [1, 2],
+        1: [4, 5],
+        2: [7, 8],
+      },
     );
 
     expect(sequentialArrayBlobs([1, 2, 4, 5, 5, 7, 8])).toEqual(
       {
-        '0': [1, 2],
-        '1': [4, 5, 5],
-        '2': [7, 8],
-      }
+        0: [1, 2],
+        1: [4, 5, 5],
+        2: [7, 8],
+      },
     );
   });
 

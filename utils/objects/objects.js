@@ -118,10 +118,10 @@ export const objectIntersection = (l_object, r_object, equalFn, keyFn, valueFn) 
     objectForEach(
       l_object,
       (l_key, l_value) => {
-        if (equalFn(r_key, r_value, l_key, l_value,)) {
+        if (equalFn(r_key, r_value, l_key, l_value)) {
           curr_intersec[
-            keyFn(r_key, r_value, l_key, l_value,)
-          ] = valueFn(r_key, r_value, l_key, l_value,);
+            keyFn(r_key, r_value, l_key, l_value)
+          ] = valueFn(r_key, r_value, l_key, l_value);
         }
       },
       {},
@@ -146,34 +146,29 @@ export const objectEqual = (l_object, r_object, equalFn) => equalFn(l_object, r_
  * @abstract Declare a flatten function that takes
  * object as parameter and returns the flatten object
  *
- * @param {Object} ob
+ * @param {Object} obj
  * @return {Object}
  */
-export const objectFlatten = (ob) => {
- 
+export const objectFlatten = (obj) => {
   // The object which contains the
   // final result
-  let result = {};
+  const result = {};
 
   // loop through the object "ob"
-  for (const i in ob) {
-
-      // We check the type of the i using
-      // typeof() function and recursively
-      // call the function again
-      if ((typeof ob[i]) === 'object' && !Array.isArray(ob[i])) {
-          const temp = objectFlatten(ob[i]);
-          for (const j in temp) {
-
-              // Store temp in result
-              result[i + '.' + j] = temp[j];
-          }
+  for (const i in obj) {
+    // We check the type of the i using typeof() function and recursively call the function again
+    if ((typeof obj[i]) === 'object' && !Array.isArray(obj[i])) {
+      const temp = objectFlatten(obj[i]);
+      for (const j in temp) {
+        // Store temp in result
+        result[`${i}.${j}`] = temp[j];
       }
+    }
 
-      // Else store ob[i] in result directly
-      else {
-          result[i] = ob[i];
-      }
+    // Else store ob[i] in result directly
+    else {
+      result[i] = obj[i];
+    }
   }
   return result;
 };

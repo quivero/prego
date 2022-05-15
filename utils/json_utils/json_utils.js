@@ -7,7 +7,7 @@ import fs from 'fs';
  * @param {Object} json_object
  * @param {String} name
  */
- export const saveStringtoFile = (path, name, string) => {
+export const saveStringtoFile = (path, name, string) => {
   // write JSON string to a file
   fs.writeFile(`${path}/${name}.txt`, string, (err) => {
     if (err) {

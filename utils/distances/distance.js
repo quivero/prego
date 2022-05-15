@@ -5,8 +5,8 @@ import {
 } from '../numbers/numbers.js';
 
 import {
-  throwError
-} from '../sys/sys.js'
+  throwError,
+} from '../sys/sys.js';
 
 /**
  * @abstract n-norm of a number
@@ -58,15 +58,15 @@ export const sphereCentralAngle = (coordinate_1, coordinate_2) => {
 
   const latitude_1 = coordinate_1[1];
   const latitude_2 = coordinate_2[1];
-  
+
   const aux_1 = 1 - hav(latitude_1 - latitude_2) - hav(latitude_1 + latitude_2);
   const aux_2 = hav(longitude_2 - longitude_1);
   const aux_3 = hav(latitude_2 - latitude_1);
 
-  const hav_theta = aux_3 + aux_2*aux_1;
+  const hav_theta = aux_3 + aux_2 * aux_1;
 
-  return 2*Math.asin(Math.sqrt(hav_theta));
-}
+  return 2 * Math.asin(Math.sqrt(hav_theta));
+};
 
 /**
  * @abstract returns the distance of two points on a sphere
@@ -76,6 +76,4 @@ export const sphereCentralAngle = (coordinate_1, coordinate_2) => {
  * @param {Number} n
  * @return {Number}
  */
-export const greatCircleDistance = (coordinate_1, coordinate_2, R) => {
-  return R*sphereCentralAngle(coordinate_1, coordinate_2)
-}
+export const greatCircleDistance = (coordinate_1, coordinate_2, R) => R * sphereCentralAngle(coordinate_1, coordinate_2);

@@ -2,7 +2,7 @@ import {
   nNormDistance,
   nNorm,
   sphereCentralAngle,
-  greatCircleDistance,  
+  greatCircleDistance,
 } from '../distance.js';
 
 describe('distance', () => {
@@ -30,7 +30,7 @@ describe('distance', () => {
 
   it('should return n-norm of a number array', () => {
     const coords = [1, 1, 1, 1, 1];
-    
+
     expect(nNorm(coords, 2)).toBeCloseTo(Math.sqrt(5));
   });
 
@@ -58,20 +58,20 @@ describe('distance', () => {
 
   it('should return distance between two coordinates on a sphere', () => {
     const coord_1 = [0, 0];
-    const coord_2 = [0, Math.PI/2];
-    const coord_3 = [Math.PI/2, 0];
+    const coord_2 = [0, Math.PI / 2];
+    const coord_3 = [Math.PI / 2, 0];
     const radius = 1;
 
     expect(
       greatCircleDistance(coord_1, coord_2, radius),
-    ).toBeCloseTo(Math.PI/2);
+    ).toBeCloseTo(Math.PI / 2);
 
     expect(
       greatCircleDistance(coord_1, coord_3, radius),
-    ).toBeCloseTo(Math.PI/2);
+    ).toBeCloseTo(Math.PI / 2);
 
     expect(
       greatCircleDistance(coord_2, coord_3, radius),
-    ).toBeCloseTo(Math.PI/2);
+    ).toBeCloseTo(Math.PI / 2);
   });
 });

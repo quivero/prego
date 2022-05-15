@@ -8,22 +8,22 @@ import {
 import { throwError } from '../sys/sys.js';
 
 /**
- * @abstract returns prime factors for non-zero natural numbers 
- * 
+ * @abstract returns prime factors for non-zero natural numbers
+ *
  * @param {String} task_msg
  */
 export const primeFactors = (n) => {
-  if(typeof n !== 'number') {
-    throwError(`to factorize \'${n}\'. It MUST be a number!`)
+  if (typeof n !== 'number') {
+    throwError(`to factorize \'${n}\'. It MUST be a number!`);
   }
-  
+
   if (decimalPart(n) !== 0 || n < 1) {
     throw Error('The provided number must not be zero and must be natural.');
   }
-  
+
   let factors = [];
 
-  if(n === 1) {
+  if (n === 1) {
     factors = [1];
   } else {
     let divisor = 2;
@@ -44,34 +44,32 @@ export const primeFactors = (n) => {
 /**
  * @abstract returns true/false for prime/non-prime number
  *
- * @param {Number} number 
- * @return {boolean} 
+ * @param {Number} number
+ * @return {boolean}
  */
-export const isPrime = (number) => {
-  return Object.keys(primeFactors(number)).length === 1 && 
-         Object.values(primeFactors(number))[0] === 1;
-}
+export const isPrime = (number) => Object.keys(primeFactors(number)).length === 1
+         && Object.values(primeFactors(number))[0] === 1;
 
 /**
  * @abstract converts randian to degree angle
  *
  * @param {Number} radian_angle
- * @return {NUmber} 
+ * @return {NUmber}
  */
-export const radianToDegree = (radian_angle) => 180*radian_angle/Math.PI;
+export const radianToDegree = (radian_angle) => 180 * radian_angle / Math.PI;
 
 /**
  * @abstract converts degree to randian angle
- * 
+ *
  * @param {Number} radian_angle
- * @return {Number} 
+ * @return {Number}
  */
-export const degreeToRadian = (degree_angle) => Math.PI*degree_angle/180;
+export const degreeToRadian = (degree_angle) => Math.PI * degree_angle / 180;
 
 /**
  * @abstract return haversine function sin^2(theta)
- * 
+ *
  * @param {Number} radian_angle
- * @return {NUmber} 
+ * @return {NUmber}
  */
-export const hav = (theta) => Math.sin(theta/2) ** 2
+export const hav = (theta) => Math.sin(theta / 2) ** 2;

@@ -17,7 +17,7 @@ describe('numbers', () => {
         5: 1,
       },
     );
-    
+
     expect(primeFactors(100)).toEqual(
       {
         2: 2,
@@ -47,9 +47,9 @@ describe('numbers', () => {
 
   it('should throw error for unappropriate entry', () => {
     function stringFactorization() {
-      return isPrime('42')
+      return isPrime('42');
     }
-    
+
     expect(stringFactorization).toThrowError();
   });
 

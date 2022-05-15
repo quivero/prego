@@ -127,32 +127,31 @@ export const sort = (arr, sort_type = 0) => {
  * @param {Array} arr
  * @return {object}
  */
- export const sequentialArrayBlobs = (arr) => {
+export const sequentialArrayBlobs = (arr) => {
   const blobs = {};
   let counter = 0;
   let head_index = 0;
 
   // Sort number array in ascending order
   arr = sort(arr, 1);
-  
-  if(arr.length === 1) {
-    return {'0': arr};
-  } else {
-    for (let index of _.range(arr.length)) {
-      if(index > 0) {
-        if(arr[index] - arr[index-1] > 1) {
-          blobs[counter] = arr.slice(head_index, index);
-          head_index = index;
-          counter += 1;
-        }
 
-        if(index === arr.length - 1) {
-          blobs[counter] = arr.slice(head_index, index + 1);
-        }
+  if (arr.length === 1) {
+    return { 0: arr };
+  }
+  for (const index of _.range(arr.length)) {
+    if (index > 0) {
+      if (arr[index] - arr[index - 1] > 1) {
+        blobs[counter] = arr.slice(head_index, index);
+        head_index = index;
+        counter += 1;
+      }
+
+      if (index === arr.length - 1) {
+        blobs[counter] = arr.slice(head_index, index + 1);
       }
     }
   }
-  
+
   return blobs;
 };
 
@@ -343,9 +342,8 @@ export function* euler(sets) {
 
   if (!objectReduce(
     sets,
-    (result, elements_key, elements) => {
-      return result & removeArrayDuplicates(elements).length === elements.length
-    }, true
+    (result, elements_key, elements) => result & removeArrayDuplicates(elements).length === elements.length,
+    true,
   )) {
     throwError('Each array must NOT have duplicates!');
   }
@@ -449,7 +447,7 @@ export function* venn(sets) {
   let curr_keys_len = -1;
 
   let keys = keys_fun(sets);
-  
+
   // Traverse the combination lattice
   for (const chunk_card of _.range(1, keys.length + 1)) {
     for (const comb_keys of new _.combinations(keys, chunk_card)) {

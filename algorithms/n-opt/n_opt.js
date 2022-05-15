@@ -22,14 +22,13 @@ export const reduceDistance = (vertices, distance_fun) => {
   vertices.forEach(
     (vertex, index) => {
       if (index !== 0) {
-        total_distance += distance_fun(
-          vertices[index - 1], vertices[index]);
+        total_distance += distance_fun(vertices[index - 1], vertices[index]);
       }
     },
   );
-  
+
   return total_distance;
-}
+};
 
 /**
  * @abstract Iterative improvement based on 3 exchange.

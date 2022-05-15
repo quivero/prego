@@ -25,7 +25,7 @@ export default {
   // It is reflected in properties such as location.href.
   // @see: https://github.com/facebook/jest/issues/6769
   testEnvironmentOptions: {
-    url: 'http://localhost/'
+    url: 'http://localhost/',
   },
 
   // @see: https://jestjs.io/docs/en/configuration#coveragethreshold-object

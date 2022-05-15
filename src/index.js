@@ -8,7 +8,21 @@ import {
   processBlueprint,
   processBlueprints,
   blueprintValidity,
+  getBlueprintInvalidNodes,
+
+  castBlueprintToDiagram,
 } from '../utils/workflow/parsers.js';
+
+import {
+  saveStringtoFile,
+  loadJSONfromFile,
+  saveJSONtoFile,
+} from '../utils/json_utils/json_utils.js';
+
+import {
+  objectFlatten,
+  objectFilter,
+} from '../utils/objects/objects.js';
 
 import {
   generateRandomMeshVertices,
@@ -34,9 +48,14 @@ app.listen(PORT, () => {
 
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
+  const curr_dir = `${process.cwd()}`;
+  const bps_root = `${curr_dir}/src/samples/blueprints/approva/`;
 
   /*
-  const bps_root = `${process.cwd()}/src/samples/blueprints/approva/`;
+  const diagramConfig = loadJSONfromFile(`${curr_dir}/utils/workflow/`, 'diagramConfig')
+  saveStringtoFile(curr_dir, 'test', 'This is line one. \nThis is line two.');
+  */
+
   const READ_ALL_BPS = false;
 
   if (READ_ALL_BPS) {

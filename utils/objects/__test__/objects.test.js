@@ -39,8 +39,6 @@ describe('objects', () => {
   });
 
   it('should return filtered object', () => {
-    
-
     expect().toEqual();
   });
 
@@ -48,23 +46,23 @@ describe('objects', () => {
     expect(
       objectFlatten(
         {
-          "a": 1,
-          "b": {
-            "c": 3,
-            "d": {
-              "e": 4,
-              "f": 5
-            }
-          }
-        }
-      )
+          a: 1,
+          b: {
+            c: 3,
+            d: {
+              e: 4,
+              f: 5,
+            },
+          },
+        },
+      ),
     ).toEqual(
       {
-        "a": 1,
-        "b.c": 3,
-        "b.d.e": 4,
-        "b.d.f": 5
-      }
+        a: 1,
+        'b.c': 3,
+        'b.d.e': 4,
+        'b.d.f': 5,
+      },
     );
   });
 

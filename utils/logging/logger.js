@@ -1,18 +1,18 @@
-import { 
-    createLogger, 
-    format, 
-    transports, 
-    config 
-} from 'winston'
+import {
+  createLogger,
+  format,
+  transports,
+  config,
+} from 'winston';
 
 export const logger = createLogger({
-  level: "debug",
+  level: 'debug',
   levels: config.npm.levels,
   format: format.combine(
     format.padLevels(),
-    format.timestamp({ format: "DD/MM/YYYY HH:mm:ss" }),
+    format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss' }),
     format.colorize(),
-    format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+    format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
   ),
   transports: [new transports.Console()],
   exceptionHandlers: [
@@ -22,4 +22,3 @@ export const logger = createLogger({
   ],
   rejectionHandlers: [new transports.Console()],
 });
-

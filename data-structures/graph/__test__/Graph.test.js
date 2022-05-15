@@ -121,9 +121,9 @@ describe('Graph', () => {
         ['A', 'B'], ['B', 'C'],
       ],
     );
-    
+
     graph.addEdges([AB, BC]);
-      
+
     expect(graph.getEdgesFromChain([0, 1, 2]).length).toBe(3);
   });
 
@@ -135,12 +135,12 @@ describe('Graph', () => {
           ['A', 'B'], ['B', 'C'],
         ],
       );
-      
+
       graph.addEdges([AB, BC]);
-        
-      return graph.getEdgesFromChain([0, 2])
+
+      return graph.getEdgesFromChain([0, 2]);
     }
-      
+
     expect(invalidChain).toThrowError();
   });
 

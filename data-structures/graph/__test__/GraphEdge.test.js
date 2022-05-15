@@ -13,6 +13,8 @@ describe('GraphEdge', () => {
 
     expect(edge.getKey()).toBe('A_B');
     expect(edge.toString()).toBe('A_B');
+    expect(edge.getKeyTuple()).toEqual(['A', 'B']);
+
     expect(edge.startVertex).toEqual(startVertex);
     expect(edge.endVertex).toEqual(endVertex);
     expect(edge.weight).toEqual(0);
