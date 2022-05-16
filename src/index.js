@@ -9,7 +9,6 @@ import {
   processBlueprints,
   blueprintValidity,
   getBlueprintInvalidNodes,
-
   castBlueprintToDiagram,
 } from '../utils/workflow/parsers.js';
 
@@ -17,9 +16,11 @@ import {
   saveStringtoFile,
   loadJSONfromFile,
   saveJSONtoFile,
-} from '../utils/json_utils/json_utils.js';
+  createDirectory
+} from '../utils/file/file.js';
 
 import {
+  objectForEach,
   objectFlatten,
   objectFilter,
 } from '../utils/objects/objects.js';
@@ -50,30 +51,45 @@ app.get('/', (req, res) => {
   // Driver program - Create a sample graph
   const curr_dir = `${process.cwd()}`;
   const bps_root = `${curr_dir}/src/samples/blueprints/approva/`;
+  const diagrams_root_folder = `${curr_dir}/src/samples`
+  const diagrams_folder = 'diagrams';
 
-  /*
   const diagramConfig = loadJSONfromFile(`${curr_dir}/utils/workflow/`, 'diagramConfig')
-  saveStringtoFile(curr_dir, 'test', 'This is line one. \nThis is line two.');
-  */
-
-  const READ_ALL_BPS = false;
+  createDirectory(diagrams_root_folder, diagrams_folder);
+  
+  const READ_ALL_BPS = true;
+  let output = {};
 
   if (READ_ALL_BPS) {
-    res.send(processBlueprints(bps_root, blueprintValidity));
+    output = processBlueprints(
+      bps_root, 
+      (blueprint) => castBlueprintToDiagram(blueprint, diagramConfig)
+    )
+    
+    objectForEach(
+      output,
+      (blueprint_name, diagram_content) => {
+        saveStringtoFile(
+          `${diagrams_root_folder}/${diagrams_folder}`, 
+          `${blueprint_name}`, 
+          diagram_content
+        )
+      }
+    );
+    
   } else {
     const blueprint_fname = 'botMessage.json';
 
-    res.send(processBlueprint(bps_root, blueprint_fname, blueprintValidity));
+    res.send(
+      processBlueprint(
+        bps_root,
+        blueprint_fname,
+        getBlueprintInvalidNodes,
+      ),
+    );
   }
-  */
-  
-  const vertices = generateRandomMeshVertices(10, 2, [0, 10]);
-  const distance_fun = (coordinate_1, coordinate_2) => {
-    return nNormDistance(coordinate_1, coordinate_2, 2)
-  };
-  
-  console.log(distance_fun([0, 0], [1, 1]));
   
   res.send(':)');
+  
 });
 // [END app]
