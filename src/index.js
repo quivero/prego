@@ -39,9 +39,6 @@ app.get('/', (req, res) => {
   const bps_root = `${curr_dir}/src/samples/blueprints`;
   const diagrams_destination_folder = 'diagrams';
   
-  const diagramConfig = loadJSONfromFile(`${curr_dir}/utils/workflow/`, 'diagramConfig')
-  createDirectory(bps_root, diagrams_destination_folder);
-  
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
   let paths = {};
@@ -70,8 +67,7 @@ app.get('/', (req, res) => {
         
         return generateBlueprintPathDiagrams(
           blueprint, bps_root,
-          diagrams_destination_folder, 
-          diagramConfig
+          diagrams_destination_folder
         );
       }
     )
@@ -85,8 +81,7 @@ app.get('/', (req, res) => {
       bps_root, `${blueprint_fname}.json`,
       (blueprint) => generateBlueprintPathDiagrams(
         blueprint, bps_root,
-        diagrams_destination_folder,
-        diagramConfig
+        diagrams_destination_folder
       )
     );
     
