@@ -7,31 +7,17 @@ import 'lodash.multicombinations';
 import {
   processBlueprint,
   processBlueprints,
-  blueprintValidity,
-  getBlueprintInvalidNodes,
+  parseBlueprintToGraph,
   castBlueprintToDiagram,
+  castBlueprintPathsToDiagram,
+  generateBlueprintPathDiagrams,
+  fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
 import {
-  saveStringtoFile,
   loadJSONfromFile,
-  saveJSONtoFile,
-  createDirectory
+  createDirectory,
 } from '../utils/file/file.js';
-
-import {
-  objectForEach,
-  objectFlatten,
-  objectFilter,
-} from '../utils/objects/objects.js';
-
-import {
-  generateRandomMeshVertices,
-} from '../data-structures/mesh/utils/mesh.js';
-
-import {
-  nNormDistance,
-} from '../utils/distances/distance.js';
 
 const app = express();
 
@@ -50,46 +36,62 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
   const curr_dir = `${process.cwd()}`;
-  const bps_root = `${curr_dir}/src/samples/blueprints/approva/`;
-  const diagrams_root_folder = `${curr_dir}/src/samples`
-  const diagrams_folder = 'diagrams';
-
+  const bps_root = `${curr_dir}/src/samples/blueprints`;
+  const diagrams_destination_folder = 'diagrams';
+  
   const diagramConfig = loadJSONfromFile(`${curr_dir}/utils/workflow/`, 'diagramConfig')
-  createDirectory(diagrams_root_folder, diagrams_folder);
+  createDirectory(bps_root, diagrams_destination_folder);
   
   const READ_ALL_BPS = true;
-  let output = {};
-
+  let processed_blueprint = {};
+  let paths = {};
+  let bp_graph = {};
+  
   if (READ_ALL_BPS) {
-    output = processBlueprints(
+    processed_blueprint = processBlueprints(
       bps_root, 
-      (blueprint) => castBlueprintToDiagram(blueprint, diagramConfig)
+      (blueprint) => {
+        /*
+        // TAKE NOTE: Verifies valid paths within blueprint
+        // TO FIX: Review invalid routes given blueprint
+        paths = fromStartToFinishCombsAllPaths(blueprint);
+        bp_graph = parseBlueprintToGraph(blueprint);
+        
+        for (const from_start_to_finish_key in paths.from_to) {
+          for (const route_index in paths.from_to[from_start_to_finish_key].routes) {
+            paths['from_to'][from_start_to_finish_key]['routes'][route_index] = bp_graph.isChain(
+              bp_graph.convertVerticesKeystoIndexes(
+                paths.from_to[from_start_to_finish_key].routes[route_index].node_path.trace
+              )
+            )
+          }
+        }
+        */
+        
+        return generateBlueprintPathDiagrams(
+          blueprint, bps_root,
+          diagrams_destination_folder, 
+          diagramConfig
+        );
+      }
     )
     
-    objectForEach(
-      output,
-      (blueprint_name, diagram_content) => {
-        saveStringtoFile(
-          `${diagrams_root_folder}/${diagrams_folder}`, 
-          `${blueprint_name}`, 
-          diagram_content
-        )
-      }
-    );
+    res.send(processed_blueprint);
     
   } else {
-    const blueprint_fname = 'botMessage.json';
-
-    res.send(
-      processBlueprint(
-        bps_root,
-        blueprint_fname,
-        getBlueprintInvalidNodes,
-      ),
+    const blueprint_fname = 'activitySchemaValidation';
+    
+    processed_blueprint = processBlueprint(
+      bps_root, `${blueprint_fname}.json`,
+      (blueprint) => generateBlueprintPathDiagrams(
+        blueprint, bps_root,
+        diagrams_destination_folder,
+        diagramConfig
+      )
     );
+    
+    res.send(':)');
   }
-  
-  res.send(':)');
   
 });
 // [END app]
