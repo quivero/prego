@@ -1,0 +1,16 @@
+graph TD
+      1([1]) ==> 2([2])
+      2([2]) ==> 3([3])
+
+      linkStyle 0 stroke:gold,stroke-width:4px
+      linkStyle 1 stroke:gold,stroke-width:4px
+
+      classDef default fill:#e0e0e0,stroke:#bdbdbd,stroke-width:3px
+      classDef start_node fill:#3B1,stroke:#391,stroke-width:8px
+      classDef finish_node fill:#3B1,stroke:#391,stroke-width:8px
+      classDef trail_node fill:#0CF,stroke:#09F,stroke-width:6px
+      classDef bugged_node fill:#F88,stroke:#F22,stroke-width:3px
+
+      class 1 start_node
+      class 2 trail_node
+      class 3 finish_node
