@@ -60,7 +60,7 @@
     "eslint-plugin-jest": "26.2.2",
     "eslint-scope": "7.1.1",
     "jest": "28.1.0",
-    "lodash.combinations": "18.10.0",
+    "lodash.combinations": "18.11.0",
     "npm-check-engine": "1.0.0",
     "webpack": "5.72.1",
     "webpack-cli": "4.9.2"
