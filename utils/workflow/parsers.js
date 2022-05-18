@@ -581,7 +581,6 @@ export const generateBlueprintPathDiagrams = (
  * 
  * @param {Object} blueprint
  * @param {Object} diagramConfig
- * @param {Array} diagramConfig
  * @return {String} diagram_body
  */
 export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
@@ -750,6 +749,13 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
   return diagram_body;
 };
 
+/**
+ * @abstract returns object with route diagrams for given blueprint
+ * 
+ * @param {Object} blueprint
+ * @param {Object} diagramConfig
+ * @return {Object} diagrams_obj
+ */
 export const castBlueprintPathsToDiagram = (blueprint, diagramConfig) => {
   let path_diagrams = {};
   const paths_obj = fromStartToFinishCombsAllPaths(blueprint);
