@@ -18,6 +18,7 @@ import {
   filenameHasExtension,
   createDirectory,
   saveFilenameContentObject,
+  loadJSONfromFile,
 } from '../file/file.js';
 
 import {
@@ -26,6 +27,8 @@ import {
   objectFlatten,
   objectKeyFind,
 } from '../objects/objects.js';
+
+const diagramConfig = loadJSONfromFile(`${process.cwd()}/utils/workflow/`, 'diagramConfig');
 
 const node_types = [
   'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
@@ -546,11 +549,13 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
  * @return {object} all_paths
  */
 export const generateBlueprintPathDiagrams = (
-    blueprint, bps_root, diagrams_destination_folder, diagramConfig
+    blueprint, bps_root, diagrams_destination_folder
   ) => {
 
   let path_folder = '';
-  const processed_blueprint = castBlueprintPathsToDiagram(blueprint, diagramConfig)
+  const processed_blueprint = castBlueprintPathsToDiagram(blueprint)
+  
+  createDirectory(bps_root, diagrams_destination_folder);
   
   for(const start_finish in processed_blueprint["from_to"]) {
     path_folder = `${diagrams_destination_folder}/${blueprint['name']}`
@@ -583,7 +588,7 @@ export const generateBlueprintPathDiagrams = (
  * @param {Object} diagramConfig
  * @return {String} diagram_body
  */
-export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
+export const castBlueprintToDiagram = (blueprint, path = []) => {
   // Required variables
   const nodesConfig = diagramConfig['themes'].nodes;
   const edgesConfig = diagramConfig['themes'].edges;
@@ -756,7 +761,7 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
  * @param {Object} diagramConfig
  * @return {Object} diagrams_obj
  */
-export const castBlueprintPathsToDiagram = (blueprint, diagramConfig) => {
+export const castBlueprintPathsToDiagram = (blueprint) => {
   let path_diagrams = {};
   const paths_obj = fromStartToFinishCombsAllPaths(blueprint);
   let diagrams = {};
@@ -769,12 +774,14 @@ export const castBlueprintPathsToDiagram = (blueprint, diagramConfig) => {
     for(const route of paths_obj.from_to[from_to_key].routes) {
       try {
         diagrams[counter] = castBlueprintToDiagram(
-          blueprint, diagramConfig, route.node_path.trace
+          blueprint, route.node_path.trace
         );
         
         counter += 1;
-      } catch {
+      } catch (error) {
         console.log(`Route ${route.node_path.trace} is invalid.`)
+        console.log(`Error message: ${error.message}`);
+        console.log(`Error message: ${error.message}`);
       }
     }
     
