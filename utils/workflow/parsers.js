@@ -42,9 +42,9 @@ const require = createRequire(import.meta.url);
  * @return processed_blueprint
  */
 export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
-  const fname = bps_root_path + blueprint_name;
+  const fname = `${bps_root_path}/${blueprint_name}`;
   const tokens = fname.split('.');
-
+  
   if (tokens[tokens.length - 1] === 'json') {
     const blueprint = require(fname);
 
@@ -176,6 +176,8 @@ export const reachableNodesFromStartNodes = (blueprint) => {
 export const reachableFinishNodesFromStartNodes = (blueprint) => {
   const start_finish_nodes = startAndFinishNodes(blueprint);
   const reachable_nodes = reachableNodesFromStartNodes(blueprint);
+
+  const bp_graph = parseBlueprintToGraph(blueprint);
 
   for (const start_node_key of start_finish_nodes.start_nodes) {
     reachable_nodes[start_node_key] = _.intersection(
