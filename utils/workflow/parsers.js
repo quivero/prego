@@ -15,6 +15,12 @@ import {
 } from '../arrays/arrays.js';
 
 import {
+  filenameHasExtension,
+  createDirectory,
+  saveFilenameContentObject,
+} from '../file/file.js';
+
+import {
   objectReduce,
   objectFilter,
   objectFlatten,
@@ -24,6 +30,7 @@ import {
 const node_types = [
   'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
 ];
+
 const require = createRequire(import.meta.url);
 
 /**
@@ -75,8 +82,10 @@ export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => 
  */
 export const processBlueprints = (bps_root_path, blueprintFn) => {
   const processed_blueprints = {};
-  const blueprints_fnames = fs.readdirSync(bps_root_path);
-
+  const blueprints_fnames = fs.readdirSync(bps_root_path).filter(
+    (filename) => filenameHasExtension(filename, 'json')
+  );
+  
   for (let i = 0; i < blueprints_fnames.length; i += 1) {
     const blueprint_i_name = blueprints_fnames[i];
 
@@ -494,17 +503,17 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   }
 
   return route_describe;
-};
+}; 
 
 /**
- * @abstract returns all paths between all start nodes and finish nodes
+ * @abstract return all paths between all start nodes and finish nodes
  *
  * @param {Object} blueprint
  * @return {object} all_paths
  */
 export const fromStartToFinishCombsAllPaths = (blueprint) => {
   const sf_nodes = startAndFinishNodes(blueprint);
-
+  
   const paths = {};
   let total_length = 0;
   let startNode;
@@ -514,7 +523,7 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
     startNode = sf_nodes.start_nodes[i];
     for (const j of _.range(sf_nodes.finish_nodes.length)) {
       finishNode = sf_nodes.finish_nodes[j];
-
+      
       const label = `${startNode}_${finishNode}`;
       paths[label] = fromStartToFinishAllPaths(blueprint, startNode, finishNode);
 
@@ -528,6 +537,51 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
   };
 };
 
+/**
+ * @abstract generates and save blueprint diagrams to diagrams_destination_folder
+ *
+ * @param {Object} blueprint
+ * @return {object} all_paths
+ */
+export const generateBlueprintPathDiagrams = (
+    blueprint, bps_root, diagrams_destination_folder, diagramConfig
+  ) => {
+
+  let path_folder = '';
+  const processed_blueprint = castBlueprintPathsToDiagram(blueprint, diagramConfig)
+  
+  for(const start_finish in processed_blueprint["from_to"]) {
+    path_folder = `${diagrams_destination_folder}/${blueprint['name']}`
+    createDirectory(bps_root, path_folder);
+    
+    path_folder = `${path_folder}/${start_finish}`;
+    createDirectory(bps_root, path_folder);
+    
+    processed_blueprint["from_to"][start_finish] = objectReduce(
+      processed_blueprint["from_to"][start_finish],
+      (result, path_index, route) => {
+        result[`path_${start_finish}_index_${path_index}`] = route;
+      
+        return result
+      }, {}
+    );
+    
+    saveFilenameContentObject(
+      processed_blueprint["from_to"][start_finish], `${bps_root}/${path_folder}`
+    );
+  }
+
+  return blueprint;
+}
+
+/**
+ * @abstract returns blueprint diagram string
+ * 
+ * @param {Object} blueprint
+ * @param {Object} diagramConfig
+ * @param {Array} diagramConfig
+ * @return {String} diagram_body
+ */
 export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
   // Required variables
   const nodesConfig = diagramConfig['themes'].nodes;
@@ -539,23 +593,30 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
   let left_node_border = '';
   let right_node_border = '';
   let node_type = '';
+  let node_border_type = '';
 
   let link_str = '';
   let string_tmp = '';
 
   const nodeToType = getBlueprintNodeToTypeMap(blueprint);
   const blueprint_graph = parseBlueprintToGraph(blueprint);
-
+  
+  path = blueprint_graph.convertVerticesKeystoIndexes(path);
+  
   const path_edges = blueprint_graph.convertEdgesToVerticesIndices(
-    blueprint_graph.getEdgesFromChain(path),
-  );
+      blueprint_graph.getEdgesFromChain(path),
+    ).map((path_edge) => blueprint_graph.convertVerticesIndexestoKeys(path_edge));
   
   const invalid_nodes = getBlueprintInvalidNodes(blueprint);
 
   const path_vertex_keys = blueprint_graph.convertVerticesIndexestoKeys(path);
   
   const styleFormatter = (str) => str.replace('{', '').replace(/['"]+/g, '').replace('}', '');
-  let path_line_numbers = path_edges.map((path_edge) => Object.keys(blueprint_graph.edges).indexOf(path_edge));
+  
+  let path_line_numbers = path_edges.map((path_edge) => Object.keys(blueprint_graph.edges).indexOf(
+    `${path_edge[0]}_${path_edge[1]}`
+  ));
+  
   
   const breakline = '\n';
   const spacing = '      ';
@@ -567,18 +628,50 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
   Object.keys(blueprint_graph.vertices).forEach(
     (node_key) => {
       node_type = nodeToType[node_key].toLowerCase();
-
+      
+      // Only start and finish nodes are simultaneous
       if (node_type.includes('start')) {
-        diagramNodeType[node_key] = 'start_node';
+        diagramNodeType[node_key] = {
+          "style": "start_node",
+        };
       } else if (node_type.includes('finish')) {
-        diagramNodeType[node_key] = 'finish_node';
-      } else if (path_vertex_keys.includes(node_key)) {
-        diagramNodeType[node_key] = 'active_node';
+        diagramNodeType[node_key] = {
+          "style": "finish_node",
+        };
       } else if (invalid_nodes.includes(node_key)) {
-        diagramNodeType[node_key] = 'bugged_node';
-      } else if (!path_vertex_keys.includes(node_key)) {
-        diagramNodeType[node_key] = 'default';
+        diagramNodeType[node_key] = {
+          "style": "bugged_node",
+        };
+      } else if (path_vertex_keys.includes(node_key)) {
+        diagramNodeType[node_key] = {
+          "style": "trail_node",
+        };
+      } else {
+        diagramNodeType[node_key] = {
+          "style": "default",
+        };
       }
+
+      // Define the border for each node separarely. It may be extended.
+      if (node_type.includes('start')) {
+        diagramNodeType[node_key]["border"] = "start_node";
+
+      } else if (node_type.includes('finish')) {
+        diagramNodeType[node_key]["border"] = "finish_node";
+      
+      } else if (node_type.includes('flow')) {
+        diagramNodeType[node_key]["border"] = "flow_node";
+      
+      } else if (path_vertex_keys.includes(node_key)) {
+        diagramNodeType[node_key]["border"] = "trail_node";
+      
+      } else if (invalid_nodes.includes(node_key)) {
+        diagramNodeType[node_key]["border"] = "bugged_node";
+      
+      } else {
+        diagramNodeType[node_key]["border"] = "default";
+      }
+    
     }
   )
   
@@ -587,18 +680,19 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
     (edge) => {
       // From node
       from_node_key = edge.startVertex.getKey();
-      node_type = diagramNodeType[from_node_key];
+      node_border_type = diagramNodeType[from_node_key]['border'];
       
-      left_node_border = nodesConfig[node_type].border.left;
-      right_node_border = nodesConfig[node_type].border.right;
+      left_node_border = nodesConfig["borders"][node_border_type].left;
+      right_node_border = nodesConfig["borders"][node_border_type].right;
       from_node_key = `${from_node_key}${left_node_border}${from_node_key}${right_node_border}`;
 
       // To node
       to_node_key = edge.endVertex.getKey();
-      node_type = diagramNodeType[to_node_key];
+      node_border_type = diagramNodeType[to_node_key]['border'];
       
-      left_node_border = nodesConfig[node_type].border.left;
-      right_node_border = nodesConfig[node_type].border.right;
+      left_node_border = nodesConfig['borders'][node_border_type].left;
+      right_node_border = nodesConfig['borders'][node_border_type].right;
+
       to_node_key = `${to_node_key}${left_node_border}${to_node_key}${right_node_border}`;
       
       // Arrow
@@ -614,9 +708,9 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
       diagram_body += spacing + string_tmp + breakline;
     },
   );
-
+  
   diagram_body += breakline;
-
+  
   // Edges style definition
   path_line_numbers.forEach(
     (path_line_number) => {
@@ -630,22 +724,22 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
   diagram_body += breakline;
   
   // Add node classes
-  Object.keys(nodesConfig).forEach(
-    (node_type) => {
-      string_tmp = styleFormatter(JSON.stringify(nodesConfig[node_type]['style']));
+  Object.keys(nodesConfig['style']).forEach(
+    (node_key) => {
+      string_tmp = styleFormatter(JSON.stringify(nodesConfig['style'][node_key]));
       
-      string_tmp = `classDef ${node_type} ${string_tmp}`;
+      string_tmp = `classDef ${node_key} ${string_tmp}`;
       diagram_body += spacing + string_tmp + breakline;
     }
   )
-
+  
   diagram_body += breakline;
   
   // Add node classes
   Object.keys(diagramNodeType).forEach(
     (node_key) => {
-      if(diagramNodeType[node_key] !== 'default') {
-        string_tmp = `class ${node_key} ${diagramNodeType[node_key]}`;
+      if(diagramNodeType[node_key]['style'] !== 'default') {
+        string_tmp = `class ${node_key} ${diagramNodeType[node_key]['style']}`;
         diagram_body += spacing + string_tmp + breakline;
       }
     }
@@ -653,6 +747,37 @@ export const castBlueprintToDiagram = (blueprint, diagramConfig, path = []) => {
   
   return diagram_body;
 };
+
+export const castBlueprintPathsToDiagram = (blueprint, diagramConfig) => {
+  let path_diagrams = {};
+  const paths_obj = fromStartToFinishCombsAllPaths(blueprint);
+  let diagrams = {};
+  let counter = 0;
+  
+  for(const from_to_key in paths_obj.from_to) {
+    counter = 0;
+    path_diagrams[from_to_key] = {};
+    
+    for(const route of paths_obj.from_to[from_to_key].routes) {
+      try {
+        diagrams[counter] = castBlueprintToDiagram(
+          blueprint, diagramConfig, route.node_path.trace
+        );
+        
+        counter += 1;
+      } catch {
+        console.log(`Route ${route.node_path.trace} is invalid.`)
+      }
+    }
+    
+    path_diagrams[from_to_key] = _.cloneDeep(diagrams);
+  }
+
+  return {
+    length: paths_obj.length,
+    from_to: path_diagrams
+  }
+}
 
 export const parseWorkflowXMLToGraph = () => {
   throw Error('Not implemented');
