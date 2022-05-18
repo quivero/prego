@@ -232,27 +232,28 @@ export default class Graph {
    * @param {Array[integer]} chain
    * @returns GraphVertex
    */
-  getEdgesFromChain(chain) {
+  getEdgesFromChain(index_chain) {
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
     const edges = [];
+    
     let from_edge_key = '';
     let to_edge_key = '';
 
-    if (!this.isChain(chain)) {
+    if (!this.isChain(index_chain)) {
       throw Error('Provided chain is not a valid for this graph!');
     } else {
-      return chain.map(
+      index_chain.forEach(
         (vertex, index) => {
-          from_edge_key = vertices_indexes_to_keys[chain[index]];
-          to_edge_key = vertices_indexes_to_keys[chain[index + 1]];
-
-          if (index !== chain.length - 1) {
+          from_edge_key = vertices_indexes_to_keys[index_chain[index]];
+          to_edge_key = vertices_indexes_to_keys[index_chain[index + 1]];
+          
+          if (index !== index_chain.length - 1) {
             edges.push(this.edges[`${from_edge_key}_${to_edge_key}`]);
           }
-
-          return edges;
         },
       );
+
+      return edges;
     }
   }
 
@@ -307,7 +308,7 @@ export default class Graph {
    */
   convertEdgeToVerticesIndices(edge) {
     const keys_to_indices = this.getVerticesKeystoIndices();
-
+    
     return [
       keys_to_indices[edge.startVertex.getKey()],
       keys_to_indices[edge.endVertex.getKey()],
@@ -319,7 +320,9 @@ export default class Graph {
    * @returns {Array[Integer]}
    */
   convertEdgesToVerticesIndices(edges) {
-    return edges.map((edge) => this.convertEdgeToVerticesIndices(edge));
+    return edges.map((edge) => {
+      return this.convertEdgeToVerticesIndices(edge);
+    });
   }
 
   /**
@@ -2288,7 +2291,7 @@ export default class Graph {
   isEmpty() {
     return Object.keys(this.edges).length == 0;
   }
-
+  
   /**
    * @abstract returns true if a indices vertices sequence is a valid chain
    *
@@ -2298,7 +2301,7 @@ export default class Graph {
   isChain(chain_candidate) {
     let is_chain = true;
     const adjList = this.getAdjacencyList(0);
-
+    
     for (let i = 0; i < chain_candidate.length - 1; i += 1) {
       is_chain &= adjList[chain_candidate[i]].includes(chain_candidate[i + 1]);
     }

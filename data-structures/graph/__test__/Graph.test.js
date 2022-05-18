@@ -124,7 +124,7 @@ describe('Graph', () => {
 
     graph.addEdges([AB, BC]);
 
-    expect(graph.getEdgesFromChain([0, 1, 2]).length).toBe(3);
+    expect(graph.getEdgesFromChain([0, 1, 2]).length).toBe(2);
   });
 
   it('should return edges from index chain', () => {
