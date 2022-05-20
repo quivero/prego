@@ -5,29 +5,27 @@ import {
 } from '../objects/objects.js';
 
 export const createDirectory = (root_path, name) => {
-  const folder_path = `${root_path}/${name}`
-  
+  const folder_path = `${root_path}/${name}`;
+
   if (fs.existsSync(folder_path)) {
     console.log(`Directory ${root_path}/${name} already exists!`);
   } else {
     fs.mkdirSync(
-      folder_path, 
+      folder_path,
       (err) => {
         if (err) {
-            return console.error(err);
+          return console.error(err);
         }
 
         console.log(`Directory ${name} created successfully at path ${root_path}!`);
-      }
+      },
     );
   }
-}
+};
 
 export const saveFilenameContentObject = (obj, root_path) => {
-  objectForEach(
-    obj, (filename, content) => saveStringtoFile(`${root_path}`, `${filename}`, content)
-  )
-}
+  objectForEach(obj, (filename, content) => saveStringtoFile(`${root_path}`, `${filename}`, content));
+};
 
 /**
  * @abstract saves string to file
@@ -42,7 +40,7 @@ export const saveStringtoFile = (path, name, string) => {
     if (err) {
       throw err;
     }
-    
+
     console.log(`String saved at file ${path}/${name}.txt`);
   });
 };
@@ -84,7 +82,4 @@ export const loadJSONfromFile = (root_path, name) => {
   return JSON.parse(filedata);
 };
 
-export const filenameHasExtension = (filename, extension) => {
-  return filename.split('.').length === 2 && filename.includes(extension);
-}
-
+export const filenameHasExtension = (filename, extension) => filename.split('.').length === 2 && filename.includes(extension);

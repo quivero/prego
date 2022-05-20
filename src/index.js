@@ -37,24 +37,24 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
   const curr_dir = `${process.cwd()}`;
-  const bps_root = `${curr_dir}/src/samples/blueprints`;
+  const bps_root = `${curr_dir}/src/samples/blueprints/approva`;
   const diagrams_destination_folder = 'diagrams';
-  
+
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
-  let paths = {};
-  let bp_graph = {};
-  
+  const paths = {};
+  const bp_graph = {};
+
   if (READ_ALL_BPS) {
     processed_blueprint = processBlueprints(
-      bps_root, 
-      (blueprint) => {
-        /*
+      bps_root,
+      (blueprint) =>
+      /*
         // TAKE NOTE: Verifies valid paths within blueprint
         // TO FIX: Review invalid routes given blueprint
         paths = fromStartToFinishCombsAllPaths(blueprint);
         bp_graph = parseBlueprintToGraph(blueprint);
-        
+
         for (const from_start_to_finish_key in paths.from_to) {
           for (const route_index in paths.from_to[from_start_to_finish_key].routes) {
             paths['from_to'][from_start_to_finish_key]['routes'][route_index] = bp_graph.isChain(
@@ -65,33 +65,25 @@ app.get('/', (req, res) => {
           }
         }
         */
-        
-        /*
+
+      /*
         return generateValidBlueprintPathDiagrams(
           blueprint, bps_root,
           diagrams_destination_folder
         );
         */
 
-        return blueprintValidity(blueprint)
-      }
-    )
-    
+        blueprintValidity(blueprint),
+
+    );
+
     res.send(processed_blueprint);
-    
   } else {
     const blueprint_fname = 'activitySchemaValidation';
-    
-    processed_blueprint = processBlueprint(
-      bps_root, `${blueprint_fname}.json`,
-      (blueprint) => generateBlueprintPathDiagrams(
-        blueprint, bps_root,
-        diagrams_destination_folder
-      )
-    );
-    
+
+    processed_blueprint = processBlueprint(bps_root, `${blueprint_fname}.json`, (blueprint) => generateBlueprintPathDiagrams(blueprint, bps_root, diagrams_destination_folder));
+
     res.send(':)');
   }
-  
 });
 // [END app]
