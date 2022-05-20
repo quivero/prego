@@ -283,15 +283,20 @@ export const parseBlueprintToGraph = (blueprint) => {
 export const getBlueprintUnreachableNodes = (blueprint) => {
   const graph = parseBlueprintToGraph(blueprint);
   const start_finish_nodes = startAndFinishNodes(blueprint);
-
-  const non_start_nodes = _.difference(graph.getAllVerticesKeys(), start_finish_nodes.start_nodes);
-
-  const reachable_nodes = _.uniq(
-    _.flatten(
-      Object.values(
-        getBlueprintAllNodesByType(blueprint),
-      ),
-    ),
+  
+  const non_start_nodes = _.difference(
+    graph.getAllVerticesKeys(), 
+    start_finish_nodes.start_nodes
+  );
+  
+  const reachable_nodes = graph.convertVerticesIndexestoKeys(
+    _.uniq(
+      _.flatten(
+        start_finish_nodes.start_nodes.map(
+          (start_key) => graph.reachableNodes(start_key)
+        )
+      ) 
+    )
   );
   
   return _.difference(non_start_nodes, reachable_nodes);
@@ -307,28 +312,56 @@ export const blueprintValidity = (blueprint) => {
   const graph = parseBlueprintToGraph(blueprint);
 
   const sf_nodes = startAndFinishNodes(blueprint);
+  
   const unreachable_non_start_nodes = getBlueprintUnreachableNodes(blueprint);
 
+  // Finish nodes not reachable from a start node
+  const non_traversable_finish_nodes = _.difference(
+    sf_nodes.finish_nodes,
+    Object.values(
+      objectReduce(
+        reachableFinishNodesFromStartNodes(blueprint),
+        (traversable_finish_nodes, start_key, traversable_from_start_key) => {
+          return _.uniq(
+            _.union(
+              traversable_finish_nodes, traversable_from_start_key
+            )
+          )
+        }, []
+      )
+    )
+  );
+
+  // Vertices without to-nodes and not finish nodes
   const loose_nodes_keys = graph.convertVerticesIndexestoKeys(graph.looseNodes());
+  const loose_non_finish_nodes = _.difference(loose_nodes_keys, sf_nodes.finish_nodes);
+  
+  // Vertices without from-nodes and not start nodes
   const orphan_nodes_keys = graph.convertVerticesIndexestoKeys(graph.orphanNodes());
-
-  const loose_non_finish_nodes = _.difference(orphan_nodes_keys, sf_nodes.start_nodes);
-
-  const orphan_non_start_nodes = _.difference(loose_nodes_keys, sf_nodes.finish_nodes);
+  const orphan_non_start_nodes = _.difference(orphan_nodes_keys, sf_nodes.start_nodes); 
 
   const validity_decorate_obj = {
     reachability: {
+      description: 'The union of all start vertices reachable nodes comprehend all non start vertices.',
       is_reachable_from_start: unreachable_non_start_nodes.length === 0,
       unreachable_nodes: unreachable_non_start_nodes,
     },
     contains_start_finish: {
+      description: 'A Flowbuild workflow must have at least one start and finsh vertices.',
       has_start_finish: (sf_nodes.start_nodes.length !== 0) && (sf_nodes.finish_nodes.length !== 0),
     },
+    traversability: {
+      description: 'The union of reachable finish vertices by start vertices is equivalent to all finish vertices.',
+      is_traversable_from_starts: non_traversable_finish_nodes.length === 0,
+      non_traversable_finish: non_traversable_finish_nodes,
+    },
     all_loose_is_finish: {
+      description: 'A loose vertex MUST be a finish vertex.',
       is_all_loose_finish: loose_non_finish_nodes.length === 0,
       loose_non_finish_nodes,
     },
     all_orphan_is_start: {
+      description: 'An orphan vertex MUST be a start vertex.',
       is_all_orphan_start: orphan_non_start_nodes.length === 0,
       orphan_non_start_nodes,
     },
@@ -339,12 +372,12 @@ export const blueprintValidity = (blueprint) => {
     validity_decorate_obj,
     (is_valid, validity_clause, validity_args) => {
       is_valid_key = objectKeyFind(validity_args, (reason, argument) => reason.includes('is_') || reason.includes('has_'));
-
+  
       return is_valid && validity_args[is_valid_key];
     },
     true,
   );
-
+  
   return {
     is_valid,
     validity_arguments: validity_decorate_obj,
