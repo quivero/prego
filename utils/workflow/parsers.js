@@ -233,6 +233,12 @@ export const getBlueprintNodesByType = (blueprint, type) => {
   return nodes_per_type;
 };
 
+/**
+ * @abstract returns the type of each object
+ *
+ * @param {Object} blueprint
+ * @return {Object} node_ids_per_type
+ */
 export const getBlueprintAllNodesByType = (blueprint) => {
   const node_ids_per_type = {};
 
@@ -243,6 +249,12 @@ export const getBlueprintAllNodesByType = (blueprint) => {
   return node_ids_per_type;
 };
 
+/**
+ * @abstract returns node to type map
+ *
+ * @param {Object} blueprint
+ * @return {Object} node_type_map
+ */
 export const getBlueprintNodeToTypeMap = (blueprint) => {
   const node_type_map = {};
   const nodes = [];
@@ -280,6 +292,12 @@ export const parseBlueprintToGraph = (blueprint) => {
   return graph;
 };
 
+/**
+ * @abstract returns an array with unreachable nodes
+ *
+ * @param {Object} blueprint
+ * @param {Array} graph
+ */
 export const getBlueprintUnreachableNodes = (blueprint) => {
   const graph = parseBlueprintToGraph(blueprint);
   const start_finish_nodes = startAndFinishNodes(blueprint);
@@ -832,6 +850,12 @@ export const castBlueprintPathsToDiagram = (blueprint) => {
   }
 }
 
+/**
+ * @abstract returns a converted workflow blueprint XML to graph
+ *
+ * @param {Object} blueprint
+ * @return {object} islands
+ */
 export const parseWorkflowXMLToGraph = () => {
   throw Error('Not implemented');
 };
