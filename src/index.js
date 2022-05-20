@@ -7,10 +7,11 @@ import 'lodash.multicombinations';
 import {
   processBlueprint,
   processBlueprints,
+  blueprintValidity,
   parseBlueprintToGraph,
   castBlueprintToDiagram,
   castBlueprintPathsToDiagram,
-  generateBlueprintPathDiagrams,
+  generateValidBlueprintPathDiagrams,
   fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
@@ -65,10 +66,14 @@ app.get('/', (req, res) => {
         }
         */
         
-        return generateBlueprintPathDiagrams(
+        /*
+        return generateValidBlueprintPathDiagrams(
           blueprint, bps_root,
           diagrams_destination_folder
         );
+        */
+
+        return blueprintValidity(blueprint)
       }
     )
     
