@@ -159,6 +159,9 @@ export const reachableNodesFromStartNodes = (blueprint) => {
   const start_finish_nodes = startAndFinishNodes(blueprint);
   const reachable_nodes = {};
 
+  let bp_graph = parseBlueprintToGraph(blueprint);
+  let workflow_finish_reachability = {};
+
   for (const start_node_key of start_finish_nodes.start_nodes) {
     workflow_finish_reachability[start_node_key] = [];
 
@@ -205,7 +208,7 @@ export const describeBlueprint = (blueprint) => {
     name: blueprint.name,
     description: blueprint.description,
     node_ids_per_type: getBlueprintAllNodesByType(blueprint),
-    reachable_finish_from_start: reachableFinishNodesFromStart(blueprint),
+    reachable_finish_from_start: reachableFinishNodesFromStartNodes(blueprint),
     graph: bp_graph.describe(),
   };
 };
@@ -290,7 +293,7 @@ export const getBlueprintUnreachableNodes = (blueprint) => {
       ),
     ),
   );
-
+  
   return _.difference(non_start_nodes, reachable_nodes);
 };
 
@@ -548,37 +551,39 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
  * @param {Object} blueprint
  * @return {object} all_paths
  */
-export const generateBlueprintPathDiagrams = (
+export const generateValidBlueprintPathDiagrams = (
     blueprint, bps_root, diagrams_destination_folder
   ) => {
-
-  let path_folder = '';
-  const processed_blueprint = castBlueprintPathsToDiagram(blueprint)
   
-  createDirectory(bps_root, diagrams_destination_folder);
+  const blueprint_validity = blueprintValidity(blueprint);
   
-  for(const start_finish in processed_blueprint["from_to"]) {
-    path_folder = `${diagrams_destination_folder}/${blueprint['name']}`
-    createDirectory(bps_root, path_folder);
+  if(blueprint_validity.is_valid) {
+    let path_folder = '';
+    const processed_blueprint = castBlueprintPathsToDiagram(blueprint)
     
-    path_folder = `${path_folder}/${start_finish}`;
-    createDirectory(bps_root, path_folder);
+    createDirectory(bps_root, diagrams_destination_folder);
     
-    processed_blueprint["from_to"][start_finish] = objectReduce(
-      processed_blueprint["from_to"][start_finish],
-      (result, path_index, route) => {
-        result[`path_${start_finish}_index_${path_index}`] = route;
+    for(const start_finish in processed_blueprint["from_to"]) {
+      path_folder = `${diagrams_destination_folder}/${blueprint['name']}`
+      createDirectory(bps_root, path_folder);
       
-        return result
-      }, {}
-    );
-    
-    saveFilenameContentObject(
-      processed_blueprint["from_to"][start_finish], `${bps_root}/${path_folder}`
-    );
+      path_folder = `${path_folder}/${start_finish}`;
+      createDirectory(bps_root, path_folder);
+      
+      processed_blueprint["from_to"][start_finish] = objectReduce(
+        processed_blueprint["from_to"][start_finish],
+        (result, path_index, route) => {
+          result[`path_${start_finish}_index_${path_index}`] = route;
+        
+          return result
+        }, {}
+      );
+      
+      saveFilenameContentObject(
+        processed_blueprint["from_to"][start_finish], `${bps_root}/${path_folder}`
+      );
+    }
   }
-
-  return blueprint;
 }
 
 /**
