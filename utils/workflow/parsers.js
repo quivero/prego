@@ -90,6 +90,8 @@ export const processBlueprints = (bps_root_path, blueprintFn) => {
   );
   
   for (let i = 0; i < blueprints_fnames.length; i += 1) {
+    console.log(`[${i}/${blueprints_fnames.length}]: ${blueprints_fnames[i]}`);
+
     const blueprint_i_name = blueprints_fnames[i];
 
     processed_blueprints[blueprint_i_name] = processBlueprint(bps_root_path, blueprint_i_name, blueprintFn);
@@ -495,11 +497,12 @@ export const nodeToLaneRoute = (
  */
 export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   const bp_graph = parseBlueprintToGraph(blueprint);
-
+  
   const node_id_to_lane = nodeToLane(blueprint);
 
   const looseNodes = bp_graph.looseNodes();
   const orphanNodes = bp_graph.orphanNodes();
+
   const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
   const vertices_indices_to_keys = bp_graph.getVerticesIndicestoKeys();
 
@@ -662,7 +665,7 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
 
   const nodeToType = getBlueprintNodeToTypeMap(blueprint);
   const blueprint_graph = parseBlueprintToGraph(blueprint);
-  
+
   path = blueprint_graph.convertVerticesKeystoIndexes(path);
   
   const path_edges = blueprint_graph.convertEdgesToVerticesIndices(
@@ -670,7 +673,6 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
     ).map((path_edge) => blueprint_graph.convertVerticesIndexestoKeys(path_edge));
   
   const invalid_nodes = getBlueprintInvalidNodes(blueprint);
-
   const path_vertex_keys = blueprint_graph.convertVerticesIndexestoKeys(path);
   
   const styleFormatter = (str) => str.replace('{', '').replace(/['"]+/g, '').replace('}', '');
@@ -678,7 +680,6 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   let path_line_numbers = path_edges.map((path_edge) => Object.keys(blueprint_graph.edges).indexOf(
     `${path_edge[0]}_${path_edge[1]}`
   ));
-  
   
   const breakline = '\n';
   const spacing = '      ';
