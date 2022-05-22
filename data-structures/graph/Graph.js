@@ -418,10 +418,10 @@ export default class Graph {
   }
 
   /**
-   * @abstract looseNodes are vertices without to-nodes
+   * @abstract sinkNodes are vertices without to-nodes
    * @returns {GraphEdge[]}
    */
-  looseNodes() {
+  sinkNodes() {
     const loose_nodes = [];
     const forward_star = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
@@ -436,10 +436,10 @@ export default class Graph {
   }
 
   /**
-   * @abstract orphanNodes are vertices without from-nodes
+   * @abstract sourceNodes are vertices without from-nodes
    * @returns {GraphEdge[]}
    */
-  orphanNodes() {
+  sourceNodes() {
     const orphan_nodes = [];
     const inverse_star = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
@@ -2424,8 +2424,8 @@ export default class Graph {
       edges: Object.keys(this.edges).toString(),
       vertices_keys_to_indices: this.getVerticesKeystoIndices(),
       adjacency_list: this.getAdjacencyList(),
-      loose_nodes: this.looseNodes(),
-      orphan_nodes: this.orphanNodes(),
+      loose_nodes: this.sinkNodes(),
+      orphan_nodes: this.sourceNodes(),
       articulation_nodes: this.articulationPoints(),
       bridges: this.bridges(true),
       is_cyclic,

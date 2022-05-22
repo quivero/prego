@@ -2712,7 +2712,7 @@ describe('Graph', () => {
     // Add edges
     graph_.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
-    expect(graph_.looseNodes()).toEqual([3]);
+    expect(graph_.sinkNodes()).toEqual([3]);
   });
 
   it('should return orphan nodes', () => {
@@ -2732,7 +2732,7 @@ describe('Graph', () => {
     // Add edges
     graph_.addEdges([AB, BC, DB]);
 
-    expect(graph_.orphanNodes()).toEqual([0, 3]);
+    expect(graph_.sourceNodes()).toEqual([0, 3]);
   });
 
   it('should be possible to reverse graph', () => {

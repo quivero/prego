@@ -350,11 +350,11 @@ export const blueprintValidity = (blueprint) => {
   );
 
   // Vertices without to-nodes and not finish nodes
-  const loose_nodes_keys = graph.convertVerticesIndexestoKeys(graph.looseNodes());
+  const loose_nodes_keys = graph.convertVerticesIndexestoKeys(graph.sinkNodes());
   const loose_non_finish_nodes = _.difference(loose_nodes_keys, sf_nodes.finish_nodes);
 
   // Vertices without from-nodes and not start nodes
-  const orphan_nodes_keys = graph.convertVerticesIndexestoKeys(graph.orphanNodes());
+  const orphan_nodes_keys = graph.convertVerticesIndexestoKeys(graph.sourceNodes());
   const orphan_non_start_nodes = _.difference(orphan_nodes_keys, sf_nodes.start_nodes);
 
   const validity_decorate_obj = {
@@ -497,8 +497,8 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
   const node_id_to_lane = nodeToLane(blueprint);
 
-  const looseNodes = bp_graph.looseNodes();
-  const orphanNodes = bp_graph.orphanNodes();
+  const sinkNodes = bp_graph.sinkNodes();
+  const sourceNodes = bp_graph.sourceNodes();
 
   const vertices_keys_to_indices = bp_graph.getVerticesKeystoIndices();
   const vertices_indices_to_keys = bp_graph.getVerticesIndicestoKeys();
@@ -521,14 +521,14 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
     return [];
   }
 
-  if (getAllIndexes(orphanNodes, start_index).length === 0) {
-    console.warn(`Warning: Vertex id ${start_index}, key ${start_key}, is not a orphan node! Detected start nodes: ${orphanNodes}`);
+  if (getAllIndexes(sourceNodes, start_index).length === 0) {
+    console.warn(`Warning: Vertex id ${start_index}, key ${start_key}, is not a orphan node! Detected start nodes: ${sourceNodes}`);
 
     return [];
   }
 
-  if (getAllIndexes(looseNodes, finish_index).length === 0) {
-    console.warn(`Warning: Vertex id ${finish_index}, key ${finish_key}, is not a loose node! Detected finish nodes: ${looseNodes}`);
+  if (getAllIndexes(sinkNodes, finish_index).length === 0) {
+    console.warn(`Warning: Vertex id ${finish_index}, key ${finish_key}, is not a loose node! Detected finish nodes: ${sinkNodes}`);
 
     return [];
   }
