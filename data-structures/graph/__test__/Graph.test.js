@@ -248,8 +248,8 @@ describe('Graph', () => {
           edges: 'A_B,B_C',
           vertices_keys_to_indices: { A: 0, B: 1, C: 2 },
           adjacency_list: { 0: [1], 1: [2], 2: [] },
-          loose_nodes: [2],
-          orphan_nodes: [0],
+          sink_nodes: [2],
+          source_nodes: [0],
           articulation_nodes: [1],
           bridges: [[1, 2], [0, 1]],
           is_cyclic: false,
@@ -2689,7 +2689,7 @@ describe('Graph', () => {
     });
   });
 
-  it('should return loose nodes', () => {
+  it('should return source nodes', () => {
     const graph_ = new Graph(true);
 
     // Nodes
@@ -2715,7 +2715,7 @@ describe('Graph', () => {
     expect(graph_.sinkNodes()).toEqual([3]);
   });
 
-  it('should return orphan nodes', () => {
+  it('should return source nodes', () => {
     const graph_ = new Graph(true);
 
     // Nodes
