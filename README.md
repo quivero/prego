@@ -46,14 +46,10 @@ You must follow the instructions below
 
 3) Open a browser;
 4) Type `localhost:8080` on the URL field;
- 
-## Backlog
 
-### As a solution
+## Featured
 
-I ask the reader apologies for the author's envy regarding similar python library [networkx](https://networkx.org/documentation/stable/reference/classes/index.html). They provide multiple concepts for graph formalization and defition whose author's knowledge lacks. Hence, it seems reasonable to offer similar features in this directions.
-
-Likewise, the library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It is a feature as a parser for Flowbuild Workflow blueprints, available [here](https://github.com/dot-quiver/dot-quiver-api/blob/44217b78c9b15dfbe33708b8f744ce8d3ea00e99/utils/workflow/parsers.js#L531). There are some samples [here](https://github.com/dot-quiver/dot-quiver-api/tree/main/src/samples/blueprints/diagrams). 
+The library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It is a feature as a parser for Flowbuild Workflow blueprints, available [here](https://github.com/dot-quiver/dot-quiver-api/blob/44217b78c9b15dfbe33708b8f744ce8d3ea00e99/utils/workflow/parsers.js#L531). There are some samples [here](https://github.com/dot-quiver/dot-quiver-api/tree/main/src/samples/blueprints/diagrams). 
 
 For diagrams rendering, you need to: 
 
@@ -61,6 +57,12 @@ For diagrams rendering, you need to:
 2) Enter on the Mermaid Editor [here](https://mermaid.live);
 3) Paste the copied content from item 1) on the respective text field;
 4) In case the diagram is too big, the platform will complain and deactivate auto-rendering. You must reactivate it to see the rendered diagram. 
+
+## Backlog
+
+### As a solution
+
+I ask the reader apologies for the author's envy regarding similar python library [networkx](https://networkx.org/documentation/stable/reference/classes/index.html). They provide multiple concepts for graph formalization and defition whose author's knowledge lacks. Hence, it seems reasonable to offer similar features in this directions.
 
 ### As a Package
 
