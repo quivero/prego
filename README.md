@@ -14,8 +14,9 @@ Its objective is to provide some data structures for application-suitable scenar
 
 1. [Preamble](#preamble)
 2. [How to run](#how-to-run)
-3. [Backlog](#backlog)
-4. [Prelude](#prelude)
+3. [Featured](#featured)
+4. [Backlog](#backlog)
+5. [Prelude](#prelude)
 
 ## Preamble
 
