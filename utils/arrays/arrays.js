@@ -348,8 +348,6 @@ export function* euler(sets) {
     throwError('Each array must NOT have duplicates!');
   }
 
-  sets = objectMap(sets, (set_key, set) => sort(set, 1));
-
   const sets_keys_fun = (sets_) => Object
     .keys(sets_)
     .filter((key) => sets_[key].length !== 0);

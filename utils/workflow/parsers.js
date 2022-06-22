@@ -236,6 +236,26 @@ export const getBlueprintNodesByType = (blueprint, type) => {
 };
 
 /**
+ * @abstract returns an object with all nodes specified by type as keys
+ *
+ * @param {Object} blueprint
+ * @param {Integer} type
+ * @param {Object} nodes_per_type
+ */
+export const getBlueprintNodesByTypeCategory = (blueprint, type) => {
+  const { nodes } = blueprint.blueprint_spec;
+  const nodes_per_type = [];
+
+  for (const node of nodes) {
+    if (node.type.toLowerCase() === type) {
+      nodes_per_type.push(node.id);
+    }
+  }
+
+  return nodes_per_type;
+};
+
+/**
  * @abstract returns the type of each object
  *
  * @param {Object} blueprint
