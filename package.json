@@ -45,7 +45,7 @@
     "update": "npm i -g npm-check-updates && ncu -u && npm update && git add . && git commit -m 'config/ package.json' && git push"
   },
   "devDependencies": {
-    "np": "7.6.1",
+    "np": "7.6.2",
     "@babel/preset-env": "7.18.2",
     "@babel/eslint-parser": "7.18.2",
     "eslint-nibble": "8.0.2",
