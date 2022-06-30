@@ -2079,7 +2079,7 @@ export default class Graph {
    *
    * @param {Array} acyclic_path_indexes
    * @param {Array} cycle_nodes_indexes
-   * @return {Array[Integer]} allPaths for given acyclic path and
+   * @return {Array[Integer]} allPaths for given acyclic path
    */
   #allPathsUtil(acyclic_path_indexes, cycle_nodes_indexes) {
     const acyclic_path_keys = this.convertVerticesIndexestoKeys(acyclic_path_indexes);
@@ -2118,26 +2118,22 @@ export default class Graph {
       // regarding the intersection vertex and cycle nodes,
       // than exists edges flowing in or out these vertices.
 
-      // An outflow vertex has edges the do not belong to the acyclic path
+      // An outflow vertex has edges that do not belong to the acyclic path
       const to_vertices_indexes = _.intersection(forward_star[intersect_node_id], cycle_nodes_indexes);
-
       const to_edges_candidates = this.convertVerticesIndexestoKeys(to_vertices_indexes)
         .map((vertex_key) => `${intersect_node_key}_${vertex_key}`);
-
       const to_edges = _.difference(to_edges_candidates, _.intersection(path_edges, to_edges_candidates));
 
       if (to_vertices_indexes.length !== 0 && to_edges.length !== 0) {
         outflow_nodes.push(intersect_node_id);
       }
 
+      // Likewise to inflow vertices
       const from_vertices_indexes = _.intersection(reverse_star[intersect_node_id], cycle_nodes_indexes);
-
       const from_edges_candidates = this.convertVerticesIndexestoKeys(from_vertices_indexes)
         .map((vertex_key) => `${vertex_key}_${intersect_node_key}`);
-
       const from_edges = _.difference(from_edges_candidates, _.intersection(path_edges, from_edges_candidates));
 
-      // An outflow vertex has edges the do not belong to the acyclic path
       if (from_vertices_indexes.length !== 0 && from_edges.length !== 0) {
         inflow_nodes.push(intersect_node_id);
       }
@@ -2200,13 +2196,15 @@ export default class Graph {
    * @return {Array[Integer]} allPaths for given acyclic path and
    */
   allPaths(from_key, to_key = from_key) {
+    // Acyclic paths for acyclic graph
     if (!this.isCyclic()) {
       return this.acyclicPaths(from_key, to_key);
     }
 
     const from_id = this.getVertexIndex(this.vertices[from_key]);
-
     let acyclic_paths = [];
+
+    // Hamiltonian paths
     if (from_key === to_key) {
       const hamiltonian_cycles = [];
 
@@ -2218,21 +2216,26 @@ export default class Graph {
         return [];
       }
 
-      return hamiltonian_cycles.map((hamiltonian_cycle) => {
-        let id = getAllIndexes(hamiltonian_cycle, from_id);
+      // Add from index to both ends
+      return hamiltonian_cycles.map(
+        (hamiltonian_cycle) => {
+          let id = getAllIndexes(hamiltonian_cycle, from_id);
 
-        id = id[0];
+          id = id[0];
 
-        return hamiltonian_cycle.slice(id).concat(
-          hamiltonian_cycle.slice(0, id),
-        ).concat(from_id);
-      });
+          return hamiltonian_cycle.slice(id).concat(
+            hamiltonian_cycle.slice(0, id),
+          ).concat(from_id);
+        }
+      );
     }
+
     acyclic_paths = this.acyclicPaths(from_key, to_key);
 
     const cycle_indices = this.getCycleIndices();
     let cyclic_paths = [];
-
+    
+    // Cycles in graph 
     if (Object.keys(cycle_indices).length !== 0) {
       let cycle_nodes_arr = [];
       let connected_cycles_indexes = [];
@@ -2272,7 +2275,7 @@ export default class Graph {
   /**
    * @abstract returns the same graph without edges
    *
-   * @return {Graoh} graph
+   * @return {Graph} graph
    */
   empty() {
     this.deleteEdges(this.getAllEdges());
