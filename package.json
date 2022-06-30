@@ -38,7 +38,7 @@
     "test": "jest --coverage",
     "test:watch": "jest --watchAll --coverage",
     "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
-    "publish": "np --any-branch",
+    "release": "np --any-branch",
     "lint": "npx eslint --fix-type .",
     "nibble": "npx eslint-nibble .",
     "fixable-nibble": "npx eslint-nibble --fixable-only .",
