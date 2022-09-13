@@ -1,6 +1,5 @@
 // [START app]
 import express from 'express';
-
 import _ from 'lodash';
 import 'lodash.multicombinations';
 

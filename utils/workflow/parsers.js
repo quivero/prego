@@ -88,7 +88,7 @@ export const processBlueprints = (bps_root_path, blueprintFn) => {
   const blueprints_fnames = fs.readdirSync(bps_root_path).filter(
     (filename) => filenameHasExtension(filename, 'json'),
   );
-
+  
   for (let i = 0; i < blueprints_fnames.length; i += 1) {
     console.log(`[${i}/${blueprints_fnames.length}]: ${blueprints_fnames[i]}`);
 
