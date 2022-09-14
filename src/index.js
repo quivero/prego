@@ -36,44 +36,33 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
   const curr_dir = `${process.cwd()}`;
-  const bps_root = `${curr_dir}/src/samples/blueprints/approva`;
+  const bps_root = `${curr_dir}/src/samples/blueprints/tester`;
   const diagrams_destination_folder = 'diagrams';
 
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
-  const paths = {};
-  const bp_graph = {};
+  let paths = {};
+  let paths_ = {};
+  let bp_graph = {};
 
   if (READ_ALL_BPS) {
     processed_blueprint = processBlueprints(
       bps_root,
-      (blueprint) =>
-      /*
+      (blueprint) => 
+
         // TAKE NOTE: Verifies valid paths within blueprint
         // TO FIX: Review invalid routes given blueprint
-        paths = fromStartToFinishCombsAllPaths(blueprint);
-        bp_graph = parseBlueprintToGraph(blueprint);
-
-        for (const from_start_to_finish_key in paths.from_to) {
-          for (const route_index in paths.from_to[from_start_to_finish_key].routes) {
-            paths['from_to'][from_start_to_finish_key]['routes'][route_index] = bp_graph.isChain(
-              bp_graph.convertVerticesKeystoIndexes(
-                paths.from_to[from_start_to_finish_key].routes[route_index].node_path.trace
-              )
-            )
-          }
-        }
-        */
+        
+        fromStartToFinishCombsAllPaths(blueprint)
 
       /*
         return generateValidBlueprintPathDiagrams(
           blueprint, bps_root,
           diagrams_destination_folder
         );
-        */
-
+        
         blueprintValidity(blueprint),
-
+      */
     );
 
     res.send(processed_blueprint);
