@@ -34,7 +34,9 @@ The package allows to be used as a library. [Here is an example](https://github.
 
 ### As a service
 
-You may utilize some cloud service to host the app, like AWS, Azure or GCloud, but in this case you might run locally.
+You may utilize some cloud service to host the app, like AWS, Azure or GCloud, but in this case you might run locally. You can use the docker file by building and running the application with commands below
+
+```>>> docker build -t quivero . &&& docker run --publish 8080:8080 quivero```
 
 You must follow the instructions below
 
