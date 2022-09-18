@@ -12,7 +12,7 @@ services:
       - "8080:8080"
     volumes:
       - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
+      - /home/node/app/node_modules
     networks:
       - app-network
     command: /home/node/app/node_modules/.bin/nodemon app.js
