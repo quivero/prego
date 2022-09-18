@@ -38,7 +38,7 @@ You may utilize some cloud service to host the app, like AWS, Azure or GCloud, b
 
 ```>>> docker build -t quivero . &&& docker run --publish 8080:8080 quivero```
 
-You must follow the instructions below
+To host it locally, you must follow the instructions below:
 
 1) Clone the repository typing on terminal `git clone git@github.com:dot-quiver/dot-quiver-api.git`;
 2) Run the commands:
