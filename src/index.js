@@ -35,10 +35,11 @@ app.listen(PORT, () => {
 
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
+  // Driver program - Create a sample graph
   const curr_dir = `${process.cwd()}`
   const bps_root = `${curr_dir}/src/samples/blueprints/tester`;
   const diagrams_destination_folder = 'diagrams';
-  console.log(bps_root)
+  
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
   let paths = {};
