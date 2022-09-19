@@ -1,4 +1,4 @@
-import _ from 'lodash';
+  import _ from 'lodash';
 import fs from 'fs';
 
 import { createRequire } from 'module';
@@ -28,7 +28,7 @@ import {
   objectKeyFind,
 } from '../objects/objects.js';
 
-const diagramConfig = loadJSONfromFile(`${process.cwd()}/utils/workflow/`, 'diagramConfig');
+const diagramConfig = require('./diagramConfig');
 
 const node_types = [
   'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
