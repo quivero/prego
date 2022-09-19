@@ -28,13 +28,12 @@ import {
   objectKeyFind,
 } from '../objects/objects.js';
 
-const diagramConfig = require('./diagramConfig');
-
 const node_types = [
   'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
 ];
 
 const require = createRequire(import.meta.url);
+const diagramConfig = require('./diagramConfig');
 
 /**
  * @abstract
