@@ -35,10 +35,10 @@ app.listen(PORT, () => {
 
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
-  const curr_dir = `${process.cwd()}`;
+  const curr_dir = `${process.cwd()}`
   const bps_root = `${curr_dir}/src/samples/blueprints/tester`;
   const diagrams_destination_folder = 'diagrams';
-
+  console.log(bps_root)
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
   let paths = {};
@@ -69,7 +69,11 @@ app.get('/', (req, res) => {
   } else {
     const blueprint_fname = 'activitySchemaValidation';
 
-    processed_blueprint = processBlueprint(bps_root, `${blueprint_fname}.json`, (blueprint) => generateBlueprintPathDiagrams(blueprint, bps_root, diagrams_destination_folder));
+    processed_blueprint = processBlueprint(
+        bps_root, 
+        `${blueprint_fname}.json`, 
+        (blueprint) => generateBlueprintPathDiagrams(blueprint, bps_root, diagrams_destination_folder)
+    );
 
     res.send(':)');
   }
