@@ -1,6 +1,6 @@
 {
   "name": "Loop Simple BP",
-  "description": "Loop simple BP for tests",
+  "description": "Loop Simple BP for tests",
   "blueprint_spec": {
     "requirements": ["core"],
     "prepare": [],
@@ -8,27 +8,12 @@
       {
         "id": "START",
         "name": "Start node",
-        "next": "CONFIG",
+        "next": "GET-USER",
         "type": "Start",
         "lane_id": "anyone",
         "parameters": {
           "input_schema": {},
           "timeout": 3600
-        }
-      },
-      {
-        "id": "CONFIG",
-        "name": "Set process parameters do bag",
-        "next": "GET-USER",
-        "type": "SystemTask",
-        "lane_id": "anyone",
-        "category": "setToBag",
-        "parameters": {
-          "input": {
-            "actor_id": {
-              "$ref": "actor_data.actor_id"
-            }
-          }
         }
       },
       {
@@ -60,7 +45,7 @@
       {
         "id": "BAG-USER",
         "name": "Bag user",
-        "next": "USER-VIEW",
+        "next": "USER-ACTIVITY",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "setToBag",
@@ -73,9 +58,9 @@
         }
       },
       {
-        "id": "USER-VIEW",
-        "name": "Send view to user",
-        "next": "BAG-USER-ACTION",
+        "id": "USER-ACTIVITY",
+        "name": "Send activity to user",
+        "next": "BAG-USER-ACTIVITY",
         "type": "UserTask",
         "lane_id": "anyone",
         "parameters": {
@@ -87,14 +72,14 @@
               "$ref": "bag.actor_id"
             }
           },
-          "action": "USER_VIEW",
+          "action": "USER_ACTIVITY",
           "activity_manager": "commit"
         }
       },
       {
-        "id": "BAG-USER-ACTION",
+        "id": "BAG-USER-ACTIVITY",
         "name": "Bag user action",
-        "next": "GET-USER-STATUS",
+        "next": "GET-STATUS",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "setToBag",
@@ -107,9 +92,9 @@
         }
       },
       {
-        "id": "GET-USER-STATUS",
+        "id": "GET-STATUS",
         "name": "Get status of user",
-        "next": "CHECK-USER-STATUS",
+        "next": "CHECK-STATUS",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "http",
@@ -133,11 +118,11 @@
         }
       },
       {
-        "id": "CHECK-USER-STATUS",
+        "id": "CHECK-STATUS",
         "name": "Check user status",
         "next": {
-          "default": "CHECK-USER-ACTION",
-          "CANCELED": "CANCELED-USER"
+          "default": "CHECK-USER-ACTIVITY",
+          "ERROR": "NOTIFY-ERROR"
         },
         "type": "Flow",
         "lane_id": "anyone",
@@ -150,12 +135,13 @@
         }
       },
       {
-        "id": "CHECK-USER-ACTION",
+        "id": "CHECK-USER-ACTIVITY",
         "name": "Check user action",
         "next": {
-          "cancel": "END-USER",
-          "default": "USER-VIEW",
-          "prosseguir": "REDIRECT"
+          "cancel": "END-CANCEL",
+          "default": "END-ACTIVITY",
+          "continue": "END-CONTINUE",
+          "activity": "USER-ACTIVITY"
         },
         "type": "Flow",
         "lane_id": "anyone",
@@ -168,56 +154,40 @@
         }
       },
       {
-        "id": "REDIRECT",
-        "name": "Redirect user",
-        "next": "END-REDIRECT",
-        "type": "UserTask",
-        "lane_id": "anyone",
-        "parameters": {
-          "input": {
-            "url": {
-              "$mustache": "https://home"
-            },
-            "actor_id": {
-              "$ref": "bag.actor_id"
-            }
-          },
-          "action": "REDIRECT",
-          "activity_manager": "commit"
-        }
-      },
-      {
-        "id": "END-USER",
+        "id": "END-CANCEL",
         "name": "Finish node",
         "next": null,
         "type": "Finish",
         "lane_id": "anyone"
       },
       {
-        "id": "CANCELED-USER",
+        "id": "END-ACTIVITY",
+        "name": "Finish node",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "anyone"
+      },
+      {
+        "id": "NOTIFY-ERROR",
         "name": "User task node",
-        "next": "END-CANCELED",
+        "next": "END-ERROR",
         "type": "UserTask",
         "lane_id": "anyone",
         "parameters": {
-          "input": {
-            "actor_id": {
-              "$ref": "bag.actor_id"
-            }
-          },
-          "action": "CANCELED",
-          "activity_manager": "commit"
+          "input": {},
+          "action": "NOTIFY_ERROR",
+          "activity_manager": "notify"
         }
       },
       {
-        "id": "END-CANCELED",
+        "id": "END-ERROR",
         "name": "Finish process after CANCELED",
         "next": null,
         "type": "Finish",
         "lane_id": "anyone"
       },
       {
-        "id": "END-REDIRECT",
+        "id": "END-CONTINUE",
         "name": "Finish process after REDIRECT",
         "next": null,
         "type": "Finish",

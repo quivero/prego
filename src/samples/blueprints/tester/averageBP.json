@@ -20,7 +20,7 @@
       {
         "id": "START",
         "name": "start",
-        "next": "CONFIG",
+        "next": "GET-TASK-STATUS",
         "type": "Start",
         "lane_id": "anyone",
         "parameters": {
@@ -38,24 +38,9 @@
         }
       },
       {
-        "id": "CONFIG",
-        "name": "save process parameters to bag",
-        "next": "GET-LAST-APPROVAL",
-        "type": "SystemTask",
-        "lane_id": "anyone",
-        "category": "SetToBag",
-        "parameters": {
-          "input": {
-            "counter_retry": {
-              "$ref": "environment.COUNTER_RETRY"
-            }
-          }
-        }
-      },
-      {
-        "id": "GET-LAST-APPROVAL",
-        "name": "get last approval",
-        "next": "GET-APPROVAL-RESPONSE",
+        "id": "GET-TASK-STATUS",
+        "name": "get task status",
+        "next": "CHECK-TASK-RESPONSE",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "HTTP",
@@ -63,23 +48,23 @@
           "input": {},
           "request": {
             "url": {
-              "$mustache": "http://api/approvals/{{{bag.cpf}}}/last"
+              "$mustache": "http://api/tasks"
             },
             "verb": "GET",
             "headers": {
               "Authorization": {
-                "$mustache": "Apikey={{{environment.API_KEY}}}"
+                "$mustache": "Bearer {{{environment.TOKEN}}}"
               }
             }
           }
         }
       },
       {
-        "id": "GET-APPROVAL-RESPONSE",
-        "name": "check get approval status response code",
+        "id": "CHECK-TASK-RESPONSE",
+        "name": "check get task status response code",
         "next": {
-          "200": "BAG-APPROVAL",
-          "default": "GET-APPROVAL-PANIC"
+          "200": "BAG-TASK",
+          "default": "END-TASK-ERROR"
         },
         "type": "Flow",
         "lane_id": "anyone",
@@ -92,24 +77,24 @@
         }
       },
       {
-        "id": "BAG-APPROVAL",
-        "name": "save approval_id to bag",
-        "next": "GET-STATUS",
+        "id": "BAG-TASK",
+        "name": "save task status to bag",
+        "next": "GET-SCHEDULE",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "SetToBag",
         "parameters": {
           "input": {
-            "approval_id": {
-              "$ref": "result.data.id"
+            "task_status": {
+              "$ref": "result.data"
             }
           }
         }
       },
       {
-        "id": "GET-STATUS",
-        "name": "get status",
-        "next": "CHECK-PROCESS-STATUS",
+        "id": "GET-SCHEDULE",
+        "name": "get schedule",
+        "next": "CHECK-SCHEDULE-RESPONSE",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "HTTP",
@@ -117,46 +102,46 @@
           "input": {},
           "request": {
             "url": {
-              "$mustache": "https://document-analysis/{{bag.cpf}}"
+              "$mustache": "https://schedule"
             },
             "verb": "GET",
             "headers": {
               "ContentType": "application/json",
               "Authorization": {
-                "$mustache": "Bearer {{environment.API_KEY}}"
+                "$mustache": "Bearer {{environment.TOKEN}}"
               }
             }
           }
         }
       },
       {
-        "id": "CHECK-PROCESS-STATUS",
-        "name": "check if process is done",
+        "id": "CHECK-SCHEDULE-RESPONSE",
+        "name": "check schedule response",
         "next": {
-          "DONE": "BAG-STATUS",
+          "200": "BAG-SCHEDULE",
           "default": "TIMER-COUNT"
         },
         "type": "Flow",
         "lane_id": "anyone",
         "parameters": {
           "input": {
-            "processes": {
-              "$ref": "result.data[0].status"
+            "decision": {
+              "$ref": "result.status"
             }
           }
         }
       },
       {
-        "id": "BAG-STATUS",
-        "name": "save status to bag",
-        "next": "IS-APPROVED-OR-INCONCLUSIVE",
+        "id": "BAG-SCHEDULE",
+        "name": "save schedule to bag",
+        "next": "IS-SCHEDULE-DONE",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "SetToBag",
         "parameters": {
           "input": {
-            "approved": {
-              "$ref": "result.data[0].approved"
+            "schedule": {
+              "$ref": "result.data[0]"
             }
           }
         }
@@ -181,7 +166,7 @@
         "name": "check if will retry again",
         "next": {
           "true": "WAIT",
-          "default": "STATUS-PANIC"
+          "default": "END-SCHEDULE-ERROR"
         },
         "type": "Flow",
         "lane_id": "anyone",
@@ -196,7 +181,7 @@
       {
         "id": "WAIT",
         "name": "timer wait",
-        "next": "GET-STATUS",
+        "next": "GET-SCHEDULE",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "timer",
@@ -206,11 +191,11 @@
         }
       },
       {
-        "id": "IS-APPROVED-OR-INCONCLUSIVE",
-        "name": "check if status is reproved",
+        "id": "IS-SCHEDULE-DONE",
+        "name": "check if schedule is done",
         "next": {
-          "default": "END-VERIFY",
-          "false": "REJECT-APPROVAL"
+          "default": "END-SCHEDULE-DONE",
+          "false": "DELETE-SCHEDULE"
         },
         "type": "Flow",
         "lane_id": "anyone",
@@ -223,9 +208,9 @@
         }
       },
       {
-        "id": "REJECT-APPROVAL",
-        "name": "reject approval",
-        "next": "REJECT-APPROVAL-RESPONSE",
+        "id": "DELETE-SCHEDULE",
+        "name": "delete schedule",
+        "next": "CHECK-DELETION-STATUS",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "HTTP",
@@ -233,23 +218,23 @@
           "input": {},
           "request": {
             "url": {
-              "$mustache": "http://api/approvals/{{bag.approval_id}}/reject"
+              "$mustache": "http://api/delete/schedule"
             },
-            "verb": "PUT",
+            "verb": "DELETE",
             "headers": {
               "Authorization": {
-                "$mustache": "Apikey={{{environment.API_KEY}}}"
+                "$mustache": "Bearer {{{environment.TOKEN}}}"
               }
             }
           }
         }
       },
       {
-        "id": "REJECT-APPROVAL-RESPONSE",
-        "name": "check reject approval response",
+        "id": "CHECK-DELETION-STATUS",
+        "name": "check schedule deletion response",
         "next": {
-          "200": "END-REPROVED",
-          "default": "REJECT-APPROVAL-PANIC"
+          "200": "END-SCHEDULE-DELETED",
+          "default": "END-DELETION-ERROR"
         },
         "type": "Flow",
         "lane_id": "anyone",
@@ -262,130 +247,67 @@
         }
       },
       {
-        "id": "STATUS-PANIC",
-        "name": "sent alert to NewRelic - get status error",
-        "next": "END-STATUS-PANIC",
-        "type": "SystemTask",
-        "lane_id": "anyone",
-        "category": "startProcess",
-        "parameters": {
-          "input": {
-            "cpf": {
-              "$ref": "bag.cpf"
-            },
-            "description": "Error while trying to get status"
-          },
-          "actor_data": {
-            "$ref": "actor_data"
-          },
-          "workflow_name": "PANIC"
-        }
-      },
-      {
-        "id": "GET-APPROVAL-PANIC",
-        "name": "sent alert to NewRelic - get approval error",
-        "next": "END-GET-APPROVAL-PANIC",
-        "type": "SystemTask",
-        "lane_id": "anyone",
-        "category": "startProcess",
-        "parameters": {
-          "input": {
-            "cpf": {
-              "$ref": "bag.cpf"
-            },
-            "description": "Error while trying to get approval"
-          },
-          "actor_data": {
-            "$ref": "actor_data"
-          },
-          "workflow_name": "PANIC"
-        }
-      },
-      {
-        "id": "REJECT-APPROVAL-PANIC",
-        "name": "sent alert to NewRelic - reject approval error",
-        "next": "END-REJECT-APPROVAL-PANIC",
-        "type": "SystemTask",
-        "lane_id": "anyone",
-        "category": "startProcess",
-        "parameters": {
-          "input": {
-            "cpf": {
-              "$ref": "bag.cpf"
-            },
-            "description": "Error while trying to reject approval"
-          },
-          "actor_data": {
-            "$ref": "actor_data"
-          },
-          "workflow_name": "PANIC"
-        }
-      },
-      {
-        "id": "END-STATUS-PANIC",
-        "name": "end with get status error",
+        "id": "END-SCHEDULE-ERROR",
+        "name": "end with schedule error",
         "next": null,
         "type": "Finish",
         "lane_id": "anyone",
         "parameters": {
           "input": {
             "status": "ERROR",
-            "message": "Error while trying to get status"
+            "message": "Error while trying to get schedule"
           }
         }
       },
       {
-        "id": "END-GET-APPROVAL-PANIC",
-        "name": "end with get approval error",
+        "id": "END-TASK-ERROR",
+        "name": "end with get task error",
         "next": null,
         "type": "Finish",
         "lane_id": "anyone",
         "parameters": {
           "input": {
             "status": "ERROR",
-            "message": "Error while trying to get approval"
+            "message": "Error while trying to get task"
           }
         }
       },
       {
-        "id": "END-REJECT-APPROVAL-PANIC",
-        "name": "end with reject approval error",
+        "id": "END-DELETION-ERROR",
+        "name": "end with schedule deletion error",
         "next": null,
         "type": "Finish",
         "lane_id": "anyone",
         "parameters": {
           "input": {
             "status": "ERROR",
-            "message": "Error while trying to reject approval"
+            "message": "Error while trying to delete schedule"
           }
         }
       },
       {
-        "id": "END-VERIFY",
-        "name": "end with status approved or inconclusive",
+        "id": "END-SCHEDULE-DONE",
+        "name": "end with schedule done",
         "next": null,
         "type": "Finish",
         "lane_id": "anyone",
         "parameters": {
           "input": {
-            "status": "APPROVED/INCONCLUSIVE",
-            "message": "End process successfully with status approved or inconclusive"
+            "status": "DONE",
+            "message": "End process successfully with schedule done"
           }
         }
       },
       {
-        "id": "END-REPROVED",
-        "name": "end with reproved",
+        "id": "END-SCHEDULE-DELETED",
+        "name": "end with schedule deleted",
         "next": null,
         "type": "Finish",
         "lane_id": "anyone",
         "parameters": {
           "input": {
-            "status": "REPROVED",
-            "message": "End process successfully with status reproved",
-            "approval_id": {
-              "$ref": "bag.approval_id"
-            }
+            "status": "DELETED",
+            "message": "End process successfully with schedule deleted"
           }
         }
       }
@@ -393,7 +315,7 @@
     "prepare": [],
     "environment": {
       "COUNTER_RETRY": "COUNTER_RETRY",
-      "API_KEY": "API_KEY"
+      "TOKEN": "TOKEN"
     },
     "requirements": [
       "core"

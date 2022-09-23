@@ -16,8 +16,8 @@
         ]
       },
       {
-        "id": "actorId",
-        "name": "actorId",
+        "id": "actor_id",
+        "name": "actor_id",
         "rule": [
           "fn",
           [
@@ -44,65 +44,13 @@
             ]
           ]
         ]
-      },
-      {
-        "id": "loggedOrActorId",
-        "name": "creator or logged user",
-        "rule": [
-          "fn",
-          [
-            "actor_data",
-            "bag"
-          ],
-          [
-            "or",
-            [
-              "=",
-              [
-                "get",
-                "bag",
-                [
-                  "`",
-                  "actor_id"
-                ]
-              ],
-              [
-                "get",
-                "actor_data",
-                [
-                  "`",
-                  "actor_id"
-                ]
-              ]
-            ],
-            [
-              "=",
-              [
-                "get",
-                "bag",
-                [
-                  "`",
-                  "logged_user_id"
-                ]
-              ],
-              [
-                "get",
-                "actor_data",
-                [
-                  "`",
-                  "actor_id"
-                ]
-              ]
-            ]
-          ]
-        ]
       }
     ],
     "nodes": [
       {
         "id": "START",
         "name": "start",
-        "next": "ACTOR-BAG",
+        "next": "BAG-ACTOR",
         "type": "Start",
         "lane_id": "anyone",
         "parameters": {
@@ -111,9 +59,9 @@
         }
       },
       {
-        "id": "ACTOR-BAG",
+        "id": "BAG-ACTOR",
         "name": "bag actor_id",
-        "next": "LOGIN-FORM",
+        "next": "SHOW-LOGIN",
         "type": "SystemTask",
         "lane_id": "anyone",
         "category": "setToBag",
@@ -126,11 +74,11 @@
         }
       },
       {
-        "id": "LOGIN-FORM",
-        "name": "LOGIN-FORM",
+        "id": "SHOW-LOGIN",
+        "name": "SHOW LOGIN FORM",
         "next": "LOGIN",
         "type": "UserTask",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "parameters": {
           "input": {},
           "action": "LOGIN_FORM",
@@ -167,9 +115,9 @@
       {
         "id": "LOGIN",
         "name": "post login",
-        "next": "LOGIN-RESPONSE",
+        "next": "CHECK-LOGIN-RESPONSE",
         "type": "SystemTask",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "category": "HTTP",
         "parameters": {
           "input": {
@@ -194,16 +142,15 @@
         }
       },
       {
-        "id": "LOGIN-RESPONSE",
+        "id": "CHECK-LOGIN-RESPONSE",
         "name": "is user authenticated",
         "next": {
-          "200": "LOGIN-BAG",
-          "201": "LOGIN-BAG",
-          "206": "LOGIN-BAG",
-          "default": "LOGIN-FORM-ERROR"
+          "200": "BAG-LOGIN",
+          "201": "BAG-LOGIN",
+          "default": "NOTIFY-LOGIN-ERROR"
         },
         "type": "Flow",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "parameters": {
           "input": {
             "decision": {
@@ -213,72 +160,69 @@
         }
       },
       {
-        "id": "LOGIN-BAG",
-        "name": "bag userid and currentloggeduser",
-        "next": "TERMS-CONDITIONS",
+        "id": "BAG-LOGIN",
+        "name": "bag userid logged",
+        "next": "GET-INFO",
         "type": "SystemTask",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "category": "SetToBag",
         "parameters": {
           "input": {
             "logged_user_id": {
               "$ref": "result.data.data.uuid"
-            },
-            "currentLoggedUser": {
-              "$ref": "result.data"
             }
           }
         }
       },
       {
-        "id": "LOGIN-FORM-ERROR",
-        "name": "LOGIN_FORM_ERROR",
-        "next": "LOGIN-END-ERROR",
+        "id": "NOTIFY-LOGIN-ERROR",
+        "name": "NOTIFY-LOGIN-ERROR",
+        "next": "END-LOGIN-ERROR",
         "type": "UserTask",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "parameters": {
           "input": {
             "status": {
               "$ref": "result.status"
             }
           },
-          "action": "LOGIN_FORM_ERROR",
+          "action": "NOTIFY_LOGIN_ERROR",
           "timeout": 30
         }
       },
       {
-        "id": "TERMS-CONDITIONS",
-        "name": "get api terms conditions last",
-        "next": "TERMS-CONDITIONS-RESPONSE",
+        "id": "GET-INFO",
+        "name": "get user info",
+        "next": "CHECK-INFO-RESPONSE",
         "type": "SystemTask",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "category": "HTTP",
         "parameters": {
           "input": {},
           "request": {
             "url": {
-              "$mustache": "https://api/terms_conditions/last"
+              "$mustache": "https://api/info"
             },
             "verb": "GET",
             "headers": {
               "ContentType": "application/json",
               "Authorization": {
-                "$mustache": "Apikey={{{bag.currentLoggedUser.token}}}"
+                "$mustache": "Bearer {{environment.TOKEN}}"
               }
             }
           }
         }
       },
       {
-        "id": "TERMS-CONDITIONS-RESPONSE",
-        "name": "does user have accepted terms ",
+        "id": "CHECK-INFO-RESPONSE",
+        "name": "check get info response status",
         "next": {
-          "204": "DELIVER-TOKEN-LOGIN",
-          "404": "SHOW-TERMS-ACCEPTANCE-MODAL",
-          "default": "TERMS-CONDITIONS-END-ERROR"
+          "200": "GET-TASKS",
+          "404": "NOTIFY-INFO-NOT-FOUND",
+          "default": "END-INFO-ERROR"
         },
         "type": "Flow",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "parameters": {
           "input": {
             "decision": {
@@ -288,50 +232,49 @@
         }
       },
       {
-        "id": "SHOW-TERMS-ACCEPTANCE-MODAL",
-        "name": "SHOW_TERMS_ACCEPTANCE_MODAL",
-        "next": "TERMS-CONDITIONS-POST",
+        "id": "NOTIFY-INFO-NOT-FOUND",
+        "name": "NOTIFY INFO NOT FOUND",
+        "next": "SAVE-NEW-INFO",
         "type": "UserTask",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "parameters": {
           "input": {},
-          "action": "SHOW_TERMS_ACCEPTANCE_MODAL"
+          "action": "NOTIFY_INFO_NOT_FOUND"
         }
       },
       {
-        "id": "TERMS-CONDITIONS-POST",
-        "name": "post api terms conditions last",
-        "next": "TERMS-CONDITIONS-STATUS",
+        "id": "SAVE-NEW-INFO",
+        "name": "post save new info",
+        "next": "CHECK-SAVE-INFO-RESPONSE",
         "type": "SystemTask",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "category": "HTTP",
         "parameters": {
           "input": {},
           "request": {
             "url": {
-              "$mustache": "https://api/terms_conditions/last"
+              "$mustache": "https://api/info/register"
             },
             "verb": "POST",
             "headers": {
               "ContentType": "application/json",
               "Authorization": {
-                "$mustache": "Apikey={{{bag.currentLoggedUser.token}}}"
+                "$mustache": "Bearer {{environment.TOKEN}}"
               }
             }
           }
         }
       },
       {
-        "id": "TERMS-CONDITIONS-STATUS",
-        "name": "does User have accepted terms successfully",
+        "id": "CHECK-SAVE-INFO-RESPONSE",
+        "name": "does save info response status",
         "next": {
-          "200": "DELIVER-TOKEN-LOGIN",
-          "201": "DELIVER-TOKEN-LOGIN",
-          "206": "DELIVER-TOKEN-LOGIN",
-          "default": "SHOW-TERMS-ACCEPTANCE-MODAL"
+          "200": "GET-TASKS",
+          "201": "GET-TASKS",
+          "default": "NOTIFY-INFO-NOT-FOUND"
         },
         "type": "Flow",
-        "lane_id": "actorId",
+        "lane_id": "actor_id",
         "parameters": {
           "input": {
             "decision": {
@@ -341,64 +284,53 @@
         }
       },
       {
-        "id": "DELIVER-TOKEN-LOGIN",
-        "name": "DELIVER_TOKEN_LOGIN",
-        "next": "AVAILABLE-PROCESS",
-        "type": "UserTask",
-        "lane_id": "loggedOrActorId",
-        "parameters": {
-          "input": {
-            "cpf": {
-              "$ref": "bag.currentLoggedUser.data.cpf"
-            },
-            "name": {
-              "$ref": "bag.name"
-            }
-          },
-          "action": "DELIVER_TOKEN_LOGIN"
-        }
-      },
-      {
-        "id": "AVAILABLE-PROCESS",
-        "name": "start available process",
-        "next": "AVAILABLE-PROCESS-BAG",
+        "id": "GET-TASKS",
+        "name": "get available tasks",
+        "next": "BAG-TASKS",
         "type": "SystemTask",
-        "lane_id": "loggedOrActorId",
-        "category": "availableActivities",
+        "lane_id": "actor_id",
+        "category": "http",
         "parameters": {
           "input": {},
-          "actor_id": {
-            "$ref": "actor_data.actor_id"
-          },
-          "activity_status": "started",
-          "get_only_active_processes": true
+          "request": {
+            "url": {
+              "$mustache": "https://api/tasks"
+            },
+            "verb": "GET",
+            "headers": {
+              "ContentType": "application/json",
+              "Authorization": {
+                "$mustache": "Bearer {{environment.TOKEN}}"
+              }
+            }
+          }
         }
       },
       {
-        "id": "AVAILABLE-PROCESS-BAG",
-        "name": "bag available processes",
-        "next": "AVAILABLE-PROCESS-LENGTH",
+        "id": "BAG-TASKS",
+        "name": "bag tasks",
+        "next": "CHECK-TASKS-QTY",
         "type": "SystemTask",
-        "lane_id": "loggedOrActorId",
+        "lane_id": "actor_id",
         "category": "SetToBag",
         "parameters": {
           "input": {
-            "processes": {
+            "tasks": {
               "$ref": "result.activities"
             }
           }
         }
       },
       {
-        "id": "AVAILABLE-PROCESS-LENGTH",
-        "name": "check if there are processes",
+        "id": "CHECK-TASKS-QTY",
+        "name": "check if there are tasks",
         "next": {
-          "0": "START-NEW-PROCESS",
-          "undefined": "START-NEW-PROCESS",
-          "default": "START-USER-PROCESS"
+          "0": "CREATE-TASKS",
+          "undefined": "CREATE-TASKS",
+          "default": "START-TASKS"
         },
         "type": "Flow",
-        "lane_id": "loggedOrActorId",
+        "lane_id": "actor_id",
         "parameters": {
           "input": {
             "processesLength": {
@@ -408,63 +340,61 @@
         }
       },
       {
-        "id": "START-USER-PROCESS",
-        "name": "redirect user to user main area",
-        "next": "USER-PROCESS-END",
+        "id": "START-TASKS",
+        "name": "start tasks",
+        "next": "END-LOGIN",
         "type": "SystemTask",
-        "lane_id": "loggedOrActorId",
-        "category": "startProcess",
-        "parameters": {
-          "input": {
-            "name": {
-              "$ref": "bag.name"
-            }
-          },
-          "actor_data": {
-            "$ref": "actor_data"
-          },
-          "workflow_name": "OTHER_BP"
-        }
-      },
-      {
-        "id": "START-NEW-PROCESS",
-        "name": "create process for users with no processes",
-        "next": "START-USER-PROCESS",
-        "type": "SystemTask",
-        "lane_id": "loggedOrActorId",
+        "lane_id": "actor_id",
         "category": "startProcess",
         "parameters": {
           "input": {},
           "actor_data": {
             "$ref": "actor_data"
           },
-          "workflow_name": "ANOTHER_BP"
+          "workflow_name": "START_TASKS"
         }
       },
       {
-        "id": "USER-PROCESS-END",
-        "name": "finish user profile",
-        "next": null,
-        "type": "Finish",
-        "lane_id": "loggedOrActorId"
+        "id": "CREATE-TASKS",
+        "name": "create tasks",
+        "next": "START-TASKS",
+        "type": "SystemTask",
+        "lane_id": "actor_id",
+        "category": "startProcess",
+        "parameters": {
+          "input": {},
+          "actor_data": {
+            "$ref": "actor_data"
+          },
+          "workflow_name": "CREATE_TASKS"
+        }
       },
       {
-        "id": "LOGIN-END-ERROR",
-        "name": "finish from login",
+        "id": "END-LOGIN",
+        "name": "finish success",
         "next": null,
         "type": "Finish",
-        "lane_id": "actorId"
+        "lane_id": "actor_id"
       },
       {
-        "id": "TERMS-CONDITIONS-END-ERROR",
+        "id": "END-LOGIN-ERROR",
+        "name": "finish from error login",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "actor_id"
+      },
+      {
+        "id": "END-INFO-ERROR",
         "name": "finish terms-conditions",
         "next": null,
         "type": "Finish",
-        "lane_id": "actorId"
+        "lane_id": "actor_id"
       }
     ],
     "prepare": [],
-    "environment": {},
+    "environment": {
+      "TOKEN": "TOKEN"
+    },
     "requirements": [
       "core"
     ]
