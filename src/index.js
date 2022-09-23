@@ -12,6 +12,7 @@ import {
   castBlueprintPathsToDiagram,
   generateValidBlueprintPathDiagrams,
   fromStartToFinishCombsAllPaths,
+  describeBlueprint
 } from '../utils/workflow/parsers.js';
 
 import {
@@ -49,21 +50,15 @@ app.get('/', (req, res) => {
   if (READ_ALL_BPS) {
     processed_blueprint = processBlueprints(
       bps_root,
-      (blueprint) => 
+      (blueprint) => {
+        const validity_json = blueprintValidity(blueprint);
 
-        // TAKE NOTE: Verifies valid paths within blueprint
-        // TO FIX: Review invalid routes given blueprint
-        
-        fromStartToFinishCombsAllPaths(blueprint)
-
-      /*
-        return generateValidBlueprintPathDiagrams(
-          blueprint, bps_root,
-          diagrams_destination_folder
-        );
-        
-        blueprintValidity(blueprint),
-      */
+        return {
+          description: describeBlueprint(blueprint),
+          validity: validity_json,
+          ...validity_json.is_valid && { paths: fromStartToFinishCombsAllPaths(blueprint) }
+        }
+      }
     );
 
     res.send(processed_blueprint);
