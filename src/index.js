@@ -6,13 +6,10 @@ import 'lodash.multicombinations';
 import {
   processBlueprint,
   processBlueprints,
-  blueprintValidity,
-  parseBlueprintToGraph,
-  castBlueprintToDiagram,
+  summarizeBlueprint,
   castBlueprintPathsToDiagram,
   generateValidBlueprintPathDiagrams,
-  fromStartToFinishCombsAllPaths,
-  describeBlueprint
+  fromStartToFinishCombsAllPaths
 } from '../utils/workflow/parsers.js';
 
 import {
@@ -51,13 +48,8 @@ app.get('/', (req, res) => {
     processed_blueprint = processBlueprints(
       bps_root,
       (blueprint) => {
-        const validity_json = blueprintValidity(blueprint);
 
-        return {
-          description: describeBlueprint(blueprint),
-          validity: validity_json,
-          ...validity_json.is_valid && { paths: fromStartToFinishCombsAllPaths(blueprint) }
-        }
+        return summarizeBlueprint(blueprint);
       }
     );
 
