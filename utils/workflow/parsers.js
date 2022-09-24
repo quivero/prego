@@ -861,6 +861,24 @@ export const castBlueprintPathsToDiagram = (blueprint) => {
  * @param {Object} blueprint
  * @return {object} islands
  */
+ export const summarizeBlueprint = (blueprint) => { 
+  const validity_json = blueprintValidity(blueprint);
+  
+  return {
+    ...describeBlueprint(blueprint),
+    validity: validity_json,
+    mermaidDiagram: castBlueprintPathsToDiagram(blueprint),
+    ...validity_json.is_valid && { paths: fromStartToFinishCombsAllPaths(blueprint) }
+  }
+};
+
+
+/**
+ * @abstract returns a converted workflow blueprint XML to graph
+ *
+ * @param {Object} blueprint
+ * @return {object} islands
+ */
 export const parseWorkflowXMLToGraph = () => {
   throw Error('Not implemented');
 };
