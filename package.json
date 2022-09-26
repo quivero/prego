@@ -1,10 +1,9 @@
 {
   "name": "quivero-api",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "type": "module",
   "version": "6.0.1",
   "description": "Package to handle dot-quiver based structures",
-  "main": "./src/index.js",
   "sideEffects": false,
   "repository": {
     "type": "git",
@@ -32,7 +31,7 @@
     "lodash": "^4.17.21",
     "lodash.multicombinations": "^1.0.0",
     "lodash.multipermutations": "^1.0.0",
-    "mermaid": "^9.1.6",
+    "mermaid": "^9.1.7",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
     "react-scripts": "^5.0.1",
@@ -70,7 +69,7 @@
     "eslint-scope": "7.1.1",
     "jest": "29.0.3",
     "lodash.combinations": "18.11.1",
-    "np": "7.6.2",
+    "np": "^7.6.2",
     "npm-check-engine": "1.0.0",
     "webpack": "5.74.0",
     "webpack-cli": "4.10.0"
