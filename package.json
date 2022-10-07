@@ -60,7 +60,7 @@
     "@types/jest": "28.1.8",
     "@typescript-eslint/eslint-plugin": "5.39.0",
     "@typescript-eslint/parser": "5.39.0",
-    "eslint": "8.24.0",
+    "eslint": "8.25.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-google": "0.14.0",
     "eslint-nibble": "8.1.0",
