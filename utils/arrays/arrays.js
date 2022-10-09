@@ -2,13 +2,13 @@ import 'lodash.combinations';
 import _ from 'lodash';
 
 import {
-  throwError,
-} from '../sys/sys.js';
-
-import {
   objectReduce,
   objectMap,
 } from '../objects/objects.js';
+
+import { logging, log_message } from '../logging/logger.js'
+
+const logger = logging('arrays');
 
 /**
  * @abstract returns an array of ones with length n
@@ -67,7 +67,7 @@ export const cyclicSort = (array, index) => {
     const subject = `Provided index ${index}`;
     const condition = `greater than array length ${array.length}`;
 
-    console.error(`${category} : ${subject} ${condition}`);
+    log_message(logger, 'error', `${category} : ${subject} ${condition}`);
   }
 
   const head = array.slice(index);
@@ -115,7 +115,7 @@ export const sort = (arr, sort_type = 0) => {
   } else if (sort_type == 1) {
     // Do nothing
   } else {
-    throwError('Sorting types are 0 and 1 for descending and ascending order.');
+    log_message(logger, 'error', 'Sorting types are 0 and 1 for descending and ascending order.');
   }
 
   return arr;
@@ -229,7 +229,10 @@ export const removeArrayDuplicates = (list) => {
 
 export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
-    throwError('Size of array must be greater or equal to the product of n by m');
+    log_message(
+      logger, 'error',
+      'Size of array must be greater or equal to the product of n by m'
+    );
   }
 
   let curr_comb = [];
@@ -301,7 +304,10 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
  */
 export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
-    throwError('Dimension and length must be positive natural numbers!');
+    log_message(
+      logger, 'error', 
+      'Dimension and length must be positive natural numbers!'
+    );
   }
 
   for (const indexes of formationFn(length, dim, dim)) {
@@ -338,14 +344,19 @@ export function* upperTriangularHyperindexes(length, dim) {
  */
 export function* euler(sets) {
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
-  if (Object.values(sets).length === 0) throwError('There must at least ONE set!');
+  if (Object.values(sets).length === 0) log_message(
+    logger, 'error', 'There must at least ONE set!'
+  );
 
   if (!objectReduce(
     sets,
     (result, elements_key, elements) => result & removeArrayDuplicates(elements).length === elements.length,
     true,
   )) {
-    throwError('Each array must NOT have duplicates!');
+    log_message(
+      logger, 'error', 
+      'Each array must NOT have duplicates!'
+    );
   }
 
   const sets_keys_fun = (sets_) => Object
