@@ -17,6 +17,12 @@ import {
   createDirectory,
 } from '../utils/file/file.js';
 
+import {
+  logging,
+} from '../utils/logging/logger.js';
+
+const logger = logging('quivero');
+
 const app = express();
 
 // [START enable_parser]
@@ -45,6 +51,8 @@ app.get('/', (req, res) => {
   let bp_graph = {};
 
   if (READ_ALL_BPS) {
+    logger.log('info', ':)');
+
     processed_blueprint = processBlueprints(
       bps_root,
       (blueprint) => {
