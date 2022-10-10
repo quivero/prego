@@ -19,6 +19,7 @@ import {
 
 import {
   logging,
+  morganMiddleware,
 } from '../utils/logging/logger.js';
 
 const logger = logging('quivero');
@@ -29,6 +30,10 @@ const app = express();
 // This middleware is available in Express v4.16.0 onwards
 app.use(express.json({ extended: true }));
 // [END enable_parser]
+
+// [START logger]
+app.use(morganMiddleware);
+// [END logger]
 
 // Listen to the App Engine-specified port, or 8080 otherwise
 const PORT = process.env.PORT || 8080;
@@ -43,16 +48,16 @@ app.get('/', (req, res) => {
   const curr_dir = `${process.cwd()}`
   const bps_root = `${curr_dir}/src/samples/blueprints/tester`;
   const diagrams_destination_folder = 'diagrams';
-  
+    
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
   let paths = {};
   let paths_ = {};
   let bp_graph = {};
 
-  if (READ_ALL_BPS) {
-    logger.log('info', ':)');
+  logger.log('info', 'Access root route /');
 
+  if (READ_ALL_BPS) {
     processed_blueprint = processBlueprints(
       bps_root,
       (blueprint) => {
