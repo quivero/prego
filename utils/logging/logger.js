@@ -34,7 +34,7 @@ export const logging = (label_msg = 'default') => {
   const logger_setup = {
     format: format.combine(
       label({ label: label_msg }),
-      format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss' }),
+      format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss.sss A' }),
       format.colorize(),
       format.printf((info) => `[${info.timestamp} - ${label_msg}] ${info.level}: ${info.message}`),
     ),
@@ -59,14 +59,18 @@ export const log_message = (logger, level, message) => {
   });
 }
 
-export const agentMorganReport = logging('morgan')
+export const agentMorganReporter = logging('morgan')
 
-const morganMiddleware = logger(
+/**
+ * @abstract Morgan middleware to log app access 
+ *
+ */
+export const morganMiddleware = logger(
   ':method :url :status :res[content-length] - :response-time ms',
   {
     stream: {
       // Configure Morgan to use our custom logger with the http severity
-      write: (message) => agentMorganReport.http(message.trim()),
+      write: (message) => agentMorganReporter.log('info', message),
     },
   }
 );
