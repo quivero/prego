@@ -2,7 +2,7 @@
   "name": "quivero-api",
   "main": "./src/index.js",
   "type": "module",
-  "version": "6.0.3",
+  "version": "6.0.4",
   "description": "Package to handle dot-quiver based structures",
   "sideEffects": false,
   "repository": {
