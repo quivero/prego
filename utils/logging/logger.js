@@ -34,7 +34,7 @@ export const logging = (label_msg = 'default') => {
   const logger_setup = {
     format: format.combine(
       label({ label: label_msg }),
-      format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss' }),
+      format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss.sss A' }),
       format.colorize(),
       format.printf((info) => `[${info.timestamp} - ${label_msg}] ${info.level}: ${info.message}`),
     ),
@@ -70,7 +70,7 @@ export const morganMiddleware = logger(
   {
     stream: {
       // Configure Morgan to use our custom logger with the http severity
-      write: (message) => agentMorganReporter.log('info', message.trim()),
+      write: (message) => agentMorganReporter.log('info', message),
     },
   }
 );
