@@ -9,7 +9,9 @@ const {
   config,
 } = winston
 
-const { combine, timestamp, label, printf } = format;
+const { 
+  combine, timestamp, label, printf 
+} = format;
 
 /*
   We may define our own logging level. The default are given below 
