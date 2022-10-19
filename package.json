@@ -44,7 +44,7 @@
     "winston": "^3.8.2"
   },
   "scripts": {
-    "ci:report": "journalctl | grep quivero"
+    "ci:report": "journalctl | grep quivero",
     "systemd": "/usr/bin/node /home/ec2-user/quivero-api/src/index.js",
     "start": "nodemon ./src/index.js",
     "test": "jest --coverage",
