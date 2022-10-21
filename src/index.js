@@ -9,7 +9,7 @@ import {
   summarizeBlueprint,
   castBlueprintPathsToDiagram,
   generateValidBlueprintPathDiagrams,
-  fromStartToFinishCombsAllPaths
+  fromStartToFinishCombsAllPaths,
 } from '../utils/workflow/parsers.js';
 
 import {
@@ -45,25 +45,22 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
   // Driver program - Create a sample graph
-  const curr_dir = `${process.cwd()}`
+  const curr_dir = `${process.cwd()}`;
   const bps_root = `${curr_dir}/src/samples/blueprints/tester`;
   const diagrams_destination_folder = 'diagrams';
-    
+
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
-  let paths = {};
-  let paths_ = {};
-  let bp_graph = {};
+  const paths = {};
+  const paths_ = {};
+  const bp_graph = {};
 
   logger.log('info', 'Access root route /');
 
   if (READ_ALL_BPS) {
     processed_blueprint = processBlueprints(
       bps_root,
-      (blueprint) => {
-
-        return summarizeBlueprint(blueprint);
-      }
+      (blueprint) => summarizeBlueprint(blueprint),
     );
 
     res.send(processed_blueprint);
@@ -71,9 +68,9 @@ app.get('/', (req, res) => {
     const blueprint_fname = 'activitySchemaValidation';
 
     processed_blueprint = processBlueprint(
-        bps_root, 
-        `${blueprint_fname}.json`, 
-        (blueprint) => generateBlueprintPathDiagrams(blueprint, bps_root, diagrams_destination_folder)
+      bps_root,
+      `${blueprint_fname}.json`,
+      (blueprint) => generateBlueprintPathDiagrams(blueprint, bps_root, diagrams_destination_folder),
     );
 
     res.send(':)');

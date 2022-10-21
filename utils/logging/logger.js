@@ -1,20 +1,20 @@
 import * as winston from 'winston';
-import * as sinon from "sinon";
-import logger from "morgan";
+import * as sinon from 'sinon';
+import logger from 'morgan';
 
 const {
   createLogger,
   format,
   transports,
   config,
-} = winston
+} = winston;
 
-const { 
-  combine, timestamp, label, printf 
+const {
+  combine, timestamp, label, printf,
 } = format;
 
 /*
-  We may define our own logging level. The default are given below 
+  We may define our own logging level. The default are given below
   by property config.syslog.levels
   const my_levels = {
     error: 0,
@@ -46,25 +46,25 @@ export const logging = (label_msg = 'default') => {
         format: format.errors(),
       }),
     ],
-    rejectionHandlers: [new transports.Console()]
+    rejectionHandlers: [new transports.Console()],
   };
 
-  let logger_ = createLogger(logger_setup);
+  const logger_ = createLogger(logger_setup);
 
-  return logger_; 
+  return logger_;
 };
 
 export const log_message = (logger, level, message) => {
   logger.log({
-    level: level,
-    message: message
+    level,
+    message,
   });
-}
+};
 
-export const agentMorganReporter = logging('morgan')
+export const agentMorganReporter = logging('morgan');
 
 /**
- * @abstract Morgan middleware to log app access 
+ * @abstract Morgan middleware to log app access
  *
  */
 export const morganMiddleware = logger(
@@ -74,5 +74,5 @@ export const morganMiddleware = logger(
       // Configure Morgan to use our custom logger with the http severity
       write: (message) => agentMorganReporter.log('info', message),
     },
-  }
+  },
 );

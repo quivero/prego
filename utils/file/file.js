@@ -1,19 +1,20 @@
 import fs from 'fs';
-import { logging, log_message } from '../logging/logger.js'
+import { logging, log_message } from '../logging/logger.js';
 
 import {
   objectForEach,
 } from '../objects/objects.js';
 
-const logger = logging('file'); 
+const logger = logging('file');
 
 export const createDirectory = (root_path, name) => {
   const folder_path = `${root_path}/${name}`;
 
   if (fs.existsSync(folder_path)) {
     log_message(
-      logger, 'info', 
-      `Directory ${root_path}/${name} already exists!`
+      logger,
+      'info',
+      `Directory ${root_path}/${name} already exists!`,
     );
   } else {
     fs.mkdirSync(
@@ -24,8 +25,9 @@ export const createDirectory = (root_path, name) => {
         }
 
         log_message(
-          logger, 'info', 
-          `Directory ${name} created successfully at path ${root_path}!`
+          logger,
+          'info',
+          `Directory ${name} created successfully at path ${root_path}!`,
         );
       },
     );
@@ -34,8 +36,9 @@ export const createDirectory = (root_path, name) => {
 
 export const saveFilenameContentObject = (obj, root_path) => {
   objectForEach(
-    obj, 
-    (filename, content) => saveStringtoFile(`${root_path}`, `${filename}`, content));
+    obj,
+    (filename, content) => saveStringtoFile(`${root_path}`, `${filename}`, content),
+  );
 };
 
 /**
@@ -53,8 +56,9 @@ export const saveStringtoFile = (path, name, string) => {
     }
 
     log_message(
-      logger, 'info', 
-      `String saved at file ${path}/${name}.txt`
+      logger,
+      'info',
+      `String saved at file ${path}/${name}.txt`,
     );
   });
 };
@@ -77,8 +81,10 @@ export const saveJSONtoFile = (root_path, json_object, name) => {
     }
 
     log_message(
-      logger, 'info', 
-      `JSON file saved at file ${root_path}/${name}.json`);
+      logger,
+      'info',
+      `JSON file saved at file ${root_path}/${name}.json`,
+    );
   });
 };
 

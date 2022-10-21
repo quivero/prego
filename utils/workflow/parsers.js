@@ -1,4 +1,4 @@
-  import _ from 'lodash';
+import _ from 'lodash';
 import fs from 'fs';
 
 import { createRequire } from 'module';
@@ -87,7 +87,7 @@ export const processBlueprints = (bps_root_path, blueprintFn) => {
   const blueprints_fnames = fs.readdirSync(bps_root_path).filter(
     (filename) => filenameHasExtension(filename, 'json'),
   );
-  
+
   for (let i = 0; i < blueprints_fnames.length; i += 1) {
     console.log(`[${i}/${blueprints_fnames.length}]: ${blueprints_fnames[i]}`);
 
@@ -861,17 +861,16 @@ export const castBlueprintPathsToDiagram = (blueprint) => {
  * @param {Object} blueprint
  * @return {object} islands
  */
- export const summarizeBlueprint = (blueprint) => { 
+export const summarizeBlueprint = (blueprint) => {
   const validity_json = blueprintValidity(blueprint);
-  
+
   return {
     ...describeBlueprint(blueprint),
     validity: validity_json,
     mermaidDiagram: castBlueprintPathsToDiagram(blueprint),
-    ...validity_json.is_valid && { paths: fromStartToFinishCombsAllPaths(blueprint) }
-  }
+    ...validity_json.is_valid && { paths: fromStartToFinishCombsAllPaths(blueprint) },
+  };
 };
-
 
 /**
  * @abstract returns a converted workflow blueprint XML to graph

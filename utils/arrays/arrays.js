@@ -6,7 +6,7 @@ import {
   objectMap,
 } from '../objects/objects.js';
 
-import { logging, log_message } from '../logging/logger.js'
+import { logging, log_message } from '../logging/logger.js';
 
 const logger = logging('arrays');
 
@@ -230,8 +230,9 @@ export const removeArrayDuplicates = (list) => {
 export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
     log_message(
-      logger, 'error',
-      'Size of array must be greater or equal to the product of n by m'
+      logger,
+      'error',
+      'Size of array must be greater or equal to the product of n by m',
     );
   }
 
@@ -305,8 +306,9 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
 export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
     log_message(
-      logger, 'error', 
-      'Dimension and length must be positive natural numbers!'
+      logger,
+      'error',
+      'Dimension and length must be positive natural numbers!',
     );
   }
 
@@ -344,9 +346,7 @@ export function* upperTriangularHyperindexes(length, dim) {
  */
 export function* euler(sets) {
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
-  if (Object.values(sets).length === 0) log_message(
-    logger, 'error', 'There must at least ONE set!'
-  );
+  if (Object.values(sets).length === 0) log_message(logger, 'error', 'There must at least ONE set!');
 
   if (!objectReduce(
     sets,
@@ -354,8 +354,9 @@ export function* euler(sets) {
     true,
   )) {
     log_message(
-      logger, 'error', 
-      'Each array must NOT have duplicates!'
+      logger,
+      'error',
+      'Each array must NOT have duplicates!',
     );
   }
 

@@ -2226,7 +2226,7 @@ export default class Graph {
           return hamiltonian_cycle.slice(id).concat(
             hamiltonian_cycle.slice(0, id),
           ).concat(from_id);
-        }
+        },
       );
     }
 
@@ -2234,8 +2234,8 @@ export default class Graph {
 
     const cycle_indices = this.getCycleIndices();
     let cyclic_paths = [];
-    
-    // Cycles in graph 
+
+    // Cycles in graph
     if (Object.keys(cycle_indices).length !== 0) {
       let cycle_nodes_arr = [];
       let connected_cycles_indexes = [];
