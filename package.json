@@ -44,17 +44,18 @@
     "winston": "^3.8.2"
   },
   "scripts": {
-    "ci:report": "journalctl | grep quivero",
-    "systemd": "/usr/bin/node /home/ec2-user/quivero-api/src/index.js",
+    "report": "journalctl -u quivero.service",
+    "restart": "systemctl restart quivero.service",
+    "deploy": "systemctl enable quivero.service && systemctl start quivero.service",
+    "update": "bash ./utils/sscripts/update.sh",
     "start": "nodemon ./src/index.js",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll --coverage",
-    "test:ci": "jest --ci --reporters=d'efault' --reporters='./github-actions-reporter'",
+    "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
     "release": "np --any-branch",
     "lint": "npx eslint --fix-type .",
     "nibble": "npx eslint-nibble .",
-    "fixable-nibble": "npx eslint-nibble --fixable-only .",
-    "update": "npm i -g npm-check-updates && ncu -u && npm update && git add . && git commit -m 'config/ package.json' && git push"
+    "fixable-nibble": "npx eslint-nibble --fixable-only ."
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",
