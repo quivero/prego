@@ -45,6 +45,7 @@
     "winston": "^3.8.2"
   },
   "scripts": {
+    "dev:build": "./utils/sscripts/node-build.sh",
     "systemctl:watch": "journalctl -u quivero.service",
     "systemctl:deploy": "./utils/sscripts/systemctl-deploy.sh",
     "systemctl:restart": "systemctl restart quivero.service",
