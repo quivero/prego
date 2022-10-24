@@ -47,7 +47,7 @@
   "scripts": {
     "report": "journalctl -u quivero.service",
     "restart": "systemctl restart quivero.service",
-    "deploy": "systemctl enable quivero.service && systemctl start quivero.service",
+    "deploy": "./utils/sscripts/deploy_systemctl.sh",
     "update": "bash ./utils/sscripts/update.sh",
     "start": "nodemon ./src/index.js",
     "test": "jest --coverage",
