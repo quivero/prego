@@ -15,7 +15,7 @@ import {
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-const app = express();
+export const app = express();
 
 app.use(require('express-status-monitor')());
 
