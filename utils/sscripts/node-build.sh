@@ -10,7 +10,7 @@ sudo yum install –y nodejs
 
 nvm install lts/*
 
-echo "NPM version: $(npm -v)"
+echo NPM version: $(npm -v)
 echo "NVM version: $(nvm --version)"
 echo "NodeJS version: $(node -v)"
 
