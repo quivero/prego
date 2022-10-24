@@ -346,8 +346,8 @@ do_install() {
 				;;
 			esac
 		;;
-
-		centos|rhel|sles)
+		
+		amzn|centos|rhel|sles)
 			if [ -z "$dist_version" ] && [ -r /etc/os-release ]; then
 				dist_version="$(. /etc/os-release && echo "$VERSION_ID")"
 			fi
