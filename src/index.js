@@ -1,8 +1,4 @@
 // [START app]
-import express from 'express';
-import _ from 'lodash';
-import 'lodash.multicombinations';
-
 import {
   processBlueprint,
   processBlueprints,
@@ -18,29 +14,16 @@ import {
 } from '../utils/file/file.js';
 
 import {
-  logging,
-  morganMiddleware,
-} from '../utils/logging/logger.js';
+  statusImgPath
+} from '../utils/logging/status.js'; 
 
-const logger = logging('quivero');
+import {
+  app
+} from './router.js'
 
-const app = express();
-
-// [START enable_parser]
-// This middleware is available in Express v4.16.0 onwards
-app.use(express.json({ extended: true }));
-// [END enable_parser]
-
-// [START logger]
-app.use(morganMiddleware);
-// [END logger]
-
-// Listen to the App Engine-specified port, or 8080 otherwise
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
-});
+app.get('/status/:code', (req, res) => {
+  res.sendFile(process.cwd()+'/'+statusImgPath(req.params.code));
+})
 
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
@@ -54,8 +37,6 @@ app.get('/', (req, res) => {
   const paths = {};
   const paths_ = {};
   const bp_graph = {};
-
-  logger.log('info', 'Access root route /');
 
   if (READ_ALL_BPS) {
     processed_blueprint = processBlueprints(
