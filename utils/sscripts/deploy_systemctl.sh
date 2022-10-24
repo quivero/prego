@@ -1,5 +1,7 @@
 #!/bin/bash
 
+chmod 777 /lib/systemd/system/
+
 echo "[Unit]
 Description=quivero - making data-structure available
 Documentation=https://github.com/quivero/quivero-api
