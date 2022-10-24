@@ -46,7 +46,7 @@
   },
   "scripts": {
     "systemctl:watch": "journalctl -u quivero.service",
-    "systemctl:deploy": "./utils/sscripts/deploy_systemctl.sh",
+    "systemctl:deploy": "./utils/sscripts/systemctl-deploy.sh",
     "systemctl:restart": "systemctl restart quivero.service",
     "docker:deploy": "./utils/sscripts/docker-deploy.sh $npm_config_tag $npm_config_from $npm_config_to",
     "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
