@@ -460,7 +460,7 @@ do_install() {
 			echo_docker_as_nonroot
 			exit 0
 			;;
-		centos|fedora|rhel)
+		amzn|centos|fedora|rhel)
 			if [ "$(uname -m)" != "s390x" ] && [ "$lsb_dist" = "rhel" ]; then
 				echo "Packages for RHEL are currently only available for s390x."
 				exit 1
