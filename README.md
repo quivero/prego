@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/dot-quiver)](https://www.npmjs.com/package/quivero-api)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/dot-quiver)
 ![Documentation Status](https://img.shields.io/npm/l/dot-quiver)
-[![Code coverage report](https://codecov.io/gh/dot-quiver/dot-quiver-api/branch/main/graph/badge.svg?token=U6VOO56PDL)](https://app.codecov.io/gh/dot-quiver/dot-quiver-api)
+[![Code coverage report](https://codecov.io/gh/dot-quiver/dot-quiver-api/branch/main/graph/badge.svg?token=U6VOO56PDL)](https://app.codecov.io/gh/quivero/quivero-api)
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
@@ -26,11 +26,11 @@ Its objective is to provide some data structures for application-suitable scenar
 
 ### As a package
 
-The package allows to be used as a library. [Here is an example](https://github.com/dot-quiver/use-case) of the library use case.
+The package allows to be used as a library. [Here is an example](https://github.com/quivero/use-case) of the library use case.
 
 1) Go to your project path (for example, NodeJS or React);
-2) Install the library with the command ```npm install --save dot-quiver```;
-3) Import in your project folder from project root folder, for example, ```import Graph from 'dot-quiver/data-structures/graph/Graph.js'```
+2) Install the library with the command ```npm install --save quivero-api```;
+3) Import in your project folder from project root folder, for example, ```import Graph from 'quivero-api/data-structures/graph/Graph.js'```
 
 ### As a service
 
@@ -40,7 +40,7 @@ You may utilize some cloud service to host the app, like AWS, Azure or GCloud, b
 
 To host it locally, you must follow the instructions below:
 
-1) Clone the repository typing on terminal `git clone git@github.com:dot-quiver/dot-quiver-api.git`;
+1) Clone the repository typing on terminal `git clone git@github.com:quivero/quivero-api.git`;
 2) Run the commands:
     
     2.1. `npm install`: install local dependencies;
@@ -52,11 +52,11 @@ To host it locally, you must follow the instructions below:
 
 ## Featured
 
-The library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It is a feature as a parser for Flowbuild Workflow blueprints, available [here](https://github.com/dot-quiver/dot-quiver-api/blob/44217b78c9b15dfbe33708b8f744ce8d3ea00e99/utils/workflow/parsers.js#L531). There are some samples [here](https://github.com/dot-quiver/dot-quiver-api/tree/main/src/samples/blueprints/diagrams). 
+The library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It is a feature as a parser for Flowbuild Workflow blueprints, available [here](https://github.com/quivero-api/quivero-api/blob/44217b78c9b15dfbe33708b8f744ce8d3ea00e99/utils/workflow/parsers.js#L531). There are some samples [here](https://github.com/quivero/quivero-api-api/tree/main/src/samples/blueprints/diagrams). 
 
 For diagrams rendering, you need to: 
 
-1) Copy the content of some text file from [this](https://github.com/dot-quiver/dot-quiver-api/tree/main/src/samples/blueprints/diagrams) path; 
+1) Copy the content of some text file from [this](https://github.com/quivero/quivero-api/tree/main/src/samples/blueprints/diagrams) path; 
 2) Enter on the Mermaid Editor [here](https://mermaid.live);
 3) Paste the copied content from item 1) on the respective text field;
 4) In case the diagram is too big, the platform will complain and deactivate auto-rendering. You must reactivate it to see the rendered diagram. 
