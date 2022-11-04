@@ -63,7 +63,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",
     "@babel/plugin-transform-runtime": "7.19.6",
-    "@babel/preset-env": "7.19.4",
+    "@babel/preset-env": "7.20.2",
     "@types/jest": "28.1.8",
     "@typescript-eslint/eslint-plugin": "5.42.0",
     "@typescript-eslint/parser": "5.42.0",
