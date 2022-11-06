@@ -7,13 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Test using Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '12'
-      
-      - name: Install dependencies      
+          node-version: "12"
+
+      - name: Install dependencies
         run: npm install
 
       - name: Run the tests
@@ -21,7 +21,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
-      
+
       - name: Tests ✅
         if: ${{ success() }}
         run: |

@@ -34,8 +34,8 @@
     "lodash.multipermutations": "^1.0.0",
     "mermaid": "^8.4.3",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.7.1",
     "react-scripts": "^2.1.3",
     "rimraf": "^3.0.2",
     "sinon": "^14.0.1",
@@ -43,7 +43,8 @@
     "winston": "^3.8.2"
   },
   "scripts": {
-    "build": "npm run node:build && npm run docker:build", 
+    "build": "npm run node:build && npm run docker:build",
+    "migrations": "knex --env ${KNEX_ENV} --knexfile knexfile.js migrate:latest",
     "node:build": "./utils/sscripts/node-build.sh",
     "systemctl:watch": "journalctl -u quivero.service",
     "systemctl:deploy": "./utils/sscripts/systemctl-deploy.sh",
@@ -58,7 +59,9 @@
     "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
     "publish": "np --any-branch",
     "nibble": "npx eslint-nibble .",
-    "fixable-nibble": "npx eslint-nibble --fixable-only ."
+    "fixable-nibble": "npx eslint-nibble --fixable-only .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",
@@ -70,6 +73,7 @@
     "eslint-nibble": "8.1.0",
     "jest": "28.1.3",
     "lodash.combinations": "18.11.1",
+    "nodemon": "^2.0.20",
     "np": "^3.0.4",
     "npm-check-engine": "1.0.0",
     "webpack": "5.74.0",

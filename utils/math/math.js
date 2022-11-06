@@ -1,6 +1,4 @@
-import {
-  throwError,
-} from '../sys/sys.js';
+import { throwError } from "../sys/sys.js";
 
 /**
  * @abstract decimal part of a number
@@ -19,7 +17,7 @@ export const decimalPart = (number) => number - Math.floor(number);
  */
 export const xor = (a, b) => {
   if (![0, 1].includes(a) || ![0, 1].includes(b)) {
-    throw Error('Variables a and b must be either boolean or numbers 0/1!');
+    throw Error("Variables a and b must be either boolean or numbers 0/1!");
   }
 
   return Boolean(a * (1 - b) + b * (1 - a));
@@ -34,7 +32,7 @@ export const xor = (a, b) => {
  */
 export const abRandom = (min, max) => {
   if (min >= max) {
-    throwError('The latter number must be greater than the former.');
+    throwError("The latter number must be greater than the former.");
   }
 
   return min + (max - min) * Math.random();
@@ -49,7 +47,8 @@ export const abRandom = (min, max) => {
  * @return {boolean}
  */
 export const sphericalToCartesian = (coords, R) => {
-  const prodsin = (arr) => arr.reduce((prod_, angle) => prod_ * Math.sin(angle), 1);
+  const prodsin = (arr) =>
+    arr.reduce((prod_, angle) => prod_ * Math.sin(angle), 1);
 
   const s2cRecur = (index, coords, R) => {
     const curr_coord = coords[index];
@@ -60,11 +59,8 @@ export const sphericalToCartesian = (coords, R) => {
   const curr_coord = coords[coords.length - 1];
 
   return coords
-    .map(
-      (coord, index) => s2cRecur(index, coords, R),
-    ).concat(
-      [
-        R * prodsin(coords.slice(0, coords.length - 1)) * Math.sin(curr_coord),
-      ],
-    );
+    .map((coord, index) => s2cRecur(index, coords, R))
+    .concat([
+      R * prodsin(coords.slice(0, coords.length - 1)) * Math.sin(curr_coord),
+    ]);
 };

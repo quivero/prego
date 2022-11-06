@@ -36,10 +36,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -111,10 +108,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {

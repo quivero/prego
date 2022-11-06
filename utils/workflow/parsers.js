@@ -1,39 +1,43 @@
-import _ from 'lodash';
-import fs from 'fs';
+import _ from "lodash";
+import fs from "fs";
 
-import { createRequire } from 'module';
-import Graph from '../../data-structures/graph/Graph.js';
+import { createRequire } from "module";
+import Graph from "../../data-structures/graph/Graph.js";
 
-import {
-  createEdgesFromVerticesValues,
-} from '../../data-structures/graph/utils/graph.js';
+import { createEdgesFromVerticesValues } from "../../data-structures/graph/utils/graph.js";
 
 import {
   getAllIndexes,
   removeArrayDuplicates,
   hasElement,
-} from '../arrays/arrays.js';
+} from "../arrays/arrays.js";
 
 import {
   filenameHasExtension,
   createDirectory,
   saveFilenameContentObject,
   loadJSONfromFile,
-} from '../file/file.js';
+} from "../file/file.js";
 
 import {
   objectReduce,
   objectFilter,
   objectFlatten,
   objectKeyFind,
-} from '../objects/objects.js';
+} from "../objects/objects.js";
 
 const node_types = [
-  'start', 'finish', 'systemtask', 'subprocess', 'scripttask', 'flow', 'usertask',
+  "start",
+  "finish",
+  "systemtask",
+  "subprocess",
+  "scripttask",
+  "flow",
+  "usertask",
 ];
 
 const require = createRequire(import.meta.url);
-const diagramConfig = require('./diagramConfig');
+const diagramConfig = require("./diagramConfig");
 
 /**
  * @abstract
@@ -45,9 +49,9 @@ const diagramConfig = require('./diagramConfig');
  */
 export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
   const fname = `${bps_root_path}/${blueprint_name}`;
-  const tokens = fname.split('.');
+  const tokens = fname.split(".");
 
-  if (tokens[tokens.length - 1] === 'json') {
+  if (tokens[tokens.length - 1] === "json") {
     const blueprint = require(fname);
 
     return blueprint;
@@ -65,7 +69,11 @@ export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
  * @param {Object} blueprintFn
  * @return processed_blueprint
  */
-export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => {
+export const processBlueprint = (
+  bps_root_path,
+  blueprint_name,
+  blueprintFn
+) => {
   const blueprint = readBlueprintFromFile(bps_root_path, blueprint_name);
 
   if (Object.keys(blueprint).length !== 0) {
@@ -84,16 +92,20 @@ export const processBlueprint = (bps_root_path, blueprint_name, blueprintFn) => 
  */
 export const processBlueprints = (bps_root_path, blueprintFn) => {
   const processed_blueprints = {};
-  const blueprints_fnames = fs.readdirSync(bps_root_path).filter(
-    (filename) => filenameHasExtension(filename, 'json'),
-  );
+  const blueprints_fnames = fs
+    .readdirSync(bps_root_path)
+    .filter((filename) => filenameHasExtension(filename, "json"));
 
   for (let i = 0; i < blueprints_fnames.length; i += 1) {
     console.log(`[${i}/${blueprints_fnames.length}]: ${blueprints_fnames[i]}`);
 
     const blueprint_i_name = blueprints_fnames[i];
 
-    processed_blueprints[blueprint_i_name] = processBlueprint(bps_root_path, blueprint_i_name, blueprintFn);
+    processed_blueprints[blueprint_i_name] = processBlueprint(
+      bps_root_path,
+      blueprint_i_name,
+      blueprintFn
+    );
   }
 
   return processed_blueprints;
@@ -111,16 +123,16 @@ export const getBlueprintNextNodes = (blueprint) => {
   return objectReduce(
     nodes,
     (next_nodes, node_key, node_value) => {
-      if (node_value.type.toLowerCase() === 'flow') {
+      if (node_value.type.toLowerCase() === "flow") {
         next_nodes[node_value.id] = Object.values(node_value.next);
-      } else if (node_value.type.toLowerCase() === 'finish') {
+      } else if (node_value.type.toLowerCase() === "finish") {
       } else {
         next_nodes[node_value.id] = [node_value.next];
       }
 
       return next_nodes;
     },
-    {},
+    {}
   );
 };
 
@@ -138,7 +150,7 @@ export const getBlueprintFromToEdgeTuples = (blueprint) => {
     (edge_nodes, curr_node_key, curr_node_value) => {
       if (curr_node_value.length > 1) {
         edge_nodes = edge_nodes.concat(
-          curr_node_value.map((next_node_key) => [curr_node_key, next_node_key]),
+          curr_node_value.map((next_node_key) => [curr_node_key, next_node_key])
         );
       } else {
         edge_nodes.push([curr_node_key, curr_node_value[0]]);
@@ -146,7 +158,7 @@ export const getBlueprintFromToEdgeTuples = (blueprint) => {
 
       return edge_nodes;
     },
-    [],
+    []
   );
 };
 
@@ -167,7 +179,7 @@ export const reachableNodesFromStartNodes = (blueprint) => {
     workflow_finish_reachability[start_node_key] = [];
 
     reachable_nodes[start_node_key] = bp_graph.convertVerticesIndexestoKeys(
-      bp_graph.reachableNodes(start_node_key),
+      bp_graph.reachableNodes(start_node_key)
     );
   }
 
@@ -189,7 +201,7 @@ export const reachableFinishNodesFromStartNodes = (blueprint) => {
   for (const start_node_key of start_finish_nodes.start_nodes) {
     reachable_nodes[start_node_key] = _.intersection(
       reachable_nodes[start_node_key],
-      start_finish_nodes.finish_nodes,
+      start_finish_nodes.finish_nodes
     );
   }
 
@@ -281,11 +293,9 @@ export const getBlueprintNodeToTypeMap = (blueprint) => {
   const nodes = [];
 
   for (const type of node_types) {
-    getBlueprintNodesByType(blueprint, type).forEach(
-      (node_key) => {
-        node_type_map[node_key] = type;
-      },
-    );
+    getBlueprintNodesByType(blueprint, type).forEach((node_key) => {
+      node_type_map[node_key] = type;
+    });
   }
 
   return node_type_map;
@@ -304,10 +314,8 @@ export const parseBlueprintToGraph = (blueprint) => {
 
   graph.addEdges(
     removeArrayDuplicates(
-      createEdgesFromVerticesValues(
-        getBlueprintFromToEdgeTuples(blueprint),
-      ),
-    ),
+      createEdgesFromVerticesValues(getBlueprintFromToEdgeTuples(blueprint))
+    )
   );
 
   return graph;
@@ -325,17 +333,17 @@ export const getBlueprintUnreachableNodes = (blueprint) => {
 
   const non_start_nodes = _.difference(
     graph.getAllVerticesKeys(),
-    start_finish_nodes.start_nodes,
+    start_finish_nodes.start_nodes
   );
 
   const reachable_nodes = graph.convertVerticesIndexestoKeys(
     _.uniq(
       _.flatten(
-        start_finish_nodes.start_nodes.map(
-          (start_key) => graph.reachableNodes(start_key),
-        ),
-      ),
-    ),
+        start_finish_nodes.start_nodes.map((start_key) =>
+          graph.reachableNodes(start_key)
+        )
+      )
+    )
   );
 
   return _.difference(non_start_nodes, reachable_nodes);
@@ -360,44 +368,57 @@ export const blueprintValidity = (blueprint) => {
     Object.values(
       objectReduce(
         reachableFinishNodesFromStartNodes(blueprint),
-        (traversable_finish_nodes, start_key, traversable_from_start_key) => _.uniq(
-          _.union(traversable_finish_nodes, traversable_from_start_key),
-        ),
-        [],
-      ),
-    ),
+        (traversable_finish_nodes, start_key, traversable_from_start_key) =>
+          _.uniq(_.union(traversable_finish_nodes, traversable_from_start_key)),
+        []
+      )
+    )
   );
 
   // Vertices without to-nodes and not finish nodes
-  const loose_nodes_keys = graph.convertVerticesIndexestoKeys(graph.sinkNodes());
-  const loose_non_finish_nodes = _.difference(loose_nodes_keys, sf_nodes.finish_nodes);
+  const loose_nodes_keys = graph.convertVerticesIndexestoKeys(
+    graph.sinkNodes()
+  );
+  const loose_non_finish_nodes = _.difference(
+    loose_nodes_keys,
+    sf_nodes.finish_nodes
+  );
 
   // Vertices without from-nodes and not start nodes
-  const orphan_nodes_keys = graph.convertVerticesIndexestoKeys(graph.sourceNodes());
-  const orphan_non_start_nodes = _.difference(orphan_nodes_keys, sf_nodes.start_nodes);
+  const orphan_nodes_keys = graph.convertVerticesIndexestoKeys(
+    graph.sourceNodes()
+  );
+  const orphan_non_start_nodes = _.difference(
+    orphan_nodes_keys,
+    sf_nodes.start_nodes
+  );
 
   const validity_decorate_obj = {
     reachability: {
-      description: 'The union of all start vertices reachable nodes comprehend all non start vertices.',
+      description:
+        "The union of all start vertices reachable nodes comprehend all non start vertices.",
       is_reachable_from_start: unreachable_non_start_nodes.length === 0,
       unreachable_nodes: unreachable_non_start_nodes,
     },
     contains_start_finish: {
-      description: 'A Flowbuild workflow must have at least one start and finsh vertices.',
-      has_start_finish: (sf_nodes.start_nodes.length !== 0) && (sf_nodes.finish_nodes.length !== 0),
+      description:
+        "A Flowbuild workflow must have at least one start and finsh vertices.",
+      has_start_finish:
+        sf_nodes.start_nodes.length !== 0 && sf_nodes.finish_nodes.length !== 0,
     },
     traversability: {
-      description: 'The union of reachable finish vertices by start vertices is equivalent to all finish vertices.',
+      description:
+        "The union of reachable finish vertices by start vertices is equivalent to all finish vertices.",
       is_traversable_from_starts: non_traversable_finish_nodes.length === 0,
       non_traversable_finish: non_traversable_finish_nodes,
     },
     all_loose_is_finish: {
-      description: 'A loose vertex MUST be a finish vertex.',
+      description: "A loose vertex MUST be a finish vertex.",
       is_all_loose_finish: loose_non_finish_nodes.length === 0,
       loose_non_finish_nodes,
     },
     all_orphan_is_start: {
-      description: 'An orphan vertex MUST be a start vertex.',
+      description: "An orphan vertex MUST be a start vertex.",
       is_all_orphan_start: orphan_non_start_nodes.length === 0,
       orphan_non_start_nodes,
     },
@@ -407,11 +428,14 @@ export const blueprintValidity = (blueprint) => {
   const is_valid = objectReduce(
     validity_decorate_obj,
     (is_valid, validity_clause, validity_args) => {
-      is_valid_key = objectKeyFind(validity_args, (reason, argument) => reason.includes('is_') || reason.includes('has_'));
+      is_valid_key = objectKeyFind(
+        validity_args,
+        (reason, argument) => reason.includes("is_") || reason.includes("has_")
+      );
 
       return is_valid && validity_args[is_valid_key];
     },
-    true,
+    true
   );
 
   return {
@@ -426,13 +450,14 @@ export const blueprintValidity = (blueprint) => {
  * @param {Object} blueprint
  * @param {Array} valid_nodes
  */
-export const getBlueprintInvalidNodes = (blueprint) => _.flatten(
-  Object.values(
-    objectFilter(objectFlatten(
-      blueprintValidity(blueprint),
-    ), (key, value) => key.includes('nodes')),
-  ),
-);
+export const getBlueprintInvalidNodes = (blueprint) =>
+  _.flatten(
+    Object.values(
+      objectFilter(objectFlatten(blueprintValidity(blueprint)), (key, value) =>
+        key.includes("nodes")
+      )
+    )
+  );
 
 /**
  * @abstract returns start and finish nodes object of given blueprint
@@ -446,11 +471,11 @@ export const startAndFinishNodes = (blueprint) => {
   const finishNodes = [];
 
   for (const node of nodes) {
-    if (node.type.toLowerCase() === 'start') {
+    if (node.type.toLowerCase() === "start") {
       startNodes.push(node.id);
     }
 
-    if (node.type.toLowerCase() === 'finish') {
+    if (node.type.toLowerCase() === "finish") {
       finishNodes.push(node.id);
     }
   }
@@ -484,7 +509,7 @@ export const nodeToLane = (blueprint) => {
 export const nodeToLaneRoute = (
   node_route,
   vertices_indices_to_keys,
-  node_id_to_lane,
+  node_id_to_lane
 ) => {
   const lane_route = [];
 
@@ -527,12 +552,16 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
   let is_undefined = false;
   if (start_index === undefined) {
-    console.Warning(`Warning: Claimed start vertex key ${start_key} is not available within nodes`);
+    console.Warning(
+      `Warning: Claimed start vertex key ${start_key} is not available within nodes`
+    );
     is_undefined = true;
   }
 
   if (finish_index === undefined) {
-    console.warn(`Warning: Claimed finish vertex key ${finish_key} is not available within nodes`);
+    console.warn(
+      `Warning: Claimed finish vertex key ${finish_key} is not available within nodes`
+    );
     is_undefined = true;
   }
 
@@ -541,13 +570,17 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   }
 
   if (getAllIndexes(sourceNodes, start_index).length === 0) {
-    console.warn(`Warning: Vertex id ${start_index}, key ${start_key}, is not a orphan node! Detected start nodes: ${sourceNodes}`);
+    console.warn(
+      `Warning: Vertex id ${start_index}, key ${start_key}, is not a orphan node! Detected start nodes: ${sourceNodes}`
+    );
 
     return [];
   }
 
   if (getAllIndexes(sinkNodes, finish_index).length === 0) {
-    console.warn(`Warning: Vertex id ${finish_index}, key ${finish_key}, is not a loose node! Detected finish nodes: ${sinkNodes}`);
+    console.warn(
+      `Warning: Vertex id ${finish_index}, key ${finish_key}, is not a loose node! Detected finish nodes: ${sinkNodes}`
+    );
 
     return [];
   }
@@ -562,22 +595,24 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
   let node_route_i = [];
 
   for (const i in routes) {
-    lane_route_i = nodeToLaneRoute(routes[i], vertices_indices_to_keys, node_id_to_lane);
+    lane_route_i = nodeToLaneRoute(
+      routes[i],
+      vertices_indices_to_keys,
+      node_id_to_lane
+    );
 
     node_route_i = bp_graph.convertVerticesIndexestoKeys(routes[i]);
 
-    route_describe.routes.push(
-      {
-        node_path: {
-          length: node_route_i.length,
-          trace: node_route_i,
-        },
-        lane_path: {
-          length: lane_route_i.length,
-          trace: lane_route_i,
-        },
+    route_describe.routes.push({
+      node_path: {
+        length: node_route_i.length,
+        trace: node_route_i,
       },
-    );
+      lane_path: {
+        length: lane_route_i.length,
+        trace: lane_route_i,
+      },
+    });
   }
 
   return route_describe;
@@ -603,7 +638,11 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
       finishNode = sf_nodes.finish_nodes[j];
 
       const label = `${startNode}_${finishNode}`;
-      paths[label] = fromStartToFinishAllPaths(blueprint, startNode, finishNode);
+      paths[label] = fromStartToFinishAllPaths(
+        blueprint,
+        startNode,
+        finishNode
+      );
 
       total_length += paths[label].length;
     }
@@ -621,11 +660,15 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
  * @param {Object} blueprint
  * @return {object} all_paths
  */
-export const generateValidBlueprintPathDiagrams = (blueprint, bps_root, diagrams_destination_folder) => {
+export const generateValidBlueprintPathDiagrams = (
+  blueprint,
+  bps_root,
+  diagrams_destination_folder
+) => {
   const blueprint_validity = blueprintValidity(blueprint);
 
   if (blueprint_validity.is_valid) {
-    let path_folder = '';
+    let path_folder = "";
     const processed_blueprint = castBlueprintPathsToDiagram(blueprint);
 
     createDirectory(bps_root, diagrams_destination_folder);
@@ -644,10 +687,13 @@ export const generateValidBlueprintPathDiagrams = (blueprint, bps_root, diagrams
 
           return result;
         },
-        {},
+        {}
       );
 
-      saveFilenameContentObject(processed_blueprint.from_to[start_finish], `${bps_root}/${path_folder}`);
+      saveFilenameContentObject(
+        processed_blueprint.from_to[start_finish],
+        `${bps_root}/${path_folder}`
+      );
     }
   }
 };
@@ -664,155 +710,150 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   const nodesConfig = diagramConfig.themes.nodes;
   const edgesConfig = diagramConfig.themes.edges;
 
-  let from_node_key = '';
-  let to_node_key = '';
+  let from_node_key = "";
+  let to_node_key = "";
 
-  let left_node_border = '';
-  let right_node_border = '';
-  let node_type = '';
-  let node_border_type = '';
+  let left_node_border = "";
+  let right_node_border = "";
+  let node_type = "";
+  let node_border_type = "";
 
-  let link_str = '';
-  let string_tmp = '';
+  let link_str = "";
+  let string_tmp = "";
 
   const nodeToType = getBlueprintNodeToTypeMap(blueprint);
   const blueprint_graph = parseBlueprintToGraph(blueprint);
 
   path = blueprint_graph.convertVerticesKeystoIndexes(path);
 
-  const path_edges = blueprint_graph.convertEdgesToVerticesIndices(
-    blueprint_graph.getEdgesFromChain(path),
-  ).map((path_edge) => blueprint_graph.convertVerticesIndexestoKeys(path_edge));
+  const path_edges = blueprint_graph
+    .convertEdgesToVerticesIndices(blueprint_graph.getEdgesFromChain(path))
+    .map((path_edge) =>
+      blueprint_graph.convertVerticesIndexestoKeys(path_edge)
+    );
 
   const invalid_nodes = getBlueprintInvalidNodes(blueprint);
   const path_vertex_keys = blueprint_graph.convertVerticesIndexestoKeys(path);
 
-  const styleFormatter = (str) => str.replace('{', '').replace(/['"]+/g, '').replace('}', '');
+  const styleFormatter = (str) =>
+    str.replace("{", "").replace(/['"]+/g, "").replace("}", "");
 
-  const path_line_numbers = path_edges.map((path_edge) => Object.keys(blueprint_graph.edges).indexOf(
-    `${path_edge[0]}_${path_edge[1]}`,
-  ));
+  const path_line_numbers = path_edges.map((path_edge) =>
+    Object.keys(blueprint_graph.edges).indexOf(
+      `${path_edge[0]}_${path_edge[1]}`
+    )
+  );
 
-  const breakline = '\n';
-  const spacing = '      ';
+  const breakline = "\n";
+  const spacing = "      ";
   let diagram_body = `graph TD${breakline}`;
 
   const diagramNodeType = {};
 
   // Classification of nodes according to diagram
-  Object.keys(blueprint_graph.vertices).forEach(
-    (node_key) => {
-      node_type = nodeToType[node_key].toLowerCase();
+  Object.keys(blueprint_graph.vertices).forEach((node_key) => {
+    node_type = nodeToType[node_key].toLowerCase();
 
-      // Only start and finish nodes are simultaneous
-      if (node_type.includes('start')) {
-        diagramNodeType[node_key] = {
-          style: 'start_node',
-        };
-      } else if (node_type.includes('finish')) {
-        diagramNodeType[node_key] = {
-          style: 'finish_node',
-        };
-      } else if (invalid_nodes.includes(node_key)) {
-        diagramNodeType[node_key] = {
-          style: 'bugged_node',
-        };
-      } else if (path_vertex_keys.includes(node_key)) {
-        diagramNodeType[node_key] = {
-          style: 'trail_node',
-        };
-      } else {
-        diagramNodeType[node_key] = {
-          style: 'default',
-        };
-      }
+    // Only start and finish nodes are simultaneous
+    if (node_type.includes("start")) {
+      diagramNodeType[node_key] = {
+        style: "start_node",
+      };
+    } else if (node_type.includes("finish")) {
+      diagramNodeType[node_key] = {
+        style: "finish_node",
+      };
+    } else if (invalid_nodes.includes(node_key)) {
+      diagramNodeType[node_key] = {
+        style: "bugged_node",
+      };
+    } else if (path_vertex_keys.includes(node_key)) {
+      diagramNodeType[node_key] = {
+        style: "trail_node",
+      };
+    } else {
+      diagramNodeType[node_key] = {
+        style: "default",
+      };
+    }
 
-      // Define the border for each node separarely. It may be extended.
-      if (node_type.includes('start')) {
-        diagramNodeType[node_key].border = 'start_node';
-      } else if (node_type.includes('finish')) {
-        diagramNodeType[node_key].border = 'finish_node';
-      } else if (node_type.includes('flow')) {
-        diagramNodeType[node_key].border = 'flow_node';
-      } else if (path_vertex_keys.includes(node_key)) {
-        diagramNodeType[node_key].border = 'trail_node';
-      } else if (invalid_nodes.includes(node_key)) {
-        diagramNodeType[node_key].border = 'bugged_node';
-      } else {
-        diagramNodeType[node_key].border = 'default';
-      }
-    },
-  );
+    // Define the border for each node separarely. It may be extended.
+    if (node_type.includes("start")) {
+      diagramNodeType[node_key].border = "start_node";
+    } else if (node_type.includes("finish")) {
+      diagramNodeType[node_key].border = "finish_node";
+    } else if (node_type.includes("flow")) {
+      diagramNodeType[node_key].border = "flow_node";
+    } else if (path_vertex_keys.includes(node_key)) {
+      diagramNodeType[node_key].border = "trail_node";
+    } else if (invalid_nodes.includes(node_key)) {
+      diagramNodeType[node_key].border = "bugged_node";
+    } else {
+      diagramNodeType[node_key].border = "default";
+    }
+  });
 
   // Edges lines definition
-  Object.values(blueprint_graph.edges).forEach(
-    (edge) => {
-      // From node
-      from_node_key = edge.startVertex.getKey();
-      node_border_type = diagramNodeType[from_node_key].border;
+  Object.values(blueprint_graph.edges).forEach((edge) => {
+    // From node
+    from_node_key = edge.startVertex.getKey();
+    node_border_type = diagramNodeType[from_node_key].border;
 
-      left_node_border = nodesConfig.borders[node_border_type].left;
-      right_node_border = nodesConfig.borders[node_border_type].right;
-      from_node_key = `${from_node_key}${left_node_border}${from_node_key}${right_node_border}`;
+    left_node_border = nodesConfig.borders[node_border_type].left;
+    right_node_border = nodesConfig.borders[node_border_type].right;
+    from_node_key = `${from_node_key}${left_node_border}${from_node_key}${right_node_border}`;
 
-      // To node
-      to_node_key = edge.endVertex.getKey();
-      node_border_type = diagramNodeType[to_node_key].border;
+    // To node
+    to_node_key = edge.endVertex.getKey();
+    node_border_type = diagramNodeType[to_node_key].border;
 
-      left_node_border = nodesConfig.borders[node_border_type].left;
-      right_node_border = nodesConfig.borders[node_border_type].right;
+    left_node_border = nodesConfig.borders[node_border_type].left;
+    right_node_border = nodesConfig.borders[node_border_type].right;
 
-      to_node_key = `${to_node_key}${left_node_border}${to_node_key}${right_node_border}`;
+    to_node_key = `${to_node_key}${left_node_border}${to_node_key}${right_node_border}`;
 
-      // Arrow
-      if (hasElement(path_edges, edge.getKeyTuple())) {
-        link_str = edgesConfig.trail.link;
-      } else {
-        link_str = edgesConfig.default.link;
-      }
+    // Arrow
+    if (hasElement(path_edges, edge.getKeyTuple())) {
+      link_str = edgesConfig.trail.link;
+    } else {
+      link_str = edgesConfig.default.link;
+    }
 
-      link_str += '>';
+    link_str += ">";
 
-      string_tmp = `${from_node_key} ${link_str} ${to_node_key}`;
-      diagram_body += spacing + string_tmp + breakline;
-    },
-  );
+    string_tmp = `${from_node_key} ${link_str} ${to_node_key}`;
+    diagram_body += spacing + string_tmp + breakline;
+  });
 
   diagram_body += breakline;
 
   // Edges style definition
-  path_line_numbers.forEach(
-    (path_line_number) => {
-      string_tmp = styleFormatter(JSON.stringify(edgesConfig.trail.style));
+  path_line_numbers.forEach((path_line_number) => {
+    string_tmp = styleFormatter(JSON.stringify(edgesConfig.trail.style));
 
-      string_tmp = `linkStyle ${path_line_number} ${string_tmp}`;
-      diagram_body += spacing + string_tmp + breakline;
-    },
-  );
+    string_tmp = `linkStyle ${path_line_number} ${string_tmp}`;
+    diagram_body += spacing + string_tmp + breakline;
+  });
 
   diagram_body += breakline;
 
   // Add node classes
-  Object.keys(nodesConfig.style).forEach(
-    (node_key) => {
-      string_tmp = styleFormatter(JSON.stringify(nodesConfig.style[node_key]));
+  Object.keys(nodesConfig.style).forEach((node_key) => {
+    string_tmp = styleFormatter(JSON.stringify(nodesConfig.style[node_key]));
 
-      string_tmp = `classDef ${node_key} ${string_tmp}`;
-      diagram_body += spacing + string_tmp + breakline;
-    },
-  );
+    string_tmp = `classDef ${node_key} ${string_tmp}`;
+    diagram_body += spacing + string_tmp + breakline;
+  });
 
   diagram_body += breakline;
 
   // Add node classes
-  Object.keys(diagramNodeType).forEach(
-    (node_key) => {
-      if (diagramNodeType[node_key].style !== 'default') {
-        string_tmp = `class ${node_key} ${diagramNodeType[node_key].style}`;
-        diagram_body += spacing + string_tmp + breakline;
-      }
-    },
-  );
+  Object.keys(diagramNodeType).forEach((node_key) => {
+    if (diagramNodeType[node_key].style !== "default") {
+      string_tmp = `class ${node_key} ${diagramNodeType[node_key].style}`;
+      diagram_body += spacing + string_tmp + breakline;
+    }
+  });
 
   return diagram_body;
 };
@@ -836,7 +877,10 @@ export const castBlueprintPathsToDiagram = (blueprint) => {
 
     for (const route of paths_obj.from_to[from_to_key].routes) {
       try {
-        diagrams[counter] = castBlueprintToDiagram(blueprint, route.node_path.trace);
+        diagrams[counter] = castBlueprintToDiagram(
+          blueprint,
+          route.node_path.trace
+        );
 
         counter += 1;
       } catch (error) {
@@ -868,7 +912,9 @@ export const summarizeBlueprint = (blueprint) => {
     ...describeBlueprint(blueprint),
     validity: validity_json,
     mermaidDiagram: castBlueprintPathsToDiagram(blueprint),
-    ...validity_json.is_valid && { paths: fromStartToFinishCombsAllPaths(blueprint) },
+    ...(validity_json.is_valid && {
+      paths: fromStartToFinishCombsAllPaths(blueprint),
+    }),
   };
 };
 
@@ -879,7 +925,7 @@ export const summarizeBlueprint = (blueprint) => {
  * @return {object} islands
  */
 export const parseWorkflowXMLToGraph = () => {
-  throw Error('Not implemented');
+  throw Error("Not implemented");
 };
 
 /**
@@ -888,4 +934,5 @@ export const parseWorkflowXMLToGraph = () => {
  * @param {Object} blueprint
  * @return {object} islands
  */
-export const workflowIslands = (blueprint) => parseBlueprintToGraph(blueprint).islands();
+export const workflowIslands = (blueprint) =>
+  parseBlueprintToGraph(blueprint).islands();

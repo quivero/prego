@@ -6,25 +6,23 @@ import {
   castBlueprintPathsToDiagram,
   generateValidBlueprintPathDiagrams,
   fromStartToFinishCombsAllPaths,
-} from '../utils/workflow/parsers.js';
+} from "../utils/workflow/parsers.js";
 
-import {
-  loadJSONfromFile,
-  createDirectory,
-} from '../utils/file/file.js';
+import { loadJSONfromFile, createDirectory } from "../utils/file/file.js";
 
-import {
-  statusImgPath
-} from '../utils/logging/status.js'; 
+import { statusImgPath } from "../utils/logging/status.js";
 
-import {
-  app
-} from './router.js'
+import { app } from "./router.js";
 
-app.get('/status/:code', (req, res) => {
-  res.sendFile(process.cwd()+'/'+statusImgPath(req.params.code));
-})
+app.get("/status/:code", (req, res) => {
+  res.sendFile(process.cwd() + "/" + statusImgPath(req.params.code));
+});
 
+app.get("/", (req, res) => {
+  res.send(":)");
+});
+
+/*
 app.get('/', (req, res) => {
   // Driver program - Create a sample graph
   // Driver program - Create a sample graph
@@ -57,4 +55,5 @@ app.get('/', (req, res) => {
     res.send(':)');
   }
 });
+*/
 // [END app]

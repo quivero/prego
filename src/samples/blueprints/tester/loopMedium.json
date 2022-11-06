@@ -6,42 +6,18 @@
       {
         "id": "anyone",
         "name": "anyone",
-        "rule": [
-          "fn",
-          [
-            "&",
-            "args"
-          ],
-          true
-        ]
+        "rule": ["fn", ["&", "args"], true]
       },
       {
         "id": "actor_id",
         "name": "actor_id",
         "rule": [
           "fn",
-          [
-            "actor_data",
-            "bag"
-          ],
+          ["actor_data", "bag"],
           [
             "=",
-            [
-              "get",
-              "bag",
-              [
-                "`",
-                "actor_id"
-              ]
-            ],
-            [
-              "get",
-              "actor_data",
-              [
-                "`",
-                "actor_id"
-              ]
-            ]
+            ["get", "bag", ["`", "actor_id"]],
+            ["get", "actor_data", ["`", "actor_id"]]
           ]
         ]
       }
@@ -82,21 +58,14 @@
         "parameters": {
           "input": {},
           "action": "LOGIN_FORM",
-          "encrypted_data": [
-            "user.password"
-          ],
+          "encrypted_data": ["user.password"],
           "activity_schema": {
             "type": "object",
-            "required": [
-              "user"
-            ],
+            "required": ["user"],
             "properties": {
               "user": {
                 "type": "object",
-                "required": [
-                  "password",
-                  "cpf_or_email"
-                ],
+                "required": ["password", "cpf_or_email"],
                 "properties": {
                   "password": {
                     "type": "object"
@@ -395,8 +364,6 @@
     "environment": {
       "TOKEN": "TOKEN"
     },
-    "requirements": [
-      "core"
-    ]
+    "requirements": ["core"]
   }
 }

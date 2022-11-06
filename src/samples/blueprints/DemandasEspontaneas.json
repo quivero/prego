@@ -2,50 +2,24 @@
   "name": "DemandasEspontaneas",
   "description": "Orsegups demandas espontaneas",
   "blueprint_spec": {
-    "requirements": [
-      "core"
-    ],
+    "requirements": ["core"],
     "prepare": [],
     "lanes": [
       {
         "id": "o1",
         "name": "default",
-        "rule": [
-          "fn",
-          [
-            "&",
-            "args"
-          ],
-          true
-        ]
+        "rule": ["fn", ["&", "args"], true]
       },
       {
         "id": "o2",
         "name": "representante",
         "rule": [
           "fn",
-          [
-            "actor_data",
-            "bag"
-          ],
+          ["actor_data", "bag"],
           [
             "=",
-            [
-              "get",
-              "bag",
-              [
-                "`",
-                "actor_id"
-              ]
-            ],
-            [
-              "get",
-              "actor_data",
-              [
-                "`",
-                "actor_id"
-              ]
-            ]
+            ["get", "bag", ["`", "actor_id"]],
+            ["get", "actor_data", ["`", "actor_id"]]
           ]
         ]
       },
@@ -54,10 +28,7 @@
         "name": "gestores",
         "rule": [
           "fn",
-          [
-            "actor_data",
-            "bag"
-          ],
+          ["actor_data", "bag"],
           [
             "eval",
             [
@@ -67,30 +38,10 @@
                 "map",
                 [
                   "fn",
-                  [
-                    "v"
-                  ],
-                  [
-                    "=",
-                    "v",
-                    [
-                      "get",
-                      "actor_data",
-                      [
-                        "`",
-                        "actor_id"
-                      ]
-                    ]
-                  ]
+                  ["v"],
+                  ["=", "v", ["get", "actor_data", ["`", "actor_id"]]]
                 ],
-                [
-                  "get",
-                  "bag",
-                  [
-                    "`",
-                    "gestores_ids"
-                  ]
-                ]
+                ["get", "bag", ["`", "gestores_ids"]]
               ]
             ]
           ]
@@ -101,10 +52,7 @@
         "name": "pool",
         "rule": [
           "fn",
-          [
-            "actor_data",
-            "bag"
-          ],
+          ["actor_data", "bag"],
           [
             "eval",
             [
@@ -114,30 +62,10 @@
                 "map",
                 [
                   "fn",
-                  [
-                    "v"
-                  ],
-                  [
-                    "=",
-                    "v",
-                    [
-                      "get",
-                      "actor_data",
-                      [
-                        "`",
-                        "actor_id"
-                      ]
-                    ]
-                  ]
+                  ["v"],
+                  ["=", "v", ["get", "actor_data", ["`", "actor_id"]]]
                 ],
-                [
-                  "get",
-                  "bag",
-                  [
-                    "`",
-                    "lista_vendedores_ids"
-                  ]
-                ]
+                ["get", "bag", ["`", "lista_vendedores_ids"]]
               ]
             ]
           ]
@@ -148,10 +76,7 @@
         "name": "authenticated",
         "rule": [
           "fn",
-          [
-            "actor_data",
-            "bag"
-          ],
+          ["actor_data", "bag"],
           [
             "eval",
             [
@@ -159,28 +84,8 @@
               "or",
               [
                 "map",
-                [
-                  "fn",
-                  [
-                    "v"
-                  ],
-                  [
-                    "=",
-                    "v",
-                    [
-                      "`",
-                      "authenticated"
-                    ]
-                  ]
-                ],
-                [
-                  "get",
-                  "actor_data",
-                  [
-                    "`",
-                    "claims"
-                  ]
-                ]
+                ["fn", ["v"], ["=", "v", ["`", "authenticated"]]],
+                ["get", "actor_data", ["`", "claims"]]
               ]
             ]
           ]
@@ -195,12 +100,7 @@
         "parameters": {
           "input_schema": {
             "type": "object",
-            "required": [
-              "nome",
-              "prod_servico",
-              "telefone",
-              "compromisso"
-            ],
+            "required": ["nome", "prod_servico", "telefone", "compromisso"],
             "properties": {
               "id_cliente_ext": {
                 "type": "string"
@@ -242,14 +142,7 @@
               },
               "prod_servico": {
                 "type": "string",
-                "enum": [
-                  "alarme",
-                  "cftv",
-                  "pgo",
-                  "ALARME",
-                  "CFTV",
-                  "PGO"
-                ]
+                "enum": ["alarme", "cftv", "pgo", "ALARME", "CFTV", "PGO"]
               },
               "representante": {
                 "type": "string"

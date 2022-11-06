@@ -1,4 +1,4 @@
-import LinkedList from '../linked-list/LinkedList.js';
+import LinkedList from "../linked-list/LinkedList.js";
 
 export default class GraphVertex {
   /**
@@ -6,7 +6,7 @@ export default class GraphVertex {
    */
   constructor(label, value = 0) {
     if (label === undefined) {
-      throw new Error('Graph vertex must have a value');
+      throw new Error("Graph vertex must have a value");
     }
 
     /**
@@ -73,7 +73,10 @@ export default class GraphVertex {
     const edges = this.edges.toArray();
 
     /** @param {LinkedListNode} node */
-    const neighborsConverter = (node) => (node.value.startVertex === this ? node.value.endVertex : node.value.startVertex);
+    const neighborsConverter = (node) =>
+      node.value.startVertex === this
+        ? node.value.endVertex
+        : node.value.startVertex;
 
     // Return either start or end vertex.
     // For undirected graphs it is possible that current vertex will be the end one.
@@ -112,7 +115,8 @@ export default class GraphVertex {
    */
   hasNeighbor(vertex) {
     const vertexNode = this.edges.find({
-      callback: (edge) => edge.startVertex === vertex || edge.endVertex === vertex,
+      callback: (edge) =>
+        edge.startVertex === vertex || edge.endVertex === vertex,
     });
 
     return !!vertexNode;
@@ -123,7 +127,8 @@ export default class GraphVertex {
    * @returns {(GraphEdge|undefined)}
    */
   findEdge(vertex) {
-    const edgeFinder = (edge) => edge.startVertex === vertex || edge.endVertex === vertex;
+    const edgeFinder = (edge) =>
+      edge.startVertex === vertex || edge.endVertex === vertex;
 
     const edge = this.edges.find({ callback: edgeFinder });
 

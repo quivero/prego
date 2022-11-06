@@ -1,15 +1,10 @@
 // Javascript program to generate all unique partitions of an integer
-import 'lodash.combinations';
-import _ from 'lodash';
+import "lodash.combinations";
+import _ from "lodash";
 
-import {
-  hasElement,
-  ones,
-  sort,
-  getUniques,
-} from '../arrays/arrays.js';
+import { hasElement, ones, sort, getUniques } from "../arrays/arrays.js";
 
-import { decimalPart } from '../math/math.js';
+import { decimalPart } from "../math/math.js";
 
 /*
  * @abstract returns unique partitions of an integer with
@@ -20,7 +15,7 @@ import { decimalPart } from '../math/math.js';
  */
 export const partitions = (n) => {
   if (decimalPart(n) !== 0 || n <= 0) {
-    throw Error('Given number must be positive and natural!');
+    throw Error("Given number must be positive and natural!");
   }
 
   const all_partitions = [];
@@ -56,7 +51,9 @@ export const cardvecCombinations = (points, card_vec) => {
   let elem_1_combs = [];
 
   if (points.length !== card_vec.reduce((a, b) => a + b)) {
-    throw Error('The sum of card_vec elements MUST be equal to points cardinality');
+    throw Error(
+      "The sum of card_vec elements MUST be equal to points cardinality"
+    );
   }
 
   if (card_vec.length === 1) {
@@ -66,7 +63,10 @@ export const cardvecCombinations = (points, card_vec) => {
   for (const elem_0_comb of _.combinations(points, elem_0)) {
     blob_comb = [elem_0_comb];
 
-    elem_1_combs = cardvecCombinations(_.difference(points, elem_0_comb), card_vec.slice(1));
+    elem_1_combs = cardvecCombinations(
+      _.difference(points, elem_0_comb),
+      card_vec.slice(1)
+    );
 
     blob_comb.push(elem_1_combs);
     blob_combs.push(blob_comb);

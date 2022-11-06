@@ -1,14 +1,14 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../data-structures/graph/GraphEdge';
-import Graph from '../../../data-structures/graph/Graph';
-import bfTravellingSalesman from '../bfTravellingSalesman';
+import GraphVertex from "../../../data-structures/graph/GraphVertex";
+import GraphEdge from "../../../data-structures/graph/GraphEdge";
+import Graph from "../../../data-structures/graph/Graph";
+import bfTravellingSalesman from "../bfTravellingSalesman";
 
-describe('bfTravellingSalesman', () => {
-  it('should solve problem for simple graph', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
+describe("bfTravellingSalesman", () => {
+  it("should solve problem for simple graph", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
 
     const edgeAB = new GraphEdge(vertexA, vertexB, 1);
     const edgeBD = new GraphEdge(vertexB, vertexD, 1);
@@ -25,10 +25,20 @@ describe('bfTravellingSalesman', () => {
     const edgeCB = new GraphEdge(vertexC, vertexB, 9);
 
     const graph = new Graph(true);
-    graph
-      .addEdges([edgeAB, edgeBD, edgeDC, edgeCA,
-        edgeBA, edgeDB, edgeCD, edgeAC,
-        edgeAD, edgeDA, edgeBC, edgeCB]);
+    graph.addEdges([
+      edgeAB,
+      edgeBD,
+      edgeDC,
+      edgeCA,
+      edgeBA,
+      edgeDB,
+      edgeCD,
+      edgeAC,
+      edgeAD,
+      edgeDA,
+      edgeBC,
+      edgeCB,
+    ]);
 
     const salesmanPath = bfTravellingSalesman(graph);
 

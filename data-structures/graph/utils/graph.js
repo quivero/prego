@@ -1,14 +1,11 @@
-import 'lodash.combinations';
-import _ from 'lodash';
+import "lodash.combinations";
+import _ from "lodash";
 
-import GraphVertex from '../GraphVertex.js';
-import GraphEdge from '../GraphEdge.js';
-import Graph from '../Graph.js';
+import GraphVertex from "../GraphVertex.js";
+import GraphEdge from "../GraphEdge.js";
+import Graph from "../Graph.js";
 
-import {
-  objectInit,
-  objectMap,
-} from '../../../utils/objects/objects.js';
+import { objectInit, objectMap } from "../../../utils/objects/objects.js";
 
 export const createVertices = (labels) => {
   const vertices = [];
@@ -34,31 +31,26 @@ export const createEdges = (vertices_tuples) => {
 
 export const createEdgesFromVerticesValues = (vertices_values_tuples) => {
   const vertex_id_to_obj = objectMap(
-    objectInit(
-      _.uniq(_.flatten(vertices_values_tuples)),
-      {},
-    ),
-    (vertex_key, obj) => new GraphVertex(vertex_key),
+    objectInit(_.uniq(_.flatten(vertices_values_tuples)), {}),
+    (vertex_key, obj) => new GraphVertex(vertex_key)
   );
 
   return createEdges(
-    vertices_values_tuples.map(
-      (vertices_values_tuple) => [
-        vertex_id_to_obj[vertices_values_tuple[0]],
-        vertex_id_to_obj[vertices_values_tuple[1]],
-      ],
-    ),
+    vertices_values_tuples.map((vertices_values_tuple) => [
+      vertex_id_to_obj[vertices_values_tuple[0]],
+      vertex_id_to_obj[vertices_values_tuple[1]],
+    ])
   );
 };
 
 export const createCompleteUndirectedGraph = (vertices_keys) => {
   const graph = new Graph(false);
 
-  graph.addEdges(createEdgesFromVerticesValues(_.combinations(vertices_keys, 2)));
+  graph.addEdges(
+    createEdgesFromVerticesValues(_.combinations(vertices_keys, 2))
+  );
 
   return graph;
 };
 
-export const convertGraphToDiagram = (graph) => {
-
-};
+export const convertGraphToDiagram = (graph) => {};

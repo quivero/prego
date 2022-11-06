@@ -4,17 +4,15 @@ module.exports = {
     es2021: true,
   },
   env: { jest: true },
-  extends: [
-    'airbnb-base',
-  ],
+  extends: ["airbnb-base"],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
   rules: {
-      camelcase: "off",
-      nounderscoredangle: "off",
-      nounusedvars: "off",
-      importextensions: "off",
+    camelcase: "off",
+    nounderscoredangle: "off",
+    nounusedvars: "off",
+    importextensions: "off",
   },
 };

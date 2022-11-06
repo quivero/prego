@@ -9,9 +9,9 @@ _Read this in other languages:_
 [_한국어_](README.ko-KR.md)
 
 In computing, a **hash table** (hash map) is a data
-structure which implements an *associative array*
-abstract data type, a structure that can *map keys
-to values*. A hash table uses a *hash function* to
+structure which implements an _associative array_
+abstract data type, a structure that can _map keys
+to values_. A hash table uses a _hash function_ to
 compute an index into an array of buckets or slots,
 from which the desired value can be found
 

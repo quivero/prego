@@ -1,5 +1,5 @@
-import Stack from '../../data-structures/stack/Stack.js';
-import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
+import Stack from "../../data-structures/stack/Stack.js";
+import depthFirstSearch from "../depth-first-search/depthFirstSearch.js";
 
 /**
  * @param {Graph} graph
@@ -38,7 +38,8 @@ function getVerticesSortedByDfsFinishTime(graph) {
     },
 
     // Don't allow to traverse the nodes that have been already visited.
-    allowTraversal: ({ nextVertex }) => !visitedVerticesSet[nextVertex.getKey()],
+    allowTraversal: ({ nextVertex }) =>
+      !visitedVerticesSet[nextVertex.getKey()],
   };
 
   // Do FIRST DFS PASS traversal for all graph vertices to fill the verticesByFinishTime stack.
@@ -85,12 +86,15 @@ function getSCCSets(graph, verticesByFinishTime) {
     // which doesn't have parent.
     leaveVertex: ({ previousVertex }) => {
       if (previousVertex === null) {
-        stronglyConnectedComponentsSets.push([...stronglyConnectedComponentsSet]);
+        stronglyConnectedComponentsSets.push([
+          ...stronglyConnectedComponentsSet,
+        ]);
       }
     },
 
     // Don't allow traversal of already visited vertices.
-    allowTraversal: ({ nextVertex }) => !visitedVerticesSet[nextVertex.getKey()],
+    allowTraversal: ({ nextVertex }) =>
+      !visitedVerticesSet[nextVertex.getKey()],
   };
 
   while (!verticesByFinishTime.isEmpty()) {

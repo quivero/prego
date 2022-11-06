@@ -1,7 +1,7 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../data-structures/graph/GraphEdge';
-import Graph from '../../../data-structures/graph/Graph';
-import eulerianPath from '../eulerianPath';
+import GraphVertex from "../../../data-structures/graph/GraphVertex";
+import GraphEdge from "../../../data-structures/graph/GraphEdge";
+import Graph from "../../../data-structures/graph/Graph";
+import eulerianPath from "../eulerianPath";
 
 console.warn = jest.fn();
 
@@ -9,15 +9,15 @@ beforeEach(() => {
   console.warn.mockClear();
 });
 
-describe('eulerianPath', () => {
-  it('should find Eulerian Circuit in graph', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
-    const vertexF = new GraphVertex('F');
-    const vertexG = new GraphVertex('G');
+describe("eulerianPath", () => {
+  it("should find Eulerian Circuit in graph", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
+    const vertexF = new GraphVertex("F");
+    const vertexG = new GraphVertex("G");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAE = new GraphEdge(vertexA, vertexE);
@@ -32,9 +32,18 @@ describe('eulerianPath', () => {
 
     const graph = new Graph();
 
-    graph
-      .addEdges([edgeAB, edgeAE, edgeAF, edgeAG, edgeGF,
-        edgeBE, edgeEB, edgeBC, edgeED, edgeCD]);
+    graph.addEdges([
+      edgeAB,
+      edgeAE,
+      edgeAF,
+      edgeAG,
+      edgeGF,
+      edgeBE,
+      edgeEB,
+      edgeBC,
+      edgeED,
+      edgeCD,
+    ]);
 
     const graphEdgesCount = graph.getAllEdges().length;
 
@@ -55,15 +64,15 @@ describe('eulerianPath', () => {
     expect(eulerianPathSet[10].getKey()).toBe(vertexA.getKey());
   });
 
-  it('should find Eulerian Path in graph', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
-    const vertexF = new GraphVertex('F');
-    const vertexG = new GraphVertex('G');
-    const vertexH = new GraphVertex('H');
+  it("should find Eulerian Path in graph", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
+    const vertexF = new GraphVertex("F");
+    const vertexG = new GraphVertex("G");
+    const vertexH = new GraphVertex("H");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexA, vertexC);
@@ -77,9 +86,17 @@ describe('eulerianPath', () => {
 
     const graph = new Graph();
 
-    graph
-      .addEdges([edgeAB, edgeAC, edgeBD, edgeDC, edgeHG,
-        edgeCE, edgeEF, edgeFH, edgeFG]);
+    graph.addEdges([
+      edgeAB,
+      edgeAC,
+      edgeBD,
+      edgeDC,
+      edgeHG,
+      edgeCE,
+      edgeEF,
+      edgeFH,
+      edgeFG,
+    ]);
 
     const graphEdgesCount = graph.getAllEdges().length;
 

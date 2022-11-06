@@ -8,28 +8,11 @@
         "name": "actor_id",
         "rule": [
           "fn",
-          [
-            "actor_data",
-            "bag"
-          ],
+          ["actor_data", "bag"],
           [
             "=",
-            [
-              "get",
-              "bag",
-              [
-                "`",
-                "actor_id"
-              ]
-            ],
-            [
-              "get",
-              "actor_data",
-              [
-                "`",
-                "actor_id"
-              ]
-            ]
+            ["get", "bag", ["`", "actor_id"]],
+            ["get", "actor_data", ["`", "actor_id"]]
           ]
         ]
       },
@@ -50,9 +33,7 @@
           "timeout": 604800,
           "input_schema": {
             "type": "object",
-            "required": [
-              "cpf"
-            ],
+            "required": ["cpf"],
             "properties": {
               "cpf": {
                 "type": "string"
@@ -84,10 +65,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -204,10 +182,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -245,10 +220,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -302,10 +274,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -392,10 +361,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -430,10 +396,7 @@
             },
             "verb": "GET"
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -471,10 +434,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -533,10 +493,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -628,10 +585,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -686,10 +640,7 @@
               }
             }
           },
-          "valid_response_codes": [
-            200,
-            204
-          ]
+          "valid_response_codes": [200, 204]
         }
       },
       {
@@ -735,8 +686,6 @@
     "environment": {
       "TOKEN": "TOKEN"
     },
-    "requirements": [
-      "core"
-    ]
+    "requirements": ["core"]
   }
 }

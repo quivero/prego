@@ -1,4 +1,4 @@
-import GraphVertex from '../../data-structures/graph/GraphVertex.js';
+import GraphVertex from "../../data-structures/graph/GraphVertex.js";
 
 /**
  * @param {number[][]} adjacencyMatrix
@@ -7,20 +7,31 @@ import GraphVertex from '../../data-structures/graph/GraphVertex.js';
  * @param {GraphVertex} vertexCandidate
  * @return {boolean}
  */
-function isSafe(adjacencyMatrix, verticesKeystoIndices, cycle, vertexCandidate) {
+function isSafe(
+  adjacencyMatrix,
+  verticesKeystoIndices,
+  cycle,
+  vertexCandidate
+) {
   const endVertex = cycle[cycle.length - 1];
 
   // Get end and candidate vertices indices in adjacency matrix.
-  const candidateVertexAdjacencyIndex = verticesKeystoIndices[vertexCandidate.getKey()];
+  const candidateVertexAdjacencyIndex =
+    verticesKeystoIndices[vertexCandidate.getKey()];
   const endVertexAdjacencyIndex = verticesKeystoIndices[endVertex.getKey()];
 
   // Check if last vertex in the path and candidate vertex are adjacent.
-  if (adjacencyMatrix[endVertexAdjacencyIndex][candidateVertexAdjacencyIndex] === Infinity) {
+  if (
+    adjacencyMatrix[endVertexAdjacencyIndex][candidateVertexAdjacencyIndex] ===
+    Infinity
+  ) {
     return false;
   }
 
   // Check if vertexCandidate is being added to the path for the first time.
-  const candidateDuplicate = cycle.find((vertex) => vertex.getKey() === vertexCandidate.getKey());
+  const candidateDuplicate = cycle.find(
+    (vertex) => vertex.getKey() === vertexCandidate.getKey()
+  );
 
   return !candidateDuplicate;
 }
@@ -43,7 +54,10 @@ function isCycle(adjacencyMatrix, verticesKeystoIndices, cycle) {
   const endVertexAdjacencyIndex = verticesKeystoIndices[endVertex.getKey()];
 
   // Check if we can go from end vertex to the start one.
-  return adjacencyMatrix[endVertexAdjacencyIndex][startVertexAdjacencyIndex] !== Infinity;
+  return (
+    adjacencyMatrix[endVertexAdjacencyIndex][startVertexAdjacencyIndex] !==
+    Infinity
+  );
 }
 
 /**
@@ -60,7 +74,9 @@ function* hamiltonianCycleRecursive({
   cycle,
 }) {
   // Clone cycle in order to prevent it from modification by other DFS branches.
-  const currentCycle = [...cycle].map((vertex) => new GraphVertex(vertex.label));
+  const currentCycle = [...cycle].map(
+    (vertex) => new GraphVertex(vertex.label)
+  );
 
   if (vertices.length === currentCycle.length) {
     // Hamiltonian path is found.
@@ -77,20 +93,24 @@ function* hamiltonianCycleRecursive({
     const vertexCandidate = vertices[vertexIndex];
 
     // Check if it is safe to put vertex candidate to cycle.
-    if (isSafe(adjacencyMatrix, verticesKeystoIndices, currentCycle, vertexCandidate)) {
+    if (
+      isSafe(
+        adjacencyMatrix,
+        verticesKeystoIndices,
+        currentCycle,
+        vertexCandidate
+      )
+    ) {
       // Add candidate vertex to cycle path.
       currentCycle.push(vertexCandidate);
 
       // Try to find other vertices in cycle.
-      for (
-        const cycle_ of
-        hamiltonianCycleRecursive({
-          adjacencyMatrix,
-          vertices,
-          verticesKeystoIndices,
-          cycle: currentCycle,
-        })
-      ) {
+      for (const cycle_ of hamiltonianCycleRecursive({
+        adjacencyMatrix,
+        vertices,
+        verticesKeystoIndices,
+        cycle: currentCycle,
+      })) {
         yield cycle_;
       }
 
@@ -124,14 +144,13 @@ export default function* hamiltonianCycle(graph) {
   const cycle = [startVertex];
 
   // Try to find cycles recursively in Depth First Search order.
-  for (const cycle_ of
-    hamiltonianCycleRecursive({
-      adjacencyMatrix,
-      vertices,
-      verticesKeystoIndices,
-      cycles,
-      cycle,
-    })) {
+  for (const cycle_ of hamiltonianCycleRecursive({
+    adjacencyMatrix,
+    vertices,
+    verticesKeystoIndices,
+    cycles,
+    cycle,
+  })) {
     yield cycle_;
   }
 }

@@ -12,15 +12,15 @@
         "next": "2",
         "parameters": {
           "input_schema": {
-              "type": "object",
-              "properties": {
-                  "flow": {
-                      "type": "object",
-                      "properties": {
-                          "action": { "type": "string" }
-                      }
-                  }
+            "type": "object",
+            "properties": {
+              "flow": {
+                "type": "object",
+                "properties": {
+                  "action": { "type": "string" }
+                }
               }
+            }
           }
         },
         "required": ["flow"],
@@ -53,7 +53,7 @@
         "parameters": {
           "action": "PROVIDE_NEXT_ACTION",
           "input": {
-             "current_action": { "$ref": "bag.flow.action" }
+            "current_action": { "$ref": "bag.flow.action" }
           },
           "activity_manager": "commit",
           "activity_schema": {
@@ -64,26 +64,26 @@
         }
       },
       {
-      	"id":"4",
-      	"name":"SAVE-ACTION",
-      	"next":"5",
-      	"type":"SystemTask",
-      	"category":"setToBag",
-      	"lane_id":"everyone",
-      	"parameters":{
-      		"input":{
-      			"flow":{
-      				"action": {
-      					"$ref": "result.activities[0].data.qty"
-      				}
-      			}
-      		}
-      	}
+        "id": "4",
+        "name": "SAVE-ACTION",
+        "next": "5",
+        "type": "SystemTask",
+        "category": "setToBag",
+        "lane_id": "everyone",
+        "parameters": {
+          "input": {
+            "flow": {
+              "action": {
+                "$ref": "result.activities[0].data.qty"
+              }
+            }
+          }
+        }
       },
       {
         "id": "5",
         "type": "Flow",
-        "name": "VERIFY-TIMEOUT", 
+        "name": "VERIFY-TIMEOUT",
         "next": {
           "true": "6",
           "default": "3"
@@ -109,7 +109,7 @@
       {
         "id": "everyone",
         "name": "free lane",
-        "rule": {"$js": "({actor_data, bag}) => true"}
+        "rule": { "$js": "({actor_data, bag}) => true" }
       }
     ],
     "environment": {}

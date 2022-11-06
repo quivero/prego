@@ -1,6 +1,6 @@
 # Some structures, many possibilities
 
-[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md) 
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 [![npm version](https://img.shields.io/npm/v/dot-quiver)](https://www.npmjs.com/package/quivero-api)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/dot-quiver)
 ![Documentation Status](https://img.shields.io/npm/l/dot-quiver)
@@ -28,38 +28,38 @@ Its objective is to provide some data structures for application-suitable scenar
 
 The package allows to be used as a library. [Here is an example](https://github.com/quivero/use-case) of the library use case.
 
-1) Go to your project path (for example, NodeJS or React);
-2) Install the library with the command ```npm install --save quivero-api```;
-3) Import in your project folder from project root folder, for example, ```import Graph from 'quivero-api/data-structures/graph/Graph.js'```
+1. Go to your project path (for example, NodeJS or React);
+2. Install the library with the command `npm install --save quivero-api`;
+3. Import in your project folder from project root folder, for example, `import Graph from 'quivero-api/data-structures/graph/Graph.js'`
 
 ### As a service
 
 You may utilize some cloud service to host the app, like AWS, Azure or GCloud, but in this case you might run locally. You can use the docker file by building and running the application with commands below
 
-```>>> docker build -t quivero . &&& docker run --publish 8080:8080 quivero```
+`>>> docker build -t quivero . &&& docker run --publish 8080:8080 quivero`
 
 To host it locally, you must follow the instructions below:
 
-1) Clone the repository typing on terminal `git clone git@github.com:quivero/quivero-api.git`;
-2) Run the commands:
-    
-    2.1. `npm install`: install local dependencies;
-    
-    2.2. `npm start`: run the server locally;
+1. Clone the repository typing on terminal `git clone git@github.com:quivero/quivero-api.git`;
+2. Run the commands:
 
-3) Open a browser;
-4) Type `localhost:8080` on the URL field;
+   2.1. `npm install`: install local dependencies;
+
+   2.2. `npm start`: run the server locally;
+
+3. Open a browser;
+4. Type `localhost:8080` on the URL field;
 
 ## Featured
 
-The library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It is a feature as a parser for Flowbuild Workflow blueprints, available [here](https://github.com/quivero-api/quivero-api/blob/44217b78c9b15dfbe33708b8f744ce8d3ea00e99/utils/workflow/parsers.js#L531). There are some samples [here](https://github.com/quivero/quivero-api-api/tree/main/src/samples/blueprints/diagrams). 
+The library [Mermaid](https://github.com/mermaid-js/mermaid-cli) offers a graphical manner to visualize graphs. It is a feature as a parser for Flowbuild Workflow blueprints, available [here](https://github.com/quivero-api/quivero-api/blob/44217b78c9b15dfbe33708b8f744ce8d3ea00e99/utils/workflow/parsers.js#L531). There are some samples [here](https://github.com/quivero/quivero-api-api/tree/main/src/samples/blueprints/diagrams).
 
-For diagrams rendering, you need to: 
+For diagrams rendering, you need to:
 
-1) Copy the content of some text file from [this](https://github.com/quivero/quivero-api/tree/main/src/samples/blueprints/diagrams) path; 
-2) Enter on the Mermaid Editor [here](https://mermaid.live);
-3) Paste the copied content from item 1) on the respective text field;
-4) In case the diagram is too big, the platform will complain and deactivate auto-rendering. You must reactivate it to see the rendered diagram. 
+1. Copy the content of some text file from [this](https://github.com/quivero/quivero-api/tree/main/src/samples/blueprints/diagrams) path;
+2. Enter on the Mermaid Editor [here](https://mermaid.live);
+3. Paste the copied content from item 1) on the respective text field;
+4. In case the diagram is too big, the platform will complain and deactivate auto-rendering. You must reactivate it to see the rendered diagram.
 
 ## Backlog
 
@@ -73,10 +73,8 @@ A glossary with implementation possibilities is available [here](https://en.wiki
 
 1. data-structures/graph/Graph.js:
 
-    - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
-
+   - [ ] isTraceable(): [definition](https://mathworld.wolfram.com/TraceableGraph.html)
 
 ## Prelude
 
-In case you run it as a service, nodemon may disappear from terminal. You may kill the process by run of command ```fuser -k 8080/tcp``` 
-
+In case you run it as a service, nodemon may disappear from terminal. You may kill the process by run of command `fuser -k 8080/tcp`

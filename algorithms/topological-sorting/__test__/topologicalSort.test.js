@@ -1,19 +1,19 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../data-structures/graph/GraphEdge';
-import Graph from '../../../data-structures/graph/Graph';
+import GraphVertex from "../../../data-structures/graph/GraphVertex";
+import GraphEdge from "../../../data-structures/graph/GraphEdge";
+import Graph from "../../../data-structures/graph/Graph";
 
-import topologicalSort from '../topologicalSort';
+import topologicalSort from "../topologicalSort";
 
-describe('topologicalSort', () => {
-  it('should do topological sorting on graph', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
-    const vertexF = new GraphVertex('F');
-    const vertexG = new GraphVertex('G');
-    const vertexH = new GraphVertex('H');
+describe("topologicalSort", () => {
+  it("should do topological sorting on graph", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
+    const vertexF = new GraphVertex("F");
+    const vertexG = new GraphVertex("G");
+    const vertexH = new GraphVertex("H");
 
     const edgeAC = new GraphEdge(vertexA, vertexC);
     const edgeBC = new GraphEdge(vertexB, vertexC);
@@ -26,9 +26,16 @@ describe('topologicalSort', () => {
 
     const graph = new Graph(true);
 
-    graph
-      .addEdges([edgeAC, edgeBC, edgeBD, edgeCE,
-        edgeDF, edgeEF, edgeEH, edgeFG]);
+    graph.addEdges([
+      edgeAC,
+      edgeBC,
+      edgeBD,
+      edgeCE,
+      edgeDF,
+      edgeEF,
+      edgeEH,
+      edgeFG,
+    ]);
 
     const sortedVertices = topologicalSort(graph);
 

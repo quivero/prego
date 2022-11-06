@@ -74,9 +74,7 @@
             "client1": "teste",
             "pizzas": {
               "qty": 2,
-              "flavors": [
-                "mussarela", "pepperoni"
-              ],
+              "flavors": ["mussarela", "pepperoni"],
               "olives": false
             }
           }
@@ -103,7 +101,9 @@
         "lane_id": "1",
         "parameters": {
           "input": {
-            "comment": { "$mustache": "check if there are {{bag.pizzas.qty}} pizzas in the bag" }
+            "comment": {
+              "$mustache": "check if there are {{bag.pizzas.qty}} pizzas in the bag"
+            }
           }
         }
       },

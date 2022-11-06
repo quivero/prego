@@ -1,87 +1,78 @@
 {
-    "name": "minimalBP-api-provu",
-    "description": "minimalBP",
-    "blueprint_spec": {
-        "lanes": [
-            {
-                "id": "1",
-                "name": "the_only_lane",
-                "rule": [
-                    "fn",
-                    [
-                        "&",
-                        "args"
-                    ],
-                    true
-                ]
+  "name": "minimalBP-api-provu",
+  "description": "minimalBP",
+  "blueprint_spec": {
+    "lanes": [
+      {
+        "id": "1",
+        "name": "the_only_lane",
+        "rule": ["fn", ["&", "args"], true]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "START-PROCESS",
+        "type": "Start",
+        "name": "Start node",
+        "parameters": {
+          "input_schema": {}
+        },
+        "next": "COINGECKO",
+        "lane_id": "1"
+      },
+      {
+        "id": "COINGECKO",
+        "name": "coingecko-api",
+        "next": "COINGECKO-RESPONSE",
+        "type": "SystemTask",
+        "lane_id": "1",
+        "category": "HTTP",
+        "parameters": {
+          "input": {},
+          "request": {
+            "url": "https://api.coingecko.com/api/v3/ping",
+            "verb": "GET",
+            "headers": {
+              "ContentType": "application/json",
+              "Authorization": {}
             }
-        ],
-        "nodes": [
-            {
-                "id": "START-PROCESS",
-                "type": "Start",
-                "name": "Start node",
-                "parameters": {
-                    "input_schema": {}
-                },
-                "next": "COINGECKO",
-                "lane_id": "1"
-            },
-            {
-                "id": "COINGECKO",
-                "name": "coingecko-api",
-                "next": "COINGECKO-RESPONSE",
-                "type": "SystemTask",
-                "lane_id": "1",
-                "category": "HTTP",
-                "parameters": {
-                    "input": {},
-                    "request": {
-                        "url": "https://api.coingecko.com/api/v3/ping",
-                        "verb": "GET",
-                        "headers": {
-                            "ContentType": "application/json",
-                            "Authorization": {}
-                        }
-                    }
-                }
-            },
-            {
-                "id": "COINGECKO-RESPONSE",
-                "name": "check coingecko response",
-                "next": {
-                  "200": "COINGECKO-SUCCESS-END",
-                  "default": "COINGECKO-FAILURE-END"
-                },
-                "type": "Flow",
-                "lane_id": "1",
-                "parameters": {
-                  "input": {
-                    "decision": {
-                      "$ref": "result.status"
-                    }
-                  }
-                }
-              },
-            {
-                "id": "COINGECKO-SUCCESS-END",
-                "name": "END",
-                "next": null,
-                "type": "Finish",
-                "lane_id": "1"
-            },
-            {
-                "id": "COINGECKO-FAILURE-END",
-                "name": "END",
-                "next": null,
-                "type": "Finish",
-                "lane_id": "1"
+          }
+        }
+      },
+      {
+        "id": "COINGECKO-RESPONSE",
+        "name": "check coingecko response",
+        "next": {
+          "200": "COINGECKO-SUCCESS-END",
+          "default": "COINGECKO-FAILURE-END"
+        },
+        "type": "Flow",
+        "lane_id": "1",
+        "parameters": {
+          "input": {
+            "decision": {
+              "$ref": "result.status"
             }
-        ],
-        "prepare": [],
-        "environment": {},
-        "requirements": [
-            "core"
-        ]
-    }
+          }
+        }
+      },
+      {
+        "id": "COINGECKO-SUCCESS-END",
+        "name": "END",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      },
+      {
+        "id": "COINGECKO-FAILURE-END",
+        "name": "END",
+        "next": null,
+        "type": "Finish",
+        "lane_id": "1"
+      }
+    ],
+    "prepare": [],
+    "environment": {},
+    "requirements": ["core"]
+  }
 }

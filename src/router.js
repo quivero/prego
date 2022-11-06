@@ -1,23 +1,20 @@
-import express from 'express';
+import express from "express";
 
 import {
   logging,
   morganMiddleware,
   agentMorganReporter,
-  log_message
-} from '../utils/logging/logger.js';
+  log_message,
+} from "../utils/logging/logger.js";
 
-import {
-  statusMW,
-  statusImgPath
-} from '../utils/logging/status.js'; 
+import { statusMW, statusImgPath } from "../utils/logging/status.js";
 
-import { createRequire } from 'module';
+import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
 export const app = express();
 
-app.use(require('express-status-monitor')());
+app.use(require("express-status-monitor")());
 
 app.use(statusMW);
 
@@ -39,5 +36,5 @@ app.use(morganMiddleware);
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  log_message(agentMorganReporter, 'info', `Listening on port: ${PORT}`);
+  log_message(agentMorganReporter, "info", `Listening on port: ${PORT}`);
 });

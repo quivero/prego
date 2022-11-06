@@ -1,14 +1,14 @@
-import GraphVertex from '../../../data-structures/graph/GraphVertex';
-import GraphEdge from '../../../data-structures/graph/GraphEdge';
-import Graph from '../../../data-structures/graph/Graph';
-import graphBridges from '../graphBridges';
+import GraphVertex from "../../../data-structures/graph/GraphVertex";
+import GraphEdge from "../../../data-structures/graph/GraphEdge";
+import Graph from "../../../data-structures/graph/Graph";
+import graphBridges from "../graphBridges";
 
-describe('graphBridges', () => {
-  it('should find bridges in simple graph', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
+describe("graphBridges", () => {
+  it("should find bridges in simple graph", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
@@ -16,8 +16,7 @@ describe('graphBridges', () => {
 
     const graph = new Graph();
 
-    graph
-      .addEdges([edgeAB, edgeBC, edgeCD]);
+    graph.addEdges([edgeAB, edgeBC, edgeCD]);
 
     const bridges = Object.values(graphBridges(graph));
 
@@ -28,11 +27,11 @@ describe('graphBridges', () => {
     expect(bridges[2].getKey()).toBe(edgeAB.getKey());
   });
 
-  it('should find bridges in simple graph with back edge', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
+  it("should find bridges in simple graph with back edge", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
@@ -41,8 +40,7 @@ describe('graphBridges', () => {
 
     const graph = new Graph();
 
-    graph
-      .addEdges([edgeAB, edgeAC, edgeBC, edgeCD]);
+    graph.addEdges([edgeAB, edgeAC, edgeBC, edgeCD]);
 
     const bridges = Object.values(graphBridges(graph));
 
@@ -50,15 +48,15 @@ describe('graphBridges', () => {
     expect(bridges[0].getKey()).toBe(edgeCD.getKey());
   });
 
-  it('should find bridges in graph', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
-    const vertexF = new GraphVertex('F');
-    const vertexG = new GraphVertex('G');
-    const vertexH = new GraphVertex('H');
+  it("should find bridges in graph", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
+    const vertexF = new GraphVertex("F");
+    const vertexG = new GraphVertex("G");
+    const vertexH = new GraphVertex("H");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
@@ -72,9 +70,17 @@ describe('graphBridges', () => {
 
     const graph = new Graph();
 
-    graph
-      .addEdges([edgeAB, edgeBC, edgeAC, edgeCD, edgeFH,
-        edgeDE, edgeEG, edgeEF, edgeGF]);
+    graph.addEdges([
+      edgeAB,
+      edgeBC,
+      edgeAC,
+      edgeCD,
+      edgeFH,
+      edgeDE,
+      edgeEG,
+      edgeEF,
+      edgeGF,
+    ]);
 
     const bridges = Object.values(graphBridges(graph));
 
@@ -84,15 +90,15 @@ describe('graphBridges', () => {
     expect(bridges[2].getKey()).toBe(edgeCD.getKey());
   });
 
-  it('should find bridges in graph starting with different root vertex', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
-    const vertexF = new GraphVertex('F');
-    const vertexG = new GraphVertex('G');
-    const vertexH = new GraphVertex('H');
+  it("should find bridges in graph starting with different root vertex", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
+    const vertexF = new GraphVertex("F");
+    const vertexG = new GraphVertex("G");
+    const vertexH = new GraphVertex("H");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
@@ -106,9 +112,17 @@ describe('graphBridges', () => {
 
     const graph = new Graph();
 
-    graph
-      .addEdges([edgeDE, edgeAB, edgeBC, edgeAC, edgeCD,
-        edgeEG, edgeEF, edgeGF, edgeFH]);
+    graph.addEdges([
+      edgeDE,
+      edgeAB,
+      edgeBC,
+      edgeAC,
+      edgeCD,
+      edgeEG,
+      edgeEF,
+      edgeGF,
+      edgeFH,
+    ]);
 
     const bridges = Object.values(graphBridges(graph));
 
@@ -118,12 +132,12 @@ describe('graphBridges', () => {
     expect(bridges[2].getKey()).toBe(edgeCD.getKey());
   });
 
-  it('should find bridges in yet another graph #1', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
+  it("should find bridges in yet another graph #1", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexA, vertexC);
@@ -142,14 +156,14 @@ describe('graphBridges', () => {
     expect(bridges[1].getKey()).toBe(edgeCD.getKey());
   });
 
-  it('should find bridges in yet another graph #2', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
-    const vertexF = new GraphVertex('F');
-    const vertexG = new GraphVertex('G');
+  it("should find bridges in yet another graph #2", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
+    const vertexF = new GraphVertex("F");
+    const vertexG = new GraphVertex("G");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexA, vertexC);
@@ -162,9 +176,16 @@ describe('graphBridges', () => {
 
     const graph = new Graph();
 
-    graph
-      .addEdges([edgeAB, edgeAC, edgeBC, edgeCD,
-        edgeCE, edgeCF, edgeEG, edgeFG]);
+    graph.addEdges([
+      edgeAB,
+      edgeAC,
+      edgeBC,
+      edgeCD,
+      edgeCE,
+      edgeCF,
+      edgeEG,
+      edgeFG,
+    ]);
 
     const bridges = Object.values(graphBridges(graph));
 

@@ -1,14 +1,11 @@
-import 'lodash.combinations';
-import _ from 'lodash';
+import "lodash.combinations";
+import _ from "lodash";
 
-import {
-  objectReduce,
-  objectMap,
-} from '../objects/objects.js';
+import { objectReduce, objectMap } from "../objects/objects.js";
 
-import { logging, log_message } from '../logging/logger.js';
+import { logging, log_message } from "../logging/logger.js";
 
-const logger = logging('arrays');
+const logger = logging("arrays");
 
 /**
  * @abstract returns an array of ones with length n
@@ -63,11 +60,11 @@ export const countDict = (arr) => {
  */
 export const cyclicSort = (array, index) => {
   if (array.length < index) {
-    const category = 'Error';
+    const category = "Error";
     const subject = `Provided index ${index}`;
     const condition = `greater than array length ${array.length}`;
 
-    log_message(logger, 'error', `${category} : ${subject} ${condition}`);
+    log_message(logger, "error", `${category} : ${subject} ${condition}`);
   }
 
   const head = array.slice(index);
@@ -115,7 +112,11 @@ export const sort = (arr, sort_type = 0) => {
   } else if (sort_type == 1) {
     // Do nothing
   } else {
-    log_message(logger, 'error', 'Sorting types are 0 and 1 for descending and ascending order.');
+    log_message(
+      logger,
+      "error",
+      "Sorting types are 0 and 1 for descending and ascending order."
+    );
   }
 
   return arr;
@@ -180,11 +181,9 @@ export const hasElement = (arr, elem) => {
  * @return {Array} arr_without_elems
  */
 export const removeElements = (arr, elems_to_del) => {
-  elems_to_del.forEach(
-    (elem_to_del) => {
-      arr = arr.filter((elem) => elem_to_del !== elem);
-    },
-  );
+  elems_to_del.forEach((elem_to_del) => {
+    arr = arr.filter((elem) => elem_to_del !== elem);
+  });
 
   return arr;
 };
@@ -231,8 +230,8 @@ export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
     log_message(
       logger,
-      'error',
-      'Size of array must be greater or equal to the product of n by m',
+      "error",
+      "Size of array must be greater or equal to the product of n by m"
     );
   }
 
@@ -244,9 +243,11 @@ export function* mSetsOfnTuples(array, n, m) {
     if (m === 1) {
       yield curr_comb;
     } else {
-      for (
-        const tail_comb of mSetsOfnTuples(_.difference(array, head_comb), n, m - 1)
-      ) {
+      for (const tail_comb of mSetsOfnTuples(
+        _.difference(array, head_comb),
+        n,
+        m - 1
+      )) {
         yield curr_comb.concat(tail_comb);
       }
     }
@@ -272,7 +273,11 @@ export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
     if (curr_dim === 1) {
       yield i;
     } else {
-      for (const tail_indexes of fullPolytopeIndexesFn(length, curr_dim - 1, dim)) {
+      for (const tail_indexes of fullPolytopeIndexesFn(
+        length,
+        curr_dim - 1,
+        dim
+      )) {
         yield [i].concat(tail_indexes);
       }
     }
@@ -290,7 +295,12 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
     if (curr_dim === 1) {
       yield i;
     } else {
-      for (const tail_indexes of upperTriangularIndexesFn(length, curr_dim - 1, dim, i)) {
+      for (const tail_indexes of upperTriangularIndexesFn(
+        length,
+        curr_dim - 1,
+        dim,
+        i
+      )) {
         yield [i].concat(tail_indexes);
       }
     }
@@ -307,8 +317,8 @@ export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
     log_message(
       logger,
-      'error',
-      'Dimension and length must be positive natural numbers!',
+      "error",
+      "Dimension and length must be positive natural numbers!"
     );
   }
 
@@ -346,28 +356,27 @@ export function* upperTriangularHyperindexes(length, dim) {
  */
 export function* euler(sets) {
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
-  if (Object.values(sets).length === 0) log_message(logger, 'error', 'There must at least ONE set!');
+  if (Object.values(sets).length === 0)
+    log_message(logger, "error", "There must at least ONE set!");
 
-  if (!objectReduce(
-    sets,
-    (result, elements_key, elements) => result & removeArrayDuplicates(elements).length === elements.length,
-    true,
-  )) {
-    log_message(
-      logger,
-      'error',
-      'Each array must NOT have duplicates!',
-    );
+  if (
+    !objectReduce(
+      sets,
+      (result, elements_key, elements) =>
+        result & (removeArrayDuplicates(elements).length === elements.length),
+      true
+    )
+  ) {
+    log_message(logger, "error", "Each array must NOT have duplicates!");
   }
 
-  const sets_keys_fun = (sets_) => Object
-    .keys(sets_)
-    .filter((key) => sets_[key].length !== 0);
+  const sets_keys_fun = (sets_) =>
+    Object.keys(sets_).filter((key) => sets_[key].length !== 0);
 
   let compl_sets_keys = [];
-  let comb_str = '';
+  let comb_str = "";
   let celements = [];
-  let comb_intersec_key = '';
+  let comb_intersec_key = "";
   let comb_intersec = [];
   let comb_excl = [];
 
@@ -387,10 +396,9 @@ export function* euler(sets) {
             result[compl_set_key] = sets[compl_set_key];
             return result;
           },
-          {},
-        ),
-      )
-      ) {
+          {}
+        )
+      )) {
         comb_str = comb_elements[0];
         celements = comb_elements[1];
 
@@ -399,11 +407,9 @@ export function* euler(sets) {
           // Exclusive elements of group except current analysis set
           yield [comb_str, comb_excl];
 
-          comb_str.split(',').forEach(
-            (ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_excl);
-            },
-          );
+          comb_str.split(",").forEach((ckey) => {
+            sets[ckey] = _.difference(sets[ckey], comb_excl);
+          });
 
           sets[set_key] = _.difference(sets[set_key], comb_excl);
         }
@@ -411,15 +417,13 @@ export function* euler(sets) {
         comb_intersec = _.intersection(celements, sets[set_key]);
         if (comb_intersec.length !== 0) {
           // Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key].concat(comb_str.split(',')).join(',');
+          comb_intersec_key = [set_key].concat(comb_str.split(",")).join(",");
 
           yield [comb_intersec_key, comb_intersec];
 
-          comb_str.split(',').forEach(
-            (ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_intersec);
-            },
-          );
+          comb_str.split(",").forEach((ckey) => {
+            sets[ckey] = _.difference(sets[ckey], comb_intersec);
+          });
 
           sets[set_key] = _.difference(sets[set_key], comb_intersec);
         }
@@ -442,11 +446,10 @@ export function* euler(sets) {
  * @return {Array} keys_elems
  */
 export function* venn(sets) {
-  const keys_fun = (sets_) => Object.keys(sets_).map(
-    (key) => Number(key),
-  ).filter(
-    (key) => sets_[key].length !== 0,
-  );
+  const keys_fun = (sets_) =>
+    Object.keys(sets_)
+      .map((key) => Number(key))
+      .filter((key) => sets_[key].length !== 0);
 
   let comb_sets_inter = {};
   let comb_sets_excl = {};
@@ -462,14 +465,17 @@ export function* venn(sets) {
   for (const chunk_card of _.range(1, keys.length + 1)) {
     for (const comb_keys of new _.combinations(keys, chunk_card)) {
       // In case any of the sets under analysis is empty
-      if (hasElement([...comb_keys.map((key) => sets[Number(key)])], [])) continue;
+      if (hasElement([...comb_keys.map((key) => sets[Number(key)])], []))
+        continue;
 
       // Intersection of elements
-      comb_sets_inter = _.intersection(...comb_keys.map((key) => sets[Number(key)]));
+      comb_sets_inter = _.intersection(
+        ...comb_keys.map((key) => sets[Number(key)])
+      );
 
-      compl_set_elems = _.uniq(_.flatten(
-        _.difference(keys, comb_keys).map((set_key) => sets[set_key]),
-      ));
+      compl_set_elems = _.uniq(
+        _.flatten(_.difference(keys, comb_keys).map((set_key) => sets[set_key]))
+      );
 
       comb_sets_excl = _.difference(comb_sets_inter, compl_set_elems);
       cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl);
@@ -487,7 +493,7 @@ export function* venn(sets) {
           result[key] = _.difference(set_, cum_union_sofar);
           return result;
         },
-        {},
+        {}
       );
 
       keys = keys_fun(sets);

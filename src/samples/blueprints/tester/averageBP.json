@@ -6,14 +6,7 @@
       {
         "id": "anyone",
         "name": "anyone",
-        "rule": [
-          "fn",
-          [
-            "&",
-            "args"
-          ],
-          true
-        ]
+        "rule": ["fn", ["&", "args"], true]
       }
     ],
     "nodes": [
@@ -31,9 +24,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "cpf"
-            ]
+            "required": ["cpf"]
           }
         }
       },
@@ -317,8 +308,6 @@
       "COUNTER_RETRY": "COUNTER_RETRY",
       "TOKEN": "TOKEN"
     },
-    "requirements": [
-      "core"
-    ]
+    "requirements": ["core"]
   }
 }

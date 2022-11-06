@@ -20,7 +20,9 @@ function findAllPaths(startVertex, paths = [], path = []) {
   }, {});
 
   // Get all unvisited neighbors of startVertex.
-  const unvisitedNeighbors = startVertex.getNeighbors().filter((neighbor) => !visitedSet[neighbor.getKey()]);
+  const unvisitedNeighbors = startVertex
+    .getNeighbors()
+    .filter((neighbor) => !visitedSet[neighbor.getKey()]);
 
   // If there no unvisited neighbors then treat current path as complete and save it.
   if (!unvisitedNeighbors.length) {
@@ -30,7 +32,11 @@ function findAllPaths(startVertex, paths = [], path = []) {
   }
 
   // Go through all the neighbors.
-  for (let neighborIndex = 0; neighborIndex < unvisitedNeighbors.length; neighborIndex += 1) {
+  for (
+    let neighborIndex = 0;
+    neighborIndex < unvisitedNeighbors.length;
+    neighborIndex += 1
+  ) {
     const currentUnvisitedNeighbor = unvisitedNeighbors[neighborIndex];
     findAllPaths(currentUnvisitedNeighbor, paths, currentPath);
   }
@@ -86,12 +92,23 @@ export default function bfTravellingSalesman(graph) {
   const verticesKeystoIndices = graph.getVerticesKeystoIndices();
   let salesmanPath = [];
   let salesmanPathWeight = null;
-  for (let cycleIndex = 0; cycleIndex < allPossibleCycles.length; cycleIndex += 1) {
+  for (
+    let cycleIndex = 0;
+    cycleIndex < allPossibleCycles.length;
+    cycleIndex += 1
+  ) {
     const currentCycle = allPossibleCycles[cycleIndex];
-    const currentCycleWeight = getCycleWeight(adjacencyMatrix, verticesKeystoIndices, currentCycle);
+    const currentCycleWeight = getCycleWeight(
+      adjacencyMatrix,
+      verticesKeystoIndices,
+      currentCycle
+    );
 
     // If current cycle weight is smaller then previous ones treat current cycle as most optimal.
-    if (salesmanPathWeight === null || currentCycleWeight < salesmanPathWeight) {
+    if (
+      salesmanPathWeight === null ||
+      currentCycleWeight < salesmanPathWeight
+    ) {
       salesmanPath = currentCycle;
       salesmanPathWeight = currentCycleWeight;
     }

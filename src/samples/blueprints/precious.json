@@ -6,14 +6,7 @@
       {
         "id": "1",
         "name": "theOnlyLane",
-        "rule": [
-          "fn",
-          [
-            "&",
-            "args"
-          ],
-          true
-        ]
+        "rule": ["fn", ["&", "args"], true]
       }
     ],
     "nodes": [
@@ -495,8 +488,6 @@
     ],
     "prepare": [],
     "environment": {},
-    "requirements": [
-      "core"
-    ]
+    "requirements": ["core"]
   }
 }
