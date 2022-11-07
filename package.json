@@ -29,6 +29,7 @@
     "express": "^4.18.1",
     "express-status-monitor": "^1.3.4",
     "fs": "^0.0.2",
+    "husky": "^8.0.1",
     "lodash": "^4.17.21",
     "lodash.multicombinations": "^1.0.0",
     "lodash.multipermutations": "^1.0.0",
@@ -44,7 +45,6 @@
   },
   "scripts": {
     "build": "npm run node:build && npm run docker:build",
-    "migrations": "knex --env ${KNEX_ENV} --knexfile knexfile.js migrate:latest",
     "node:build": "./utils/sscripts/node-build.sh",
     "systemctl:watch": "journalctl -u quivero.service",
     "systemctl:deploy": "./utils/sscripts/systemctl-deploy.sh",
@@ -61,7 +61,8 @@
     "nibble": "npx eslint-nibble .",
     "fixable-nibble": "npx eslint-nibble --fixable-only .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",
