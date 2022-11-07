@@ -54,7 +54,7 @@
     "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
     "update": "bash ./utils/sscripts/update.sh",
     "start": "nodemon ./src/index.js",
-    "test:run": "jest --coverage",
+    "test": "jest --coverage",
     "test:watch": "jest --watchAll --coverage",
     "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
     "publish": "np --any-branch",
