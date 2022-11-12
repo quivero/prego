@@ -1,7 +1,11 @@
 import _ from "lodash";
 import {
+  ones,
+  zip,
   getAllIndexes,
   countDict,
+  RandMinMax,
+  nRandMinMax,
   cyclicSort,
   isCyclicEqual,
   getUniques,
@@ -24,6 +28,33 @@ const { format } = require("winston");
 describe("Array", () => {
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  it("should get an array of ones", () => {
+    expect(ones(5)).toStrictEqual([1, 1, 1, 1, 1]);
+  });
+
+  it("should get a random number between 0 and 1", () => {
+    const num = RandMinMax(0, 1);
+
+    expect(num).toBeGreaterThanOrEqual(0);
+    expect(num).toBeLessThanOrEqual(1);
+  });
+
+  it("should get a [2, 1] random array between 0 and 1", () => {
+    const num = nRandMinMax(2, 0, 1);
+
+    expect(num[0]).toBeGreaterThanOrEqual(0);
+    expect(num[0]).toBeLessThanOrEqual(1);
+
+    expect(num[1]).toBeGreaterThanOrEqual(0);
+    expect(num[1]).toBeLessThanOrEqual(1);
+  });
+
+  it("should receive a zipped array with two arrays entries", () => {
+    expect(
+      zip([1, 2, 3], ['a', 'b', 'c'])
+    ).toStrictEqual([[1, 'a'], [2, 'b'], [3, 'c']]);
   });
 
   it("should get all indexes of given value within array", () => {
