@@ -209,6 +209,49 @@ export const reachableFinishNodesFromStartNodes = (blueprint) => {
 };
 
 /**
+ * @abstract returns an object with nodes description
+ *
+ * @param {Object} blueprint
+ * @param {Object} nodes_dict
+ */
+export const describeNodes = (blueprint) => {
+// XXX: Only available for documentation. In case there necessity to 
+// use full nodes properties, we must use the original array
+// blueprint.blueprint_spec.nodes
+    return objectReduce(
+      blueprint.blueprint_spec.nodes,
+      (nodes_description, node_index, node_description) => {
+        nodes_description[node_description.id] = {
+          "name": node_description.name,
+          "type": node_description.type,
+          "next": node_description.next,
+          "lane_id": node_description.lane_id
+        }
+
+        return nodes_description
+      }, {}
+    )
+};
+
+/**
+ * @abstract returns an object with nodes description
+ *
+ * @param {Object} blueprint
+ * @param {Object} nodes_dict
+ */
+export const describeLanes = (blueprint) => {
+  return objectReduce(
+      blueprint.blueprint_spec.lanes,
+      (nodes_description, node_index, node_description) => {
+        nodes_description[node_description.id] = {
+          "name": node_description.name,
+          "rule": node_description.tule,
+        }
+      }, {}
+    )
+};
+
+/**
  * @abstract returns an object with a rich description of given blueprint
  *
  * @param {Object} blueprint
@@ -220,6 +263,8 @@ export const describeBlueprint = (blueprint) => {
   return {
     name: blueprint.name,
     description: blueprint.description,
+    nodes: describeNodes(blueprint),
+    lanes: describeLanes(blueprint),
     node_ids_per_type: getBlueprintAllNodesByType(blueprint),
     reachable_finish_from_start: reachableFinishNodesFromStartNodes(blueprint),
     graph: bp_graph.describe(),
