@@ -14,16 +14,10 @@
           "input_schema": {
             "type": "object",
             "properties": {
-              "flow": {
-                "type": "object",
-                "properties": {
-                  "action": { "type": "string" }
-                }
-              }
+              "flow": { "action": { "type": "string" } }
             }
           }
         },
-        "required": ["flow"],
         "lane_id": "everyone"
       },
       {
@@ -56,36 +50,20 @@
             "current_action": { "$ref": "bag.flow.action" }
           },
           "activity_manager": "commit",
+          "timeout": 10,
           "activity_schema": {
             "type": "object",
             "properties": {},
-            "required": ["current_action"]
+            "required": ["qty", "flavors"]
           }
         }
       },
       {
         "id": "4",
-        "name": "SAVE-ACTION",
-        "next": "5",
-        "type": "SystemTask",
-        "category": "setToBag",
-        "lane_id": "everyone",
-        "parameters": {
-          "input": {
-            "flow": {
-              "action": {
-                "$ref": "result.activities[0].data.qty"
-              }
-            }
-          }
-        }
-      },
-      {
-        "id": "5",
         "type": "Flow",
         "name": "VERIFY-TIMEOUT",
         "next": {
-          "true": "6",
+          "true": "5",
           "default": "3"
         },
         "lane_id": "everyone",
@@ -98,7 +76,7 @@
         }
       },
       {
-        "id": "6",
+        "id": "5",
         "type": "Finish",
         "name": "Finish Praise",
         "next": null,
