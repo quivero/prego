@@ -19,16 +19,10 @@ app.get("/status/:code", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send(":)");
-});
-
-/*
-app.get('/', (req, res) => {
-  // Driver program - Create a sample graph
   // Driver program - Create a sample graph
   const curr_dir = `${process.cwd()}`;
-  const bps_root = `${curr_dir}/src/samples/blueprints/tester`;
-  const diagrams_destination_folder = 'diagrams';
+  const bps_root = `${curr_dir}/src/samples/blueprints`;
+  const diagrams_destination_folder = "diagrams";
 
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
@@ -37,23 +31,25 @@ app.get('/', (req, res) => {
   const bp_graph = {};
 
   if (READ_ALL_BPS) {
-    processed_blueprint = processBlueprints(
-      bps_root,
-      (blueprint) => summarizeBlueprint(blueprint),
+    processed_blueprint = processBlueprints(bps_root, (blueprint) =>
+      summarizeBlueprint(blueprint)
     );
 
     res.send(processed_blueprint);
   } else {
-    const blueprint_fname = 'activitySchemaValidation';
+    const blueprint_fname = "activitySchemaValidation";
 
     processed_blueprint = processBlueprint(
       bps_root,
       `${blueprint_fname}.json`,
-      (blueprint) => generateBlueprintPathDiagrams(blueprint, bps_root, diagrams_destination_folder),
+      (blueprint) =>
+        generateBlueprintPathDiagrams(
+          blueprint,
+          bps_root,
+          diagrams_destination_folder
+        )
     );
-
-    res.send(':)');
   }
 });
-*/
+
 // [END app]
