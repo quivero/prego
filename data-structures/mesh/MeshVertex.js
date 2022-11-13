@@ -1,4 +1,5 @@
 import GraphVertex from "../graph/GraphVertex.js";
+import { zip } from "../../utils/arrays/arrays.js";
 
 export default class MeshVertex extends GraphVertex {
   /**
@@ -26,18 +27,11 @@ export default class MeshVertex extends GraphVertex {
 }
 
 /**
- * @param {string} label
- * @param {*[]} coordinate
- */
-export const createGVertex = (label, coordinate) =>
-  new GraphicMeshVertex(label, coordinate);
-
-/**
  * @param {string} labels
  * @param {*[]} coordinates
  */
-export const createGVertices = (labels, coordinates) =>
+export const createMVertices = (labels, coordinates) =>
   zip(labels, coordinates).map(
     (label_coordinate) =>
-      new GraphicMeshVertex(label_coordinate[0], label_coordinate[1])
+      new MeshVertex(label_coordinate[0], label_coordinate[1])
   );
