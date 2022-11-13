@@ -15,13 +15,13 @@ export default {
   // If the test path matches any of the patterns, it will be skipped.
   testPathIgnorePatterns: [
     "<rootDir>/node_modules/",
-    "<rootDir>/utils/logging/"
+    "<rootDir>/utils/logging/",
   ],
 
   // If the file path matches any of the patterns, coverage information will be skipped.
   coveragePathIgnorePatterns: [
     "<rootDir>/node_modules/",
-    "<rootDir>/utils/logging/"
+    "<rootDir>/utils/logging/",
   ],
 
   // The pattern Jest uses to detect test files.
