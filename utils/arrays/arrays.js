@@ -16,6 +16,32 @@ const logger = logging("arrays");
 export const ones = (n) => Array(n).fill(1);
 
 /**
+ * @abstract returns a random number between min_val and max_val
+ *
+ * @param {Number} min_val
+ * @return {Number} max_val
+ */
+export const RandMinMax = (min_val, max_val) => {
+  return (max_val - min_val) * Math.random() + min_val;
+};
+
+/**
+ * @abstract returns a random number between min_val and max_val
+ *
+ * @param {Integer} n
+ * @return {Array} ones
+ */
+export const nRandMinMax = (n, min_val, max_val) => {
+  let n_array = [];
+
+  for (let i = 0; i < n; i += 1) {
+    n_array.push(RandMinMax(min_val, max_val));
+  }
+
+  return n_array;
+};
+
+/**
  * @abstract returns an array of indexes with val
  *
  * @param {Array} arr
@@ -35,26 +61,22 @@ export const getAllIndexes = (arr, val) => {
   return indexes;
 };
 
-
 /**
  * @abstract returns array with elements equal to array tuple
- * 
+ *
  * @param {Array} array_1
  * @param {Array} array_2
  * @return {Array}
  */
 export const zip = (arr_1, arr_2) => {
-  if(arr_1.length !== arr_2.length){
-    throw Error('Arrays must have the same length.');
+  if (arr_1.length !== arr_2.length) {
+    throw Error("Arrays must have the same length.");
   }
 
-  const arr_tuple = arr_1.map(
-    (e, i) => [e, arr_2[i]]
-  );
+  const arr_tuple = arr_1.map((e, i) => [e, arr_2[i]]);
 
   return arr_tuple;
 };
-
 
 /**
  * @abstract returns dictionary with number prime factors
@@ -377,15 +399,16 @@ export function* upperTriangularHyperindexes(length, dim) {
  */
 export function* euler(sets) {
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
+  
   if (Object.values(sets).length === 0)
     log_message(logger, "error", "There must at least ONE set!");
 
   if (
     !objectReduce(
       sets,
-      (result, elements_key, elements) =>
-        result & (removeArrayDuplicates(elements).length === elements.length),
-      true
+      (result, elements_key, elements) => {
+        return result | (removeArrayDuplicates(elements).length !== elements.length)
+      }, false
     )
   ) {
     log_message(logger, "error", "Each array must NOT have duplicates!");
@@ -459,79 +482,5 @@ export function* euler(sets) {
   }
 }
 
-/**
- * @abstract returns each tuple [key, elems] of the extended venn
- * systematic in a generator-wise fashion
- *
- * @param {Array} sets
- * @return {Array} keys_elems
- */
-export function* venn(sets) {
-  const keys_fun = (sets_) =>
-    Object.keys(sets_)
-      .map((key) => Number(key))
-      .filter((key) => sets_[key].length !== 0);
-
-  let comb_sets_inter = {};
-  let comb_sets_excl = {};
-
-  let cum_union_sofar = [];
-  let compl_set_elems = [];
-  let prev_keys_len = -1;
-  let curr_keys_len = -1;
-
-  let keys = keys_fun(sets);
-
-  // Traverse the combination lattice
-  for (const chunk_card of _.range(1, keys.length + 1)) {
-    for (const comb_keys of new _.combinations(keys, chunk_card)) {
-      // In case any of the sets under analysis is empty
-      if (hasElement([...comb_keys.map((key) => sets[Number(key)])], []))
-        continue;
-
-      // Intersection of elements
-      comb_sets_inter = _.intersection(
-        ...comb_keys.map((key) => sets[Number(key)])
-      );
-
-      compl_set_elems = _.uniq(
-        _.flatten(_.difference(keys, comb_keys).map((set_key) => sets[set_key]))
-      );
-
-      comb_sets_excl = _.difference(comb_sets_inter, compl_set_elems);
-      cum_union_sofar = _.union(cum_union_sofar, comb_sets_excl);
-
-      if (comb_sets_excl.length !== 0) {
-        yield [comb_keys.toString(), comb_sets_excl];
-      }
-
-      // Verify if there is some empty set
-      prev_keys_len = keys.length;
-
-      sets = objectReduce(
-        sets,
-        (result, key, set_) => {
-          result[key] = _.difference(set_, cum_union_sofar);
-          return result;
-        },
-        {}
-      );
-
-      keys = keys_fun(sets);
-
-      curr_keys_len = keys.length;
-
-      // If any set turned empty, break inner-loop. The chunk cardinality
-      // in the inner-loop may be greater than the available non-empty sets.
-      // Therefore, it is also a necessary condition. Both together are
-      // sufficient for integers
-      if (curr_keys_len < prev_keys_len && curr_keys_len < chunk_card) {
-        break;
-      }
-    }
-  }
-}
-
 export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)]);
 
-export const spreadVenn = (lists) => Object.fromEntries([...venn(lists)]);

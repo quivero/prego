@@ -9,8 +9,8 @@ import {
   cyclicSort,
   isCyclicEqual,
   getUniques,
+  euler,
   spreadEuler,
-  spreadVenn,
   removeElements,
   hasElement,
   sort,
@@ -23,13 +23,18 @@ import {
   sequentialArrayBlobs,
 } from "../arrays";
 
+import { log_message } from "../../logging/logger.js";
+
 const { format } = require("winston");
 
-describe("Array", () => {
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+jest.mock( '../../logging/logger');
 
+afterEach(() => {
+  // restore the spy created with spyOn
+  jest.restoreAllMocks();
+});
+
+describe("Array", () => {
   it("should get an array of ones", () => {
     expect(ones(5)).toStrictEqual([1, 1, 1, 1, 1]);
   });
@@ -78,6 +83,51 @@ describe("Array", () => {
   it("should reorder elements from chain in a cyclic form", () => {
     expect(cyclicSort("ABCD", 2)).toStrictEqual("CDAB");
   });
+
+  it("should call log_message for array length greater than given index", () => {
+    cyclicSort([1, 2, 3], 4);
+
+    expect( log_message ).toHaveBeenCalled();
+  });
+
+  it("should call log_message for inexistent input arguments ", () => {
+    sort([3, 1, 2], 2);
+
+    expect( log_message ).toHaveBeenCalled();
+  });
+
+  it("should call log_message for invalid blob scenario ", () => {
+    const mSetsOfnTuples_gen = mSetsOfnTuples(
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5, 3
+    )
+
+    mSetsOfnTuples_gen.next()
+
+    expect( log_message ).toHaveBeenCalled();
+  }); 
+
+  it("should call log_message for empty sets", () => {
+    const euler_gen = euler({})
+
+    euler_gen.next()
+
+    expect( log_message ).toHaveBeenCalled();
+  }); 
+
+  it("should call log_message for sets with duplicated elements", () => {
+    const euler_gen = euler({'a': [1, 1]})
+
+    euler_gen.next()
+
+    expect( log_message ).toHaveBeenCalled();
+  }); 
+
+  it("should call log_message for invalid input arguments ", () => {
+    const hyperIndexes_gen = hyperIndexes(1, -1, () => 'test')
+    hyperIndexes_gen.next()
+
+    expect( log_message ).toHaveBeenCalled();
+  });  
 
   it("should return an descending ordered array", () => {
     expect(sort([1, 2, 3, 4, 5])).toEqual([5, 4, 3, 2, 1]);
@@ -190,16 +240,10 @@ describe("hasElement", () => {
   });
 });
 
-describe("Extended venn diagram", () => {
+describe("Extended euler diagram", () => {
   it("should validate information from Extended Venn Diagram", () => {
     const list_1 = [1, 2, 3, 4, 5];
     const list_2 = [4, 5, 6, 7];
-
-    expect(spreadVenn([list_1, list_2])).toEqual({
-      "0,1": [4, 5],
-      0: [1, 2, 3],
-      1: [6, 7],
-    });
 
     expect(spreadEuler([list_1, list_2])).toEqual({
       "0,1": [4, 5],
@@ -249,20 +293,6 @@ describe("Extended venn diagram", () => {
       "0,1,2": [2],
     };
 
-    expect(spreadVenn([list_1, list_2, list_3])).toEqual(result);
-
     expect(spreadEuler([list_1, list_2, list_3])).toEqual(result);
-  });
-
-  it("should validate empty exclusivity from Extended Venn Diagram", () => {
-    const list_1 = [1, 2, 3, 4, 5, 6];
-    const list_2 = [4, 5, 6];
-
-    const result = {
-      0: [1, 2, 3],
-      "0,1": [4, 5, 6],
-    };
-
-    expect(spreadVenn([list_1, list_2])).toEqual(result);
   });
 });
