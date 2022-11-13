@@ -215,22 +215,23 @@ export const reachableFinishNodesFromStartNodes = (blueprint) => {
  * @param {Object} nodes_dict
  */
 export const describeNodes = (blueprint) => {
-// XXX: Only available for documentation. In case there necessity to 
-// use full nodes properties, we must use the original array
-// blueprint.blueprint_spec.nodes
-    return objectReduce(
-      blueprint.blueprint_spec.nodes,
-      (nodes_description, node_index, node_description) => {
-        nodes_description[node_description.id] = {
-          "name": node_description.name,
-          "type": node_description.type,
-          "next": node_description.next,
-          "lane_id": node_description.lane_id
-        }
+  // XXX: Only available for documentation. In case there necessity to
+  // use full nodes properties, we must use the original array
+  // blueprint.blueprint_spec.nodes
+  return objectReduce(
+    blueprint.blueprint_spec.nodes,
+    (nodes_description, node_index, node_description) => {
+      nodes_description[node_description.id] = {
+        name: node_description.name,
+        type: node_description.type,
+        next: node_description.next,
+        lane_id: node_description.lane_id,
+      };
 
-        return nodes_description
-      }, {}
-    )
+      return nodes_description;
+    },
+    {}
+  );
 };
 
 /**
@@ -241,14 +242,15 @@ export const describeNodes = (blueprint) => {
  */
 export const describeLanes = (blueprint) => {
   return objectReduce(
-      blueprint.blueprint_spec.lanes,
-      (nodes_description, node_index, node_description) => {
-        nodes_description[node_description.id] = {
-          "name": node_description.name,
-          "rule": node_description.tule,
-        }
-      }, {}
-    )
+    blueprint.blueprint_spec.lanes,
+    (nodes_description, node_index, node_description) => {
+      nodes_description[node_description.id] = {
+        name: node_description.name,
+        rule: node_description.tule,
+      };
+    },
+    {}
+  );
 };
 
 /**
@@ -756,10 +758,14 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   const edgesConfig = diagramConfig.themes.edges;
 
   let from_node_key = "";
+  let from_node_text = "";
+
   let to_node_key = "";
+  let to_node_text = "";
 
   let left_node_border = "";
   let right_node_border = "";
+
   let node_type = "";
   let node_border_type = "";
 
@@ -768,6 +774,7 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
 
   const nodeToType = getBlueprintNodeToTypeMap(blueprint);
   const blueprint_graph = parseBlueprintToGraph(blueprint);
+  const nodes = describeNodes(blueprint);
 
   path = blueprint_graph.convertVerticesKeystoIndexes(path);
 
@@ -846,16 +853,40 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
 
     left_node_border = nodesConfig.borders[node_border_type].left;
     right_node_border = nodesConfig.borders[node_border_type].right;
-    from_node_key = `${from_node_key}${left_node_border}${from_node_key}${right_node_border}`;
+
+    from_node_text = '"' + from_node_key;
+    from_node_text += ": " + nodes[from_node_key].name;
+
+    /*
+// Add descriptive object (bag content, for example) to node
+    from_node_text += "<br> { ";
+    from_node_text += "<br> key: value";
+    from_node_text += " <br> }";
+*/
+
+    from_node_text += '"';
+
+    from_node_key = `${from_node_key}${left_node_border}${from_node_text}${right_node_border}`;
 
     // To node
     to_node_key = edge.endVertex.getKey();
     node_border_type = diagramNodeType[to_node_key].border;
-
     left_node_border = nodesConfig.borders[node_border_type].left;
     right_node_border = nodesConfig.borders[node_border_type].right;
 
-    to_node_key = `${to_node_key}${left_node_border}${to_node_key}${right_node_border}`;
+    to_node_text = '"' + to_node_key;
+    to_node_text += ": " + nodes[to_node_key].name;
+
+    /*
+// Add descriptive object (bag content, for example) to node
+    to_node_text += "<br> { ";
+    to_node_text += "<br> key: value";
+    to_node_text += " <br> }";
+*/
+
+    to_node_text += '"';
+
+    to_node_key = `${to_node_key}${left_node_border}${to_node_text}${right_node_border}`;
 
     // Arrow
     if (hasElement(path_edges, edge.getKeyTuple())) {
@@ -964,6 +995,15 @@ export const summarizeBlueprint = (blueprint) => {
 };
 
 /**
+ * @abstract returns workflow islands
+ *
+ * @param {Object} blueprint
+ * @return {object} islands
+ */
+export const workflowIslands = (blueprint) =>
+  parseBlueprintToGraph(blueprint).islands();
+
+/**
  * @abstract returns a converted workflow blueprint XML to graph
  *
  * @param {Object} blueprint
@@ -972,12 +1012,3 @@ export const summarizeBlueprint = (blueprint) => {
 export const parseWorkflowXMLToGraph = () => {
   throw Error("Not implemented");
 };
-
-/**
- * @abstract returns workflow islands
- *
- * @param {Object} blueprint
- * @return {object} islands
- */
-export const workflowIslands = (blueprint) =>
-  parseBlueprintToGraph(blueprint).islands();
