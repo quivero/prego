@@ -1,6 +1,15 @@
-import { decimalPart, xor, sphericalToCartesian, abRandom } from "../math.js";
+import { 
+  decimalPart, 
+  xor, 
+  sphericalToCartesian, 
+  abRandom, 
+  dot,
+  vecArg
+} from "../math.js";
 
-import { nNorm } from "../../distances/distance.js";
+import { 
+  nNorm 
+} from "../../distances/distance.js";
 
 describe("combinatorics", () => {
   it("should return number decimal part", () => {
@@ -48,4 +57,25 @@ describe("combinatorics", () => {
       nNorm(sphericalToCartesian([Math.PI / 2, Math.PI / 2], 1), 2)
     ).toBeCloseTo(1);
   });
+
+  it("should return dot product between vectors", () => {
+    
+    expect(dot([1, 0, 0], [0, 1, 0])).toBe(0);
+    expect(dot([1, 0, 0], [1, 0, 0])).toBe(1);
+    expect(dot([1, 1, 1], [1, 1, 1])).toBe(3);
+
+  });
+
+  it("should return dot product between vectors", () => {
+    expect(vecArg([1, 0, 0], [0, 0, 1], 2)).toBe(Math.PI/2);
+  });
+
+  it("should return dot product between vectors", () => {
+    expect(vecArg([1, 0, 0], [0, 0, 1], 2)).toBe(Math.PI/2);
+  });
+
+  it("should return dot product between vectors", () => {
+    expect(vecArg([1, 0, 0], [1, 1, 0], 2)).toBeCloseTo(Math.PI/4);
+  });
+  
 });

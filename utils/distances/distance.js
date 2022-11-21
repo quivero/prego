@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { hav } from "../numbers/numbers.js";
-
+import { vecArg, sphericalToCartesian } from "../math/math.js";
 import { throwError } from "../sys/sys.js";
 
 /**
@@ -72,3 +72,21 @@ export const sphereCentralAngle = (coordinate_1, coordinate_2) => {
  */
 export const greatCircleDistance = (coordinate_1, coordinate_2, R) =>
   R * sphereCentralAngle(coordinate_1, coordinate_2);
+
+/**
+ * @abstract returns the distance of two points on a sphere
+ *
+ * @param {Array} coordinate_1
+ * @param {Array} coordinate_2
+ * @param {Number} n
+ * @return {Number}
+ */
+export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
+  return R * vecArg(
+    sphericalToCartesian(coordinate_1, R), 
+    sphericalToCartesian(coordinate_2, R), 
+    2
+  )
+
+};
+

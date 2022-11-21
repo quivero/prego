@@ -1,4 +1,5 @@
 import { throwError } from "../sys/sys.js";
+import { nNorm } from "../distances/distance.js";
 
 /**
  * @abstract decimal part of a number
@@ -47,20 +48,39 @@ export const abRandom = (min, max) => {
  * @return {boolean}
  */
 export const sphericalToCartesian = (coords, R) => {
-  const prodsin = (arr) =>
-    arr.reduce((prod_, angle) => prod_ * Math.sin(angle), 1);
+  const prodsin = (arr) => 
+      arr.length===0 ? 1 : arr.reduce((prod_, angle) => prod_ * Math.sin(angle), 1);
 
-  const s2cRecur = (index, coords, R) => {
-    const curr_coord = coords[index];
+  const s2cRecur = (coords_, index) => {
+    return prodsin(coords_.slice(0, index)) * Math.cos(coords_[index]);
+  }
 
-    return R * prodsin(coords.slice(0, index)) * Math.cos(curr_coord);
-  };
-
+  const prev_coords = coords.slice(0, coords.length);
   const curr_coord = coords[coords.length - 1];
 
-  return coords
-    .map((coord, index) => s2cRecur(index, coords, R))
-    .concat([
-      R * prodsin(coords.slice(0, coords.length - 1)) * Math.sin(curr_coord),
-    ]);
+  console.log('prev_coords: ' + String(prev_coords))
+  console.log(prev_coords.map((coord, index) => R * s2cRecur(prev_coords, index)))
+
+  return prev_coords
+    .map((coord, index) => R * s2cRecur(prev_coords, index))
+    .concat([ R * prodsin(prev_coords) * Math.sin(curr_coord)]);
 };
+
+/**
+ * @abstract dot product
+ * 
+ * @param {Array} arr
+ * @return {Number}
+ */
+export const dot = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
+
+/**
+ * @abstract vector argument based on n-norm
+ * 
+ * @param {Array} u
+ * @param {Array} v
+ * @param {Number} n
+ * @return {Number}
+ */
+export const vecArg = (u, v, n) => Math.acos(dot(u, v)/(nNorm(u, n) * nNorm(v, n)));
+
