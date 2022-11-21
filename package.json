@@ -19,6 +19,28 @@
     "url": "https://github.com/quivero/quivero-api/issues"
   },
   "homepage": "https://github.com/quivero/quivero-api#readme",
+  "scripts": {
+    "build": "npm run node:build && npm run docker:build",
+    "node:build": "./utils/sscripts/node-build.sh",
+    "systemctl:watch": "journalctl -u quivero.service",
+    "systemctl:deploy": "./utils/sscripts/systemctl-deploy.sh",
+    "systemctl:restart": "systemctl restart quivero.service",
+    "docker:build": "./utils/sscripts/docker-build.sh",
+    "docker:deploy": "./utils/sscripts/docker-deploy.sh $npm_config_tag $npm_config_from $npm_config_to",
+    "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
+    "update": "bash ./utils/sscripts/update.sh",
+    "start": "nodemon ./src/index.js",
+    "test": "jest --collect-coverage --coverage",
+    "test:watch": "jest --watchAll --collect-coverage --coverage",
+    "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
+    "release": "np --any-branch",
+    "nibble": "npx eslint-nibble .",
+    "fixable-nibble": "npx eslint-nibble --fixable-only .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky install"
+  },
+
   "dependencies": {
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.2",
@@ -42,27 +64,6 @@
     "sinon": "^14.0.2",
     "strongly-connected-components": "^1.0.1",
     "winston": "^3.8.2"
-  },
-  "scripts": {
-    "build": "npm run node:build && npm run docker:build",
-    "node:build": "./utils/sscripts/node-build.sh",
-    "systemctl:watch": "journalctl -u quivero.service",
-    "systemctl:deploy": "./utils/sscripts/systemctl-deploy.sh",
-    "systemctl:restart": "systemctl restart quivero.service",
-    "docker:build": "./utils/sscripts/docker-build.sh",
-    "docker:deploy": "./utils/sscripts/docker-deploy.sh $npm_config_tag $npm_config_from $npm_config_to",
-    "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
-    "update": "bash ./utils/sscripts/update.sh",
-    "start": "nodemon ./src/index.js",
-    "test": "jest --collect-coverage --coverage",
-    "test:watch": "jest --watchAll --collect-coverage --coverage",
-    "test:ci": "jest --ci --reporters='default' --reporters='./github-actions-reporter'",
-    "release": "np --any-branch",
-    "nibble": "npx eslint-nibble .",
-    "fixable-nibble": "npx eslint-nibble --fixable-only .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",
