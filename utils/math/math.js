@@ -48,36 +48,39 @@ export const abRandom = (min, max) => {
  * @return {boolean}
  */
 export const sphericalToCartesian = (coords, R) => {
-  const prodsin = (arr) => 
-      arr.length===0 ? 1 : arr.reduce((prod_, angle) => prod_ * Math.sin(angle), 1);
+  const prodsin = (arr) =>
+    arr.length === 0
+      ? 1
+      : arr.reduce((prod_, angle) => prod_ * Math.sin(angle), 1);
 
   const s2cRecur = (coords_, index) => {
     return prodsin(coords_.slice(0, index)) * Math.cos(coords_[index]);
-  }
+  };
 
   const prev_coords = coords.slice(0, coords.length);
   const curr_coord = coords[coords.length - 1];
 
   return prev_coords
     .map((coord, index) => R * s2cRecur(prev_coords, index))
-    .concat([ R * prodsin(prev_coords) * Math.sin(curr_coord)]);
+    .concat([R * prodsin(prev_coords) * Math.sin(curr_coord)]);
 };
 
 /**
  * @abstract dot product
- * 
+ *
  * @param {Array} arr
  * @return {Number}
  */
-export const dot = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
+export const dot = (a, b) =>
+  a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
 
 /**
  * @abstract vector argument based on n-norm
- * 
+ *
  * @param {Array} u
  * @param {Array} v
  * @param {Number} n
  * @return {Number}
  */
-export const vecArg = (u, v, n) => Math.acos(dot(u, v)/(nNorm(u, n) * nNorm(v, n)));
-
+export const vecArg = (u, v, n) =>
+  Math.acos(dot(u, v) / (nNorm(u, n) * nNorm(v, n)));

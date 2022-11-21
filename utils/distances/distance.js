@@ -82,11 +82,12 @@ export const greatCircleDistance = (coordinate_1, coordinate_2, R) =>
  * @return {Number}
  */
 export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
-  return R * vecArg(
-    sphericalToCartesian(coordinate_1, R), 
-    sphericalToCartesian(coordinate_2, R), 
-    2
-  )
-
+  return (
+    R *
+    vecArg(
+      sphericalToCartesian(coordinate_1, R),
+      sphericalToCartesian(coordinate_2, R),
+      2
+    )
+  );
 };
-

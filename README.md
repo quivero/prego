@@ -60,7 +60,7 @@ For diagrams rendering, you need to:
 3. Paste the copied content from item 1) on the respective text field;
 4. In case the diagram is too big, the platform will complain and deactivate auto-rendering. You must reactivate it to see the rendered diagram.
 
-The resulting diagram text-code outputs as a string with escape characters `\n`. The online tool [FreeFormater](https://www.freeformatter.com/json-escape.html) allows the developer to indent the text without these non-compilable escape characters. Copy-paste the text on the text field and press `Unescape JSON`: the unescaped text appears on text field below. 
+The resulting diagram text-code outputs as a string with escape characters `\n`. The online tool [FreeFormater](https://www.freeformatter.com/json-escape.html) allows the developer to indent the text without these non-compilable escape characters. Copy-paste the text on the text field and press `Unescape JSON`: the unescaped text appears on text field below.
 
 ## Backlog
 

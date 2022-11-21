@@ -399,7 +399,7 @@ export function* upperTriangularHyperindexes(length, dim) {
  */
 export function* euler(sets) {
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
-  
+
   if (Object.values(sets).length === 0)
     log_message(logger, "error", "There must at least ONE set!");
 
@@ -407,8 +407,11 @@ export function* euler(sets) {
     !objectReduce(
       sets,
       (result, elements_key, elements) => {
-        return result & (removeArrayDuplicates(elements).length === elements.length)
-      }, true
+        return (
+          result & (removeArrayDuplicates(elements).length === elements.length)
+        );
+      },
+      true
     )
   ) {
     log_message(logger, "error", "Each array must NOT have duplicates!");
@@ -483,4 +486,3 @@ export function* euler(sets) {
 }
 
 export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)]);
-

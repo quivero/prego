@@ -27,7 +27,7 @@ import { log_message } from "../../logging/logger.js";
 
 const { format } = require("winston");
 
-jest.mock( '../../logging/logger');
+jest.mock("../../logging/logger");
 
 afterEach(() => {
   // restore the spy created with spyOn
@@ -57,9 +57,11 @@ describe("Array", () => {
   });
 
   it("should receive a zipped array with two arrays entries", () => {
-    expect(
-      zip([1, 2, 3], ['a', 'b', 'c'])
-    ).toStrictEqual([[1, 'a'], [2, 'b'], [3, 'c']]);
+    expect(zip([1, 2, 3], ["a", "b", "c"])).toStrictEqual([
+      [1, "a"],
+      [2, "b"],
+      [3, "c"],
+    ]);
   });
 
   it("should get all indexes of given value within array", () => {
@@ -87,47 +89,49 @@ describe("Array", () => {
   it("should call log_message for array length greater than given index", () => {
     cyclicSort([1, 2, 3], 4);
 
-    expect( log_message ).toHaveBeenCalled();
+    expect(log_message).toHaveBeenCalled();
   });
 
   it("should call log_message for inexistent input arguments ", () => {
     sort([3, 1, 2], 2);
 
-    expect( log_message ).toHaveBeenCalled();
+    expect(log_message).toHaveBeenCalled();
   });
 
   it("should call log_message for invalid blob scenario ", () => {
     const mSetsOfnTuples_gen = mSetsOfnTuples(
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5, 3
-    )
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      5,
+      3
+    );
 
-    mSetsOfnTuples_gen.next()
+    mSetsOfnTuples_gen.next();
 
-    expect( log_message ).toHaveBeenCalled();
-  }); 
+    expect(log_message).toHaveBeenCalled();
+  });
 
   it("should call log_message for empty sets", () => {
-    const euler_gen = euler({})
+    const euler_gen = euler({});
 
-    euler_gen.next()
+    euler_gen.next();
 
-    expect( log_message ).toHaveBeenCalled();
-  }); 
+    expect(log_message).toHaveBeenCalled();
+  });
 
   it("should call log_message for sets with duplicated elements", () => {
-    const euler_gen = euler({'a': [1, 1]})
+    const euler_gen = euler({ a: [1, 1] });
 
-    euler_gen.next()
+    euler_gen.next();
 
-    expect( log_message ).toHaveBeenCalled();
-  }); 
+    expect(log_message).toHaveBeenCalled();
+  });
 
   it("should call log_message for invalid input arguments ", () => {
-    const hyperIndexes_gen = hyperIndexes(1, -1, () => 'test')
-    hyperIndexes_gen.next()
+    const hyperIndexes_gen = hyperIndexes(1, -1, () => "test");
+    hyperIndexes_gen.next();
 
-    expect( log_message ).toHaveBeenCalled();
-  });  
+    expect(log_message).toHaveBeenCalled();
+  });
 
   it("should return an descending ordered array", () => {
     expect(sort([1, 2, 3, 4, 5])).toEqual([5, 4, 3, 2, 1]);
@@ -295,6 +299,4 @@ describe("Extended euler diagram", () => {
 
     expect(spreadEuler([list_1, list_2, list_3])).toEqual(result);
   });
-
-  
 });

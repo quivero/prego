@@ -3,7 +3,7 @@ import {
   nNorm,
   sphereCentralAngle,
   greatCircleDistance,
-  nSphereDistance
+  nSphereDistance,
 } from "../distance.js";
 
 describe("distance", () => {
@@ -71,22 +71,21 @@ describe("distance", () => {
   });
 
   it("should return distance on a ", () => {
-      const coord_1 = [0, 0];
-      const coord_2 = [Math.PI / 2, 0];
-      const coord_3 = [Math.PI, 0];
-      const radius = 1;
-      
-      expect(
-        nSphereDistance(coord_1, coord_2, radius)
-      ).toBeCloseTo(2 * Math.PI * radius / 4);
+    const coord_1 = [0, 0];
+    const coord_2 = [Math.PI / 2, 0];
+    const coord_3 = [Math.PI, 0];
+    const radius = 1;
 
-      expect(
-        nSphereDistance(coord_1, coord_3, radius)
-      ).toBeCloseTo(2 * Math.PI * radius / 2);
+    expect(nSphereDistance(coord_1, coord_2, radius)).toBeCloseTo(
+      (2 * Math.PI * radius) / 4
+    );
 
-      expect( 
-        nSphereDistance(coord_2, coord_3, radius)
-      ).toBeCloseTo(2 * Math.PI * radius / 4);
+    expect(nSphereDistance(coord_1, coord_3, radius)).toBeCloseTo(
+      (2 * Math.PI * radius) / 2
+    );
+
+    expect(nSphereDistance(coord_2, coord_3, radius)).toBeCloseTo(
+      (2 * Math.PI * radius) / 4
+    );
   });
 });
-
