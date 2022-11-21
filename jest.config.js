@@ -20,8 +20,7 @@ export default {
 
   // If the file path matches any of the patterns, coverage information will be skipped.
   coveragePathIgnorePatterns: [
-    "<rootDir>/node_modules/",
-    "<rootDir>/utils/logging/",
+    "<rootDir>/node_modules/"
   ],
 
   // The pattern Jest uses to detect test files.
