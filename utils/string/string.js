@@ -25,7 +25,7 @@ export const generateToken = (length) => {
  *
  * @return String
  */
-export const codify = (str) => new Buffer(str).toString("base64");
+export const codify = (str) => Buffer.from(str).toString("base64");
 
 /**
  * @abstract convert string to hash code
@@ -34,4 +34,4 @@ export const codify = (str) => new Buffer(str).toString("base64");
  *
  * @return String
  */
-export const decodify = (hash) => new Buffer(hash, "base64").toString("ascii");
+export const decodify = (hash) => Buffer.from(hash, "base64").toString("ascii");
