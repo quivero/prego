@@ -295,4 +295,6 @@ describe("Extended euler diagram", () => {
 
     expect(spreadEuler([list_1, list_2, list_3])).toEqual(result);
   });
+
+  
 });

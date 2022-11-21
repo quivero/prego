@@ -407,8 +407,8 @@ export function* euler(sets) {
     !objectReduce(
       sets,
       (result, elements_key, elements) => {
-        return result | (removeArrayDuplicates(elements).length !== elements.length)
-      }, false
+        return result & (removeArrayDuplicates(elements).length === elements.length)
+      }, true
     )
   ) {
     log_message(logger, "error", "Each array must NOT have duplicates!");
