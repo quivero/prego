@@ -58,9 +58,6 @@ export const sphericalToCartesian = (coords, R) => {
   const prev_coords = coords.slice(0, coords.length);
   const curr_coord = coords[coords.length - 1];
 
-  console.log('prev_coords: ' + String(prev_coords))
-  console.log(prev_coords.map((coord, index) => R * s2cRecur(prev_coords, index)))
-
   return prev_coords
     .map((coord, index) => R * s2cRecur(prev_coords, index))
     .concat([ R * prodsin(prev_coords) * Math.sin(curr_coord)]);
