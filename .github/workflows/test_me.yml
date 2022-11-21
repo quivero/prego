@@ -10,8 +10,6 @@ jobs:
 
       - name: Test using Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: "12"
 
       - name: Install dependencies
         run: npm install
@@ -21,31 +19,3 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
-
-  test-coveralls:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          version: 10.x
-      - run: npm install
-      - run: npm run test
-      - name: Coveralls
-        uses: coverallsapp/github-action@1.1.3
-        env:
-          NODE_COVERALLS_DEBUG: 1
-        with:
-          github-token: ${{ secrets.github_token }}
-          parallel: true
-          flag-name: run-${{ matrix.test_number }}
-
-  finish:
-    needs: test-coveralls
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@1.1.3
-        with:
-          github-token: ${{ secrets.github_token }}
-          parallel-finished: true
