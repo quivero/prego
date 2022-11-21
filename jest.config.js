@@ -20,6 +20,7 @@ export default {
 
   // If the file path matches any of the patterns, coverage information will be skipped.
   coveragePathIgnorePatterns: [
+    "<rootDir>/utils/logging/",
     "<rootDir>/node_modules/"
   ],
 
