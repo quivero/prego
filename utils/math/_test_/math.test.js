@@ -9,17 +9,18 @@ import {
 
 import { nNorm } from "../../distances/distance.js";
 
+import { throwError } from "../../sys/sys.js";
+
+jest.mock("../../sys/sys");
+
 describe("combinatorics", () => {
   it("should return number decimal part", () => {
     expect(decimalPart(4.2)).toBeCloseTo(0.2);
   });
 
   it("should throw for unordered entries", () => {
-    function unorderedInputs() {
-      return abRandom(2, 1);
-    }
-
-    expect(unorderedInputs).toThrowError();
+    abRandom(2, 1);
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should return a value between 1 and 2", () => {

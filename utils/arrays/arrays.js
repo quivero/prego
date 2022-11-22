@@ -3,9 +3,7 @@ import _ from "lodash";
 
 import { objectReduce, objectMap } from "../objects/objects.js";
 
-import { logging, log_message } from "../logging/logger.js";
-
-const logger = logging("arrays");
+import { throwError } from "../sys/sys.js";
 
 /**
  * @abstract returns an array of ones with length n
@@ -16,17 +14,17 @@ const logger = logging("arrays");
 export const ones = (n) => Array(n).fill(1);
 
 /**
- * @abstract returns a random number between min_val and max_val
+ * @abstract returns a vector with element each between given min_val and max_val
  *
  * @param {Number} min_val
  * @return {Number} max_val
  */
-export const RandMinMax = (min_val, max_val) => {
+export const randMinMax = (min_val, max_val) => {
   return (max_val - min_val) * Math.random() + min_val;
 };
 
 /**
- * @abstract returns a random number between min_val and max_val
+ * @abstract returns a random vector between min_val and max_val
  *
  * @param {Integer} n
  * @return {Array} ones
@@ -35,7 +33,47 @@ export const nRandMinMax = (n, min_val, max_val) => {
   let n_array = [];
 
   for (let i = 0; i < n; i += 1) {
-    n_array.push(RandMinMax(min_val, max_val));
+    n_array.push(randMinMax(min_val, max_val));
+  }
+
+  return n_array;
+};
+
+/**
+ * @abstract returns a vector with element each between given min_val and max_val
+ *
+ * @param {Integer} n
+ * @return {Array} ones
+ */
+export const nRandMinsMaxs = (n, min_max_vec) => {
+  let n_array = [];
+  let msg = "";
+
+  if(min_max_vec.length !== n) {    
+      throwError("There must exist "+String(n)+" array tuples on second entry.");
+      return;
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    if(min_max_vec[i].length !== 2) {
+      throwError('Entry '+String(i)+" have 2 entries. We found "+String(min_max_vec[i].length)+"!");
+      return;
+    }
+
+    let min_val = min_max_vec[i][0];
+    let max_val = min_max_vec[i][1];
+
+    if(typeof min_val !== 'number' && typeof max_val !== 'number') {
+      throwError('Min and max values must be numbers!');
+      return;
+    }
+
+    if(min_val > max_val) {
+      throwError('error', 'Min value must be lower than Max value!');
+      return;
+    }
+
+    n_array.push(randMinMax(min_val, max_val));
   }
 
   return n_array;
@@ -70,7 +108,7 @@ export const getAllIndexes = (arr, val) => {
  */
 export const zip = (arr_1, arr_2) => {
   if (arr_1.length !== arr_2.length) {
-    throw Error("Arrays must have the same length.");
+    throwError("Arrays must have the same length.");
   }
 
   const arr_tuple = arr_1.map((e, i) => [e, arr_2[i]]);
@@ -107,7 +145,7 @@ export const cyclicSort = (array, index) => {
     const subject = `Provided index ${index}`;
     const condition = `greater than array length ${array.length}`;
 
-    log_message(logger, "error", `${category} : ${subject} ${condition}`);
+    throwError(`${category} : ${subject} ${condition}`);
   }
 
   const head = array.slice(index);
@@ -155,11 +193,7 @@ export const sort = (arr, sort_type = 0) => {
   } else if (sort_type == 1) {
     // Do nothing
   } else {
-    log_message(
-      logger,
-      "error",
-      "Sorting types are 0 and 1 for descending and ascending order."
-    );
+    throwError("Sorting types are 0 and 1 for descending and ascending order.");
   }
 
   return arr;
@@ -271,11 +305,7 @@ export const removeArrayDuplicates = (list) => {
 
 export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
-    log_message(
-      logger,
-      "error",
-      "Size of array must be greater or equal to the product of n by m"
-    );
+    throwError("Size of array must be greater or equal to the product of n by m");
   }
 
   let curr_comb = [];
@@ -358,11 +388,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
  */
 export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
-    log_message(
-      logger,
-      "error",
-      "Dimension and length must be positive natural numbers!"
-    );
+    throwError("Dimension and length must be positive natural numbers!");
   }
 
   for (const indexes of formationFn(length, dim, dim)) {
@@ -401,7 +427,7 @@ export function* euler(sets) {
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
   if (Object.values(sets).length === 0)
-    log_message(logger, "error", "There must at least ONE set!");
+    throwError("There must at least ONE set!");
 
   if (
     !objectReduce(
@@ -414,7 +440,7 @@ export function* euler(sets) {
       true
     )
   ) {
-    log_message(logger, "error", "Each array must NOT have duplicates!");
+    throwError("Each array must NOT have duplicates!");
   }
 
   const sets_keys_fun = (sets_) =>

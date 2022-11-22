@@ -6,6 +6,10 @@ import {
   nSphereDistance,
 } from "../distance.js";
 
+import { throwError } from "../../sys/sys.js";
+
+jest.mock("../../sys/sys");
+
 describe("distance", () => {
   it("should return n norm of two tuple coordinates", () => {
     const coord_1 = [1, 1];
@@ -30,25 +34,21 @@ describe("distance", () => {
   });
 
   it("should throw exception for negative n", () => {
-    function negativeExponent() {
-      const coord_1 = [1, -1];
-      const coord_2 = [2, 2];
+    const coord_1 = [1, -1];
+    const coord_2 = [2, 2];
 
-      return nNormDistance(coord_1, coord_2, -1);
-    }
-
-    expect(negativeExponent).toThrow();
+    return nNormDistance(coord_1, coord_2, -1);
+    
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should throw exception for negative n", () => {
-    function negativeExponent() {
-      const coord_1 = [1, -1];
-      const coord_2 = [2, 2];
+    const coord_1 = [1, -1];
+    const coord_2 = [2, 2];
 
-      return nNormDistanceFn(coord_1, coord_2, -1);
-    }
+    nNormDistance(coord_1, coord_2, -1);  
 
-    expect(negativeExponent).toThrowError();
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should return distance between two coordinates on a sphere", () => {

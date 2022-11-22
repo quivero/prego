@@ -4,8 +4,9 @@ import {
   zip,
   getAllIndexes,
   countDict,
-  RandMinMax,
+  randMinMax,
   nRandMinMax,
+  nRandMinsMaxs,
   cyclicSort,
   isCyclicEqual,
   getUniques,
@@ -23,11 +24,11 @@ import {
   sequentialArrayBlobs,
 } from "../arrays";
 
-import { log_message } from "../../logging/logger.js";
+import { throwError } from "../../sys/sys.js";
 
 const { format } = require("winston");
 
-jest.mock("../../logging/logger");
+jest.mock("../../sys/sys");
 
 afterEach(() => {
   // restore the spy created with spyOn
@@ -40,7 +41,7 @@ describe("Array", () => {
   });
 
   it("should get a random number between 0 and 1", () => {
-    const num = RandMinMax(0, 1);
+    const num = randMinMax(0, 1);
 
     expect(num).toBeGreaterThanOrEqual(0);
     expect(num).toBeLessThanOrEqual(1);
@@ -54,6 +55,22 @@ describe("Array", () => {
 
     expect(num[1]).toBeGreaterThanOrEqual(0);
     expect(num[1]).toBeLessThanOrEqual(1);
+  });
+
+  it("should get a [2, 1] random array with first entry between 0 and 1 and second entry between 1 and 2", () => {
+    const num = nRandMinsMaxs(2, [[0, 1], [1, 2]]);
+
+    expect(num[0]).toBeGreaterThanOrEqual(0);
+    expect(num[0]).toBeLessThanOrEqual(1);
+
+    expect(num[1]).toBeGreaterThanOrEqual(1);
+    expect(num[1]).toBeLessThanOrEqual(2);
+  });
+
+  it("should call throwError for less entries on second argument than expected", () => {
+    nRandMinsMaxs(2, [[0, 1]]);
+
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should receive a zipped array with two arrays entries", () => {
@@ -86,19 +103,19 @@ describe("Array", () => {
     expect(cyclicSort("ABCD", 2)).toStrictEqual("CDAB");
   });
 
-  it("should call log_message for array length greater than given index", () => {
+  it("should call throwError for array length greater than given index", () => {
     cyclicSort([1, 2, 3], 4);
 
-    expect(log_message).toHaveBeenCalled();
+    expect(throwError).toHaveBeenCalled();
   });
 
-  it("should call log_message for inexistent input arguments ", () => {
+  it("should call throwError for inexistent input arguments ", () => {
     sort([3, 1, 2], 2);
 
-    expect(log_message).toHaveBeenCalled();
+    expect(throwError).toHaveBeenCalled();
   });
 
-  it("should call log_message for invalid blob scenario ", () => {
+  it("should call throwError for invalid blob scenario ", () => {
     const mSetsOfnTuples_gen = mSetsOfnTuples(
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       5,
@@ -107,30 +124,30 @@ describe("Array", () => {
 
     mSetsOfnTuples_gen.next();
 
-    expect(log_message).toHaveBeenCalled();
+    expect(throwError).toHaveBeenCalled();
   });
 
-  it("should call log_message for empty sets", () => {
+  it("should call throwError for empty sets", () => {
     const euler_gen = euler({});
 
     euler_gen.next();
 
-    expect(log_message).toHaveBeenCalled();
+    expect(throwError).toHaveBeenCalled();
   });
 
-  it("should call log_message for sets with duplicated elements", () => {
+  it("should call throwError for sets with duplicated elements", () => {
     const euler_gen = euler({ a: [1, 1] });
 
     euler_gen.next();
 
-    expect(log_message).toHaveBeenCalled();
+    expect(throwError).toHaveBeenCalled();
   });
 
-  it("should call log_message for invalid input arguments ", () => {
+  it("should call throwError for invalid input arguments ", () => {
     const hyperIndexes_gen = hyperIndexes(1, -1, () => "test");
     hyperIndexes_gen.next();
 
-    expect(log_message).toHaveBeenCalled();
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should return an descending ordered array", () => {

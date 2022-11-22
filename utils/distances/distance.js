@@ -25,6 +25,7 @@ export const nNorm = (arr, n) =>
 export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   if (n < 1) {
     throwError("The exponent n must be a number greater or equal to 1!");
+    return;
   }
 
   const coord_diffs = _.zip(coordinate_1, coordinate_2).map((coord_tuple) =>

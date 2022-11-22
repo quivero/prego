@@ -1,5 +1,9 @@
 import { primeFactors, isPrime } from "../numbers.js";
 
+import { throwError } from "../../sys/sys.js";
+
+jest.mock("../../sys/sys");
+
 describe("numbers", () => {
   it("should return number decimal part", () => {
     expect(primeFactors(1)).toEqual({
@@ -33,11 +37,9 @@ describe("numbers", () => {
   });
 
   it("should throw error for unappropriate entry", () => {
-    function stringFactorization() {
-      return isPrime("42");
-    }
+    isPrime("42");
 
-    expect(stringFactorization).toThrowError();
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should return true for prime number and false for ", () => {
@@ -45,16 +47,14 @@ describe("numbers", () => {
     expect(isPrime(8)).toEqual(false);
   });
 
-  it("should throw error for negative or non-natural number", () => {
-    function negativeNumberFactorization() {
-      return primeFactors(-1);
-    }
+  it("should throw error for negative number", () => {
+    primeFactors(-1);
+    expect(throwError).toHaveBeenCalled();
+  });
 
-    function decimalNumberFactorization() {
-      return primeFactors(4.2);
-    }
+  it("should throw error for non-natural number", () => {
+    primeFactors(4.2);
 
-    expect(negativeNumberFactorization).toThrowError();
-    expect(decimalNumberFactorization).toThrowError();
+    expect(throwError).toHaveBeenCalled();
   });
 });

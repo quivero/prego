@@ -1,6 +1,10 @@
 import MeshVertex from "../MeshVertex.js";
 import { createMVertices } from "../MeshVertex.js";
 
+import { throwError } from "../../../utils/sys/sys.js";
+
+jest.mock("../../../utils/sys/sys.js");
+
 describe("GraphicMeshVertex", () => {
   it("should throw an error when trying to create MeshVertex", () => {
     let vertex = null;
@@ -23,10 +27,8 @@ describe("GraphicMeshVertex", () => {
   });
 
   it("should throw error for unequal array lengths", () => {
-    function throwErrorUnequalArrayLengths() {
-      createMVertices(["A", "b"], [[1, 2]]);
-    }
+    createMVertices(["A", "b"], [[1, 2]]);  
 
-    expect(throwErrorUnequalArrayLengths).toThrowError();
+    expect(throwError).toHaveBeenCalled();
   });
 });

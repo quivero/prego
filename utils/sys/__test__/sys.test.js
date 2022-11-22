@@ -1,9 +1,11 @@
 import { throwError } from "../sys.js";
 
+jest.mock("../../logging/logger.js");
+
 describe("numbers", () => {
   it("should throw error", () => {
     function throwErrorFn() {
-      return throwError("to continue!");
+      return throwError("Fire!");
     }
 
     expect(throwErrorFn).toThrowError();
