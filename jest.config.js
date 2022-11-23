@@ -6,7 +6,6 @@ export default {
   // Indicates whether each individual test should be reported during the run.
   verbose: false,
 
-
   // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: true,
 
@@ -48,9 +47,8 @@ export default {
   notify: true,
 
   reporters: [
-    ['jest-slow-test-reporter', {"numTests": 8, "warnOnSlowerThan": 300, "color": true}],
+    ['jest-slow-test-reporter', {"numTests": 8, "color": true}],
     'jest-progress-bar-reporter',
-    '@matteoh2o1999/github-actions-jest-reporter'
   ],
 
   
