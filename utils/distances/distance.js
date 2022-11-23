@@ -92,3 +92,37 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
     )
   );
 };
+
+/**
+ * @abstract returns the distance of two points based on 
+ *
+ * @param {Array} coordinate_1
+ * @param {Array} coordinate_2
+ * @param {Number} n
+ * @return {Number}
+ */
+export const distance = (coordinate_1, coordinate_2, methodConfig) => {
+  if(!Object.keys(methodConfig).includes('method')) {
+    throwError("There must exist property \'exponent\' on config argument \'methodConfig\'!");
+  } else {
+    switch (methodConfig['method']) {
+      case 'n_norm':
+        if(!Object.keys(methodConfig).includes('exponent')) {
+          throwError("There must exist property \'exponent\' on config argument \'methodConfig\'!");
+        } else {
+          return nNormDistance(coordinate_1, coordinate_2, methodConfig.exponent);
+        }
+
+      case 'sphere':
+        if(!Object.keys(methodConfig).includes('radius')) {
+          throwError("There must exist property \'radius\' on config argument \'methodConfig\'!");
+        } else {
+          return nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius)  
+        }
+
+      default:
+        throwError("There are only available methods \'n_norm\' and \'sphere\'");
+        return -1
+    }
+  }
+} 
