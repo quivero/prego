@@ -66,6 +66,30 @@ export const sphericalToCartesian = (coords, R) => {
 };
 
 /**
+ * @abstract an spherical coordinate of dimension n has:
+ *  1. Dimension greater than 2;
+ *  2. Entries from index:
+ *    a. 0 to indexn-2 : between [-pi, pi];
+ *    b. indexn-1      : between [0, 2 pi];
+ *
+ * @param {Array} u
+ * @return {Boolean}
+ */
+export const isSpherical = (u) => {
+  return !!(
+      u.length >= 2 && 
+      u.slice(0, u.length-1).reduce(
+        (result, elem) => result && (elem >= -Math.PI) && (elem <= Math.PI),
+        true
+      ) && 
+      u.slice(u.length-1, u.length).reduce(
+        (result, elem) => result && (elem >= 0) && (elem <= 2*Math.PI),
+        true
+      )
+    )
+}
+  
+/**
  * @abstract dot product
  *
  * @param {Array} arr
@@ -84,3 +108,4 @@ export const dot = (a, b) =>
  */
 export const vecArg = (u, v, n) =>
   Math.acos(dot(u, v) / (nNorm(u, n) * nNorm(v, n)));
+
