@@ -2,10 +2,13 @@ import {
   decimalPart,
   xor,
   sphericalToCartesian,
+  isSpherical,
   abRandom,
   dot,
   vecArg,
 } from "../math.js";
+
+import _ from 'lodash';
 
 import { nNorm } from "../../distances/distance.js";
 
@@ -73,5 +76,28 @@ describe("combinatorics", () => {
 
   it("should return dot product between vectors", () => {
     expect(vecArg([1, 0, 0], [1, 1, 0], 2)).toBeCloseTo(Math.PI / 4);
+  });
+
+  it("should return false examples of spherical coordinates", () => {
+    expect(isSpherical([])).toBe(false);
+    expect(isSpherical([42])).toBe(false);
+    
+    expect(isSpherical([-Math.PI-0.001, 0])).toBe(false);
+    expect(isSpherical([Math.PI+0.001, 0])).toBe(false);
+
+    expect(isSpherical([0, -0.001])).toBe(false);
+    expect(isSpherical([0, 2*Math.PI+0.001])).toBe(false);
+  });
+  
+  it("should return dot product between vectors", () => {
+    let phis_1 = _.range(-3, 3, 2*Math.PI/8);
+    let phis_2 = _.range(0, 6, 2*Math.PI/8);
+    
+    for (let coord_1 of phis_1) {
+      for (let coord_2 of phis_2) {
+        expect(isSpherical([phis_1[0], phis_2[0]])).toBe(true);
+      }
+
+    }
   });
 });
