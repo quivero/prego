@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { hav } from "../numbers/numbers.js";
-import { vecArg, sphericalToCartesian } from "../math/math.js";
+import { vecArg, sphericalToCartesian, isSpherical } from "../math/math.js";
 import { throwError } from "../sys/sys.js";
 
 /**
@@ -102,7 +102,9 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
  * @return {Number}
  */
 export const distance = (coordinate_1, coordinate_2, methodConfig) => {
-  if(!Object.keys(methodConfig).includes('method')) {
+  if(
+      !Object.keys(methodConfig).includes('method')
+    ) {
     throwError("There must exist property \'exponent\' on config argument \'methodConfig\'!");
   } else {
     switch (methodConfig['method']) {
@@ -116,6 +118,8 @@ export const distance = (coordinate_1, coordinate_2, methodConfig) => {
       case 'sphere':
         if(!Object.keys(methodConfig).includes('radius')) {
           throwError("There must exist property \'radius\' on config argument \'methodConfig\'!");
+        } else if ( !isSpherical(coordinate_1) || !isSpherical(coordinate_2) ) {
+          throwError("Coordinates require dimension greater than 1!");
         } else {
           return nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius)  
         }
