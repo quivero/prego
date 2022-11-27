@@ -18,9 +18,9 @@ export default class Mesh extends Graph {
   }
 
   distance(vertex_1_key, vertex_2_key) {
-    return this.metric_function(
-      this.vertices[vertex_1_key],
-      this.vertices[vertex_2_key]
+    return this.distance_function(
+      this.vertices[vertex_1_key].coordinates,
+      this.vertices[vertex_2_key].coordinates
     );
   }
 

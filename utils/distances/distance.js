@@ -31,7 +31,7 @@ export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   const coord_diffs = _.zip(coordinate_1, coordinate_2).map((coord_tuple) =>
     Math.abs(coord_tuple[1] - coord_tuple[0])
   );
-
+  
   if (n === Infinity) {
     return Math.max(...coord_diffs);
   }
