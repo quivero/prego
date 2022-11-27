@@ -9,36 +9,11 @@ describe("Mesh", () => {
           (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2
       );
 
-    const invalid_metric_fun = (coord_1, coord_2) =>
-      -Math.sqrt(
-        (coord_2.coordinates[1] - coord_1.coordinates[1]) ** 2 +
-          (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2
-      );
-
     const mesh = new Mesh(valid_metric_fun, true);
 
     expect(mesh).toBeDefined();
-    expect(mesh.metricIsValid()).toBe(true);
-
-    mesh.metric_function = invalid_metric_fun;
-
-    expect(mesh.metricIsValid()).toBe(false);
   });
-
-  it("should throw an error for non valid metric", () => {
-    function meshWithNotValidMetric() {
-      const metric_fun = (coord_1, coord_2) =>
-        -Math.sqrt(
-          (coord_2.coordinates[1] - coord_1.coordinates[1]) ** 2 +
-            (coord_2.coordinates[0] - coord_1.coordinates[0]) ** 2
-        );
-
-      return new Mesh(metric_fun);
-    }
-
-    expect(meshWithNotValidMetric).toThrowError();
-  });
-
+  
   it("should return two added vertices and the distance between them is one", () => {
     const metric_fun = (coord_1, coord_2) =>
       Math.sqrt(
