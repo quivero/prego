@@ -17,10 +17,4 @@ services:
       - app-network
     command: /home/node/app/node_modules/.bin/nodemon app.js
 
-networks:
-  app-network:
-    driver: bridge
 
-volumes:
-  dbdata:
-  node_modules:
