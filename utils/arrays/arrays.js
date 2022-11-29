@@ -1,5 +1,5 @@
-import "lodash.combinations";
 import _ from "lodash";
+import "lodash.combinations";
 
 import { objectReduce, objectMap } from "../objects/objects.js";
 
