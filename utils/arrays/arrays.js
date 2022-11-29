@@ -45,14 +45,10 @@ export const nRandMinMax = (n, min_val, max_val) => {
  * @param {Integer} n
  * @return {Array} ones
  */
-export const nRandMinsMaxs = (n, min_max_vec) => {
+export const nRandMinsMaxs = (min_max_vec) => {
   let n_array = [];
   let msg = "";
-
-  if(min_max_vec.length !== n) {    
-      throwError("There must exist "+String(n)+" array tuples on second entry.");
-      return;
-  }
+  let n = min_max_vec.length
 
   for (let i = 0; i < n; i += 1) {
     if(min_max_vec[i].length !== 2) {
@@ -287,7 +283,6 @@ export const cartesianProduct = (a, b, ...c) => {
  */
 export const removeArrayDuplicates = (list) => {
   const unique = [];
-
   list.forEach((item) => {
     let has_item = false;
 
@@ -424,24 +419,19 @@ export function* upperTriangularHyperindexes(length, dim) {
  * @return {Array} keys_elems
  */
 export function* euler(sets) {
+  let is_unique = true;
+  for (let set_key in sets) {
+      is_unique &= sets[set_key].length == removeArrayDuplicates(sets[set_key]).length;
+  }
+    
+  if (!is_unique) {
+    throwError("Each array must NOT have duplicates!");
+  }
+
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
   if (Object.values(sets).length === 0)
     throwError("There must at least ONE set!");
-
-  if (
-    !objectReduce(
-      sets,
-      (result, elements_key, elements) => {
-        return (
-          result & (removeArrayDuplicates(elements).length === elements.length)
-        );
-      },
-      true
-    )
-  ) {
-    throwError("Each array must NOT have duplicates!");
-  }
 
   const sets_keys_fun = (sets_) =>
     Object.keys(sets_).filter((key) => sets_[key].length !== 0);

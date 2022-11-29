@@ -119,7 +119,7 @@ export const distance = (coordinate_1, coordinate_2, methodConfig) => {
         if(!Object.keys(methodConfig).includes('radius')) {
           throwError("There must exist property \'radius\' on config argument \'methodConfig\'!");
         } else if ( !isSpherical(coordinate_1) || !isSpherical(coordinate_2) ) {
-          throwError("Coordinates require dimension greater than 1!");
+          throwError("Provided coordinates are not spherical!");
         } else {
           return nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius)  
         }

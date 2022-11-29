@@ -1,4 +1,10 @@
-import { primeFactors, isPrime } from "../numbers.js";
+import { 
+  primeFactors, 
+  isPrime, 
+  radianToDegree,
+  degreeToRadian,
+  hav 
+} from "../numbers.js";
 
 import { throwError } from "../../sys/sys.js";
 
@@ -31,12 +37,37 @@ describe("numbers", () => {
     });
   });
 
+  it("should return converted radian to degree", () => {
+    expect(radianToDegree(Math.PI)).toBe(180);
+  });
+
+  it("should return converted degree to radian", () => {
+    expect(degreeToRadian(180)).toBe(Math.PI);
+  });
+
+  it("should return haversine values", () => {
+    expect(hav(Math.PI)).toBeCloseTo(1);
+    expect(hav(2*Math.PI)).toBeCloseTo(0);
+  });
+
+  it("should throw error for entry with decimal part on function primeFactors", () => {
+    primeFactors(42.42);
+
+    expect(throwError).toHaveBeenCalled();
+  });
+
+  it("should throw error for entry with inappropriate entry on function primeFactors", () => {
+    primeFactors('42');
+
+    expect(throwError).toHaveBeenCalled();
+  });
+
   it("should return true/false for prime/non-prime number ", () => {
     expect(isPrime(7)).toEqual(true);
     expect(isPrime(8)).toEqual(false);
   });
 
-  it("should throw error for unappropriate entry", () => {
+  it("should throw error for inappropriate entry on function isPrime", () => {
     isPrime("42");
 
     expect(throwError).toHaveBeenCalled();

@@ -1,4 +1,5 @@
 import { agentMorganReporter, log_message } from "../logging/logger.js";
+import { lowerCase } from "lodash"
 
 /**
  * @abstract throw an error with prescribed unable task message
@@ -10,16 +11,25 @@ export const throwError = (msg) => {
     throw Error(msg);
 };
 
-function typeOf(value) {
-    var type = typeof value;
+/**
+ * @abstract throw an error with prescribed unable task message
+ *
+ * @param {String} task_msg
+ */
+export const warn = (msg) => {
+    log_message(agentMorganReporter, 'warn', msg);
+};
+
+export const typeOf = (value) => {
+    const type = typeof value;
 
     switch(type) {
         case 'object':
-        return value === null ? 'null' : Object.prototype.toString.call(value).
-            match(/^\[object (.*)\]$/)[1]
+            return value === null ? 'null' : lowerCase(Object.prototype.toString.call(value)
+                                                             .match(/^\[object (.*)\]$/)[1])
 
         case 'function':
-        return 'Function';
+        return 'function';
 
         default:
         return type;

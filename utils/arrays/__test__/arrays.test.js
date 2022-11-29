@@ -22,6 +22,7 @@ import {
   fullPolytopeHyperindexes,
   upperTriangularHyperindexes,
   sequentialArrayBlobs,
+  cartesianProduct
 } from "../arrays";
 
 import { throwError } from "../../sys/sys.js";
@@ -58,7 +59,7 @@ describe("Array", () => {
   });
 
   it("should get a [2, 1] random array with first entry between 0 and 1 and second entry between 1 and 2", () => {
-    const num = nRandMinsMaxs(2, [[0, 1], [1, 2]]);
+    const num = nRandMinsMaxs([[0, 1], [1, 2]]);
 
     expect(num[0]).toBeGreaterThanOrEqual(0);
     expect(num[0]).toBeLessThanOrEqual(1);
@@ -67,8 +68,20 @@ describe("Array", () => {
     expect(num[1]).toBeLessThanOrEqual(2);
   });
 
-  it("should call throwError for less entries on second argument than expected", () => {
-    nRandMinsMaxs(2, [[0, 1]]);
+  it("should call throwError for one entry in min_max", () => {
+    nRandMinsMaxs([[1]]);
+
+    expect(throwError).toHaveBeenCalled();
+  });
+
+  it("should call throwError for non-numerical entries", () => {
+    nRandMinsMaxs([['0', '42']]);
+
+    expect(throwError).toHaveBeenCalled();
+  });
+
+  it("should call throwError for min_max in decrescent order", () => {
+    nRandMinsMaxs([[1, 0]]);
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -271,6 +284,25 @@ describe("Extended euler diagram", () => {
       0: [1, 2, 3],
       1: [6, 7],
     });
+  });
+
+  it("should validate information from Extended Venn Diagram", () => {
+    const list_1 = [1, 2];
+    const list_2 = [3, 4];
+
+    const result = {
+      0: [1, 2],
+      1: [3, 4],
+    }
+
+    expect(
+      spreadEuler([list_1, list_2])
+    ).toEqual(
+      {
+        0: [1, 2],
+        1: [3, 4],
+      }
+    );
   });
 
   it("should return m n-tuples of the array given", () => {

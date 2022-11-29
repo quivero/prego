@@ -7,6 +7,7 @@ import {
   distance
 } from "../distance.js";
 
+import { isSpherical } from "../../math/math.js";
 import { throwError } from "../../sys/sys.js";
 
 jest.mock("../../sys/sys");
@@ -113,6 +114,15 @@ describe("distance", () => {
     const coord_2 = [1, 1];
 
     distance(coord_1, coord_2, {'method': 'sphere'});
+    
+    expect(throwError).toHaveBeenCalled();
+  });
+
+  it("should throw exception for 1-dimensional coordinates", () => {
+    const coord_1 = [0];
+    const coord_2 = [1];
+    
+    distance(coord_1, coord_2, {'method': 'sphere', 'radius': 1});
     
     expect(throwError).toHaveBeenCalled();
   });
