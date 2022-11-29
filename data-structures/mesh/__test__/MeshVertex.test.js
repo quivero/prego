@@ -1,5 +1,4 @@
 import MeshVertex from "../MeshVertex.js";
-import { createMVertices } from "../MeshVertex.js";
 
 import { throwError } from "../../../utils/sys/sys.js";
 
@@ -21,15 +20,6 @@ describe("MeshVertex", () => {
     const gvertex = new MeshVertex("A", [1, 2]);
     expect(gvertex.getKey()).toBe("A");
     expect(gvertex.toString()).toBe("A");
-  });
-
-  it("should create graph vertex", () => {
-    createMVertices(["A"], [[1, 2]]);
-  });
-
-  it("should throw error for unequal array lengths", () => {
-    createMVertices(["A", "b"], [[1, 2]]);  
-
-    expect(throwError).toHaveBeenCalled();
-  });
+  })
+  
 });

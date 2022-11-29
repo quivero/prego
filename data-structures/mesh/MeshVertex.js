@@ -26,12 +26,4 @@ export default class MeshVertex extends GraphVertex {
   }
 }
 
-/**
- * @param {string} labels
- * @param {*[]} coordinates
- */
-export const createMVertices = (labels, coordinates) =>
-  zip(labels, coordinates).map(
-    (label_coordinate) =>
-      new MeshVertex(label_coordinate[0], label_coordinate[1])
-  );
+

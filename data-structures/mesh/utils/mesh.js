@@ -10,6 +10,20 @@ import { abRandom } from "../../../utils/math/math.js";
 
 import { throwError } from "../../../utils/sys/sys.js";
 
+import { zip, nRandMinsMaxs } from "../../../utils/arrays/arrays.js";
+
+export const TOKEN_LENGTH = 5;
+
+/**
+ * @param {string} labels
+ * @param {*[]} coordinates
+ */
+export const createMVertices = (labels, coordinates) =>
+  zip(labels, coordinates).map(
+    (label_coordinate) =>
+      new MeshVertex(label_coordinate[0], label_coordinate[1])
+);
+
 /**
  * @abstract
  *
@@ -18,28 +32,25 @@ import { throwError } from "../../../utils/sys/sys.js";
  * @param {Array} bounds
  * @return {MeshVertex[]}
  */
-export const generateRandomMeshVertices = (n, dimension, bounds) => {
-  if (n <= 0 || dimension <= 0) {
-    throwError("The number of vertices and dimensions must be greater than 0");
+export const createRandomMVertices = (n, bounds) => {
+  if (n <= 0 || typeof n === 'number') {
+    throwError("The number of vertices must be greater than 0");
   }
 
-  if (bounds.length !== 2 || bounds[0] >= bounds[1]) {
-    throwError(
-      "Bound values must have length 2 and latter element greater than the former."
-    );
-  }
-
-  let label = "";
-  const length = 5;
   let coordinates = [];
+  let mesh_vertex = {};
 
-  return _.range(n).map((element) => {
-    label = generateToken(length);
-
-    coordinates = _.range(dimension).map((index) =>
-      abRandom(bounds[0], bounds[1])
-    );
-
-    return new MeshVertex(label, coordinates);
-  });
+  for(let i in _.range(n)) {
+    
+    mesh_vertex = new MeshVertex(
+        generateToken(TOKEN_LENGTH), 
+        nRandMinsMaxs(bounds)
+      );
+    
+    coordinates.push(mesh_vertex);
+  } 
+  
+  return coordinates;
 };
+
+
