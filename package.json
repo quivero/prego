@@ -1,9 +1,9 @@
 {
-  "name": "quivero-api",
+  "name": "prego",
   "main": "./src/index.js",
   "type": "module",
   "version": "6.1.0",
-  "description": "Package to handle dot-quiver-based structures",
+  "description": "Package to handle quiver-based structures",
   "sideEffects": false,
   "repository": {
     "type": "git",
