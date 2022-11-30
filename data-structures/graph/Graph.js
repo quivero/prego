@@ -20,6 +20,12 @@ import {
   sort,
 } from "../../utils/arrays/arrays.js";
 
+import {
+  throwError,
+  warn
+} from "../../utils/sys/sys.js";
+
+
 import { createEdgesFromVerticesValues } from "./utils/graph.js";
 
 import {
@@ -77,7 +83,7 @@ export default class Graph {
   addVertex(newVertex) {
     // Check if vertex has been already added.
     if (Object.keys(this.vertices).includes(newVertex.label)) {
-      throw Error(
+      throwError(
         "Vertex has already been added before. Please, choose other key!"
       );
     }
@@ -472,8 +478,8 @@ export default class Graph {
   addEdge(edge) {
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
-      console.warn(
-        `Warning: Edge ${edge.getKey()} has already been added before. Please, choose other key!`
+      warn(
+        `Edge ${edge.getKey()} has already been added before. Please, choose other key!`
       );
       return;
     }
@@ -538,7 +544,8 @@ export default class Graph {
     if (this.edges[edge.getKey()]) {
       delete this.edges[edge.getKey()];
     } else {
-      console.warn("Warning: Edge not found in graph");
+      warn("Edge not found in graph");
+      return;
     }
 
     // Try to find and end start vertices and delete edge from them.
@@ -736,9 +743,8 @@ export default class Graph {
         }
       });
     } else {
-      console.warn(
-        "Warning: The reverse of an undirected graph is identical to itself!"
-      );
+      warn("The reverse of an undirected graph is identical to itself!");
+      return; 
     }
 
     return this;
@@ -2438,46 +2444,46 @@ export default class Graph {
    */
   deserialize(graph_json) {
     if (graph_json.isDirected !== this.isDirected) {
-      throw Error("This direction is different from serialization direction.");
-    }
+      throwError("This direction is different from serialization direction.");
+    } else {
+      const vertices = this.getAllVertices();
 
-    const vertices = this.getAllVertices();
+      this.addVertices(
+        objectFilter(
+          graph_json.nodes.map((node_json) => {
+            const has_vertex = this.getVerticesKeys().includes(node_json.id);
 
-    this.addVertices(
-      objectFilter(
-        graph_json.nodes.map((node_json) => {
-          const has_vertex = this.getVerticesKeys().includes(node_json.id);
+            if (!has_vertex) {
+              return new GraphVertex(node_json.id, node_json.value);
+            }
+            return null;
+          }),
+          (key, value) => value !== null
+        )
+      );
 
-          if (!has_vertex) {
-            return new GraphVertex(node_json.id, node_json.value);
-          }
-          return null;
-        }),
-        (key, value) => value !== null
-      )
-    );
-
-    this.addEdges(
-      objectFilter(
-        graph_json.edges.map((edge_json) => {
-          const has_edge = this.getAllEdgesKeys().includes(
-            `${edge_json.source}_${edge_json.target}`
-          );
-
-          if (!has_edge) {
-            return new GraphEdge(
-              this.vertices[edge_json.source],
-              this.vertices[edge_json.target],
-              edge_json.weight
+      this.addEdges(
+        objectFilter(
+          graph_json.edges.map((edge_json) => {
+            const has_edge = this.getAllEdgesKeys().includes(
+              `${edge_json.source}_${edge_json.target}`
             );
-          }
-          return null;
-        }),
-        (key, value) => value !== null
-      )
-    );
 
-    return this;
+            if (!has_edge) {
+              return new GraphEdge(
+                this.vertices[edge_json.source],
+                this.vertices[edge_json.target],
+                edge_json.weight
+              );
+            }
+            return null;
+          }),
+          (key, value) => value !== null
+        )
+      );
+
+      return this;
+    }
   }
 
   /**

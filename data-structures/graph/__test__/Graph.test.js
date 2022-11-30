@@ -11,10 +11,17 @@ import {
 
 import { ones, isCyclicEqual } from "../../../utils/arrays/arrays";
 
-console.warn = jest.fn();
+import {
+  throwError,
+  warn
+} from "../../../utils/sys/sys.js";
 
-beforeEach(() => {
-  console.warn.mockClear();
+jest.mock("../../../utils/sys/sys.js");
+
+afterEach(() => {
+  // restore the spy created with spyOn
+  jest.restoreAllMocks();
+  jest.clearAllMocks();
 });
 
 describe("Graph", () => {
@@ -90,22 +97,20 @@ describe("Graph", () => {
     expect(edges[2]).toBeUndefined();
   });
 
-  it("should throw error for graph in other direction than serialization", () => {
-    function deserializationWithDifferentDirection() {
-      const graph = new Graph(true);
+  it("should throw error for graph in other direction than serialization", () => {  
+    const graph = new Graph(true);
 
-      const [AB, BC] = createEdgesFromVerticesValues([
-        ["A", "B"],
-        ["B", "C"],
-      ]);
+    const [AB, BC] = createEdgesFromVerticesValues([
+      ["A", "B"],
+      ["B", "C"],
+    ]);
 
-      graph.addEdges([AB, BC]);
+    graph.addEdges([AB, BC]);
 
-      const mock_graph = { isDirected: false };
-      graph.deserialize(mock_graph);
-    }
-
-    expect(deserializationWithDifferentDirection).toThrowError();
+    const mock_graph = { isDirected: false };
+    graph.deserialize(mock_graph);
+    
+    expect(throwError).toHaveBeenCalledTimes(1);
   });
 
   it("should return edges from index chain", () => {
@@ -161,17 +166,13 @@ describe("Graph", () => {
   });
 
   it("should throw a warning for added repeated vertices", () => {
-    function addRepeatedEdge() {
-      const graph = new Graph();
+    const graph = new Graph();
 
-      const [A] = createVertices(["A"]);
-      graph.addVertex(A);
-      graph.addVertex(A);
-    }
+    const [A] = createVertices(["A"]);
+    graph.addVertex(A);
+    graph.addVertex(A);
 
-    expect(addRepeatedEdge).toThrow(
-      "Vertex has already been added before. Please, choose other key!"
-    );
+    expect(throwError).toHaveBeenCalledTimes(1);
   });
 
   it("should return true for a valid chain", () => {
@@ -2089,7 +2090,7 @@ describe("Graph", () => {
 
     graph.addEdges([edgeAB, edgeAB]);
 
-    expect(console.warn).toBeCalledTimes(1);
+    expect(warn).toBeCalledTimes(1);
   });
 
   it("should return the list of all added edges", () => {
@@ -2261,22 +2262,20 @@ describe("Graph", () => {
     expect(JSON.stringify(graph.edges)).toBe("{}");
   });
 
-  it("should throw an error when trying to delete not existing edge", () => {
-    function deleteNotExistingEdge() {
-      const graph = new Graph();
+  it("should throw an error when trying to delete not existing edge", () => {    
+    const graph = new Graph();
 
-      const vertexA = new GraphVertex("A");
-      const vertexB = new GraphVertex("B");
-      const vertexC = new GraphVertex("C");
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
 
-      const edgeAB = new GraphEdge(vertexA, vertexB);
-      const edgeBC = new GraphEdge(vertexB, vertexC);
+    const edgeAB = new GraphEdge(vertexA, vertexB);
+    const edgeBC = new GraphEdge(vertexB, vertexC);
 
-      graph.addEdge(edgeAB);
-      graph.deleteEdge(edgeBC);
-    }
-
-    expect(deleteNotExistingEdge).toThrowError();
+    graph.addEdge(edgeAB);
+    graph.deleteEdge(edgeBC);
+    
+    expect(warn).toHaveBeenCalledTimes(1);
   });
 
   it("should return cycles from private property", () => {
@@ -2885,15 +2884,17 @@ describe("Graph", () => {
   it("should warn about reversing a undirected graph", () => {
     const graph = new Graph(false);
 
-    const vertexA = new GraphVertex("A");
-    const vertexB = new GraphVertex("B");
-
-    const edgeAB = new GraphEdge(vertexA, vertexB);
-
-    graph.addEdge(edgeAB);
+    graph.addEdges(
+      createEdgesFromVerticesValues(
+        [
+          ["A", "B"],
+        ]
+      )
+    );
+    
     graph.reverse();
 
-    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledTimes(1);
   });
 
   it("should return vertices indices", () => {
