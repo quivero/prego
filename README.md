@@ -4,6 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/dot-quiver)](https://www.npmjs.com/package/quivero-api)
 ![Documentation Status](https://img.shields.io/npm/l/dot-quiver)
 [![Code coverage report](https://codecov.io/gh/quivero/quivero-api/branch/main/graph/badge.svg?token=U6VOO56PDL)](https://app.codecov.io/gh/quivero/quivero-api)
+[![downloads](https://img.shields.io/npm/dm/quivero-api)](https://www.npmjs.com/package/quivero-api)
 
 Hi, this may be interpreted as an app service or a library: The former is work in progress; the latter exhibits a more mature form.
 
