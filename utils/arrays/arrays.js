@@ -5,6 +5,8 @@ import { objectReduce, objectMap } from "../objects/objects.js";
 
 import { throwError } from "../sys/sys.js";
 
+const SET_DELIMITER = ',';
+
 /**
  * @abstract returns an array of ones with length n
  *
@@ -470,7 +472,7 @@ export function* euler(sets) {
           // Exclusive elements of group except current analysis set
           yield [comb_str, comb_excl];
 
-          comb_str.split(",").forEach((ckey) => {
+          comb_str.split(SET_DELIMITER).forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_excl);
           });
 
@@ -480,11 +482,13 @@ export function* euler(sets) {
         comb_intersec = _.intersection(celements, sets[set_key]);
         if (comb_intersec.length !== 0) {
           // Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key].concat(comb_str.split(",")).join(",");
+          comb_intersec_key = [set_key].concat(
+                                          comb_str.split(SET_DELIMITER)
+                                        ).join(",");
 
           yield [comb_intersec_key, comb_intersec];
 
-          comb_str.split(",").forEach((ckey) => {
+          comb_str.split(SET_DELIMITER).forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_intersec);
           });
 
@@ -495,7 +499,7 @@ export function* euler(sets) {
       }
 
       if (sets[set_key].length !== 0) {
-        yield [String(set_key), sets[set_key]];
+        yield [ String(set_key), sets[set_key] ];
       }
     }
   }
