@@ -1651,7 +1651,7 @@ export default class Graph {
   #tarjanCycleMethod(
     origin_index,
     curr_index,
-    f,
+    finish_recur,
     points,
     marked_stack,
     marked,
@@ -1659,37 +1659,39 @@ export default class Graph {
   ) {
     const adjList = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
+    let u = {};
 
     points.push(curr_index);
     marked_stack.push(curr_index);
     marked[curr_index] = true;
 
-    let w;
-    for (let i = 0; i < n_vertices; i += 1) {
-      w = adjList[curr_index][i];
+    let adj_index;
+    for (const i of _.range(n_vertices)) {
+      adj_index = adjList[curr_index][i];
 
-      if (w < origin_index) {
-        adjList[curr_index].pop(adjList[curr_index][w]);
+      if (adj_index < origin_index) {
+        adjList[curr_index].pop(adjList[curr_index][adj_index]);
       } else {
-        // Cycle (!): Next node is equal do origin
-        if (w === origin_index) {
+        // Cycle (!): Next node is equal to origin
+        if (adj_index === origin_index) {
           const candidate = [...points];
 
-          // Add cycle candidates if list is empty or
-          // it is not in the list already
+          // Add cycle candidates if list is empty or it is not in the list already
           if (this.#cycles.length === 0) {
             this.#cycles.push(candidate);
-          } else if (!hasElement(this.#cycles, [...points]))
+          } else if (!hasElement(this.#cycles, [...points])) {
             this.#cycles.push(candidate);
+          }
 
-          f = true;
+          // Origin index is found
+          finish_recur = true;
         } else {
-          //
-          if (marked[w] === false) {
+          // Non visited adjacent vertices
+          if (marked[adj_index] === false) {
             this.#tarjanCycleMethod(
               origin_index,
-              w,
-              is_finish,
+              adj_index,
+              finish_recur,
               points,
               marked_stack,
               marked,
@@ -1700,10 +1702,10 @@ export default class Graph {
       }
     }
 
-    is_finish = f;
+    is_finish = finish_recur;
     if (is_finish) {
       // Index v is now deleted from mark stacked, and has been called u unmark v
-      let u = marked_stack.pop();
+      u = marked_stack.pop();
 
       while (u !== curr_index) {
         marked[u] = false;
