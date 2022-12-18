@@ -28,7 +28,7 @@
     "update": "bash ./utils/sscripts/update.sh",
     "start": "nodemon --trace-warnings --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
     "test": "jest --no-cache",
-    "test:watch": "jest --no-cache --watch --collect-coverage --coverage",
+    "test:watch": "jest --no-cache --watch",
     "test:ci": "jest --no-cache --collect-coverage --coverage --ci",
     "release": "np --any-branch",
     "nibble": "npx eslint-nibble .",
