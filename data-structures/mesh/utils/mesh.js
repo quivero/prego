@@ -22,7 +22,7 @@ export const createMVertices = (labels, coordinates) =>
   zip(labels, coordinates).map(
     (label_coordinate) =>
       new MeshVertex(label_coordinate[0], label_coordinate[1])
-);
+  );
 
 /**
  * @abstract
@@ -33,24 +33,21 @@ export const createMVertices = (labels, coordinates) =>
  * @return {MeshVertex[]}
  */
 export const createRandomMVertices = (n, bounds) => {
-  if (n <= 0 || typeof n === 'number') {
+  if (n <= 0 || typeof n === "number") {
     throwError("The number of vertices must be greater than 0");
   }
 
   let coordinates = [];
   let mesh_vertex = {};
 
-  for(let i in _.range(n)) {
-    
+  for (let i in _.range(n)) {
     mesh_vertex = new MeshVertex(
-        generateToken(TOKEN_LENGTH), 
-        nRandMinsMaxs(bounds)
-      );
-    
+      generateToken(TOKEN_LENGTH),
+      nRandMinsMaxs(bounds)
+    );
+
     coordinates.push(mesh_vertex);
-  } 
-  
+  }
+
   return coordinates;
 };
-
-

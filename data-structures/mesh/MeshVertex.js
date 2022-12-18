@@ -25,5 +25,3 @@ export default class MeshVertex extends GraphVertex {
     return this.label;
   }
 }
-
-

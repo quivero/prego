@@ -20,6 +20,5 @@ describe("MeshVertex", () => {
     const gvertex = new MeshVertex("A", [1, 2]);
     expect(gvertex.getKey()).toBe("A");
     expect(gvertex.toString()).toBe("A");
-  })
-  
+  });
 });

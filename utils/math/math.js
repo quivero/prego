@@ -77,18 +77,22 @@ export const sphericalToCartesian = (coords, R) => {
  */
 export const isSpherical = (u) => {
   return !!(
-      u.length >= 2 && 
-      u.slice(0, u.length-1).reduce(
-        (result, elem) => result && (elem >= -Math.PI) && (elem <= Math.PI),
+    u.length >= 2 &&
+    u
+      .slice(0, u.length - 1)
+      .reduce(
+        (result, elem) => result && elem >= -Math.PI && elem <= Math.PI,
         true
-      ) && 
-      u.slice(u.length-1, u.length).reduce(
-        (result, elem) => result && (elem >= 0) && (elem <= 2*Math.PI),
+      ) &&
+    u
+      .slice(u.length - 1, u.length)
+      .reduce(
+        (result, elem) => result && elem >= 0 && elem <= 2 * Math.PI,
         true
       )
-    )
-}
-  
+  );
+};
+
 /**
  * @abstract dot product
  *
@@ -108,4 +112,3 @@ export const dot = (a, b) =>
  */
 export const vecArg = (u, v, n) =>
   Math.acos(dot(u, v) / (nNorm(u, n) * nNorm(v, n)));
-

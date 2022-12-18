@@ -47,13 +47,17 @@ export const primeFactors = (n) => {
  */
 export const isPrime = (number) => {
   if (typeof number !== "number") {
-    throwError(`It is impossible to factorize \'${number}\'. It MUST be a number!`);
+    throwError(
+      `It is impossible to factorize \'${number}\'. It MUST be a number!`
+    );
     return;
   } else {
-    return Object.keys(primeFactors(number)).length === 1 &&
-           Object.values(primeFactors(number))[0] === 1;
+    return (
+      Object.keys(primeFactors(number)).length === 1 &&
+      Object.values(primeFactors(number))[0] === 1
+    );
   }
-}
+};
 
 /**
  * @abstract converts randian to degree angle

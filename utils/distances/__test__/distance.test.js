@@ -4,7 +4,7 @@ import {
   sphereCentralAngle,
   greatCircleDistance,
   nSphereDistance,
-  distance
+  distance,
 } from "../distance.js";
 
 import { isSpherical } from "../../math/math.js";
@@ -40,7 +40,7 @@ describe("distance", () => {
     const coord_2 = [2, 2];
 
     return nNormDistance(coord_1, coord_2, -1);
-    
+
     expect(throwError).toHaveBeenCalled();
   });
 
@@ -48,7 +48,7 @@ describe("distance", () => {
     const coord_1 = [1, -1];
     const coord_2 = [2, 2];
 
-    nNormDistance(coord_1, coord_2, -1);  
+    nNormDistance(coord_1, coord_2, -1);
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -94,9 +94,9 @@ describe("distance", () => {
   it("should return distance between coordinates according to method sphere", () => {
     const coord_1 = [0, 0];
     const coord_2 = [Math.PI / 2, 0];
-    
+
     expect(
-      distance(coord_1, coord_2, {'method': 'sphere', 'radius': 1})
+      distance(coord_1, coord_2, { method: "sphere", radius: 1 })
     ).toBeCloseTo((2 * Math.PI) / 4);
   });
 
@@ -104,8 +104,8 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, {'method': 'sphere'});
-    
+    distance(coord_1, coord_2, { method: "sphere" });
+
     expect(throwError).toHaveBeenCalled();
   });
 
@@ -113,26 +113,26 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, {'method': 'sphere'});
-    
+    distance(coord_1, coord_2, { method: "sphere" });
+
     expect(throwError).toHaveBeenCalled();
   });
 
   it("should throw exception for 1-dimensional coordinates", () => {
     const coord_1 = [0];
     const coord_2 = [1];
-    
-    distance(coord_1, coord_2, {'method': 'sphere', 'radius': 1});
-    
+
+    distance(coord_1, coord_2, { method: "sphere", radius: 1 });
+
     expect(throwError).toHaveBeenCalled();
   });
 
   it("should return distance between coordinates according to method sphere", () => {
     const coord_1 = [0, 0];
     const coord_2 = [Math.PI / 2, 0];
-    
+
     expect(
-      distance(coord_1, coord_2, {'method': 'sphere', 'radius': 1})
+      distance(coord_1, coord_2, { method: "sphere", radius: 1 })
     ).toBeCloseTo((2 * Math.PI) / 4);
   });
 
@@ -141,13 +141,12 @@ describe("distance", () => {
     const coord_2 = [2, 2];
 
     expect(
-      distance(coord_1, coord_2, {'method': 'n_norm', 'exponent': 1})
+      distance(coord_1, coord_2, { method: "n_norm", exponent: 1 })
     ).toBeCloseTo(2);
 
     expect(
-      distance(coord_1, coord_2, {'method': 'n_norm', 'exponent': 2})
+      distance(coord_1, coord_2, { method: "n_norm", exponent: 2 })
     ).toBeCloseTo(Math.sqrt(2));
-
   });
 
   it("should return greatest absolute difference for infinity norm", () => {
@@ -155,7 +154,7 @@ describe("distance", () => {
     const coord_2 = [2, 2];
 
     expect(
-      distance(coord_1, coord_2, {'method': 'n_norm', 'exponent': Infinity})
+      distance(coord_1, coord_2, { method: "n_norm", exponent: Infinity })
     ).toBeCloseTo(3);
   });
 
@@ -164,7 +163,7 @@ describe("distance", () => {
     const coord_2 = [2, 2];
 
     distance(coord_1, coord_2, {});
-    
+
     expect(throwError).toHaveBeenCalled();
   });
 
@@ -173,7 +172,7 @@ describe("distance", () => {
     const coord_2 = [0, 2];
 
     distance(coord_1, coord_2, {});
-    
+
     expect(throwError).toHaveBeenCalled();
   });
 
@@ -181,19 +180,17 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, {'method': 'n_norm'});
-    
+    distance(coord_1, coord_2, { method: "n_norm" });
+
     expect(throwError).toHaveBeenCalled();
   });
 
   it("should throw exception for missing exponent", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
-    
-    distance(coord_1, coord_2, {'method': undefined});
-    
+
+    distance(coord_1, coord_2, { method: undefined });
+
     expect(throwError).toHaveBeenCalled();
   });
 });
-
-  

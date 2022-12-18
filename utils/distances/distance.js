@@ -31,7 +31,7 @@ export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   const coord_diffs = _.zip(coordinate_1, coordinate_2).map((coord_tuple) =>
     Math.abs(coord_tuple[1] - coord_tuple[0])
   );
-  
+
   if (n === Infinity) {
     return Math.max(...coord_diffs);
   }
@@ -94,7 +94,7 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
 };
 
 /**
- * @abstract returns the distance of two points based on 
+ * @abstract returns the distance of two points based on
  *
  * @param {Array} coordinate_1
  * @param {Array} coordinate_2
@@ -102,31 +102,43 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
  * @return {Number}
  */
 export const distance = (coordinate_1, coordinate_2, methodConfig) => {
-  if(
-      !Object.keys(methodConfig).includes('method')
-    ) {
-    throwError("There must exist property \'exponent\' on config argument \'methodConfig\'!");
+  if (!Object.keys(methodConfig).includes("method")) {
+    throwError(
+      "There must exist property 'exponent' on config argument 'methodConfig'!"
+    );
   } else {
-    switch (methodConfig['method']) {
-      case 'n_norm':
-        if(!Object.keys(methodConfig).includes('exponent')) {
-          throwError("There must exist property \'exponent\' on config argument \'methodConfig\'!");
+    switch (methodConfig["method"]) {
+      case "n_norm":
+        if (!Object.keys(methodConfig).includes("exponent")) {
+          throwError(
+            "There must exist property 'exponent' on config argument 'methodConfig'!"
+          );
         } else {
-          return nNormDistance(coordinate_1, coordinate_2, methodConfig.exponent);
+          return nNormDistance(
+            coordinate_1,
+            coordinate_2,
+            methodConfig.exponent
+          );
         }
 
-      case 'sphere':
-        if(!Object.keys(methodConfig).includes('radius')) {
-          throwError("There must exist property \'radius\' on config argument \'methodConfig\'!");
-        } else if ( !isSpherical(coordinate_1) || !isSpherical(coordinate_2) ) {
+      case "sphere":
+        if (!Object.keys(methodConfig).includes("radius")) {
+          throwError(
+            "There must exist property 'radius' on config argument 'methodConfig'!"
+          );
+        } else if (!isSpherical(coordinate_1) || !isSpherical(coordinate_2)) {
           throwError("Provided coordinates are not spherical!");
         } else {
-          return nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius)  
+          return nSphereDistance(
+            coordinate_1,
+            coordinate_2,
+            methodConfig.radius
+          );
         }
 
       default:
-        throwError("There are only available methods \'n_norm\' and \'sphere\'");
-        return -1
+        throwError("There are only available methods 'n_norm' and 'sphere'");
+        return -1;
     }
   }
-} 
+};

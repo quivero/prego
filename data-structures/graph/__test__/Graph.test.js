@@ -11,10 +11,7 @@ import {
 
 import { ones, isCyclicEqual } from "../../../utils/arrays/arrays";
 
-import {
-  throwError,
-  warn
-} from "../../../utils/sys/sys.js";
+import { throwError, warn } from "../../../utils/sys/sys.js";
 
 jest.mock("../../../utils/sys/sys.js");
 
@@ -97,7 +94,7 @@ describe("Graph", () => {
     expect(edges[2]).toBeUndefined();
   });
 
-  it("should throw error for graph in other direction than serialization", () => {  
+  it("should throw error for graph in other direction than serialization", () => {
     const graph = new Graph(true);
 
     const [AB, BC] = createEdgesFromVerticesValues([
@@ -109,7 +106,7 @@ describe("Graph", () => {
 
     const mock_graph = { isDirected: false };
     graph.deserialize(mock_graph);
-    
+
     expect(throwError).toHaveBeenCalledTimes(1);
   });
 
@@ -2262,7 +2259,7 @@ describe("Graph", () => {
     expect(JSON.stringify(graph.edges)).toBe("{}");
   });
 
-  it("should throw an error when trying to delete not existing edge", () => {    
+  it("should throw an error when trying to delete not existing edge", () => {
     const graph = new Graph();
 
     const vertexA = new GraphVertex("A");
@@ -2274,7 +2271,7 @@ describe("Graph", () => {
 
     graph.addEdge(edgeAB);
     graph.deleteEdge(edgeBC);
-    
+
     expect(warn).toHaveBeenCalledTimes(1);
   });
 
@@ -2884,14 +2881,8 @@ describe("Graph", () => {
   it("should warn about reversing a undirected graph", () => {
     const graph = new Graph(false);
 
-    graph.addEdges(
-      createEdgesFromVerticesValues(
-        [
-          ["A", "B"],
-        ]
-      )
-    );
-    
+    graph.addEdges(createEdgesFromVerticesValues([["A", "B"]]));
+
     graph.reverse();
 
     expect(warn).toHaveBeenCalledTimes(1);

@@ -22,7 +22,7 @@ import {
   fullPolytopeHyperindexes,
   upperTriangularHyperindexes,
   sequentialArrayBlobs,
-  cartesianProduct
+  cartesianProduct,
 } from "../arrays";
 
 import { throwError } from "../../sys/sys.js";
@@ -59,7 +59,10 @@ describe("Array", () => {
   });
 
   it("should get a [2, 1] random array with first entry between 0 and 1 and second entry between 1 and 2", () => {
-    const num = nRandMinsMaxs([[0, 1], [1, 2]]);
+    const num = nRandMinsMaxs([
+      [0, 1],
+      [1, 2],
+    ]);
 
     expect(num[0]).toBeGreaterThanOrEqual(0);
     expect(num[0]).toBeLessThanOrEqual(1);
@@ -75,7 +78,7 @@ describe("Array", () => {
   });
 
   it("should call throwError for non-numerical entries", () => {
-    nRandMinsMaxs([['0', '42']]);
+    nRandMinsMaxs([["0", "42"]]);
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -293,16 +296,12 @@ describe("Extended euler diagram", () => {
     const result = {
       0: [1, 2],
       1: [3, 4],
-    }
+    };
 
-    expect(
-      spreadEuler([list_1, list_2])
-    ).toEqual(
-      {
-        0: [1, 2],
-        1: [3, 4],
-      }
-    );
+    expect(spreadEuler([list_1, list_2])).toEqual({
+      0: [1, 2],
+      1: [3, 4],
+    });
   });
 
   it("should return m n-tuples of the array given", () => {

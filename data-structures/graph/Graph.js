@@ -20,11 +20,7 @@ import {
   sort,
 } from "../../utils/arrays/arrays.js";
 
-import {
-  throwError,
-  warn
-} from "../../utils/sys/sys.js";
-
+import { throwError, warn } from "../../utils/sys/sys.js";
 
 import { createEdgesFromVerticesValues } from "./utils/graph.js";
 
@@ -744,7 +740,7 @@ export default class Graph {
       });
     } else {
       warn("The reverse of an undirected graph is identical to itself!");
-      return; 
+      return;
     }
 
     return this;

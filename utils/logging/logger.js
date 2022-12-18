@@ -77,4 +77,5 @@ export const morganMiddleware = logger(
  * @abstract log message through transport using agentMorganReporter logger
  *
  */
-export const log = (level, message) => log_message(agentMorganReporter, level, message); 
+export const log = (level, message) =>
+  log_message(agentMorganReporter, level, message);
