@@ -12,7 +12,7 @@
   "keywords": [
     "data-structures",
     "algorithms"
-  ],
+  ], 
   "author": "brunolnetto",
   "license": "MIT",
   "bugs": {
@@ -22,22 +22,18 @@
   "scripts": {
     "build": "npm run node:build && npm run docker:build",
     "node:build": "./utils/sscripts/node-build.sh",
-    "systemctl:watch": "journalctl -u quivero.service",
-    "systemctl:deploy": "./utils/sscripts/systemctl-deploy.sh",
-    "systemctl:restart": "systemctl restart quivero.service",
     "docker:build": "./utils/sscripts/docker-build.sh",
     "docker:deploy": "./utils/sscripts/docker-deploy.sh $npm_config_tag $npm_config_from $npm_config_to",
     "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
     "update": "bash ./utils/sscripts/update.sh",
-    "start": "nodemon ./src/index.js",
-    "test": "jest --collect-coverage --coverage",
-    "test:watch": "jest --watchAll --collect-coverage --coverage",
-    "test:ci": "jest --ci --collect-coverage --coverage --reporters='@matteoh2o1999/github-actions-jest-reporter'",
+    "start": "nodemon --trace-warnings --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
+    "test": "jest --maxWorkers=4 --detectLeaks --debug --no-cache --collect-coverage --coverage",
+    "test:watch": "jest --maxWorkers=4 --detectLeaks --debug --no-cache --watch --collect-coverage --coverage",
+    "test:ci": "jest --no-cache --maxWorkers=15 --ci --collect-coverage --coverage",
     "release": "np --any-branch",
     "nibble": "npx eslint-nibble .",
     "fixable-nibble": "npx eslint-nibble --fixable-only .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write . && prettier --check .",
     "prepare": "husky install"
   },
   "dependencies": {
