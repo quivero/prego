@@ -1,74 +1,70 @@
 // Source: https://github.com/joshburgess/eslint-config-standard-trailing-commas/blob/master/eslintrc.json
 module.exports = {
-  "parserOptions": {
-    "ecmaVersion": "latest",
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
-      "jsx": true
+  parserOptions: {
+    ecmaVersion: "latest",
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true,
+      jsx: true,
     },
-    "sourceType": "module"
+    sourceType: "module",
   },
-  
-  "env": {
+
+  env: {
     browser: true,
     es2021: true,
     jest: true,
   },
-  
-  "plugins": [
-    "standard",
-    "promise",
-    "jest"
-  ],
-  
-  "globals": {
-    "document": false,
-    "navigator": false,
-    "window": false
+
+  plugins: ["standard", "promise", "jest"],
+
+  globals: {
+    document: false,
+    navigator: false,
+    window: false,
   },
-  
-  "extends": [
+
+  extends: [
     "eslint:recommended",
     "plugin:jest/style",
     "plugin:jest-extended/all",
     "plugin:jest-formatting/recommended",
   ],
 
-  "rules": {
-    "camelcase": "off",
-    "nounderscoredangle": "off",
-    "nounusedvars": "off",
-    "importextensions": "off",
+  rules: {
+    camelcase: "off",
+    nounderscoredangle: "off",
+    nounusedvars: "off",
+    importextensions: "off",
     "jest/no-disabled-tests": "warn",
     "jest/no-focused-tests": "error",
     "jest/no-identical-title": "error",
     "jest/prefer-to-have-length": "warn",
     "jest/valid-expect": "error",
     "accessor-pairs": 2,
-    "arrow-spacing": [2, { "before": true, "after": true }],
+    "arrow-spacing": [2, { before: true, after: true }],
     "block-spacing": [2, "always"],
-    "brace-style": [2, "1tbs", { "allowSingleLine": true }],
+    "brace-style": [2, "1tbs", { allowSingleLine: true }],
     "comma-dangle": [2, "always-multiline"],
-    "comma-spacing": [2, { "before": false, "after": true }],
+    "comma-spacing": [2, { before: false, after: true }],
     "comma-style": [2, "last"],
     "constructor-super": 2,
-    "curly": [2, "multi-line"],
+    curly: [2, "multi-line"],
     "dot-location": [2, "property"],
     "eol-last": 2,
-    "eqeqeq": [2, "allow-null"],
+    eqeqeq: [2, "allow-null"],
     "func-call-spacing": [2, "never"],
-    "handle-callback-err": [2, "^(err|error)$" ],
-    "indent": [2, 2, { "SwitchCase": 1 }],
-    "key-spacing": [2, { "beforeColon": false, "afterColon": true }],
-    "keyword-spacing": [2, { "before": true, "after": true }],
-    "new-cap": [2, { "newIsCap": true, "capIsNew": false }],
+    "handle-callback-err": [2, "^(err|error)$"],
+    indent: [2, 2, { SwitchCase: 1 }],
+    "key-spacing": [2, { beforeColon: false, afterColon: true }],
+    "keyword-spacing": [2, { before: true, after: true }],
+    "new-cap": [2, { newIsCap: true, capIsNew: false }],
     "new-parens": 2,
     "no-array-constructor": 2,
     "no-caller": 2,
     "no-class-assign": 2,
     "no-cond-assign": 2,
     "no-const-assign": 2,
-    "no-constant-condition": [2, { "checkLoops": false }],
+    "no-constant-condition": [2, { checkLoops: false }],
     "no-control-regex": 2,
     "no-debugger": 2,
     "no-delete-var": 2,
@@ -95,12 +91,12 @@ module.exports = {
     "no-irregular-whitespace": 2,
     "no-iterator": 2,
     "no-label-var": 2,
-    "no-labels": [2, { "allowLoop": false, "allowSwitch": false }],
+    "no-labels": [2, { allowLoop: false, allowSwitch: false }],
     "no-lone-blocks": 2,
     "no-mixed-spaces-and-tabs": 2,
     "no-multi-spaces": 2,
     "no-multi-str": 2,
-    "no-multiple-empty-lines": [2, { "max": 1 }],
+    "no-multiple-empty-lines": [2, { max: 1 }],
     "no-native-reassign": 2,
     "no-negated-in-lhs": 2,
     "no-new": 2,
@@ -130,11 +126,11 @@ module.exports = {
     "no-undef-init": 2,
     "no-unexpected-multiline": 2,
     "no-unmodified-loop-condition": 2,
-    "no-unneeded-ternary": [2, { "defaultAssignment": false }],
+    "no-unneeded-ternary": [2, { defaultAssignment: false }],
     "no-unreachable": 2,
     "no-unsafe-finally": 2,
     "no-unsafe-negation": 2,
-    "no-unused-vars": [2, { "vars": "all", "args": "none" }],
+    "no-unused-vars": [2, { vars: "all", args: "none" }],
     "no-useless-call": 2,
     "no-useless-computed-key": 2,
     "no-useless-constructor": 2,
@@ -142,23 +138,32 @@ module.exports = {
     "no-useless-rename": 2,
     "no-whitespace-before-property": 2,
     "no-with": 2,
-    "object-property-newline": [2, { "allowMultiplePropertiesPerLine": true }],
-    "one-var": [2, { "initialized": "never" }],
-    "operator-linebreak": [2, "after", { "overrides": { "?": "before", ":": "before" } }],
-    "quotes": [2, "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+    "object-property-newline": [2, { allowMultiplePropertiesPerLine: true }],
+    "one-var": [2, { initialized: "never" }],
+    "operator-linebreak": [
+      2,
+      "after",
+      { overrides: { "?": "before", ":": "before" } },
+    ],
+    quotes: [2, "single", { avoidEscape: true, allowTemplateLiterals: true }],
     "rest-spread-spacing": [2, "never"],
-    "semi-spacing": [2, { "before": false, "after": true }],
+    "semi-spacing": [2, { before: false, after: true }],
     "space-before-blocks": [2, "always"],
     "space-before-function-paren": [2, "always"],
     "space-in-parens": [2, "never"],
     "space-infix-ops": 2,
-    "space-unary-ops": [2, { "words": true, "nonwords": false }],
-    "spaced-comment": [2, "always", 
-      { "line": { "markers": ["*package", "!", ","] }, 
-        "block": { "balanced": true, 
-        "markers": ["*package", "!", ","], 
-        "exceptions": ["*"] } 
-      }
+    "space-unary-ops": [2, { words: true, nonwords: false }],
+    "spaced-comment": [
+      2,
+      "always",
+      {
+        line: { markers: ["*package", "!", ","] },
+        block: {
+          balanced: true,
+          markers: ["*package", "!", ","],
+          exceptions: ["*"],
+        },
+      },
     ],
     "template-curly-spacing": [2, "never"],
     "unicode-bom": [2, "never"],
@@ -166,10 +171,10 @@ module.exports = {
     "valid-typeof": 2,
     "wrap-iife": [2, "any"],
     "yield-star-spacing": [2, "both"],
-    "yoda": [2, "never"],
+    yoda: [2, "never"],
     "standard/object-curly-even-spacing": [2, "either"],
     "standard/array-bracket-even-spacing": [2, "either"],
     "standard/computed-property-even-spacing": [2, "even"],
-    "promise/param-names": 2
-  }
-}
+    "promise/param-names": 2,
+  },
+};
