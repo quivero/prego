@@ -28,7 +28,7 @@ module.exports = {
   },
   
   "extends": [
-    "airbnb-base",
+    "eslint:recommended",
     "plugin:jest/style",
     "plugin:jest-extended/all",
     "plugin:jest-formatting/recommended",
