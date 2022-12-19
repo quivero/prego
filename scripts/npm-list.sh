@@ -91,7 +91,7 @@ PROJECT_ROOT_PATH="$1"
 
 unused_file="$PROJECT_ROOT_PATH/.npm_clean"
 
-rm "$unused_file"
+rm -f "$unused_file"
 touch "$unused_file"
 
 packages_route="$PROJECT_ROOT_PATH/package.json"
