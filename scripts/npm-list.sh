@@ -21,7 +21,11 @@ usage()
 {
   echo "Usage: npm-list [ -v | --verbose ] [ -c | --color ] project_root_route"
   echo "1. Navigate to package.json folder;"
-  echo "2. Run command \"npm-list [ TAGS ] .\""
+  echo "2. Run either command:"
+  echo "    bash scripts/npm-list ."
+  echo "    bash scripts/npm-list -c ."
+  echo "    bash scripts/npm-list -v ."
+  echo "    bash scripts/npm-list -c -v ."
   exit 2
 }
 
@@ -33,7 +37,7 @@ function repeat() {
 # Get value from json dictionary
 # 
 # examples:
-# 	>> jsonValue "{"a": 1, "b": 2}" "a"
+#   >> jsonValue "{"a": 1, "b": 2}" "a"
 #   1
 function jsonValue() {
     echo "$1" | jq -r ".$2"
@@ -42,7 +46,7 @@ function jsonValue() {
 # Get keys from json dictionary
 # 
 # examples:
-# 	>> jsonKeys "{"a": 1, "b": 2}"
+#   >> jsonKeys "{"a": 1, "b": 2}"
 #   a
 #   b
 function jsonKeys() {
@@ -64,11 +68,13 @@ eval set -- "$PARSED_ARGUMENTS"
 while :
 do
 case "$1" in
+    # Script tags
     -c | --color) IS_COLORED=1; shift   ;;
     -v | --verbose) IS_VERBOSE=1; shift   ;;
+    
+    # Usage option
     -h | --help) 
         usage
-        exit 0;
     ;;   
     
     # -- means the end of the arguments; drop this, and break out of the while loop
