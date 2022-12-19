@@ -12,6 +12,7 @@ grep_ignores=(
 dependency_ocurrences=""
 dependency_count=0
 
+FENCE_SIZE=50
 is_used=1
 IS_COLORED=0
 IS_VERBOSE=0
@@ -20,8 +21,13 @@ usage()
 {
   echo "Usage: npm-list [ -v | --verbose ] [ -c | --color ] project_root_route"
   echo "1. Navigate to package.json folder;"
-  echo "2. Call	list"
+  echo "2. Run command \"npm-list [ TAGS ] .\""
   exit 2
+}
+
+function repeat() {
+    perl -E "say \"$1\" x $2"
+
 }
 
 # Get value from json dictionary
@@ -40,12 +46,11 @@ function jsonValue() {
 #   a
 #   b
 function jsonKeys() {
-    echo "$1" | \
-    jq -r 'to_entries[] | .key'
+    echo "$1" | jq -r 'to_entries[] | .key'
 }
 
 command_name='npm-list'
-tags='vc'
+tags='vch'
 
 # Evaluates available commands
 PARSED_ARGUMENTS=$(getopt -a -n $command_name -o $tags --long verbose -- "$@")
@@ -60,7 +65,11 @@ while :
 do
 case "$1" in
     -c | --color) IS_COLORED=1; shift   ;;
-    -v | --verbose) IS_VERBOSE=1; shift   ;;   
+    -v | --verbose) IS_VERBOSE=1; shift   ;;
+    -h | --help) 
+        usage
+        exit 0;
+    ;;   
     
     # -- means the end of the arguments; drop this, and break out of the while loop
     --) shift; break ;;
@@ -95,6 +104,7 @@ for deps_key in "${deps_keys[@]}"; do
         # Checks if there is at least once dependency appearance
         if [[ $dependency_count -eq 1 ]]; then
             is_used=0
+            echo "$dependency_name" >> $unused_file
         else
             is_used=1
         fi
@@ -109,11 +119,11 @@ for deps_key in "${deps_keys[@]}"; do
         fi
         
         if [[ $IS_VERBOSE -eq 1 ]]; then
-            echo "================================================================================="
+            echo "$(repeat '=' $FENCE_SIZE)"
             printf "$dependency_name:$dependency_count \n"
-            echo "---------------------------------------------------------------------------------"
+            echo "$(repeat '-' $FENCE_SIZE)"
             echo "Filenames: $dependency_filenames"
-            echo "---------------------------------------------------------------------------------"
+            echo "$(repeat '-' $FENCE_SIZE)"
         else
             # dependency_name:occurrence_count:  
             printf "$dependency_name:$dependency_count:$is_used\n"
