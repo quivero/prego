@@ -2,7 +2,11 @@ import _ from "lodash";
 
 import { objectHasKey } from "../objects/objects.js";
 import { hav } from "../numbers/numbers.js";
-import { vecArg, sphericalToCartesian, isSpherical } from "../math/math.js";
+import { 
+  vecArg, 
+  sphericalToCartesian, 
+  isSpherical 
+} from "../math/math.js";
 import { throwError } from "../sys/sys.js";
 
 /**

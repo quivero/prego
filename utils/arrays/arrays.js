@@ -1,7 +1,7 @@
 import _ from "lodash";
 import "lodash.combinations";
 
-import { objectReduce, objectMap } from "../objects/objects.js";
+import { objectReduce } from "../objects/objects.js";
 
 import { throwError } from "../sys/sys.js";
 
