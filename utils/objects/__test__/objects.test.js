@@ -8,6 +8,7 @@ import {
   objectEqual,
   objectInit,
   objectFlatten,
+  objectHasKey
 } from "../objects.js";
 
 describe("objects", () => {
@@ -33,8 +34,14 @@ describe("objects", () => {
     expect(JSON.stringify(newObject)).toBe(JSON.stringify({ a: 2 }));
   });
 
-  it("should return filtered object", () => {
-    expect().toEqual();
+  it("should return boolean on key existence", () => {
+    expect(
+      objectHasKey({'a': 1, 'b': 2}, 'a')
+    ).toEqual(true);
+
+    expect(
+      objectHasKey({'a': 1, 'b': 2}, 'c')
+    ).toEqual(false);
   });
 
   it("should return filtered object", () => {

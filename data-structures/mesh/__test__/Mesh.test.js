@@ -51,7 +51,7 @@ describe("Mesh", () => {
 
   it("should return two added vertices and the distance between them is one", () => {
     const distance_fun = (coord_1, coord_2) =>
-      distance(coord_1, coord_2, { method: "n_norm", exponent: 2 });
+      distance(coord_1, coord_2, "n_norm", { exponent: 2 });
 
     const mesh = new Mesh(distance_fun);
     const A = new MeshVertex("A", [0, 0]);

@@ -96,7 +96,7 @@ describe("distance", () => {
     const coord_2 = [Math.PI / 2, 0];
 
     expect(
-      distance(coord_1, coord_2, { method: "sphere", radius: 1 })
+      distance(coord_1, coord_2, "sphere", { radius: 1 })
     ).toBeCloseTo((2 * Math.PI) / 4);
   });
 
@@ -104,7 +104,7 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, { method: "sphere" });
+    distance(coord_1, coord_2, "sphere", { });
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -113,7 +113,7 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, { method: "sphere" });
+    distance(coord_1, coord_2, "sphere", { });
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -122,7 +122,7 @@ describe("distance", () => {
     const coord_1 = [0];
     const coord_2 = [1];
 
-    distance(coord_1, coord_2, { method: "sphere", radius: 1 });
+    distance(coord_1, coord_2, "sphere", { radius: 1 });
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -132,7 +132,7 @@ describe("distance", () => {
     const coord_2 = [Math.PI / 2, 0];
 
     expect(
-      distance(coord_1, coord_2, { method: "sphere", radius: 1 })
+      distance(coord_1, coord_2, "sphere", { radius: 1 })
     ).toBeCloseTo((2 * Math.PI) / 4);
   });
 
@@ -141,11 +141,11 @@ describe("distance", () => {
     const coord_2 = [2, 2];
 
     expect(
-      distance(coord_1, coord_2, { method: "n_norm", exponent: 1 })
+      distance(coord_1, coord_2, "n_norm", { exponent: 1 })
     ).toBeCloseTo(2);
 
     expect(
-      distance(coord_1, coord_2, { method: "n_norm", exponent: 2 })
+      distance(coord_1, coord_2, "n_norm", { exponent: 2 })
     ).toBeCloseTo(Math.sqrt(2));
   });
 
@@ -154,7 +154,7 @@ describe("distance", () => {
     const coord_2 = [2, 2];
 
     expect(
-      distance(coord_1, coord_2, { method: "n_norm", exponent: Infinity })
+      distance(coord_1, coord_2, "n_norm", { exponent: Infinity })
     ).toBeCloseTo(3);
   });
 
@@ -162,16 +162,7 @@ describe("distance", () => {
     const coord_1 = [1, -1];
     const coord_2 = [2, 2];
 
-    distance(coord_1, coord_2, {});
-
-    expect(throwError).toHaveBeenCalled();
-  });
-
-  it("should throw exception for empty configuration dict", () => {
-    const coord_1 = [0, 0];
-    const coord_2 = [0, 2];
-
-    distance(coord_1, coord_2, {});
+    distance(coord_1, coord_2, '', {});
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -180,7 +171,7 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, { method: "n_norm" });
+    distance(coord_1, coord_2, undefined, {  });
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -189,7 +180,7 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, { method: undefined });
+    distance(coord_1, coord_2, "n_norm", { });
 
     expect(throwError).toHaveBeenCalled();
   });
