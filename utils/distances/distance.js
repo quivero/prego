@@ -106,32 +106,28 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
   
   switch (method) {
     case "n_norm":
-      if (!objectHasKey(methodConfig, "exponent")) {
-        throwError(
-          "There must exist property 'exponent' on config argument 'methodConfig'!"
-        );
-      } else {
-        return nNormDistance(
-          coordinate_1,
-          coordinate_2,
-          methodConfig.exponent
-        );
-      }
-
+      return !objectHasKey(methodConfig, "exponent") ?
+      throwError(
+        "There must exist property 'exponent' on config argument 'methodConfig'!"
+      ) : nNormDistance(
+        coordinate_1,
+        coordinate_2,
+        methodConfig.exponent
+      );
+    
     case "sphere":
-      if (!objectHasKey(methodConfig, "radius")) {
-        throwError(
-          "There must exist property 'radius' on config argument 'methodConfig'!"
-        );
-      } else if (!isSpherical(coordinate_1) || !isSpherical(coordinate_2)) {
-        throwError("Provided coordinates are not spherical!");
-      } else {
-        return nSphereDistance(
+      return !objectHasKey(methodConfig, "radius") ?
+      throwError(
+        "There must exist property 'radius' on config argument 'methodConfig'!"
+      ) : (
+        (!isSpherical(coordinate_1) || !isSpherical(coordinate_2)) ?
+        throwError("Provided coordinates are not spherical!") :
+        nSphereDistance(
           coordinate_1,
           coordinate_2,
           methodConfig.radius
-        );
-      }
+        )
+      )
 
     default:
       throwError("There are only available methods 'n_norm' and 'sphere'");

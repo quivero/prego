@@ -1,7 +1,6 @@
 import {
   nNormDistance,
   nNorm,
-  sphereCentralAngle,
   greatCircleDistance,
   nSphereDistance,
   distance,
