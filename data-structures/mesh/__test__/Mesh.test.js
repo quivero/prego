@@ -48,7 +48,7 @@ describe("Mesh", () => {
     expect(mesh.distance("A", "B")).toBe(1);
     expect(mesh.getPathLength([0, 1, 2])).toBe(1 + Math.sqrt(2));
   });
-  
+
   it("should return two added vertices and the distance between them is one", () => {
     const distance_fun = (coord_1, coord_2) =>
       distance(coord_1, coord_2, "n_norm", { exponent: 2 });

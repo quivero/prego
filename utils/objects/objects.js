@@ -182,7 +182,7 @@ export const objectFlatten = (obj) => {
 
 /**
  * @abstract JSON object has $key string among keys
- * 
+ *
  *
  * @param {Object} object
  * @param {String} key

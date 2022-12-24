@@ -2,11 +2,7 @@ import _ from "lodash";
 
 import { objectHasKey } from "../objects/objects.js";
 import { hav } from "../numbers/numbers.js";
-import { 
-  vecArg, 
-  sphericalToCartesian, 
-  isSpherical 
-} from "../math/math.js";
+import { vecArg, sphericalToCartesian, isSpherical } from "../math/math.js";
 import { throwError } from "../sys/sys.js";
 
 /**
@@ -107,37 +103,24 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
  * @return {Number}
  */
 export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
-  
-  let error_message="There must exist property '_placeholder_' on config argument 'methodConfig'!"
-  
+  let error_message =
+    "There must exist property '_placeholder_' on config argument 'methodConfig'!";
+
   switch (method) {
     case "n_norm":
-      return !objectHasKey(methodConfig, "exponent") ?
-      throwError(
-        error_message.replace("_placeholder_", 'exponent')
-      ) : nNormDistance(
-        coordinate_1,
-        coordinate_2,
-        methodConfig.exponent
-      );
-    
+      return !objectHasKey(methodConfig, "exponent")
+        ? throwError(error_message.replace("_placeholder_", "exponent"))
+        : nNormDistance(coordinate_1, coordinate_2, methodConfig.exponent);
+
     case "sphere":
-      return !objectHasKey(methodConfig, "radius") ?
-      throwError(
-        error_message.replace("_placeholder_", 'radius')
-      ) : (
-        (!isSpherical(coordinate_1) || !isSpherical(coordinate_2)) ?
-        throwError("Provided coordinates are not spherical!") :
-        nSphereDistance(
-          coordinate_1,
-          coordinate_2,
-          methodConfig.radius
-        )
-      )
+      return !objectHasKey(methodConfig, "radius")
+        ? throwError(error_message.replace("_placeholder_", "radius"))
+        : !isSpherical(coordinate_1) || !isSpherical(coordinate_2)
+        ? throwError("Provided coordinates are not spherical!")
+        : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
 
     default:
       throwError("There are only available methods: ['n_norm', 'sphere']");
       return -1;
   }
-  
 };
