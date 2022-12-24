@@ -123,19 +123,17 @@ describe("Graph", () => {
   });
 
   it("should return edges from index chain", () => {
-    function invalidChain() {
-      const graph = new Graph(true);
-      const [AB, BC] = createEdgesFromVerticesValues([
-        ["A", "B"],
-        ["B", "C"],
-      ]);
+    const graph = new Graph(true);
+    const [AB, BC] = createEdgesFromVerticesValues([
+      ["A", "B"],
+      ["B", "C"],
+    ]);
 
-      graph.addEdges([AB, BC]);
+    graph.addEdges([AB, BC]);
 
-      return graph.getEdgesFromChain([0, 2]);
-    }
+    graph.getEdgesFromChain([0, 2]);
 
-    expect(invalidChain).toThrowError();
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should get vertices by indexes", () => {

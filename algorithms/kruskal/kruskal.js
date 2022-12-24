@@ -1,6 +1,7 @@
 import Graph from "../../data-structures/graph/Graph";
 import QuickSort from "../sorting/quick-sort/QuickSort";
 import DisjointSet from "../../data-structures/disjoint-set/DisjointSet";
+import throwError from "../../utils/sys/sys";
 
 /**
  * @param {Graph} graph
@@ -10,7 +11,7 @@ export default function kruskal(graph) {
   // It should fire error if graph is directed since the algorithm works only
   // for undirected graphs.
   if (graph.isDirected) {
-    throw new Error("Kruskal's algorithms works only for undirected graphs");
+    throwError("Kruskal's algorithms works only for undirected graphs");
   }
 
   // Init new graph that will contain minimum spanning tree of original graph.

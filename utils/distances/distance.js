@@ -99,7 +99,8 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
  *
  * @param {Array} coordinate_1
  * @param {Array} coordinate_2
- * @param {Number} n
+ * @param {String} method
+ * @param {Object} methodConfig
  * @return {Number}
  */
 export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
@@ -108,14 +109,16 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
 
   switch (method) {
     case "n_norm":
-      return !objectHasKey(methodConfig, "exponent")
-        ? throwError(error_message.replace("_placeholder_", "exponent"))
-        : nNormDistance(coordinate_1, coordinate_2, methodConfig.exponent);
+      const exponent = !objectHasKey(methodConfig, "exponent") ? 2 : methodConfig.exponent;
+    
+      return nNormDistance(coordinate_1, coordinate_2, exponent);
 
     case "sphere":
+      const are_coords_spherical = !isSpherical(coordinate_1) || !isSpherical(coordinate_2);
+      
       return !objectHasKey(methodConfig, "radius")
         ? throwError(error_message.replace("_placeholder_", "radius"))
-        : !isSpherical(coordinate_1) || !isSpherical(coordinate_2)
+        : are_coords_spherical
         ? throwError("Provided coordinates are not spherical!")
         : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
 

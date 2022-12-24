@@ -244,7 +244,7 @@ export default class Graph {
     let to_edge_key = "";
 
     if (!this.isChain(index_chain)) {
-      throw Error("Provided chain is not a valid for this graph!");
+      throwError("Provided chain is not a valid for this graph!");
     } else {
       index_chain.forEach((vertex, index) => {
         from_edge_key = vertices_indexes_to_keys[index_chain[index]];

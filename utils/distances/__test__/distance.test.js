@@ -148,6 +148,19 @@ describe("distance", () => {
     );
   });
 
+  it("should return 2-Euclidean distance for absent exponent on methodConfig input", () => {
+    const coord_1 = [0, 0];
+    const coord_2 = [1, 1];
+
+    distance(coord_1, coord_2, "n_norm", {});
+    
+    expect(
+      distance(coord_1, coord_2, "n_norm", { })
+    ).toBeCloseTo(
+      Math.sqrt(2)
+    );
+  });
+
   it("should return greatest absolute difference for infinity norm", () => {
     const coord_1 = [1, -1];
     const coord_2 = [2, 2];
@@ -175,12 +188,4 @@ describe("distance", () => {
     expect(throwError).toHaveBeenCalled();
   });
 
-  it("should throw exception for missing exponent", () => {
-    const coord_1 = [0, 0];
-    const coord_2 = [1, 1];
-
-    distance(coord_1, coord_2, "n_norm", {});
-
-    expect(throwError).toHaveBeenCalled();
-  });
 });
