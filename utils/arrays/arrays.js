@@ -455,7 +455,7 @@ export function* euler(sets) {
   let comb_excl = [];
 
   let sets_keys = sets_keys_fun(sets);
-
+  
   // Traverse the combination lattice
   for (const set_key of sets_keys) {
     compl_sets_keys = _.difference(sets_keys, [set_key])

@@ -114,7 +114,7 @@ for deps_key in "${deps_keys[@]}"; do
         else
             is_used=1
         fi
-
+        
         if [[ $IS_COLORED -eq 1 ]]; then
             if [[ $dependency_count -eq 1 ]]; then
                 echo "$dependency_name" >> .npm_clean
