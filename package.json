@@ -93,5 +93,13 @@
   "engines": {
     "node": " >=16.0.0",
     "npm": ">=6.9.0"
+  },
+  "_moduleAliases": {
+    "@root"      : ".",
+    "@data-structures"      : "data-structures",
+    "@algorithms"      : "algorithms",
+    "@utils"      : "utils"
   }
 }
+
+
