@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo yum install curl -y 
+sudo yum install curl -y
 
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 source ~/.bashrc
@@ -13,4 +13,3 @@ nvm install lts/*
 echo NPM version: $(npm -v)
 echo "NVM version: $(nvm --version)"
 echo "NodeJS version: $(node -v)"
-

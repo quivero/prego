@@ -110,12 +110,12 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
   switch (method) {
     case "n_norm":
       const exponent = !objectHasKey(methodConfig, "exponent") ? 2 : methodConfig.exponent;
-    
+
       return nNormDistance(coordinate_1, coordinate_2, exponent);
 
     case "sphere":
       const are_coords_spherical = !isSpherical(coordinate_1) || !isSpherical(coordinate_2);
-      
+
       return !objectHasKey(methodConfig, "radius")
         ? throwError(error_message.replace("_placeholder_", "radius"))
         : are_coords_spherical

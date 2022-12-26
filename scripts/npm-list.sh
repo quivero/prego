@@ -1,9 +1,9 @@
 #!/bin/bash
 
 deps_keys=( "dependencies" "devDependencies" )
-grep_ignores=( 
-        "*node_modules*" 
-        "*.git*" 
+grep_ignores=(
+        "*node_modules*"
+        "*.git*"
         "*package-lock.json*"
         "*codecov*"
         "*scripts*"
@@ -35,7 +35,7 @@ function repeat() {
 }
 
 # Get value from json dictionary
-# 
+#
 # examples:
 # 	>> jsonValue "{"a": 1, "b": 2}" "a"
 #   1
@@ -44,7 +44,7 @@ function jsonValue() {
 }
 
 # Get keys from json dictionary
-# 
+#
 # examples:
 # 	>> jsonKeys "{"a": 1, "b": 2}"
 #   a
@@ -55,10 +55,10 @@ function jsonKeys() {
 
 function command_build () {
     grep_command_1="grep -rnw $PROJECT_ROOT_PATH -e \"$dependency_name\""
-        
+
     string_pattern="'%s\n'"
     expansion='"${grep_ignores[@]}"'
-    
+
     grep_command_2="grep -vEf <(printf $string_pattern $expansion)"
 
     grep_command="$grep_command_1 | $grep_command_2"
@@ -83,17 +83,17 @@ case "$1" in
     # Script tags
     -c | --color) IS_COLORED=1; shift   ;;
     -v | --verbose) IS_VERBOSE=1; shift   ;;
-    
+
     # Usage option
-    -h | --help) 
+    -h | --help)
         usage
-    ;;   
-    
+    ;;
+
     # -- means the end of the arguments; drop this, and break out of the while loop
     --) shift; break ;;
     # If invalid options were passed, then getopt should have reported an error,
     # which we checked as VALID_ARGUMENTS when getopt was called...
-    *) 
+    *)
         echo "Unexpected option: $1 - this should not happen."
         usage ;;
 esac
@@ -115,7 +115,7 @@ for deps_key in "${deps_keys[@]}"; do
 
     for dependency_name in $(jsonKeys "$deps_json"); do
         grep_command="$(command_build)"
-        
+
         dependency_count="$(eval "$grep_command" | wc -l)"
         dependency_filenames="$(eval "$grep_command")"
 
@@ -131,7 +131,7 @@ for deps_key in "${deps_keys[@]}"; do
             # Color red
             if [ $dependency_count -eq 0 ] || [ $dependency_count -eq 1 ]; then
                 dependency_name="\033[91;1m$dependency_name\033[0m"
-            
+
             # Color green
             else
                 dependency_name="\033[0;32m$dependency_name\033[0m"
@@ -145,7 +145,7 @@ for deps_key in "${deps_keys[@]}"; do
             echo "Filenames: $dependency_filenames"
             echo "$(repeat '-' $FENCE_SIZE)"
         else
-            # dependency_name:occurrence_count:  
+            # dependency_name:occurrence_count:
             printf "$dependency_name:$dependency_count:$is_used\n"
         fi
     done;
