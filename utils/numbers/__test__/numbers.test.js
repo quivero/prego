@@ -1,9 +1,9 @@
-import { 
-  primeFactors, 
-  isPrime, 
+import {
+  primeFactors,
+  isPrime,
   radianToDegree,
   degreeToRadian,
-  hav 
+  hav,
 } from "../numbers.js";
 
 import { throwError } from "../../sys/sys.js";
@@ -47,7 +47,7 @@ describe("numbers", () => {
 
   it("should return haversine values", () => {
     expect(hav(Math.PI)).toBeCloseTo(1);
-    expect(hav(2*Math.PI)).toBeCloseTo(0);
+    expect(hav(2 * Math.PI)).toBeCloseTo(0);
   });
 
   it("should throw error for entry with decimal part on function primeFactors", () => {
@@ -57,7 +57,7 @@ describe("numbers", () => {
   });
 
   it("should throw error for entry with inappropriate entry on function primeFactors", () => {
-    primeFactors('42');
+    primeFactors("42");
 
     expect(throwError).toHaveBeenCalled();
   });

@@ -179,3 +179,13 @@ export const objectFlatten = (obj) => {
   }
   return result;
 };
+
+/**
+ * @abstract JSON object has $key string among keys
+ *
+ *
+ * @param {Object} object
+ * @param {String} key
+ * @return {Object}
+ */
+export const objectHasKey = (object, key) => Object.keys(object).includes(key);

@@ -13,16 +13,16 @@ describe("sys", () => {
   });
 
   it("should warn a message", () => {
-    warn("It is warm.")
+    warn("It is warm.");
 
     expect(log_message).toHaveBeenCalled();
   });
 
   it("should return data types", () => {
-    expect(typeOf('string')).toBe('string');
-    expect(typeOf(42)).toBe('number');
-    expect(typeOf({})).toBe('object');
-    expect(typeOf(() => {})).toBe('function');
-    expect(typeOf(null)).toBe('null');
+    expect(typeOf("string")).toBe("string");
+    expect(typeOf(42)).toBe("number");
+    expect(typeOf({})).toBe("object");
+    expect(typeOf(() => {})).toBe("function");
+    expect(typeOf(null)).toBe("null");
   });
 });

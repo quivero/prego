@@ -1,4 +1,5 @@
 import Comparator from "../../utils/comparator/Comparator.js";
+import { throwError } from "../../utils/sys/sys.js";
 
 /**
  * Parent class for Min and Max Heaps.
@@ -289,7 +290,7 @@ export default class Heap {
    */
   /* istanbul ignore next */
   pairIsInCorrectOrder(firstElement, secondElement) {
-    throw new Error(`
+    throwError(`
       You have to implement heap pair comparision method
       for ${firstElement} and ${secondElement} values.
     `);

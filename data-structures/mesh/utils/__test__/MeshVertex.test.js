@@ -1,9 +1,9 @@
-import _ from 'lodash'
+import _ from "lodash";
 
 import {
   TOKEN_LENGTH,
   createMVertices,
-  createRandomMVertices
+  createRandomMVertices,
 } from "../mesh.js";
 
 import { throwError } from "../../../../utils/sys/sys.js";
@@ -13,7 +13,10 @@ jest.mock("../../../../utils/sys/sys.js");
 describe("MeshVertex", () => {
   it("should return n random arrays", () => {
     let n = 2;
-    let bounds = [[0, 1], [1, 2]]
+    let bounds = [
+      [0, 1],
+      [1, 2],
+    ];
 
     const m_vertices = createRandomMVertices(n, bounds);
 
@@ -21,28 +24,36 @@ describe("MeshVertex", () => {
       expect(m_vertices[i].label.length).toBe(TOKEN_LENGTH);
 
       for (let j in _.range(bounds.length)) {
-        expect(m_vertices[i].coordinates[j]).toBeGreaterThanOrEqual(bounds[j][0]);
+        expect(m_vertices[i].coordinates[j]).toBeGreaterThanOrEqual(
+          bounds[j][0]
+        );
         expect(m_vertices[i].coordinates[j]).toBeLessThanOrEqual(bounds[j][1]);
       }
     }
   });
 
   it("should throw for negative quantity of vertices", () => {
-      let n = -1;
-      let bounds = [[0, 1], [1, 2]]
-      
-      createRandomMVertices(n, bounds);
+    let n = -1;
+    let bounds = [
+      [0, 1],
+      [1, 2],
+    ];
 
-      expect(throwError).toHaveBeenCalled();
+    createRandomMVertices(n, bounds);
+
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should throw for negative quantity of vertices", () => {
-      let n = '42';
-      let bounds = [[0, 1], [1, 2]]
-      
-      createRandomMVertices(n, bounds);
+    let n = "42";
+    let bounds = [
+      [0, 1],
+      [1, 2],
+    ];
 
-      expect(throwError).toHaveBeenCalled();
+    createRandomMVertices(n, bounds);
+
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should create mesh vertex", () => {
@@ -53,7 +64,7 @@ describe("MeshVertex", () => {
   });
 
   it("should throw error for unequal array lengths", () => {
-    createMVertices(["A", "B"], [[1, 2]]);  
+    createMVertices(["A", "B"], [[1, 2]]);
 
     expect(throwError).toHaveBeenCalled();
   });

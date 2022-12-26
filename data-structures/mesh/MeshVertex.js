@@ -1,5 +1,4 @@
 import GraphVertex from "../graph/GraphVertex.js";
-import { zip } from "../../utils/arrays/arrays.js";
 
 export default class MeshVertex extends GraphVertex {
   /**
@@ -25,5 +24,3 @@ export default class MeshVertex extends GraphVertex {
     return this.label;
   }
 }
-
-

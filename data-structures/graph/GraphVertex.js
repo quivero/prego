@@ -6,7 +6,7 @@ export default class GraphVertex {
    */
   constructor(label, value = 0) {
     if (label === undefined) {
-      throw new Error("Graph vertex must have a value");
+      throwError("Graph vertex must have a value");
     }
 
     /**

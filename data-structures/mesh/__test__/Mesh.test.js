@@ -18,8 +18,7 @@ describe("Mesh", () => {
   it("should return two added vertices and the distance between them is one", () => {
     const metric_fun = (coord_1, coord_2) =>
       Math.sqrt(
-        (coord_2[1] - coord_1[1]) ** 2 +
-          (coord_2[0] - coord_1[0]) ** 2
+        (coord_2[1] - coord_1[1]) ** 2 + (coord_2[0] - coord_1[0]) ** 2
       );
 
     const mesh = new Mesh(metric_fun);
@@ -35,8 +34,7 @@ describe("Mesh", () => {
   it("should return two added vertices and the distance between them is one", () => {
     const distance_fun = (coord_1, coord_2) =>
       Math.sqrt(
-        (coord_2[1] - coord_1[1]) ** 2 +
-          (coord_2[0] - coord_1[0]) ** 2
+        (coord_2[1] - coord_1[1]) ** 2 + (coord_2[0] - coord_1[0]) ** 2
       );
 
     const mesh = new Mesh(distance_fun);
@@ -53,7 +51,7 @@ describe("Mesh", () => {
 
   it("should return two added vertices and the distance between them is one", () => {
     const distance_fun = (coord_1, coord_2) =>
-      distance(coord_1, coord_2, {'method': 'n_norm', 'exponent': 2});
+      distance(coord_1, coord_2, "n_norm", { exponent: 2 });
 
     const mesh = new Mesh(distance_fun);
     const A = new MeshVertex("A", [0, 0]);

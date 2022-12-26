@@ -1,9 +1,11 @@
 import _ from "lodash";
 import "lodash.combinations";
 
-import { objectReduce, objectMap } from "../objects/objects.js";
+import { objectReduce } from "../objects/objects.js";
 
 import { throwError } from "../sys/sys.js";
+
+const SET_DELIMITER = ",";
 
 /**
  * @abstract returns an array of ones with length n
@@ -48,24 +50,30 @@ export const nRandMinMax = (n, min_val, max_val) => {
 export const nRandMinsMaxs = (min_max_vec) => {
   let n_array = [];
   let msg = "";
-  let n = min_max_vec.length
+  let n = min_max_vec.length;
 
   for (let i = 0; i < n; i += 1) {
-    if(min_max_vec[i].length !== 2) {
-      throwError('Entry '+String(i)+" have 2 entries. We found "+String(min_max_vec[i].length)+"!");
+    if (min_max_vec[i].length !== 2) {
+      throwError(
+        "Entry " +
+          String(i) +
+          " have 2 entries. We found " +
+          String(min_max_vec[i].length) +
+          "!"
+      );
       return;
     }
 
     let min_val = min_max_vec[i][0];
     let max_val = min_max_vec[i][1];
 
-    if(typeof min_val !== 'number' && typeof max_val !== 'number') {
-      throwError('Min and max values must be numbers!');
+    if (typeof min_val !== "number" && typeof max_val !== "number") {
+      throwError("Min and max values must be numbers!");
       return;
     }
 
-    if(min_val > max_val) {
-      throwError('error', 'Min value must be lower than Max value!');
+    if (min_val > max_val) {
+      throwError("error", "Min value must be lower than Max value!");
       return;
     }
 
@@ -300,7 +308,9 @@ export const removeArrayDuplicates = (list) => {
 
 export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
-    throwError("Size of array must be greater or equal to the product of n by m");
+    throwError(
+      "Size of array must be greater or equal to the product of n by m"
+    );
   }
 
   let curr_comb = [];
@@ -421,9 +431,10 @@ export function* upperTriangularHyperindexes(length, dim) {
 export function* euler(sets) {
   let is_unique = true;
   for (let set_key in sets) {
-      is_unique &= sets[set_key].length == removeArrayDuplicates(sets[set_key]).length;
+    is_unique &=
+      sets[set_key].length == removeArrayDuplicates(sets[set_key]).length;
   }
-    
+
   if (!is_unique) {
     throwError("Each array must NOT have duplicates!");
   }
@@ -470,7 +481,7 @@ export function* euler(sets) {
           // Exclusive elements of group except current analysis set
           yield [comb_str, comb_excl];
 
-          comb_str.split(",").forEach((ckey) => {
+          comb_str.split(SET_DELIMITER).forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_excl);
           });
 
@@ -480,11 +491,13 @@ export function* euler(sets) {
         comb_intersec = _.intersection(celements, sets[set_key]);
         if (comb_intersec.length !== 0) {
           // Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key].concat(comb_str.split(",")).join(",");
+          comb_intersec_key = [set_key]
+            .concat(comb_str.split(SET_DELIMITER))
+            .join(",");
 
           yield [comb_intersec_key, comb_intersec];
 
-          comb_str.split(",").forEach((ckey) => {
+          comb_str.split(SET_DELIMITER).forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_intersec);
           });
 

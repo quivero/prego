@@ -1,4 +1,6 @@
 {
   "theme": "neutral",
-  "flowchart": { "curve": "basis" }
+  "flowchart": {
+    "curve": "basis"
+  }
 }
