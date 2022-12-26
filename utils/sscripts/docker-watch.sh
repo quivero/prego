@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if [[ $# -eq 0 ]];
-	then echo "Container image name not supplied" 
+	then echo "Container image name not supplied"
 elif docker ps -a | grep -qw "$1"; then
-	
+
 	if [[ $(docker ps -a | grep -w $1 | wc -l) -eq 1  ]]; then
 		container_id=$(docker ps -a | grep -w $1 | head -n1 | awk '{print $1;}');
 		echo $container_id
@@ -17,5 +17,5 @@ elif docker ps -a | grep -qw "$1"; then
 	fi;
 
 else
-	echo " No such container $1" 
+	echo " No such container $1"
 fi;

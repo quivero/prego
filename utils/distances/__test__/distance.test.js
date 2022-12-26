@@ -153,7 +153,7 @@ describe("distance", () => {
     const coord_2 = [1, 1];
 
     distance(coord_1, coord_2, "n_norm", {});
-    
+
     expect(
       distance(coord_1, coord_2, "n_norm", { })
     ).toBeCloseTo(
