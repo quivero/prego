@@ -788,7 +788,7 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   const path_vertex_keys = blueprint_graph.convertVerticesIndexestoKeys(path);
 
   const styleFormatter = (str) =>
-    str.replace("{", "").replace(/['"]+/g, "").replace("}", "");
+    str.replace(/\{/g, "").replace(/['"]+/g, "").replace(/\}/g, "");
 
   const path_line_numbers = path_edges.map((path_edge) =>
     Object.keys(blueprint_graph.edges).indexOf(
