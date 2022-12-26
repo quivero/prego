@@ -128,8 +128,11 @@ for deps_key in "${deps_keys[@]}"; do
         fi
 
         if [[ $IS_COLORED -eq 1 ]]; then
-            if [[ $dependency_count -eq 1 ]]; then
+            # Color red
+            if [ $dependency_count -eq 0 ] || [ $dependency_count -eq 1 ]; then
                 dependency_name="\033[91;1m$dependency_name\033[0m"
+            
+            # Color green
             else
                 dependency_name="\033[0;32m$dependency_name\033[0m"
             fi
