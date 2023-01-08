@@ -37,7 +37,7 @@ function repeat() {
 # Get value from json dictionary
 #
 # examples:
-# 	>> jsonValue "{"a": 1, "b": 2}" "a"
+#   >> jsonValue "{"a": 1, "b": 2}" "a"
 #   1
 function jsonValue() {
     echo "$1" | jq -r ".$2"
@@ -46,7 +46,7 @@ function jsonValue() {
 # Get keys from json dictionary
 #
 # examples:
-# 	>> jsonKeys "{"a": 1, "b": 2}"
+#   >> jsonKeys "{"a": 1, "b": 2}"
 #   a
 #   b
 function jsonKeys() {
