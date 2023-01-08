@@ -4,6 +4,7 @@ import { objectHasKey } from "../objects/objects.js";
 import { hav } from "../numbers/numbers.js";
 import { vecArg, sphericalToCartesian, isSpherical } from "../math/math.js";
 import { throwError } from "../sys/sys.js";
+import { log } from "../logging/logger.js";
 
 /**
  * @abstract n-norm of a number
@@ -104,26 +105,48 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
  * @return {Number}
  */
 export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
-  let error_message =
+  let notification_message =
     "There must exist property '_placeholder_' on config argument 'methodConfig'!";
 
   switch (method) {
     case "n_norm":
-      const exponent = !objectHasKey(methodConfig, "exponent") ? 2 : methodConfig.exponent;
+      let exponent;
+    
+      if(!objectHasKey(methodConfig, "exponent")) {
+        log('warn', notification_message.replace("_placeholder_", "radius"))
+        exponent = 2;
+      } else {
+        exponent = methodConfig.exponent;
+      }
 
-      return nNormDistance(coordinate_1, coordinate_2, exponent);
+      return nNormDistance(coordinate_1, coordinate_2, exponent)
 
     case "sphere":
       const are_coords_spherical = !isSpherical(coordinate_1) || !isSpherical(coordinate_2);
 
       return !objectHasKey(methodConfig, "radius")
-        ? throwError(error_message.replace("_placeholder_", "radius"))
+        ? throwError(
+            notification_message.replace("_placeholder_", "radius")
+          )
         : are_coords_spherical
         ? throwError("Provided coordinates are not spherical!")
         : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
 
     default:
       throwError("There are only available methods: ['n_norm', 'sphere']");
-      return -1;
+      return 1;
   }
 };
+
+/**
+ * @abstract returns the distance of two points based on
+ *
+ * @param {Array} coordinate_1
+ * @param {Array} coordinate_2
+ * @param {String} method
+ * @param {Object} methodConfig
+ * @return {Number}
+ */
+export const travelTime = (average_speed, coordinate_1, coordinate_2, method, methodConfig) => {
+  return distance(coordinate_1, coordinate_2, method, methodConfig)/average_speed;
+}
