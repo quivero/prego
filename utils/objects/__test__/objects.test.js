@@ -9,6 +9,7 @@ import {
   objectInit,
   objectFlatten,
   objectHasKey,
+  objectHasKeys,
 } from "../objects.js";
 
 describe("objects", () => {
@@ -40,6 +41,15 @@ describe("objects", () => {
     expect(objectHasKey({ a: 1, b: 2 }, "c")).toEqual(false);
   });
 
+  it("should return boolean on keys existence", () => {
+    const object = { a: 1, b: 2, c: 3 };
+    
+    expect(objectHasKeys(object, ['a'])).toEqual(true);
+    expect(objectHasKeys(object, ['a', 'b'])).toEqual(true);
+    expect(objectHasKeys(object, ['d'])).toEqual(false);
+    expect(objectHasKeys(object, ['a', 'd'])).toEqual(false);
+  });
+  
   it("should return filtered object", () => {
     expect(
       objectFlatten({
