@@ -24,10 +24,12 @@ export const objectInit = (keys, init_value) => {
  * @return {Object}
  */
 export const objectMap = (object, mapFn) =>
-  Object.keys(object).reduce((result, key) => {
-    result[key] = mapFn(key, object[key]);
-    return result;
-  }, {});
+  _.reduce(
+    Object.keys(object),
+    (result, key) => {
+      result[key] = mapFn(key, object[key]);
+      return result;
+    }, {});
 
 /**
  * @abstract returns a reduced object
@@ -37,7 +39,8 @@ export const objectMap = (object, mapFn) =>
  * @return {Object}
  */
 export const objectReduce = (object, reduceFn, init_val) =>
-  Object.entries(_.cloneDeep(object)).reduce(
+  _.reduce(
+    Object.entries(_.cloneDeep(object)),
     (result, [key, value]) => reduceFn(result, key, value),
     init_val
   );
@@ -189,3 +192,22 @@ export const objectFlatten = (obj) => {
  * @return {Object}
  */
 export const objectHasKey = (object, key) => Object.keys(object).includes(key);
+
+
+/**
+ * @abstract JSON object has $key string among keys
+ *
+ *
+ * @param {Object} object
+ * @param {String} key
+ * @return {Object}
+ */
+export const objectHasKeys = (object, keys) => {
+  return _.reduce(
+    keys,
+    (ObjecthasKeysSoFar, key) => ObjecthasKeysSoFar && objectHasKey(object, key), 
+    true
+  )
+}
+
+
