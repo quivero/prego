@@ -2386,7 +2386,7 @@ export default class Graph {
    *
    * @return {Object} nodes_to_cycles
    */
-  getVertexCycles() {
+  getCycles() {
     const n_vertices = this.getNumVertices();
     const cycles = this.cyclicCircuits();
     const nodes_to_cycles = {};
