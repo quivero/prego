@@ -1,4 +1,4 @@
-# Some structures, many possibilities
+# Prego
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/330043511b8240faa6161331a11e2abb)](https://app.codacy.com/gh/quivero/prego?utm_source=github.com&utm_medium=referral&utm_content=quivero/prego&utm_campaign=Badge_Grade_Settings)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
