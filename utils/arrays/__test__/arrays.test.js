@@ -27,8 +27,6 @@ import {
 
 import { throwError } from "../../sys/sys.js";
 
-const { format } = require("winston");
-
 jest.mock("../../sys/sys");
 
 afterEach(() => {
@@ -293,15 +291,12 @@ describe("Extended euler diagram", () => {
     const list_1 = [1, 2];
     const list_2 = [3, 4];
 
-    const result = {
+    const expected = {
       0: [1, 2],
       1: [3, 4],
     };
 
-    expect(spreadEuler([list_1, list_2])).toEqual({
-      0: [1, 2],
-      1: [3, 4],
-    });
+    expect(spreadEuler([list_1, list_2])).toEqual(expected);
   });
 
   it("should return m n-tuples of the array given", () => {
@@ -338,13 +333,13 @@ describe("Extended euler diagram", () => {
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
 
-    const result = {
+    const expected = {
       0: [1, 3],
       1: [4, 5],
       2: [6, 7],
       "0,1,2": [2],
     };
 
-    expect(spreadEuler([list_1, list_2, list_3])).toEqual(result);
+    expect(spreadEuler([list_1, list_2, list_3])).toEqual(expected);
   });
 });

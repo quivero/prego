@@ -1961,7 +1961,6 @@ describe("Graph", () => {
     const vertexA = new GraphVertex("A");
     const vertexB = new GraphVertex("B");
     const vertexC = new GraphVertex("C");
-    const vertexD = new GraphVertex("D");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAC = new GraphEdge(vertexB, vertexC);

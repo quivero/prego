@@ -432,7 +432,7 @@ export function* euler(sets) {
   let is_unique = true;
   for (let set_key in sets) {
     is_unique &=
-      sets[set_key].length == removeArrayDuplicates(sets[set_key]).length;
+      sets[set_key].length === removeArrayDuplicates(sets[set_key]).length;
   }
 
   if (!is_unique) {

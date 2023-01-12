@@ -52,5 +52,3 @@ export const createCompleteUndirectedGraph = (vertices_keys) => {
 
   return graph;
 };
-
-export const convertGraphToDiagram = (graph) => {};

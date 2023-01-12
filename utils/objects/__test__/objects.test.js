@@ -1,15 +1,9 @@
 import _ from "lodash";
 import {
-  objectMap,
-  objectReduce,
-  objectFilter,
-  objectDifference,
-  objectIntersection,
-  objectEqual,
-  objectInit,
-  objectFlatten,
-  objectHasKey,
-  objectHasKeys,
+  objectMap, objectReduce, objectFilter,
+  objectDifference, objectIntersection,
+  objectEqual, objectInit, objectFlatten,
+  objectHasKey, objectHasKeys,
 } from "../objects.js";
 
 describe("objects", () => {
@@ -51,23 +45,25 @@ describe("objects", () => {
   });
 
   it("should return filtered object", () => {
-    expect(
-      objectFlatten({
-        a: 1,
-        b: {
-          c: 3,
-          d: {
-            e: 4,
-            f: 5,
-          },
+    const input = {
+      a: 1,
+      b: {
+        c: 3,
+        d: {
+          e: 4,
+          f: 5,
         },
-      })
-    ).toEqual({
+      },
+    }
+    const output = objectFlatten(input)
+    const expected = {
       a: 1,
       "b.c": 3,
       "b.d.e": 4,
       "b.d.f": 5,
-    });
+    }
+    
+    expect(output).toEqual(expected);
   });
 
   it("should return reduced object by certain function", () => {

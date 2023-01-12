@@ -3,14 +3,8 @@ import "lodash.multicombinations";
 
 import _ from "lodash";
 
-import { mSetsOfnTuples } from "../../utils/arrays/arrays.js";
-
-import { throwError } from "../../utils/sys/sys.js";
-
-import { isPrime } from "../../utils/numbers/numbers.js";
 
 export const reduceDistance = (vertices, distance_fun) => {
-  const indices_to_keys = this.getVerticesIndicestoKeys();
   let total_distance = 0;
 
   vertices.forEach((vertex, index) => {

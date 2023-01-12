@@ -55,8 +55,9 @@ export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
     const blueprint = require(fname);
 
     return blueprint;
+  } else {
+    return {};
   }
-  return {};
 };
 
 /**
@@ -118,10 +119,8 @@ export const processBlueprints = (bps_root_path, blueprintFn) => {
  * @return next_ndoes
  */
 export const getBlueprintNextNodes = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
-
   return objectReduce(
-    nodes,
+    blueprint.blueprint_spec.nodes,
     (next_nodes, node_key, node_value) => {
       if (node_value.type.toLowerCase() === "flow") {
         next_nodes[node_value.id] = Object.values(node_value.next);
