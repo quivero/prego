@@ -23,5 +23,5 @@ array.
 
 ## References
 
-- [Wikipedia](https://en.wikipedia.org/wiki/Priority_queue)
-- [YouTube](https://www.youtube.com/watch?v=wptevk0bshY&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=6)
+  - [Wikipedia](https://en.wikipedia.org/wiki/Priority_queue)
+  - [YouTube](https://www.youtube.com/watch?v=wptevk0bshY&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8&index=6)

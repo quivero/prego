@@ -18,7 +18,7 @@
 
 ## Ссылки
 
-- [Граф в математике на Wikipedia](<https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D1%84_(%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0)>)
-- [Графы на YouTube. Часть 1(~10 мин)](https://www.youtube.com/watch?v=GOUuhJPLG3s)
-- [Графы на YouTube. Часть 2(~10 мин)](https://www.youtube.com/watch?v=N-kCJJkTk7g)
-- [Графы на YouTube. Часть 3(~10 мин)](https://www.youtube.com/watch?v=2o3TINew0b8)
+  - [Граф в математике на Wikipedia](<https://ru.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D1%84_(%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0)>)
+  - [Графы на YouTube. Часть 1(~10 мин)](https://www.youtube.com/watch?v=GOUuhJPLG3s)
+  - [Графы на YouTube. Часть 2(~10 мин)](https://www.youtube.com/watch?v=N-kCJJkTk7g)
+  - [Графы на YouTube. Часть 3(~10 мин)](https://www.youtube.com/watch?v=2o3TINew0b8)
