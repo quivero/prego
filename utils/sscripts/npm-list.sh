@@ -9,9 +9,6 @@ grep_ignores=(
         "*scripts*"
     )
 
-dependency_ocurrences=""
-dependency_count=0
-
 FENCE_SIZE=50
 is_used=1
 IS_COLORED=0
@@ -57,7 +54,7 @@ function command_build () {
     grep_command_1="grep -rnw $PROJECT_ROOT_PATH -e \"$dependency_name\""
 
     string_pattern="'%s\n'"
-    expansion='"${grep_ignores[@]}"'
+    expansion="${grep_ignores[@]}"
 
     grep_command_2="grep -vEf <(printf $string_pattern $expansion)"
 
@@ -108,7 +105,6 @@ touch "$unused_file"
 
 packages_route="$PROJECT_ROOT_PATH/package.json"
 packages_json="$(cat $packages_route)"
-package_keys="$(jsonKeys "$packages_json")"
 
 for deps_key in "${deps_keys[@]}"; do
     deps_json="$(jsonValue "$packages_json" "$deps_key")"
@@ -122,14 +118,14 @@ for deps_key in "${deps_keys[@]}"; do
         # Checks if there is at least once dependency appearance
         if [[ $dependency_count -eq 1 ]]; then
             is_used=0
-            echo "$dependency_name" >> $unused_file
+            echo "$dependency_name" >> "$unused_file"
         else
             is_used=1
         fi
 
         if [[ $IS_COLORED -eq 1 ]]; then
             # Color red
-            if [ $dependency_count -eq 0 ] || [ $dependency_count -eq 1 ]; then
+            if [ "$dependency_count" -eq "0" ] || [ "$dependency_count" -eq "1" ]; then
                 dependency_name="\033[91;1m$dependency_name\033[0m"
 
             # Color green
