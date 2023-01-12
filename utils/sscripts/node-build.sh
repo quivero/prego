@@ -29,7 +29,7 @@ $sh_c "$os_install_repo install -y nodejs"
 $sh_c "$os_install_repo install -y gcc g++ make"
 
 # Install nvm
-nvm install "18.12.1" --reinstall-packages-from=current -y --latest-npm
+nvm install "$NVM_VERSION" --reinstall-packages-from=current -y --latest-npm
 
 echo "=================================================================="
 

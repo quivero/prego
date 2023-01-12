@@ -116,7 +116,7 @@ for deps_key in "${deps_keys[@]}"; do
         dependency_filenames="$(eval "$grep_command")"
 
         # Checks if there is at least once dependency appearance
-        if [[ $dependency_count -eq 1 ]]; then
+        if [[ "$dependency_count" -eq "1" ]]; then
             is_used=0
             echo "$dependency_name" >> "$unused_file"
         else
@@ -134,12 +134,12 @@ for deps_key in "${deps_keys[@]}"; do
             fi
         fi
 
-        if [[ $IS_VERBOSE -eq 1 ]]; then
-            echo "$(repeat '=' $FENCE_SIZE)"
+        if [[ "$IS_VERBOSE" -eq "1" ]]; then
+            echo "$(repeat '=' "$FENCE_SIZE")"
             printf "$dependency_name:$dependency_count \n"
-            echo "$(repeat '-' $FENCE_SIZE)"
+            echo "$(repeat '-' "$FENCE_SIZE")"
             echo "Filenames: $dependency_filenames"
-            echo "$(repeat '-' $FENCE_SIZE)"
+            echo "$(repeat '-' "$FENCE_SIZE")"
         else
             # dependency_name:occurrence_count:
             printf "$dependency_name:$dependency_count:$is_used\n"
