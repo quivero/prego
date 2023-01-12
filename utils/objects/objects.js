@@ -205,9 +205,7 @@ export const objectHasKey = (object, key) => Object.keys(object).includes(key);
 export const objectHasKeys = (object, keys) => {
   return _.reduce(
     keys,
-    (ObjecthasKeysSoFar, key) => ObjecthasKeysSoFar && objectHasKey(object, key), 
+    (ObjecthasKeysSoFar, key) => ObjecthasKeysSoFar && objectHasKey(object, key),
     true
   )
 }
-
-

@@ -111,7 +111,7 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
   switch (method) {
     case "n_norm":
       let exponent;
-    
+
       if(!objectHasKey(methodConfig, "exponent")) {
         log('warn', notification_message.replace("_placeholder_", "radius"))
         exponent = 2;

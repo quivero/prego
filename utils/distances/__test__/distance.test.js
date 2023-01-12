@@ -185,7 +185,7 @@ describe("distance", () => {
     average_speed, coordinate_1, coordinate_2, method, method_config, expected_value
   ) => {
     result = travelTime(average_speed, coordinate_1, coordinate_2, method, method_config);
-    
+
     expect(result).toBeCloseTo(expected_value);
   });
 
