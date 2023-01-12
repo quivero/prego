@@ -13,6 +13,4 @@ services:
     volumes:
       - .:/home/node/app
       - /home/node/app/node_modules
-    networks:
-      - app-network
-    command: /home/node/app/node_modules/.bin/nodemon app.js
+    command: npm start
