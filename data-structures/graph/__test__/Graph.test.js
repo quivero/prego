@@ -34,23 +34,27 @@ let AB, AC, AD, AE, BC, BD,BE, CA, CB, CD, CE, CF, DA, DB,
 
 let trivia;
 
-afterEach(() => {
-  // restore the spy created with spyOn
-  jest.restoreAllMocks();
-  jest.clearAllMocks();
-});
+afterEach(
+  () => {
+    // restore the spy created with spyOn
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+  }
+);
 
-beforeEach(() => {
-  // restore the spy created with spyOn
-  A.deleteAllEdges();
-  B.deleteAllEdges();
-  C.deleteAllEdges();
-  D.deleteAllEdges();
-  E.deleteAllEdges();
-  F.deleteAllEdges();
-  G.deleteAllEdges();
-  H.deleteAllEdges();
-});
+beforeEach(
+  () => {
+    // restore the spy created with spyOn
+    A.deleteAllEdges();
+    B.deleteAllEdges();
+    C.deleteAllEdges();
+    D.deleteAllEdges();
+    E.deleteAllEdges();
+    F.deleteAllEdges();
+    G.deleteAllEdges();
+    H.deleteAllEdges();
+  }
+);
 
 describe("Graph", () => {
   it("should add vertices to graph", () => {
@@ -834,6 +838,7 @@ describe("Graph", () => {
     ])
 
     graph.addEdges([AB, BC, CD, DE, EF, FA]);
+
     const n_vertices = graph.getNumVertices();
 
     trivia = [
