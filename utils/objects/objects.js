@@ -112,34 +112,26 @@ export const objectDifference = (l_object, r_object, equalFn) =>
  * @return {Object}
  */
 export const objectIntersection = (
-  l_object,
-  r_object,
-  equalFn,
-  keyFn,
-  valueFn
-) =>
-  objectReduce(
+  l_object, r_object, equalFn, keyFn, valueFn
+) => {
+  let intersec_fun, key;
+
+  return objectReduce(
     r_object,
     (curr_intersec, r_key, r_value) => {
-      objectForEach(
-        l_object,
-        (l_key, l_value) => {
-          if (equalFn(r_key, r_value, l_key, l_value)) {
-            curr_intersec[keyFn(r_key, r_value, l_key, l_value)] = valueFn(
-              r_key,
-              r_value,
-              l_key,
-              l_value
-            );
-          }
-        },
-        {}
-      );
+      intersec_fun = (l_key, l_value) => {
+        if (equalFn(r_key, r_value, l_key, l_value)) {
+          key = keyFn(r_key, r_value, l_key, l_value);
+          curr_intersec[key] = valueFn(r_key, r_value, l_key, l_value);
+        }
+      }
+      
+      objectForEach(l_object, intersec_fun, {});
 
       return curr_intersec;
-    },
-    {}
+    }, {}
   );
+}
 
 /**
  * @abstract returns true for two equal json objects
@@ -149,8 +141,7 @@ export const objectIntersection = (
  * @param {function} equalFn
  * @return {Object}
  */
-export const objectEqual = (l_object, r_object, equalFn) =>
-  equalFn(l_object, r_object);
+export const objectEqual = (l_object, r_object, equalFn) => equalFn(l_object, r_object);
 
 /**
  * @abstract Declare a flatten function that takes
