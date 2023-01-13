@@ -1176,7 +1176,7 @@ export default class Graph {
     const forward_star = this.getAdjacencyList(0);
     const inverse_star = this.getAdjacencyList(1);
     let neighbours = [];
-    
+
     return objectReduce(
       bridge_keys,
       (bridge_dict, __, bridge_end_key) => {
