@@ -24,7 +24,7 @@ const F = new GraphVertex("F");
 const G = new GraphVertex("G");
 const H = new GraphVertex("H");
 
-let AB, AC, AD, AE, BC, BD,BE, CA, CB, CD, CE, CF, DA,DB, 
+let AB, AC, AD, AE, BC, BD,BE, CA, CB, CD, CE, CF, DA,DB,
     DC, DE, DF, EB, EF, EG, FA, FB, FD, FG, FH, GF, GH;
 
 afterEach(() => {
@@ -309,7 +309,7 @@ describe("Graph", () => {
       edge_keys.push(edge.getKey());
     });
 
-    const expected = [ "A_B", "B_C", ] 
+    const expected = [ "A_B", "B_C", ]
 
     expect(edge_keys).toEqual(["A_B", "B_C"]);
     expect(graph.getEdgesKeysByVertexKeys(["A", "B"], false)).toEqual(expected);
@@ -784,7 +784,7 @@ describe("Graph", () => {
     });
 
     expect(graph.getInOutDegreeList(1)).toEqual({
-      0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 
+      0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1,
     });
 
     const n_vertices = graph.getNumVertices();
@@ -807,7 +807,7 @@ describe("Graph", () => {
     const [
       AD, AE, AF, BD, BE, BF, CD, CE, CF, DA, DB, DC, EA, EB, EC, FA, FB, FC,
     ] = createEdges([
-      [A, D], [A, E], [A, F], [B, D], [B, E], [B, F], [C, D], [C, E], [C, F], 
+      [A, D], [A, E], [A, F], [B, D], [B, E], [B, F], [C, D], [C, E], [C, F],
       [D, A], [D, B], [D, C], [E, A], [E, B], [E, C], [F, A], [F, B], [F, C],
     ]);
 

@@ -62,7 +62,7 @@ describe("objects", () => {
       "b.d.e": 4,
       "b.d.f": 5,
     }
-    
+
     expect(output).toEqual(expected);
   });
 
