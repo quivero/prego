@@ -104,7 +104,7 @@ rm -f "$unused_file"
 touch "$unused_file"
 
 packages_route="$PROJECT_ROOT_PATH/package.json"
-packages_json="$(cat $packages_route)"
+packages_json="$(cat "$packages_route")"
 
 for deps_key in "${deps_keys[@]}"; do
     deps_json="$(jsonValue "$packages_json" "$deps_key")"

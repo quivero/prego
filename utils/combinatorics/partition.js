@@ -2,8 +2,6 @@
 import "lodash.combinations";
 import _ from "lodash";
 
-import { hasElement, ones, sort, getUniques } from "../arrays/arrays.js";
-
 import { decimalPart } from "../math/math.js";
 
 /*

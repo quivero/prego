@@ -49,7 +49,6 @@ export const nRandMinMax = (n, min_val, max_val) => {
  */
 export const nRandMinsMaxs = (min_max_vec) => {
   let n_array = [];
-  let msg = "";
   let n = min_max_vec.length;
 
   for (let i = 0; i < n; i += 1) {

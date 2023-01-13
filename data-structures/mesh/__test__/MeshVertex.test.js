@@ -1,7 +1,5 @@
 import MeshVertex from "../MeshVertex.js";
 
-import { throwError } from "../../../utils/sys/sys.js";
-
 jest.mock("../../../utils/sys/sys.js");
 
 describe("MeshVertex", () => {

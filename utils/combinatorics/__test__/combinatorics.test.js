@@ -2,7 +2,6 @@ import _ from "lodash";
 import {
   partitions,
   cardvecCombinations,
-  partitionTree,
 } from "../partition.js";
 
 describe("combinatorics", () => {

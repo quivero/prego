@@ -2,11 +2,7 @@ import _ from "lodash";
 
 import MeshVertex from "../MeshVertex.js";
 
-import { objectInit, objectMap } from "../../../utils/objects/objects.js";
-
 import { generateToken } from "../../../utils/string/string.js";
-
-import { abRandom } from "../../../utils/math/math.js";
 
 import { throwError } from "../../../utils/sys/sys.js";
 

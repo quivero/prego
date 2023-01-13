@@ -16,7 +16,6 @@ import {
   filenameHasExtension,
   createDirectory,
   saveFilenameContentObject,
-  loadJSONfromFile,
 } from "../file/file.js";
 
 import {
@@ -142,8 +141,6 @@ export const getBlueprintNextNodes = (blueprint) => {
  * @return edges
  */
 export const getBlueprintFromToEdgeTuples = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
-
   return objectReduce(
     getBlueprintNextNodes(blueprint),
     (edge_nodes, curr_node_key, curr_node_value) => {
@@ -194,8 +191,6 @@ export const reachableNodesFromStartNodes = (blueprint) => {
 export const reachableFinishNodesFromStartNodes = (blueprint) => {
   const start_finish_nodes = startAndFinishNodes(blueprint);
   const reachable_nodes = reachableNodesFromStartNodes(blueprint);
-
-  const bp_graph = parseBlueprintToGraph(blueprint);
 
   for (const start_node_key of start_finish_nodes.start_nodes) {
     reachable_nodes[start_node_key] = _.intersection(
@@ -336,7 +331,6 @@ export const getBlueprintAllNodesByType = (blueprint) => {
  */
 export const getBlueprintNodeToTypeMap = (blueprint) => {
   const node_type_map = {};
-  const nodes = [];
 
   for (const type of node_types) {
     getBlueprintNodesByType(blueprint, type).forEach((node_key) => {
@@ -354,8 +348,6 @@ export const getBlueprintNodeToTypeMap = (blueprint) => {
  * @param {Graph} graph
  */
 export const parseBlueprintToGraph = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
-
   const graph = new Graph(true);
 
   graph.addEdges(

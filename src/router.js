@@ -1,13 +1,12 @@
 import express from "express";
 
 import {
-  logging,
   morganMiddleware,
   agentMorganReporter,
   log_message,
 } from "../utils/logging/logger.js";
 
-import { statusMW, statusImgPath } from "../utils/logging/status.js";
+import { statusMW } from "../utils/logging/status.js";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);

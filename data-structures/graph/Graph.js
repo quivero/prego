@@ -194,7 +194,6 @@ export default class Graph {
    * @returns {GraphEdge[]}
    */
   getEdgesByVertexKeys(vertexKeys, exclusive = false) {
-    const edges_from_keys = [];
     const edges = this.getAllEdges();
 
     let operator_fun = () => 42;
@@ -1177,9 +1176,7 @@ export default class Graph {
     const forward_star = this.getAdjacencyList(0);
     const inverse_star = this.getAdjacencyList(1);
     let neighbours = [];
-
-    bridge_keys.forEach((bridgeEnd) => {});
-
+    
     return objectReduce(
       bridge_keys,
       (bridge_dict, __, bridge_end_key) => {
@@ -1336,9 +1333,6 @@ export default class Graph {
 
     const bridges = this.bridges(true);
     const bridge_ends = _.uniq(_.flatten(bridges));
-
-    const forward_star = this.getAdjacencyList(0);
-    const reverse_star = this.getAdjacencyList(1);
 
     let from_to = {};
 
@@ -2444,8 +2438,6 @@ export default class Graph {
     if (graph_json.isDirected !== this.isDirected) {
       throwError("This direction is different from serialization direction.");
     } else {
-      const vertices = this.getAllVertices();
-
       this.addVertices(
         objectFilter(
           graph_json.nodes.map((node_json) => {
