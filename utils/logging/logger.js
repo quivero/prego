@@ -1,5 +1,4 @@
 import * as winston from "winston";
-import * as sinon from "sinon";
 import logger from "morgan";
 
 const { createLogger, format, transports, config } = winston;

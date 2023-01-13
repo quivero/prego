@@ -22,7 +22,6 @@ import {
   fullPolytopeHyperindexes,
   upperTriangularHyperindexes,
   sequentialArrayBlobs,
-  cartesianProduct,
 } from "../arrays";
 
 import { throwError } from "../../sys/sys.js";

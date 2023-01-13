@@ -50,13 +50,7 @@ export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
   const fname = `${bps_root_path}/${blueprint_name}`;
   const tokens = fname.split(".");
 
-  if (tokens[tokens.length - 1] === "json") {
-    const blueprint = require(fname);
-
-    return blueprint;
-  } else {
-    return {};
-  }
+  return tokens[tokens.length - 1] === "json" ? require(fname) : {};
 };
 
 /**
@@ -507,6 +501,7 @@ export const startAndFinishNodes = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const startNodes = [];
   const finishNodes = [];
+  let startAndFinishNodes;
 
   for (const node of nodes) {
     if (node.type.toLowerCase() === "start") {
@@ -518,7 +513,9 @@ export const startAndFinishNodes = (blueprint) => {
     }
   }
 
-  return { start_nodes: [...startNodes], finish_nodes: [...finishNodes] };
+  startAndFinishNodes = { start_nodes: [...startNodes], finish_nodes: [...finishNodes] }
+
+  return startAndFinishNodes;
 };
 
 /**
