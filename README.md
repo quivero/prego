@@ -32,7 +32,7 @@ This is a npm data-structure package and application service: The former is work
 
 ### As a service
 
-We host the app on a cloud service `{AWS, Azure, GCloud}` or run locally. For it, we run either commands below: 
+We host the app on a cloud service `{AWS, Azure, GCloud}` or run locally. For it, we run either commands below:
 
 1. Dockerfile:
 
