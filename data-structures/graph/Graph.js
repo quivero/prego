@@ -1330,7 +1330,7 @@ export default class Graph {
 
     let from_to;
 
-    fromBridgeToIsland_reduce_fun = (result, island_id, bridge_ends_) => {
+    const fromBridgeToIsland_reduce_fun = (result, island_id, bridge_ends_) => {
       from_to = { from: [], to: [] };
 
       bridges_iterfun = (bridge_end) => {
