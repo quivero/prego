@@ -125,7 +125,7 @@ export const objectIntersection = (
           curr_intersec[key] = valueFn(r_key, r_value, l_key, l_value);
         }
       }
-      
+
       objectForEach(l_object, intersec_fun, {});
 
       return curr_intersec;
