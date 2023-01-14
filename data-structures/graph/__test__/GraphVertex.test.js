@@ -12,10 +12,10 @@ let result, expected;
 describe("GraphVertex", () => {
   it("should throw an error when trying to create vertex without value", () => {
     new GraphVertex();
-    
+
     result = throwError;
     expected = 1;
-    
+
     expect(result).toHaveBeenCalledTimes(expected);
   });
 
