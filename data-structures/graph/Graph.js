@@ -1211,8 +1211,7 @@ export default class Graph {
 
     const undirected_bridges = this.bridges(true);
     const bridge_ends = _.uniq(_.flatten(undirected_bridges));
-    const bridge_edges =
-      graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
+    const bridge_edges = graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
 
     // Remove bridges to obtain strongly connected components
     graph_copy.deleteEdges(bridge_edges);
@@ -1298,29 +1297,27 @@ export default class Graph {
   getIslandBridgeEndIODict() {
     const bridge_end_io_dict = this.getBridgeEndIODict();
 
-    return objectReduce(
-      this.islands(),
-      (result, island_id, habitant_groups) => {
-        result[island_id] = objectReduce(
-          habitant_groups.bridge_ends,
-          (result_, id_, bridge_end_id) => {
-            if (bridge_end_io_dict[bridge_end_id].from.length !== 0) {
-              result_.target.push(bridge_end_id);
-            }
+    const islands_io_fun = (result_, id_, bridge_end_id) => {
+      if (bridge_end_io_dict[bridge_end_id].from.length !== 0) {
+        result_.target.push(bridge_end_id);
+      }
 
-            if (bridge_end_io_dict[bridge_end_id].to.length !== 0) {
-              result_.source.push(bridge_end_id);
-            }
+      if (bridge_end_io_dict[bridge_end_id].to.length !== 0) {
+        result_.source.push(bridge_end_id);
+      }
 
-            return result_;
-          },
-          { source: [], target: [] }
-        );
+      return result_;
+    }
 
-        return result;
-      },
-      {}
-    );
+    const island_fun = (result, island_id, habitant_groups) => {
+      result[island_id] = objectReduce(
+        habitant_groups.bridge_ends, islands_io_fun, { source: [], target: [] }
+      );
+
+      return result;
+    }
+
+    return objectReduce(this.islands(), island_fun, {});
   }
 
   /**
@@ -1331,32 +1328,29 @@ export default class Graph {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
     const bridge_end_InOut = this.getBridgeEndIODict();
 
-    const bridges = this.bridges(true);
-    const bridge_ends = _.uniq(_.flatten(bridges));
+    let from_to;
 
-    let from_to = {};
+    fromBridgeToIsland_reduce_fun = (result, island_id, bridge_ends_) => {
+      from_to = { from: [], to: [] };
 
-    return objectReduce(
-      island_bridge_end_list,
-      (result, island_id, bridge_ends_) => {
-        from_to = { from: [], to: [] };
+      bridges_iterfun = (bridge_end) => {
+        from_to.to = _.uniq(
+          from_to.to.concat(bridge_end_InOut[bridge_end].to)
+        );
 
-        bridge_ends_.forEach((bridge_end) => {
-          from_to.to = _.uniq(
-            from_to.to.concat(bridge_end_InOut[bridge_end].to)
-          );
+        from_to.from = _.uniq(
+          from_to.from.concat(bridge_end_InOut[bridge_end].from)
+        );
 
-          from_to.from = _.uniq(
-            from_to.from.concat(bridge_end_InOut[bridge_end].from)
-          );
+        result[island_id] = from_to;
+      };
 
-          result[island_id] = from_to;
-        });
+      bridge_ends_.forEach(bridges_iterfun);
 
-        return result;
-      },
-      {}
-    );
+      return result;
+    }
+
+    return objectReduce(island_bridge_end_list, fromBridgeToIsland_reduce_fun, {});
   }
 
   /**
@@ -1367,32 +1361,25 @@ export default class Graph {
     const islands = this.islandsHabitants();
     const reachability_list = this.getReachabilityList();
 
-    return objectReduce(
-      islands,
-      (result, island_id, habitants) => {
-        if (habitants.length === 1) {
-          const reachables = {};
+    const innerReachibility_fun = (result, island_id, habitants) => {
+      if (habitants.length === 1) {
+        const reachables = {};
 
-          reachables[habitants[0]] = [habitants[0]];
-          result[island_id] = reachables;
-        } else {
-          result[island_id] = objectReduce(
-            habitants,
-            (result_, __, habitant) => {
-              result_[habitant] = _.intersection(
-                reachability_list[habitant],
-                habitants
-              );
-              return result_;
-            },
-            {}
-          );
+        reachables[habitants[0]] = [habitants[0]];
+        result[island_id] = reachables;
+      } else {
+        const intersec_fun = (result_, __, habitant) => {
+          result_[habitant] = _.intersection(reachability_list[habitant], habitants);
+          return result_;
         }
 
-        return result;
-      },
-      {}
-    );
+        result[island_id] = objectReduce(habitants, intersec_fun, {});
+      }
+
+      return result;
+    }
+
+    return objectReduce(islands, innerReachibility_fun, {});
   }
 
   /**
@@ -1402,26 +1389,22 @@ export default class Graph {
   getIslandIOReachability() {
     const reachability_list = this.getReachabilityList();
 
-    return objectReduce(
-      this.getIslandBridgeEndIODict(),
-      (result, island_id, habitants) => {
-        result[island_id] = objectReduce(
-          habitants.target,
-          (result_, id_, in_bridge_end) => {
-            result_[in_bridge_end] = _.intersection(
-              reachability_list[in_bridge_end],
-              habitants.source
-            );
-
-            return result_;
-          },
-          {}
+    const IO_fun = (result, island_id, habitants) => {
+      const from_id_reachibility_fun = (result_, id_, in_bridge_end) => {
+        result_[in_bridge_end] = _.intersection(
+          reachability_list[in_bridge_end],
+          habitants.source
         );
 
-        return result;
-      },
-      {}
-    );
+        return result_;
+      }
+      
+      result[island_id] = objectReduce(habitants.target, from_id_reachibility_fun, {});
+
+      return result;
+    }
+
+    return objectReduce(this.getIslandBridgeEndIODict(), IO_fun, {});
   }
 
   /**
@@ -1441,13 +1424,10 @@ export default class Graph {
   getIslandsAdjacencyList() {
     const bridge_end_to_island = this.getBridgeEndToIsland();
 
-    return objectMap(
-      this.getIslandsToFromBridgeEnd(),
-      (island_id, from_to_dict) =>
-        from_to_dict.to.map(
-          (to_bridge_end) => bridge_end_to_island[to_bridge_end]
-        )
-    );
+    bendToIsland_map_fun = (to_bridge_end) => bridge_end_to_island[to_bridge_end];
+    island_adj_fun = (island_id, from_to_dict) => from_to_dict.to.map(bendToIsland_map_fun)
+
+    return objectMap(this.getIslandsToFromBridgeEnd(), island_adj_fun);
   }
 
   /**

@@ -4,7 +4,6 @@ import GraphVertex from "../GraphVertex";
 import GraphEdge from "../GraphEdge";
 
 import {
-  createVertices,
   createEdges,
   createEdgesFromVerticesValues,
 } from "../utils/graph.js";
@@ -29,8 +28,10 @@ let F = new GraphVertex("F");
 let G = new GraphVertex("G");
 let H = new GraphVertex("H");
 
-let AB, AC, AD, AE, BC, BD,BE, CA, CB, CD, CE, CF, DA, DB,
-    DC, DE, DF, EB, EF, EG, FA, FB, FD, FG, FH, GF, GH;
+let AB, AC, AD, AE, AF, BC, BD, BE, BF,
+    CA, CB, CD, CE, CF, DA, DB, DC, DE, DF, 
+    EA, EB, EC, EF, EG, 
+    FA, FB, FC, FD, FG, FH, GF, GH;
 
 let trivia;
 
@@ -60,7 +61,6 @@ describe("Graph", () => {
   it("should add vertices to graph", () => {
     preamble = () => {
       graph = new Graph();
-      [A, B] = createVertices(["A", "B"]);
       graph.addVertices([A, B]);
 
       return graph;
@@ -73,9 +73,12 @@ describe("Graph", () => {
       [ graph.getVertexByKey(B.getKey()), B ]
     ]
 
-    expect(trivia[0][0]).toBe(trivia[0][1]);
-    expect(trivia[1][0]).toEqual(trivia[1][1]);
-    expect(trivia[2][0]).toEqual(trivia[2][1]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toBe(expected);
+    }
   });
 
   it("should get vertex by its index", () => {
@@ -89,11 +92,11 @@ describe("Graph", () => {
     }
 
     vertex = preamble();
-    trivia = [
-      [ vertex.getKey(), "A" ]
-    ]
 
-    expect(trivia[0][0]).toEqual(trivia[0][1]);
+    expected = vertex.getKey()
+    result = "A"
+
+    expect(expected).toEqual(result);
   });
 
   it("should serialize and deserialize graph", () => {
@@ -160,15 +163,17 @@ describe("Graph", () => {
 
     trivia = [
       [ graph_.getNumVertices(), 4 ],
-      [ edges.length, 2],
+      [ edges.length, 3 ],
       [ edges[0].toString(), "A_B" ],
       [ edges[1].toString(), "B_C" ]
     ]
 
-    expect(trivia[0][0]).toBe(trivia[0][1]);
-    expect(trivia[1][0]).toBe(trivia[1][0]);
-    expect(trivia[2][0]).toBe(trivia[2][0]);
-    expect(trivia[3][0]).toBe(trivia[3][0]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+      
+      expect(result).toBe(expected);
+    }
   });
 
   it("should throw error for graph in other direction than serialization", () => {
@@ -387,7 +392,6 @@ describe("Graph", () => {
   it("should get edges by vertex keys", () => {
     graph = new Graph();
 
-    [A, B, C] = createVertices(["A", "B", "C"]);
     [AB, BC] = createEdges([ [A, B], [B, C], ]);
 
     graph.addEdges([AB, BC]);
@@ -426,8 +430,12 @@ describe("Graph", () => {
       [edges[1].getKey(), "B_C"]
     ]
 
-    expect(trivia[0][0]).toEqual(trivia[0][1]);
-    expect(trivia[1][0]).toEqual(trivia[1][1]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+      
+      expect(result).toEqual(expected);
+    }
   });
 
   it("should get undefined for undefined start vertex index", () => {
@@ -460,8 +468,9 @@ describe("Graph", () => {
 
   it("should add edge to the same vertex", () => {
     graph = new Graph();
-
-    const [AA] = createEdges([[A, A]]);
+    
+    let AA;
+    [AA] = createEdges([[A, A]]);
 
     graph.addEdges([AA]);
 
@@ -527,8 +536,6 @@ describe("Graph", () => {
 
   it("should add edges to directed graph", () => {
     graph = new Graph(true);
-
-    [A, B] = createVertices(["A", "B"]);
     AB = new GraphEdge(A, B);
 
     graph.addEdge(AB);
@@ -569,8 +576,12 @@ describe("Graph", () => {
       [graph.hasEdge(AB.getKey()), true]
     ]
 
-    expect(trivia[0][0]).toBe(trivia[0][1]);
-    expect(trivia[1][0]).toBe(trivia[1][1]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+      
+      expect(result).toBe(expected);
+    }
   });
 
   it("should copy directed graph but undirected", () => {
@@ -628,13 +639,11 @@ describe("Graph", () => {
   });
 
   it("should return self-cycles", () => {
-    // A directed graph
     graph = new Graph(true);
 
-    // Edges
-    const [AA] = createEdges([[A, A]]);
+    let AA;
 
-    // Add edges
+    [AA] = createEdges([[A, A]]);
     graph.addEdges([AA]);
 
     result = graph.cyclicCircuits()
@@ -644,15 +653,11 @@ describe("Graph", () => {
   });
 
   it("Cycles in a finite graph must be finite", () => {
-    // A directed graph
     graph = new Graph(true);
 
-    // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
       [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B],
     ]);
-
-    // Add edges
     graph.addEdges([AB, BC, CD, CE, EB, CF, FB]);
 
     result = graph.cyclicCircuits()
@@ -664,11 +669,7 @@ describe("Graph", () => {
   it("should find Eulerian Circuit in graph", () => {
     graph = new Graph();
 
-    // Edges
-    [AB, BC, CD, DE, EF] = createEdges([
-      [A, B], [B, C], [C, D], [D, E], [E, F]
-    ]);
-
+    [AB, BC, CD, DE, EF] = createEdges([ [A, B], [B, C], [C, D], [D, E], [E, F] ]);
     graph.addEdges([AB, BC, CD, DE, EF]);
 
     result = graph.getEulerianPath();
@@ -680,11 +681,7 @@ describe("Graph", () => {
   it("should find Eulerian Circuit in graph", () => {
     graph = new Graph(true);
 
-    // Edges
-    [AB, BC, CD, DE, EF, BE] = createEdges([
-      [A, B], [B, C], [C, D], [D, E], [E, F], [B, E]
-    ]);
-
+    [AB, BC, CD, DE, EF, BE] = createEdges([ [A, B], [B, C], [C, D], [D, E], [E, F], [B, E] ]);
     graph.addEdges([AB, BC, CD, DE, EF, BE]);
 
     result = graph.isEulerian()
@@ -696,9 +693,7 @@ describe("Graph", () => {
   it("should return false for a non-eulerian directed graph", () => {
     graph = new Graph(true);
 
-    [AB, BC, BD] = createEdges([
-      [A, B], [B, C], [B, D]
-    ])
+    [AB, BC, BD] = createEdges([ [A, B], [B, C], [B, D] ])
 
     graph.addEdges([AB, BC, CD]);
 
@@ -707,17 +702,18 @@ describe("Graph", () => {
       [ graph.isEulerianCycle(), false ]
     ]
 
-    expect(trivia[0][0]).toStrictEqual(trivia[0][1]);
-    expect(trivia[1][0]).toStrictEqual(trivia[1][1]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+      
+      expect(result).toStrictEqual(expected);
+    }
   });
 
   it("should return true for an eulerian directed graph", () => {
     graph = new Graph(true);
 
-    [AB, BC, CD, DA] = createEdges([
-      [A, B], [B, C], [C, D], [D, A]
-    ])
-
+    [AB, BC, CD, DA] = createEdges([ [A, B], [B, C], [C, D], [D, A] ])
     graph.addEdges([AB, BC, CD, DA]);
 
     trivia = [
@@ -725,17 +721,18 @@ describe("Graph", () => {
       [ graph.isEulerianCycle(), true ]
     ]
 
-    expect(trivia[0][0]).toStrictEqual(trivia[0][1]);
-    expect(trivia[1][0]).toStrictEqual(trivia[1][1]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+      
+      expect(result).toStrictEqual(expected);
+    }
   });
 
   it("should return false for an directed graph with different in and out edge flow", () => {
     graph = new Graph(true);
 
-    [AB, BC, CD] = createEdges([
-      [A, B], [B, C], [C, D]
-    ])
-
+    [AB, BC, CD] = createEdges([ [A, B], [B, C], [C, D] ])
     graph.addEdges([AB, BC, CD]);
 
     result = graph.isEulerian();
@@ -747,10 +744,7 @@ describe("Graph", () => {
   it("should return 0 for an eulerian undirected graph", () => {
     graph = new Graph();
 
-    [AB, BC, BD] = createEdges([
-      [A, B], [B, C], [B, D]
-    ])
-
+    [AB, BC, BD] = createEdges([ [A, B], [B, C], [B, D] ])
     graph.addEdges([AB, BC, BD]);
 
     result = graph.isEulerian()
@@ -773,10 +767,7 @@ describe("Graph", () => {
   it("should return 0 for non-eulerian graph", () => {
     graph = new Graph();
 
-    [AB, BC] = createEdges([
-      [A, B], [B, C]
-    ])
-
+    [AB, BC] = createEdges([ [A, B], [B, C] ])
     graph.addEdges([AB, BC]);
 
     result = graph.empty().getAllEdges().length
@@ -788,10 +779,7 @@ describe("Graph", () => {
   it("should return 1 for an eulerian path of directed graph", () => {
     graph = new Graph();
 
-    [AB, BC, CD, DE, EF] = createEdges([
-      [A, B], [B, C], [C, D], [D, E], [E, F]
-    ])
-
+    [AB, BC, CD, DE, EF] = createEdges([ [A, B], [B, C], [C, D], [D, E], [E, F] ])
     graph.addEdges([AB, BC, CD, DE, EF]);
 
     result = graph.isEulerian()
@@ -850,20 +838,18 @@ describe("Graph", () => {
       [ graph.getReverseDegrees(), ones(6) ]
     ]
 
-    expect(trivia[0][0]).toEqual(trivia[0][1]);
-    expect(trivia[1][0]).toEqual(trivia[1][1]);
-    expect(trivia[2][0]).toEqual(trivia[2][1]);
-    expect(trivia[3][0]).toEqual(trivia[3][1]);
-    expect(trivia[4][0]).toEqual(trivia[4][1]);
-    expect(trivia[5][0]).toEqual(trivia[5][1]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+      
+      expect(result).toEqual(expected);
+    }
   });
 
   it("should return true for bipartite graph", () => {
-    // A directed graph
-    const graph = new Graph(true);
+    graph = new Graph(true);
 
-    // Edges
-    const [
+    [
       AD, AE, AF, BD, BE, BF, CD, CE, CF,
       DA, DB, DC, EA, EB, EC, FA, FB, FC,
     ] = createEdges([
@@ -871,14 +857,15 @@ describe("Graph", () => {
       [C, D], [C, E], [C, F], [D, A], [D, B], [D, C],
       [E, A], [E, B], [E, C], [F, A], [F, B], [F, C],
     ]);
-
-    // Add edges
     graph.addEdges([
       AD, AE, AF, BD, BE, BF, CD, CE, CF,
       DA, DB, DC, EA, EB, EC, FA, FB, FC,
     ]);
 
-    expect(graph.isBipartite()).toEqual(true);
+    expected = graph.isBipartite();
+    result = true;
+
+    expect(expected).toEqual(result);
   });
 
   it("should return false for non-bipartite graph", () => {
@@ -893,7 +880,10 @@ describe("Graph", () => {
     // Add edges
     graph.addEdges([AB, AC, BC, BD, DE, DF, FE]);
 
-    expect(graph.isBipartite()).toEqual(false);
+    expected = graph.isBipartite()
+    result = false
+
+    expect(expected).toEqual(result);
   });
 
   it("should return true for strongly connected directed graph", () => {
@@ -902,10 +892,12 @@ describe("Graph", () => {
     [AB, BC, CD, DC, BD, CA] = createEdges([
       [A, B], [B, C], [C, D], [D, C], [B, D], [C, A]
     ]);
-
     graph.addEdges([AB, BC, CD, DC, BD, CA]);
 
-    expect(graph.isStronglyConnected()).toEqual(true);
+    result = graph.isStronglyConnected();
+    expected = true;
+
+    expect(result).toEqual(expected);
   });
 
   it("should return circuits in a directed graph", () => {
@@ -929,13 +921,9 @@ describe("Graph", () => {
     // A directed graph
     graph = new Graph(true);
 
-    [AB, BC, CA, BD, DE, EF, FD] = createEdges(
-      [
+    [AB, BC, CA, BD, DE, EF, FD] = createEdges([
         [A, B], [B, C], [C, A], [B, D], [D, E], [E, F], [F, D]
-      ]
-    );
-
-    // Add edges
+    ]);
     graph.addEdges([AB, BC, CA, BD, DE, EF, FD]);
 
     result = graph.getStronglyConnectedComponentsIndices();
@@ -953,8 +941,6 @@ describe("Graph", () => {
         [A, B], [B, C], [C, A], [B, D], [D, E], [E, F], [F, D]
       ]
     );
-
-    // Add edges
     graph.addEdges([AB, BC, CA, BD, DE, EF, FD]);
 
     result = graph.getMapSCCToBindingPoints();
@@ -973,8 +959,6 @@ describe("Graph", () => {
         [E, F], [E, G], [F, H], [G, H]
       ]
     );
-
-    // Add edges
     graph.addEdges([AB, AC, BD, CD, DE, EF, EG, FH, GH]);
 
     result = graph.articulationPoints()
@@ -986,27 +970,30 @@ describe("Graph", () => {
   it("should find articulation points in simple graph", () => {
     graph = new Graph();
 
-    [AB, BC, CD] = createEdges([
-      [A, B], [B, C], [C, D]
-    ]);
-
+    [AB, BC, CD] = createEdges([ [A, B], [B, C], [C, D] ]);
     graph.addEdges([AB, BC, CD]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
     const vertices_indices = graph.getVerticesKeystoIndices();
 
-    expect(articulationPointsSet.length).toBe(2);
-    expect(articulationPointsSet[0]).toBe(vertices_indices[C.getKey()]);
-    expect(articulationPointsSet[1]).toBe(vertices_indices[B.getKey()]);
+    trivia = [
+      [articulationPointsSet.length, 2], 
+      [articulationPointsSet[0], vertices_indices[C.getKey()]],
+      [articulationPointsSet[1], vertices_indices[B.getKey()]]
+    ]
+
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toBe(expected);
+    }
   });
 
   it("should find articulation points in simple graph", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
-
-    const graph = new Graph();
-
+    graph = new Graph();
+    
+    [AB, BC, CD] = createEdges([ [A, B], [B, C], [C, D] ]);
     graph.addEdges([AB, BC, CD]);
 
     const ids = graph.convertVerticestoVerticesIndices([ A, B, C, D, ]);
@@ -1015,65 +1002,53 @@ describe("Graph", () => {
   });
 
   it("should return vertices indices from edge", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, BC, CD] = createEdges([ [A, B], [B, C], [C, D] ]);
     graph.addEdges([AB, BC, CD]);
 
     const ids = graph.convertEdgeToVerticesIndices(AB);
 
-    expect(_.isEqual(ids, [0, 1])).toBe(true);
+    result =_.isEqual(ids, [0, 1])
+    expected = true
+
+    expect(result).toBe(expected);
   });
 
   it("should return vertices indices from edges", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, BC, CD] = createEdges([ [A, B], [B, C], [C, D] ]);
     graph.addEdges([AB, BC, CD]);
 
-    const ids = graph.convertEdgesToVerticesIndices([AB, BC, CD]);
+    result = graph.convertEdgesToVerticesIndices([AB, BC, CD]);
+    expected = [ [0, 1], [1, 2], [2, 3], ];
 
-    expect(
-      _.isEqual(ids, [
-        [0, 1],
-        [1, 2],
-        [2, 3],
-      ])
-    ).toBe(true);
+    expect(result).toStrictEqual(expected);
   });
 
   it("should find articulation points in simple graph with back edge", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
-    const AC = new GraphEdge(A, C);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, BC, CD, AC] = createEdges([ [A, B], [B, C], [C, D], [A, C] ]);
     graph.addEdges([AB, AC, BC, CD]);
 
     const articulationPointsSet = graph.articulationPoints();
     const vertices_indices = graph.getVerticesKeystoIndices();
 
-    expect(articulationPointsSet.length).toBe(1);
-    expect(articulationPointsSet[0]).toBe(vertices_indices[C.getKey()]);
+    trivia = [
+      [articulationPointsSet.length, 1], 
+      [articulationPointsSet[0], vertices_indices[C.getKey()]]
+    ]
+
+    expect(trivia[0][0]).toBe(trivia[0][1]);
+    expect(trivia[1][0]).toBe(trivia[1][1]);
   });
 
   it("should find articulation points in simple graph with back edge #2", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
-    const AE = new GraphEdge(A, E);
-    const CE = new GraphEdge(C, E);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, BC, CD, AE, CE] = createEdges([ [A, B], [B, C], [C, D], [A, E], [C, E] ]);
     graph.addEdges([AB, AE, CE, BC, CD]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
@@ -1084,18 +1059,12 @@ describe("Graph", () => {
   });
 
   it("should find articulation points in graph", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const AC = new GraphEdge(A, C);
-    const CD = new GraphEdge(C, D);
-    const DE = new GraphEdge(D, E);
-    const EG = new GraphEdge(E, G);
-    const EF = new GraphEdge(E, F);
-    const GF = new GraphEdge(G, F);
-    const FH = new GraphEdge(F, H);
-
-    const graph = new Graph();
-
+    graph = new Graph();
+    
+    [AB, BC, AC, CD, DE, EG, EF, GF, FH] = createEdges([ 
+      [A, B], [B, C], [A, C], [C, D], [D, E], 
+      [E, G], [E, F], [G, F], [F, H]
+    ]);
     graph.addEdges([
       AB, BC, AC, CD, DE, EG, EF, GF, FH,
     ]);
@@ -1103,26 +1072,28 @@ describe("Graph", () => {
     const articulationPointsSet = Object.values(graph.articulationPoints());
     const vertices_indices = graph.getVerticesKeystoIndices();
 
-    expect(articulationPointsSet.length).toBe(4);
-    expect(articulationPointsSet[0]).toBe(vertices_indices[F.getKey()]);
-    expect(articulationPointsSet[1]).toBe(vertices_indices[E.getKey()]);
-    expect(articulationPointsSet[2]).toBe(vertices_indices[D.getKey()]);
-    expect(articulationPointsSet[3]).toBe(vertices_indices[C.getKey()]);
+    trivia = [
+      [articulationPointsSet.length, 4],
+      [articulationPointsSet[0], vertices_indices[F.getKey()]],
+      [articulationPointsSet[1], vertices_indices[E.getKey()]],
+      [articulationPointsSet[2], vertices_indices[D.getKey()]],
+      [articulationPointsSet[3], vertices_indices[C.getKey()]]
+    ]
+
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toBe(expected);
+    }
   });
 
   it("should find articulation points in graph starting with articulation root vertex", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const AC = new GraphEdge(A, C);
-    const CD = new GraphEdge(C, D);
-    const DE = new GraphEdge(D, E);
-    const EG = new GraphEdge(E, G);
-    const EF = new GraphEdge(E, F);
-    const GF = new GraphEdge(G, F);
-    const FH = new GraphEdge(F, H);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [ DE, AB, BC, AC, CD, EG, EF, GF, FH ] = createEdges([
+      [D, E], [A, B], [B, C], [A, C], [C, D], [E, G], [E, F], [G, F], [F, H]
+    ]);
     graph.addEdges([
       DE, AB, BC, AC, CD, EG, EF, GF, FH,
     ]);
@@ -1130,108 +1101,119 @@ describe("Graph", () => {
     const articulationPointsSet = Object.values(graph.articulationPoints());
     const vertices_indices = graph.getVerticesKeystoIndices();
 
-    expect(articulationPointsSet.length).toBe(4);
-    expect(articulationPointsSet[0]).toBe(vertices_indices[F.getKey()]);
-    expect(articulationPointsSet[1]).toBe(vertices_indices[E.getKey()]);
-    expect(articulationPointsSet[2]).toBe(vertices_indices[C.getKey()]);
-    expect(articulationPointsSet[3]).toBe(vertices_indices[D.getKey()]);
+    trivia = [
+      [ articulationPointsSet.length, 4 ],
+      [ articulationPointsSet[0], vertices_indices[F.getKey()] ],
+      [ articulationPointsSet[1], vertices_indices[E.getKey()] ],
+      [ articulationPointsSet[2], vertices_indices[C.getKey()] ],
+      [ articulationPointsSet[3], vertices_indices[D.getKey()] ]
+    ]
+
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toBe(expected);
+    }
   });
 
   it("should find articulation points in yet another graph #1", () => {
-    const AB = new GraphEdge(A, B);
-    const AC = new GraphEdge(A, C);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
-    const DE = new GraphEdge(D, E);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, AC, BC, CD, DE] = createEdges([
+      [A, B], [A, C], [B, C], [C, D], [D, E]
+    ])
     graph.addEdges([AB, AC, BC, CD, DE]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
     const vertices_indices = graph.getVerticesKeystoIndices();
 
-    expect(articulationPointsSet.length).toBe(2);
-    expect(articulationPointsSet[0]).toBe(vertices_indices[D.getKey()]);
-    expect(articulationPointsSet[1]).toBe(vertices_indices[C.getKey()]);
+    trivia = [
+      [articulationPointsSet.length, 2],
+      [articulationPointsSet[0], vertices_indices[D.getKey()]],
+      [articulationPointsSet[1], vertices_indices[C.getKey()]]
+    ];
+
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toBe(expected);
+    }
   });
 
   it("should return edges keys", () => {
-    const AB = new GraphEdge(A, B);
-    const AC = new GraphEdge(B, C);
-    const BC = new GraphEdge(C, D);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, AC, BC] = createEdges([[A, B], [A, C], [B, C]])
     graph.addEdges([AB, AC, BC]);
 
-    expect(graph.getAllEdgesKeys()).toEqual(["A_B", "B_C", "C_D"]);
+    result = graph.getAllEdgesKeys();
+    expected = ["A_B", "A_C", "B_C"];
+
+    expect(result).toEqual(expected);
   });
 
   it("should return vertices keys", () => {
-    const graph = new Graph();
+    graph = new Graph();
 
     graph.addVertices([A, B, C]);
 
-    expect(graph.getAllVerticesKeys()).toEqual(["A", "B", "C"]);
+    result = graph.getAllVerticesKeys();
+    expected = ["A", "B", "C"];
+
+    expect(result).toEqual(expected);
   });
 
   it("should return vertex by key", () => {
-    const AB = new GraphEdge(A, B);
-    const AC = new GraphEdge(B, C);
-    const BC = new GraphEdge(C, D);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, AC, BC] = createEdges([[A, B], [A, C], [B, C]])
     graph.addEdges([AB, AC, BC]);
 
-    const vertices = graph
+    result = graph
       .getVerticesByKeys(["A", "B"])
       .map((vertex) => vertex.getKey());
 
-    expect(vertices).toEqual(["A", "B"]);
+    expected = ["A", "B"]
+
+    expect(result).toEqual(expected);
   });
 
   it("should return false for a non-connected graph", () => {
-    const AB = new GraphEdge(A, B);
-    const BC = new GraphEdge(B, C);
-    const DE = new GraphEdge(D, E);
+    graph = new Graph();
 
-    const graph = new Graph();
-
+    [AB, BC, DE] = createEdges([[A, B], [B, C], [D, E]])
     graph.addEdges([AB, BC, DE]);
 
-    expect(graph.isConnected()).toBe(false);
+    result = graph.isConnected()
+    expected = false
+
+    expect(result).toBe(expected);
   });
 
   it("should find articulation points in yet another graph #2", () => {
-    const AB = new GraphEdge(A, B);
-    const AC = new GraphEdge(A, C);
-    const BC = new GraphEdge(B, C);
-    const CD = new GraphEdge(C, D);
-    const CE = new GraphEdge(C, E);
-    const CF = new GraphEdge(C, F);
-    const EG = new GraphEdge(E, G);
-    const FG = new GraphEdge(F, G);
+    graph = new Graph();
+    
+    [ AB, AC, BC, CD, CE, CF, EG, FG ] = createEdges([ 
+      [A, B], [A, C], [B, C], [C, D], [C, E], [C, F], [E, G], [F, G] 
+    ])
 
-    const graph = new Graph();
-
-    graph.addEdges([
-      AB, AC, BC, CD, CE, CF, EG, FG,
-    ]);
+    graph.addEdges([ AB, AC, BC, CD, CE, CF, EG, FG ]);
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
     const vertices_indices = graph.getVerticesKeystoIndices();
 
-    expect(articulationPointsSet.length).toBe(1);
-    expect(articulationPointsSet[0]).toBe(vertices_indices[C.getKey()]);
+    trivia = [
+      [articulationPointsSet.length, 1],
+      [articulationPointsSet[0], vertices_indices[C.getKey()]]
+    ]
+
+    expect(trivia[0][0]).toBe(trivia[0][1]);
+    expect(trivia[1][0]).toBe(trivia[1][1]);
   });
 
   it("should return true for strongly connected graph", () => {
-    const vertex_keys = ["A", "B", "C", "D", "E", "F", "G", "H"];
-
-    const [A, B, C, D, E, F, G, H] = createVertices(vertex_keys);
-
     const [AB, AC, CD, BD, EF, EG, FH, GH, DE] = createEdges([
       [A, B], [B, C], [C, D], [D, A], [E, F],  [F, G], [G, H], [H, E], [D, E],
     ]);
@@ -1336,131 +1318,103 @@ describe("Graph", () => {
     // A directed graph
     //   C          E
     // A -> B -> D -> F
-    const graph = new Graph(true);
+    graph = new Graph(true);
 
-    // Vertices
-    const AB = new GraphEdge(A, B);
-    const AC = new GraphEdge(A, C);
-    const CB = new GraphEdge(C, B);
-    const BD = new GraphEdge(B, D);
-    const DE = new GraphEdge(D, E);
-    const DF = new GraphEdge(D, F);
-    const EF = new GraphEdge(E, F);
+    [AB, AC, CB, BD, DE, DF, EF] = createEdges(
+      [
+        [A, B], [A, C], [C, B], [B, D], [D, E], [D, F], [E, F]
+      ]
+    )
 
     // Add edges
     graph.addEdges([AB, AC, CB, BD, DE, DF, EF]);
 
-    expect(JSON.stringify(graph.islands())).toBe(
-      JSON.stringify({
-        0: {
-          bridge_ends: [3],
-          inner_vertices: [4, 5],
-        },
-        1: {
-          bridge_ends: [1],
-          inner_vertices: [0, 2],
-        },
-      })
-    );
-
-    expect(graph.islandsHabitants()).toEqual({
-      0: [3, 4, 5],
-      1: [1, 0, 2],
-    });
-
-    expect(graph.getIslandBridgeEndIODict()).toEqual({
-      0: {
-        source: [],
-        target: [3],
-      },
-      1: {
-        source: [1],
-        target: [],
-      },
-    });
-
-    expect(graph.getIslandInnerReachability()).toEqual({
-      0: {
-        3: [4, 5],
-        4: [5],
-        5: [],
-      },
-      1: {
-        0: [1, 2],
-        1: [],
-        2: [1],
-      },
-    });
-
-    expect(graph.getIslandIOReachability()).toEqual({
-      0: {
-        3: [],
-      },
-      1: {},
-    });
-
-    expect(JSON.stringify(graph.getIslandToBridgeEndList())).toBe(
-      JSON.stringify({
-        0: [3],
-        1: [1],
-      })
-    );
-
-    expect(JSON.stringify(graph.getBridgeEndToIsland())).toBe(
-      JSON.stringify({
-        3: 0,
-        1: 1,
-      })
-    );
-
-    expect(graph.getIslandFromBridgeEnd(3)).toBe(0);
-    expect(graph.getIslandFromBridgeEnd(1)).toBe(1);
-
-    expect(JSON.stringify(graph.getIslandsToFromBridgeEnd())).toBe(
-      JSON.stringify({
-        0: {
-          from: [1],
-          to: [],
-        },
-        1: {
-          from: [],
-          to: [3],
-        },
-      })
-    );
-
-    expect(JSON.stringify(graph.getIslandsAdjacencyList())).toBe(
-      JSON.stringify({
-        0: [],
-        1: [0],
-      })
-    );
-
-    expect(JSON.stringify(graph.getIslandsFromToIslands())).toBe(
-      JSON.stringify({
-        0: {
-          to: [],
-          from: [1],
-        },
-        1: {
-          to: [0],
-          from: [],
-        },
-      })
-    );
-
-    expect(
-      graph
-        .getIslandGraph()
-        .getAllEdges()
-        .map((edge) => edge.getKey())
-    ).toStrictEqual(["1_0"]);
-
     const islands_graphs = graph.getIslandsSubgraphs();
 
-    expect(islands_graphs[0].getAllVerticesKeys()).toEqual(["D", "E", "F"]);
+    trivia = [
+      [ 
+        graph.islands(), 
+        {
+          0: { bridge_ends: [3], inner_vertices: [4, 5] },
+          1: { bridge_ends: [1], inner_vertices: [0, 2] },
+        } 
+      ], 
+      [ 
+        graph.islandsHabitants(),
+        { 0: [3, 4, 5], 1: [1, 0, 2] } 
+      ],
+      [ 
+        graph.getIslandBridgeEndIODict(), 
+        {
+          0: { source: [], target: [3], },
+          1: { source: [1], target: [], },
+        } 
+      ],
+      [ 
+        graph.getIslandInnerReachability(), 
+        {
+          0: { 3: [4, 5], 4: [5], 5: [], },
+          1: { 0: [1, 2], 1: [], 2: [1], },
+        }
+      ],
+      [ 
+        graph.getIslandIOReachability(), 
+        { 0: { 3: [], }, 1: {}, }
+      ],
+      [
+        graph.getIslandToBridgeEndList(),
+        { 0: [3], 1: [1], }
+      ],
+      [
+        graph.getBridgeEndToIsland(),
+        { 3: 0, 1: 1 }
+      ],
+      [
+        graph.getIslandFromBridgeEnd(3), 
+        0
+      ],
+      [
+        graph.getIslandFromBridgeEnd(1),
+        1
+      ],
+      [
+        graph.getIslandsToFromBridgeEnd(),
+        { 
+          0: { from: [1], to: [] },
+          1: { from: [], to: [3] },
+        }
+      ],
+      [
+        graph.getIslandGraph().getAllEdges().map((edge) => edge.getKey()),
+        ["1_0"]
+      ],
+      [
+        graph.getIslandsAdjacencyList(),
+        { 0: [], 1: [0] }
+      ],
+      [
+        graph.getIslandsFromToIslands(), 
+        { 
+          0: { to: [], from: [1] },
+          1: { to: [0], from: [], },
+        }
+      ],
+      [
+        islands_graphs[0].getAllVerticesKeys(),
+        ["D", "E", "F"]
+      ],
+      [
+        islands_graphs[1].getAllVerticesKeys(),
+        ["A", "B", "C"]
+      ]
+    ]
 
-    expect(islands_graphs[1].getAllVerticesKeys()).toEqual(["A", "B", "C"]);
+    for(let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toStrictEqual(expected);
+    }
   });
 
   it("should return islands properties", () => {
@@ -1475,39 +1429,31 @@ describe("Graph", () => {
     // Add edges
     graph.addEdges([AB]);
 
-    expect(graph.getIslandInnerReachability()).toEqual({
-      0: {
-        1: [1],
-      },
-      1: {
-        0: [0],
-      },
-    });
+    result = graph.getIslandInnerReachability();
+    expected = { 0: { 1: [1] }, 1: { 0: [0], }, }
+
+    expect(result).toEqual(expected);
   });
 
   it("Cycles in a finite graph must be finite", () => {
     // A directed graph
-    const graph = new Graph(true);
-
-    // Vertices
-    const [A, B, C] = createVertices(["A", "B", "C"]);
+    graph = new Graph(true);
 
     // Edges
-    const [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
+    [AB, BC] = createEdges([ [A, B], [B, C], ]);
 
     // Add edges
     graph.addEdges([AB, BC]);
 
-    expect(graph.cyclicCircuits()).toEqual([]);
+    result = graph.cyclicCircuits();
+    expected = [];
+
+    expect(result).toEqual(expected);
   });
 
   it("should find edge by vertices in undirected graph", () => {
-    const graph = new Graph();
-
-    const AB = new GraphEdge(A, B, 10);
+    graph = new Graph();
+    AB = new GraphEdge(A, B, 10);
 
     graph.addEdge(AB);
 
@@ -1516,11 +1462,19 @@ describe("Graph", () => {
     const graphAC = graph.findEdge(A, C);
     const graphCA = graph.findEdge(C, A);
 
-    expect(graphAC).toBeUndefined();
-    expect(graphCA).toBeUndefined();
-    expect(graphAB).toEqual(AB);
-    expect(graphEdgeBA).toEqual(AB);
-    expect(graphAB.weight).toBe(10);
+    trivia = [
+      [graphAC],
+      [graphCA],
+      [graphAB, AB],
+      [graphEdgeBA, AB],
+      [graphAB.weight, 10]
+    ]
+
+    expect(trivia[0][0]).toBeUndefined();
+    expect(trivia[1][0]).toBeUndefined();
+    expect(trivia[2][0]).toEqual(trivia[2][1]);
+    expect(trivia[3][0]).toEqual(trivia[3][1]);
+    expect(trivia[4][0]).toBe(trivia[4][0]);
   });
 
   it("should find edge by vertices in directed graph", () => {
@@ -1789,10 +1743,7 @@ describe("Graph", () => {
   it("should prove if a graph is cyclic", () => {
     // A directed graph
     const graph_ = new Graph(true);
-
-    // Nodes
-    const [A, B, C, D, E, F] = createVertices(["A", "B", "C", "D", "E", "F"]);
-
+    
     // Vertices
     const [AB, BC, CD, CE, EB, CF, FB] = new createEdges([
       [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B],
@@ -1907,7 +1858,6 @@ describe("Graph", () => {
     const graph = new Graph(true);
 
     // Nodes
-    const [A, B, C] = createVertices(["A", "B", "C"]);
     const [AB] = createEdges([[A, B]]);
 
     // Add edges
@@ -1996,8 +1946,7 @@ describe("Graph", () => {
 
     // Nodes
     const node_labels = ["A", "B", "C", "D", "E", "F"];
-    const [A, B, C, D, E, F] = createVertices(node_labels);
-
+    
     // Vertices
     const edge_vertices = [
       [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B],
@@ -2156,9 +2105,6 @@ describe("Graph", () => {
   it("should return acyclic paths on non cyclic graph", () => {
     // A directed graph
     const graph_ = new Graph(true);
-
-    // Nodes
-    const [A, B, C, D, E, F] = createVertices(["A", "B", "C", "D", "E", "F"]);
 
     // Vertices
     const edge_vertices = [

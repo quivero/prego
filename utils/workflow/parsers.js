@@ -587,7 +587,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
   let is_undefined = false;
   if (start_index === undefined) {
-    console.Warning(
+    console.warn(
       `Warning: Claimed start vertex key ${start_key} is not available within nodes`
     );
     is_undefined = true;
