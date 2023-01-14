@@ -1330,6 +1330,7 @@ export default class Graph {
   getIslandsToFromBridgeEnd() {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
     const bridge_end_InOut = this.getBridgeEndIODict();
+    let bridges_iterfun;
 
     let from_to;
 
