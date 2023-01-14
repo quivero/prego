@@ -34,7 +34,8 @@ export default class DisjointSet {
    */
   find(itemValue) {
     const templateDisjointItem = new DisjointSetItem(
-      itemValue, this.keyCallback
+      itemValue,
+      this.keyCallback
     );
 
     // Try to find item itself;

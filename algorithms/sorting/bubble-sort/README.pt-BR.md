@@ -12,5 +12,5 @@ O bubble sort, ou ordenação por flutuação (literalmente "por bolha"), é um 
 
 ## References
 
-  - [Wikipedia](https://pt.wikipedia.org/wiki/Bubble_sort)
-  - [YouTube](https://www.youtube.com/watch?v=6Gv8vg0kcHc&index=27&t=0s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)
+- [Wikipedia](https://pt.wikipedia.org/wiki/Bubble_sort)
+- [YouTube](https://www.youtube.com/watch?v=6Gv8vg0kcHc&index=27&t=0s&list=PLLXdhg_r2hKA7DPDsunoDZ-Z769jWn4R8)

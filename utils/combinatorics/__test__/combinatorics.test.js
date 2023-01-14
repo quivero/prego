@@ -1,8 +1,5 @@
 import _ from "lodash";
-import {
-  partitions,
-  cardvecCombinations,
-} from "../partition.js";
+import { partitions, cardvecCombinations } from "../partition.js";
 
 describe("combinatorics", () => {
   it("should return number k-partition summand terms", () => {

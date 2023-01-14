@@ -2,9 +2,7 @@
   "name": "testUserTask",
   "description": "Start a flow, commit activity and verify timeout",
   "blueprint_spec": {
-    "requirements": [
-      "core"
-    ],
+    "requirements": ["core"],
     "prepare": [],
     "nodes": [
       {
@@ -62,10 +60,7 @@
           "activity_schema": {
             "type": "object",
             "properties": {},
-            "required": [
-              "qty",
-              "flavors"
-            ]
+            "required": ["qty", "flavors"]
           }
         }
       },

@@ -73,9 +73,9 @@ export default function dijkstra(graph, startVertex) {
   }
 
   const dijkstraInfo = {
-    "distances": distances,
-    "previousVertices": previousVertices,
-  }
+    distances: distances,
+    previousVertices: previousVertices,
+  };
 
   // Return the set of shortest distances to all vertices and the set of
   // shortest paths to all vertices in a graph.

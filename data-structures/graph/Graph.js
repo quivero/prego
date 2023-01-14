@@ -1211,7 +1211,8 @@ export default class Graph {
 
     const undirected_bridges = this.bridges(true);
     const bridge_ends = _.uniq(_.flatten(undirected_bridges));
-    const bridge_edges = graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
+    const bridge_edges =
+      graph_copy.findEdgesByVertexIndicesTuples(undirected_bridges);
 
     // Remove bridges to obtain strongly connected components
     graph_copy.deleteEdges(bridge_edges);
@@ -1307,15 +1308,17 @@ export default class Graph {
       }
 
       return result_;
-    }
+    };
 
     const island_fun = (result, island_id, habitant_groups) => {
       result[island_id] = objectReduce(
-        habitant_groups.bridge_ends, islands_io_fun, { source: [], target: [] }
+        habitant_groups.bridge_ends,
+        islands_io_fun,
+        { source: [], target: [] }
       );
 
       return result;
-    }
+    };
 
     return objectReduce(this.islands(), island_fun, {});
   }
@@ -1334,9 +1337,7 @@ export default class Graph {
       from_to = { from: [], to: [] };
 
       bridges_iterfun = (bridge_end) => {
-        from_to.to = _.uniq(
-          from_to.to.concat(bridge_end_InOut[bridge_end].to)
-        );
+        from_to.to = _.uniq(from_to.to.concat(bridge_end_InOut[bridge_end].to));
 
         from_to.from = _.uniq(
           from_to.from.concat(bridge_end_InOut[bridge_end].from)
@@ -1348,9 +1349,13 @@ export default class Graph {
       bridge_ends_.forEach(bridges_iterfun);
 
       return result;
-    }
+    };
 
-    return objectReduce(island_bridge_end_list, fromBridgeToIsland_reduce_fun, {});
+    return objectReduce(
+      island_bridge_end_list,
+      fromBridgeToIsland_reduce_fun,
+      {}
+    );
   }
 
   /**
@@ -1369,15 +1374,18 @@ export default class Graph {
         result[island_id] = reachables;
       } else {
         const intersec_fun = (result_, __, habitant) => {
-          result_[habitant] = _.intersection(reachability_list[habitant], habitants);
+          result_[habitant] = _.intersection(
+            reachability_list[habitant],
+            habitants
+          );
           return result_;
-        }
+        };
 
         result[island_id] = objectReduce(habitants, intersec_fun, {});
       }
 
       return result;
-    }
+    };
 
     return objectReduce(islands, innerReachibility_fun, {});
   }
@@ -1397,12 +1405,16 @@ export default class Graph {
         );
 
         return result_;
-      }
-      
-      result[island_id] = objectReduce(habitants.target, from_id_reachibility_fun, {});
+      };
+
+      result[island_id] = objectReduce(
+        habitants.target,
+        from_id_reachibility_fun,
+        {}
+      );
 
       return result;
-    }
+    };
 
     return objectReduce(this.getIslandBridgeEndIODict(), IO_fun, {});
   }
@@ -1424,8 +1436,10 @@ export default class Graph {
   getIslandsAdjacencyList() {
     const bridge_end_to_island = this.getBridgeEndToIsland();
 
-    bendToIsland_map_fun = (to_bridge_end) => bridge_end_to_island[to_bridge_end];
-    island_adj_fun = (island_id, from_to_dict) => from_to_dict.to.map(bendToIsland_map_fun)
+    bendToIsland_map_fun = (to_bridge_end) =>
+      bridge_end_to_island[to_bridge_end];
+    island_adj_fun = (island_id, from_to_dict) =>
+      from_to_dict.to.map(bendToIsland_map_fun);
 
     return objectMap(this.getIslandsToFromBridgeEnd(), island_adj_fun);
   }

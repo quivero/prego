@@ -1,9 +1,15 @@
 import _ from "lodash";
 import {
-  objectMap, objectReduce, objectFilter,
-  objectDifference, objectIntersection,
-  objectEqual, objectInit, objectFlatten,
-  objectHasKey, objectHasKeys,
+  objectMap,
+  objectReduce,
+  objectFilter,
+  objectDifference,
+  objectIntersection,
+  objectEqual,
+  objectInit,
+  objectFlatten,
+  objectHasKey,
+  objectHasKeys,
 } from "../objects.js";
 
 describe("objects", () => {
@@ -38,10 +44,10 @@ describe("objects", () => {
   it("should return boolean on keys existence", () => {
     const object = { a: 1, b: 2, c: 3 };
 
-    expect(objectHasKeys(object, ['a'])).toEqual(true);
-    expect(objectHasKeys(object, ['a', 'b'])).toEqual(true);
-    expect(objectHasKeys(object, ['d'])).toEqual(false);
-    expect(objectHasKeys(object, ['a', 'd'])).toEqual(false);
+    expect(objectHasKeys(object, ["a"])).toEqual(true);
+    expect(objectHasKeys(object, ["a", "b"])).toEqual(true);
+    expect(objectHasKeys(object, ["d"])).toEqual(false);
+    expect(objectHasKeys(object, ["a", "d"])).toEqual(false);
   });
 
   it("should return filtered object", () => {
@@ -54,14 +60,14 @@ describe("objects", () => {
           f: 5,
         },
       },
-    }
-    const output = objectFlatten(input)
+    };
+    const output = objectFlatten(input);
     const expected = {
       a: 1,
       "b.c": 3,
       "b.d.e": 4,
       "b.d.f": 5,
-    }
+    };
 
     expect(output).toEqual(expected);
   });

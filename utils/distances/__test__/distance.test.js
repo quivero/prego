@@ -15,13 +15,11 @@ let result;
 let expected;
 
 describe("distance", () => {
-  it.each(
-    [
-      [1, 2],
-      [2, Math.sqrt(2)],
-      [Infinity, 1],
-    ]
-  )("should return n norm of two tuple coordinates", (exponent, expected) => {
+  it.each([
+    [1, 2],
+    [2, Math.sqrt(2)],
+    [Infinity, 1],
+  ])("should return n norm of two tuple coordinates", (exponent, expected) => {
     const coord_1 = [1, 1];
     const coord_2 = [2, 2];
 
@@ -96,7 +94,7 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [Math.PI / 2, 0];
 
-    result = distance(coord_1, coord_2, "sphere", { radius: 1 })
+    result = distance(coord_1, coord_2, "sphere", { radius: 1 });
     expected = (2 * Math.PI) / 4;
 
     expect(result).toBeCloseTo(expected);
@@ -151,9 +149,13 @@ describe("distance", () => {
     const coord_1 = [1, 1];
     const coord_2 = [2, 2];
 
-    expect(distance(coord_1, coord_2, "n_norm", { exponent: 1 })).toBeCloseTo(2);
+    expect(distance(coord_1, coord_2, "n_norm", { exponent: 1 })).toBeCloseTo(
+      2
+    );
 
-    expect(distance(coord_1, coord_2, "n_norm", { exponent: 2 })).toBeCloseTo(Math.sqrt(2));
+    expect(distance(coord_1, coord_2, "n_norm", { exponent: 2 })).toBeCloseTo(
+      Math.sqrt(2)
+    );
   });
 
   it("should return 2-Euclidean distance for absent exponent on methodConfig input", () => {
@@ -162,31 +164,44 @@ describe("distance", () => {
 
     distance(coord_1, coord_2, "n_norm", {});
 
-    expect(distance(coord_1, coord_2, "n_norm", { })).toBeCloseTo(Math.sqrt(2));
+    expect(distance(coord_1, coord_2, "n_norm", {})).toBeCloseTo(Math.sqrt(2));
   });
 
   it("should return greatest absolute difference for infinity norm", () => {
     const coord_1 = [1, -1];
     const coord_2 = [2, 2];
 
-    expect(distance(coord_1, coord_2, "n_norm", { exponent: Infinity })).toBeCloseTo(3);
+    expect(
+      distance(coord_1, coord_2, "n_norm", { exponent: Infinity })
+    ).toBeCloseTo(3);
   });
 
-  it.each(
-    [
-      [1, [1, 1], [2, 2],            "n_norm", { exponent: 2 }        , Math.sqrt(2)      ],
-      [1, [1, -1], [2, 2],           "n_norm", { exponent: Infinity } , 3                 ],
-      [1, [0, 0],  [Math.PI / 2, 0], "sphere", { radius: 1 }          , (2 * Math.PI) / 4 ],
-      [2, [1, 1], [2, 2],            "n_norm", { exponent: 2 }        , Math.sqrt(2) / 2  ],
-      [2, [1, -1], [2, 2],           "n_norm", { exponent: Infinity } , 1.5               ],
-      [2, [0, 0],  [Math.PI / 2, 0], "sphere", { radius: 1 }          , (2 * Math.PI) / 8 ],
-    ]
-  )("should return time to travel from coord_1 to coord_2", (
-    average_speed, coordinate_1, coordinate_2, method, method_config, expected_value
-  ) => {
-    result = travelTime(average_speed, coordinate_1, coordinate_2, method, method_config);
+  it.each([
+    [1, [1, 1], [2, 2], "n_norm", { exponent: 2 }, Math.sqrt(2)],
+    [1, [1, -1], [2, 2], "n_norm", { exponent: Infinity }, 3],
+    [1, [0, 0], [Math.PI / 2, 0], "sphere", { radius: 1 }, (2 * Math.PI) / 4],
+    [2, [1, 1], [2, 2], "n_norm", { exponent: 2 }, Math.sqrt(2) / 2],
+    [2, [1, -1], [2, 2], "n_norm", { exponent: Infinity }, 1.5],
+    [2, [0, 0], [Math.PI / 2, 0], "sphere", { radius: 1 }, (2 * Math.PI) / 8],
+  ])(
+    "should return time to travel from coord_1 to coord_2",
+    (
+      average_speed,
+      coordinate_1,
+      coordinate_2,
+      method,
+      method_config,
+      expected_value
+    ) => {
+      result = travelTime(
+        average_speed,
+        coordinate_1,
+        coordinate_2,
+        method,
+        method_config
+      );
 
-    expect(result).toBeCloseTo(expected_value);
-  });
-
+      expect(result).toBeCloseTo(expected_value);
+    }
+  );
 });

@@ -3,7 +3,6 @@ import "lodash.multicombinations";
 
 import _ from "lodash";
 
-
 export const reduceDistance = (vertices, distance_fun) => {
   let total_distance = 0;
 

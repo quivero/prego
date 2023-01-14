@@ -513,7 +513,10 @@ export const startAndFinishNodes = (blueprint) => {
     }
   }
 
-  startAndFinishNodes = { start_nodes: [...startNodes], finish_nodes: [...finishNodes] }
+  startAndFinishNodes = {
+    start_nodes: [...startNodes],
+    finish_nodes: [...finishNodes],
+  };
 
   return startAndFinishNodes;
 };

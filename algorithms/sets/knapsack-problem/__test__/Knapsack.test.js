@@ -89,11 +89,11 @@ describe("Knapsack", () => {
 
   it("should solve unbound knapsack problem", () => {
     const possibleKnapsackItems = [
-      new KnapsackItem({ value: 84, weight: 7 }),   // v/w ratio is 12
-      new KnapsackItem({ value: 5, weight: 2 }),    // v/w ratio is 2.5
-      new KnapsackItem({ value: 12, weight: 3 }),   // v/w ratio is 4
-      new KnapsackItem({ value: 10, weight: 1 }),   // v/w ratio is 10
-      new KnapsackItem({ value: 20, weight: 2 }),   // v/w ratio is 10
+      new KnapsackItem({ value: 84, weight: 7 }), // v/w ratio is 12
+      new KnapsackItem({ value: 5, weight: 2 }), // v/w ratio is 2.5
+      new KnapsackItem({ value: 12, weight: 3 }), // v/w ratio is 4
+      new KnapsackItem({ value: 10, weight: 1 }), // v/w ratio is 10
+      new KnapsackItem({ value: 20, weight: 2 }), // v/w ratio is 10
     ];
 
     const maxKnapsackWeight = 15;
@@ -114,11 +114,11 @@ describe("Knapsack", () => {
 
   it("should solve unbound knapsack problem with items in stock", () => {
     const possibleKnapsackItems = [
-      new KnapsackItem({ value: 84, weight: 7, itemsInStock: 3 }),  // v/w ratio is 12
-      new KnapsackItem({ value: 5, weight: 2, itemsInStock: 2 }),   // v/w ratio is 2.5
-      new KnapsackItem({ value: 12, weight: 3, itemsInStock: 1 }),  // v/w ratio is 4
-      new KnapsackItem({ value: 10, weight: 1, itemsInStock: 6 }),  // v/w ratio is 10
-      new KnapsackItem({ value: 20, weight: 2, itemsInStock: 8 }),  // v/w ratio is 10
+      new KnapsackItem({ value: 84, weight: 7, itemsInStock: 3 }), // v/w ratio is 12
+      new KnapsackItem({ value: 5, weight: 2, itemsInStock: 2 }), // v/w ratio is 2.5
+      new KnapsackItem({ value: 12, weight: 3, itemsInStock: 1 }), // v/w ratio is 4
+      new KnapsackItem({ value: 10, weight: 1, itemsInStock: 6 }), // v/w ratio is 10
+      new KnapsackItem({ value: 20, weight: 2, itemsInStock: 8 }), // v/w ratio is 10
     ];
 
     const maxKnapsackWeight = 17;
@@ -137,11 +137,11 @@ describe("Knapsack", () => {
 
   it("should solve unbound knapsack problem with items in stock and max weight more than sum of all items", () => {
     const possibleKnapsackItems = [
-      new KnapsackItem({ value: 84, weight: 7, itemsInStock: 3 }),  // v/w ratio is 12
-      new KnapsackItem({ value: 5, weight: 2, itemsInStock: 2 }),   // v/w ratio is 2.5
-      new KnapsackItem({ value: 12, weight: 3, itemsInStock: 1 }),  // v/w ratio is 4
-      new KnapsackItem({ value: 10, weight: 1, itemsInStock: 6 }),  // v/w ratio is 10
-      new KnapsackItem({ value: 20, weight: 2, itemsInStock: 8 }),  // v/w ratio is 10
+      new KnapsackItem({ value: 84, weight: 7, itemsInStock: 3 }), // v/w ratio is 12
+      new KnapsackItem({ value: 5, weight: 2, itemsInStock: 2 }), // v/w ratio is 2.5
+      new KnapsackItem({ value: 12, weight: 3, itemsInStock: 1 }), // v/w ratio is 4
+      new KnapsackItem({ value: 10, weight: 1, itemsInStock: 6 }), // v/w ratio is 10
+      new KnapsackItem({ value: 20, weight: 2, itemsInStock: 8 }), // v/w ratio is 10
     ];
 
     const maxKnapsackWeight = 60;

@@ -29,7 +29,9 @@ export const objectMap = (object, mapFn) =>
     (result, key) => {
       result[key] = mapFn(key, object[key]);
       return result;
-    }, {});
+    },
+    {}
+  );
 
 /**
  * @abstract returns a reduced object
@@ -112,7 +114,11 @@ export const objectDifference = (l_object, r_object, equalFn) =>
  * @return {Object}
  */
 export const objectIntersection = (
-  l_object, r_object, equalFn, keyFn, valueFn
+  l_object,
+  r_object,
+  equalFn,
+  keyFn,
+  valueFn
 ) => {
   let intersec_fun, key;
 
@@ -124,14 +130,15 @@ export const objectIntersection = (
           key = keyFn(r_key, r_value, l_key, l_value);
           curr_intersec[key] = valueFn(r_key, r_value, l_key, l_value);
         }
-      }
+      };
 
       objectForEach(l_object, intersec_fun, {});
 
       return curr_intersec;
-    }, {}
+    },
+    {}
   );
-}
+};
 
 /**
  * @abstract returns true for two equal json objects
@@ -141,7 +148,8 @@ export const objectIntersection = (
  * @param {function} equalFn
  * @return {Object}
  */
-export const objectEqual = (l_object, r_object, equalFn) => equalFn(l_object, r_object);
+export const objectEqual = (l_object, r_object, equalFn) =>
+  equalFn(l_object, r_object);
 
 /**
  * @abstract Declare a flatten function that takes
@@ -184,7 +192,6 @@ export const objectFlatten = (obj) => {
  */
 export const objectHasKey = (object, key) => Object.keys(object).includes(key);
 
-
 /**
  * @abstract JSON object has $key string among keys
  *
@@ -195,6 +202,9 @@ export const objectHasKey = (object, key) => Object.keys(object).includes(key);
  */
 export const objectHasKeys = (object, keys) => {
   return _.reduce(
-    keys, (ObjecthasKeysSoFar, key) => ObjecthasKeysSoFar && objectHasKey(object, key), true
-  )
-}
+    keys,
+    (ObjecthasKeysSoFar, key) =>
+      ObjecthasKeysSoFar && objectHasKey(object, key),
+    true
+  );
+};
