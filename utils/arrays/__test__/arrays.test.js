@@ -129,13 +129,13 @@ describe("Array", () => {
   });
 
   it("should call throwError for invalid blob scenario ", () => {
-    const mSetsOfnTuples_gen = mSetsOfnTuples(
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      5,
-      3
-    );
+    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    const n = 5; 
+    const m = 3;
 
-    mSetsOfnTuples_gen.next();
+    const set_gen =  mSetsOfnTuples(arr, n, m);
+    
+    set_gen.next()
 
     expect(throwError).toHaveBeenCalled();
   });

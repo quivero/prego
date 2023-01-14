@@ -1,17 +1,18 @@
 import MeshVertex from "../MeshVertex.js";
+import { throwError } from "../../../utils/sys/sys.js";
 
 jest.mock("../../../utils/sys/sys.js");
 
+let result, expected;
+
 describe("MeshVertex", () => {
   it("should throw an error when trying to create MeshVertex", () => {
-    let vertex = null;
+    new MeshVertex();
 
-    function createEmptyGVertex() {
-      vertex = new MeshVertex();
-    }
-
-    expect(vertex).toBeNull();
-    expect(createEmptyGVertex).toThrow();
+    result = throwError;
+    expected = 1;
+    
+    expect(result).toHaveBeenCalledTimes(expected);
   });
 
   it("should create graph vertex", () => {

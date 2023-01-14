@@ -27,7 +27,8 @@
     "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
     "update": "bash ./utils/sscripts/update.sh",
     "start": "nodemon --trace-warnings --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
-    "test": "jest",
+    "test:clear_cache": "jest  --clearCache",
+    "test": "npm run test:clear_cache && jest",
     "test:watch": "jest --watchAll",
     "test:ci": "jest --collect-coverage --coverage --ci",
     "release": "np --any-branch",
@@ -91,11 +92,5 @@
   "engines": {
     "node": " >=16.0.0",
     "npm": ">=6.9.0"
-  },
-  "_moduleAliases": {
-    "@root": ".",
-    "@data-structures": "data-structures",
-    "@algorithms": "algorithms",
-    "@utils": "utils"
   }
 }

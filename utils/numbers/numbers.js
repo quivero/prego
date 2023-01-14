@@ -82,3 +82,16 @@ export const degreeToRadian = (degree_angle) => (Math.PI * degree_angle) / 180;
  * @return {NUmber}
  */
 export const hav = (theta) => Math.sin(theta / 2) ** 2;
+
+/**
+ * @abstract return 
+ *
+ * @param {Array} radian_angle
+ * @return {Array}
+ */
+export const geographicalToSpherical = (lat_degree, lng_degree) => {
+  const lng_rad = degreeToRadian(lng_degree);
+  const lat_rad = degreeToRadian(lat_degree);
+
+  return [ Math.PI/2 - lat_rad, lng_rad ]
+}

@@ -3,6 +3,10 @@ import GraphEdge from "../../../data-structures/graph/GraphEdge";
 import Graph from "../../../data-structures/graph/Graph";
 import prim from "../prim";
 
+import { throwError } from "../../../utils/sys/sys.js";
+
+jest.mock("../../../utils/sys/sys.js");
+
 describe("prim", () => {
   it("should fire an error for directed graph", () => {
     function applyPrimToDirectedGraph() {

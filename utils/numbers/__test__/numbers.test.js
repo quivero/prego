@@ -4,6 +4,7 @@ import {
   radianToDegree,
   degreeToRadian,
   hav,
+  geographicalToSpherical
 } from "../numbers.js";
 
 import { throwError } from "../../sys/sys.js";
@@ -43,6 +44,10 @@ describe("numbers", () => {
 
   it("should return converted degree to radian", () => {
     expect(degreeToRadian(180)).toBe(Math.PI);
+  });
+
+  it("should convert geographical to spherical coordinates", () => {
+    expect(geographicalToSpherical(0, 0)).toStrictEqual([ Math.PI/2, 0 ]);
   });
 
   it("should return haversine values", () => {
