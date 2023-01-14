@@ -1436,11 +1436,8 @@ export default class Graph {
    */
   getIslandsAdjacencyList() {
     const bridge_end_to_island = this.getBridgeEndToIsland();
-
-    bendToIsland_map_fun = (to_bridge_end) =>
-      bridge_end_to_island[to_bridge_end];
-    island_adj_fun = (island_id, from_to_dict) =>
-      from_to_dict.to.map(bendToIsland_map_fun);
+    const bendToIsland_map_fun = (to_bridge_end) => bridge_end_to_island[to_bridge_end];
+    const island_adj_fun = (island_id, from_to_dict) => from_to_dict.to.map(bendToIsland_map_fun);
 
     return objectMap(this.getIslandsToFromBridgeEnd(), island_adj_fun);
   }
