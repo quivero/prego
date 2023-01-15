@@ -11,7 +11,6 @@ export default function prim(graph) {
   // for undirected graphs.
   if (graph.isDirected) {
     throwError("Prim's algorithms works only for undirected graphs");
-    
   } else {
     // Init new graph that will contain minimum spanning tree of original graph.
     const minimumSpanningTree = new Graph();
