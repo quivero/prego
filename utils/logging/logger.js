@@ -1,7 +1,7 @@
 import * as winston from "winston";
 import logger from "morgan";
 
-const { createLogger, format, transports, config } = winston;
+const { createLogger, format, transports } = winston;
 
 const { label } = format;
 

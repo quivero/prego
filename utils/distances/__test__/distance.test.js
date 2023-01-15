@@ -11,7 +11,6 @@ import { throwError } from "../../sys/sys.js";
 
 jest.mock("../../sys/sys");
 
-let distance_value;
 let result;
 let expected;
 
