@@ -22,7 +22,10 @@
     "type": "git",
     "url": "git+https://github.com/quivero/prego.git"
   },
-  "keywords": [ "data-structures", "algorithms" ],
+  "keywords": [
+    "data-structures",
+    "algorithms"
+  ],
   "author": "brunolnetto",
   "license": "MIT",
   "bugs": {

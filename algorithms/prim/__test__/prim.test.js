@@ -11,7 +11,7 @@ describe("prim", () => {
       const graph = new Graph(true);
       prim(graph);
     }
-    
+
     expect(undirectedGraphThrowError).toThrow();
   });
 
@@ -38,16 +38,16 @@ describe("prim", () => {
     const graph = new Graph();
 
     graph.addEdges([
-      edgeAB, 
-      edgeAD, 
-      edgeAC, 
-      edgeBC, 
-      edgeBE, 
-      edgeDF, 
-      edgeEC, 
-      edgeEF, 
-      edgeFC, 
-      edgeFG, 
+      edgeAB,
+      edgeAD,
+      edgeAC,
+      edgeBC,
+      edgeBE,
+      edgeDF,
+      edgeEC,
+      edgeEF,
+      edgeFC,
+      edgeFG,
     ]);
 
     expect(graph.getWeight()).toEqual(46);
