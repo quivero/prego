@@ -39,7 +39,7 @@ describe("prim", () => {
       graph = new Graph(true);
       prim(graph);
     }
-    
+
     expect(undirectedGraphThrowError).toThrow();
   });
 
