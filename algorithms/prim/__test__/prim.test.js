@@ -1,14 +1,42 @@
-import GraphVertex from "../../../data-structures/graph/GraphVertex";
-import GraphEdge from "../../../data-structures/graph/GraphEdge";
 import Graph from "../../../data-structures/graph/Graph";
+import GraphEdge from "../../../data-structures/graph/GraphEdge";
+import GraphVertex from "../../../data-structures/graph/GraphVertex";
 import prim from "../prim";
 
 jest.mock("../../../utils/sys/sys");
 
+let A = new GraphVertex("A"); 
+let B = new GraphVertex("B"); 
+let C = new GraphVertex("C"); 
+let D = new GraphVertex("D"); 
+let E = new GraphVertex("E");
+let F = new GraphVertex("F"); 
+let G = new GraphVertex("G");
+
+let edgeAB, edgeAD, edgeAC, edgeBC, edgeBE, edgeBD,
+    edgeCD, edgeDF, edgeEC, edgeEF, edgeFG, edgeFC;
+
+let graph;
+let edges;
+let minimumSpanningTree;
+
+let trivia, result, expected;
+
+beforeEach(() => {
+  // restore the spy created with spyOn
+  A.deleteAllEdges();
+  B.deleteAllEdges();
+  C.deleteAllEdges();
+  D.deleteAllEdges();
+  E.deleteAllEdges();
+  F.deleteAllEdges();
+  G.deleteAllEdges();
+});
+
 describe("prim", () => {
   it("should fire an error for directed graph", () => {
     function undirectedGraphThrowError() {
-      const graph = new Graph(true);
+      graph = new Graph(true);
       prim(graph);
     }
     
@@ -16,81 +44,72 @@ describe("prim", () => {
   });
 
   it("should find minimum spanning tree", () => {
-    const vertexA = new GraphVertex("A");
-    const vertexB = new GraphVertex("B");
-    const vertexC = new GraphVertex("C");
-    const vertexD = new GraphVertex("D");
-    const vertexE = new GraphVertex("E");
-    const vertexF = new GraphVertex("F");
-    const vertexG = new GraphVertex("G");
+    edgeAB = new GraphEdge(A, B, 2);
+    edgeAD = new GraphEdge(A, D, 3);
+    edgeAC = new GraphEdge(A, C, 3);
+    edgeBC = new GraphEdge(B, C, 4);
+    edgeBE = new GraphEdge(B, E, 3);
+    edgeDF = new GraphEdge(D, F, 7);
+    edgeEC = new GraphEdge(E, C, 1);
+    edgeEF = new GraphEdge(E, F, 8);
+    edgeFG = new GraphEdge(F, G, 9);
+    edgeFC = new GraphEdge(F, C, 6);
 
-    const edgeAB = new GraphEdge(vertexA, vertexB, 2);
-    const edgeAD = new GraphEdge(vertexA, vertexD, 3);
-    const edgeAC = new GraphEdge(vertexA, vertexC, 3);
-    const edgeBC = new GraphEdge(vertexB, vertexC, 4);
-    const edgeBE = new GraphEdge(vertexB, vertexE, 3);
-    const edgeDF = new GraphEdge(vertexD, vertexF, 7);
-    const edgeEC = new GraphEdge(vertexE, vertexC, 1);
-    const edgeEF = new GraphEdge(vertexE, vertexF, 8);
-    const edgeFG = new GraphEdge(vertexF, vertexG, 9);
-    const edgeFC = new GraphEdge(vertexF, vertexC, 6);
+    graph = new Graph();
 
-    const graph = new Graph();
+    edges = [ 
+      edgeAB, edgeAD, edgeAC, edgeBC, edgeBE, 
+      edgeDF, edgeEC, edgeEF, edgeFC, edgeFG 
+    ];
 
-    graph.addEdges([
-      edgeAB, 
-      edgeAD, 
-      edgeAC, 
-      edgeBC, 
-      edgeBE, 
-      edgeDF, 
-      edgeEC, 
-      edgeEF, 
-      edgeFC, 
-      edgeFG, 
-    ]);
+    graph.addEdges(edges);
 
-    expect(graph.getWeight()).toEqual(46);
+    minimumSpanningTree = prim(graph);
 
-    const minimumSpanningTree = prim(graph);
+    trivia = [
+      [ graph.getWeight(), 46 ],
+      [ minimumSpanningTree.getWeight(), 24 ],
+      [ minimumSpanningTree.getAllVertices().length, graph.getAllVertices().length ],
+      [ minimumSpanningTree.getAllEdges().length, graph.getAllVertices().length - 1 ],
+      [ minimumSpanningTree.toString(), "A_B,A_C,E_C,A_D,F_C,F_G" ]
+    ]
 
-    expect(minimumSpanningTree.getWeight()).toBe(24);
-    expect(minimumSpanningTree.getAllVertices().length).toBe(
-      graph.getAllVertices().length
-    );
-    expect(minimumSpanningTree.getAllEdges().length).toBe(
-      graph.getAllVertices().length - 1
-    );
-    expect(minimumSpanningTree.toString()).toBe("A_B,A_C,E_C,A_D,F_C,F_G");
+    for (let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toBe(expected);
+    }
   });
 
   it("should find minimum spanning tree for simple graph", () => {
-    const vertexA = new GraphVertex("A");
-    const vertexB = new GraphVertex("B");
-    const vertexC = new GraphVertex("C");
-    const vertexD = new GraphVertex("D");
+    edgeAB = new GraphEdge(A, B, 1);
+    edgeAD = new GraphEdge(A, D, 3);
+    edgeBC = new GraphEdge(B, C, 1);
+    edgeBD = new GraphEdge(B, D, 3);
+    edgeCD = new GraphEdge(C, D, 1);
 
-    const edgeAB = new GraphEdge(vertexA, vertexB, 1);
-    const edgeAD = new GraphEdge(vertexA, vertexD, 3);
-    const edgeBC = new GraphEdge(vertexB, vertexC, 1);
-    const edgeBD = new GraphEdge(vertexB, vertexD, 3);
-    const edgeCD = new GraphEdge(vertexC, vertexD, 1);
+    graph = new Graph();
 
-    const graph = new Graph();
+    edges = [ edgeAB, edgeAD, edgeBC, edgeBD, edgeCD ]
 
-    graph.addEdges([edgeAB, edgeAD, edgeBC, edgeBD, edgeCD]);
+    graph.addEdges(edges);
 
-    expect(graph.getWeight()).toEqual(9);
+    minimumSpanningTree = prim(graph);
 
-    const minimumSpanningTree = prim(graph);
+    trivia = [
+      [ graph.getWeight(), 9 ],
+      [ minimumSpanningTree.getWeight(), 3 ],
+      [ minimumSpanningTree.getAllVertices().length, graph.getAllVertices().length ],
+      [ minimumSpanningTree.getAllEdges().length, graph.getAllVertices().length - 1 ],
+      [ minimumSpanningTree.toString(), "A_B,B_C,C_D" ]
+    ]
 
-    expect(minimumSpanningTree.getWeight()).toBe(3);
-    expect(minimumSpanningTree.getAllVertices().length).toBe(
-      graph.getAllVertices().length
-    );
-    expect(minimumSpanningTree.getAllEdges().length).toBe(
-      graph.getAllVertices().length - 1
-    );
-    expect(minimumSpanningTree.toString()).toBe("A_B,B_C,C_D");
+    for (let index in trivia) {
+      result = trivia[index][0];
+      expected = trivia[index][1];
+
+      expect(result).toBe(expected);
+    }
   });
 });
