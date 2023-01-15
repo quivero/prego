@@ -4,43 +4,37 @@ import {
   greatCircleDistance,
   nSphereDistance,
   distance,
+  travelTime,
 } from "../distance.js";
 
-import { isSpherical } from "../../math/math.js";
 import { throwError } from "../../sys/sys.js";
 
 jest.mock("../../sys/sys");
 
+let result;
+let expected;
+
 describe("distance", () => {
-  it("should return n norm of two tuple coordinates", () => {
+  it.each([
+    [1, 2],
+    [2, Math.sqrt(2)],
+    [Infinity, 1],
+  ])("should return n norm of two tuple coordinates", (exponent, expected) => {
     const coord_1 = [1, 1];
     const coord_2 = [2, 2];
 
-    expect(nNormDistance(coord_1, coord_2, 1)).toBe(2);
+    result = nNormDistance(coord_1, coord_2, exponent);
 
-    expect(nNormDistance(coord_1, coord_2, 2)).toBe(Math.sqrt(2));
-  });
-
-  it("should return greatest absolute difference for infinity norm", () => {
-    const coord_1 = [1, -1];
-    const coord_2 = [2, 2];
-
-    expect(nNormDistance(coord_1, coord_2, Infinity)).toBe(3);
+    expect(result).toBe(expected);
   });
 
   it("should return n-norm of a number array", () => {
     const coords = [1, 1, 1, 1, 1];
 
-    expect(nNorm(coords, 2)).toBeCloseTo(Math.sqrt(5));
-  });
+    result = nNorm(coords, 2);
+    expected = Math.sqrt(5);
 
-  it("should throw exception for negative n", () => {
-    const coord_1 = [1, -1];
-    const coord_2 = [2, 2];
-
-    return nNormDistance(coord_1, coord_2, -1);
-
-    expect(throwError).toHaveBeenCalled();
+    expect(result).toBeCloseTo(expected);
   });
 
   it("should throw exception for negative n", () => {
@@ -58,63 +52,52 @@ describe("distance", () => {
     const coord_3 = [Math.PI / 2, 0];
     const radius = 1;
 
-    expect(greatCircleDistance(coord_1, coord_2, radius)).toBeCloseTo(
-      Math.PI / 2
-    );
+    result = greatCircleDistance(coord_1, coord_2, radius);
+    expected = Math.PI / 2;
 
-    expect(greatCircleDistance(coord_1, coord_3, radius)).toBeCloseTo(
-      Math.PI / 2
-    );
+    expect(result).toBeCloseTo(expected);
 
-    expect(greatCircleDistance(coord_2, coord_3, radius)).toBeCloseTo(
-      Math.PI / 2
-    );
+    result = greatCircleDistance(coord_1, coord_3, radius);
+    expected = Math.PI / 2;
+
+    expect(result).toBeCloseTo(expected);
+
+    result = greatCircleDistance(coord_2, coord_3, radius);
+    expected = Math.PI / 2;
+
+    expect(result).toBeCloseTo(expected);
   });
 
-  it("should return distance on a ", () => {
+  it("should return distance on a sphere", () => {
     const coord_1 = [0, 0];
     const coord_2 = [Math.PI / 2, 0];
     const coord_3 = [Math.PI, 0];
     const radius = 1;
 
-    expect(nSphereDistance(coord_1, coord_2, radius)).toBeCloseTo(
-      (2 * Math.PI * radius) / 4
-    );
+    expected = (2 * Math.PI * radius) / 4;
+    result = nSphereDistance(coord_1, coord_2, radius);
 
-    expect(nSphereDistance(coord_1, coord_3, radius)).toBeCloseTo(
-      (2 * Math.PI * radius) / 2
-    );
+    expect(expected).toBeCloseTo(result);
 
-    expect(nSphereDistance(coord_2, coord_3, radius)).toBeCloseTo(
-      (2 * Math.PI * radius) / 4
-    );
+    result = nSphereDistance(coord_1, coord_3, radius);
+    expected = (2 * Math.PI * radius) / 2;
+
+    expect(result).toBeCloseTo(expected);
+
+    result = nSphereDistance(coord_2, coord_3, radius);
+    expected = (2 * Math.PI * radius) / 4;
+
+    expect(result).toBeCloseTo(expected);
   });
 
   it("should return distance between coordinates according to method sphere", () => {
     const coord_1 = [0, 0];
     const coord_2 = [Math.PI / 2, 0];
 
-    expect(distance(coord_1, coord_2, "sphere", { radius: 1 })).toBeCloseTo(
-      (2 * Math.PI) / 4
-    );
-  });
+    result = distance(coord_1, coord_2, "sphere", { radius: 1 });
+    expected = (2 * Math.PI) / 4;
 
-  it("should throw exception for missing radius", () => {
-    const coord_1 = [0, 0];
-    const coord_2 = [1, 1];
-
-    distance(coord_1, coord_2, "sphere", {});
-
-    expect(throwError).toHaveBeenCalled();
-  });
-
-  it("should throw exception for missing radius", () => {
-    const coord_1 = [0, 0];
-    const coord_2 = [1, 1];
-
-    distance(coord_1, coord_2, "sphere", {});
-
-    expect(throwError).toHaveBeenCalled();
+    expect(result).toBeCloseTo(expected);
   });
 
   it("should throw exception for 1-dimensional coordinates", () => {
@@ -122,6 +105,33 @@ describe("distance", () => {
     const coord_2 = [1];
 
     distance(coord_1, coord_2, "sphere", { radius: 1 });
+
+    expect(throwError).toHaveBeenCalled();
+  });
+
+  it("should throw exception for empty configuration dict", () => {
+    const coord_1 = [1, -1];
+    const coord_2 = [2, 2];
+
+    distance(coord_1, coord_2, "", {});
+
+    expect(throwError).toHaveBeenCalled();
+  });
+
+  it("should throw exception for missing exponent", () => {
+    const coord_1 = [0, 0];
+    const coord_2 = [1, 1];
+
+    distance(coord_1, coord_2, undefined, {});
+
+    expect(throwError).toHaveBeenCalled();
+  });
+
+  it("should throw exception for missing radius", () => {
+    const coord_1 = [0, 0];
+    const coord_2 = [1, 1];
+
+    distance(coord_1, coord_2, "sphere", {});
 
     expect(throwError).toHaveBeenCalled();
   });
@@ -152,13 +162,10 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, "n_norm", {});
+    result = distance(coord_1, coord_2, "n_norm", {});
+    expected = Math.sqrt(2);
 
-    expect(
-      distance(coord_1, coord_2, "n_norm", { })
-    ).toBeCloseTo(
-      Math.sqrt(2)
-    );
+    expect(result).toBeCloseTo(expected);
   });
 
   it("should return greatest absolute difference for infinity norm", () => {
@@ -170,22 +177,32 @@ describe("distance", () => {
     ).toBeCloseTo(3);
   });
 
-  it("should throw exception for empty configuration dict", () => {
-    const coord_1 = [1, -1];
-    const coord_2 = [2, 2];
+  it.each([
+    [1, [1, 1], [2, 2], "n_norm", { exponent: 2 }, Math.sqrt(2)],
+    [1, [1, -1], [2, 2], "n_norm", { exponent: Infinity }, 3],
+    [1, [0, 0], [Math.PI / 2, 0], "sphere", { radius: 1 }, (2 * Math.PI) / 4],
+    [2, [1, 1], [2, 2], "n_norm", { exponent: 2 }, Math.sqrt(2) / 2],
+    [2, [1, -1], [2, 2], "n_norm", { exponent: Infinity }, 1.5],
+    [2, [0, 0], [Math.PI / 2, 0], "sphere", { radius: 1 }, (2 * Math.PI) / 8],
+  ])(
+    "should return time to travel from coord_1 to coord_2",
+    (
+      average_speed,
+      coordinate_1,
+      coordinate_2,
+      method,
+      method_config,
+      expected_value
+    ) => {
+      result = travelTime(
+        average_speed,
+        coordinate_1,
+        coordinate_2,
+        method,
+        method_config
+      );
 
-    distance(coord_1, coord_2, "", {});
-
-    expect(throwError).toHaveBeenCalled();
-  });
-
-  it("should throw exception for missing exponent", () => {
-    const coord_1 = [0, 0];
-    const coord_2 = [1, 1];
-
-    distance(coord_1, coord_2, undefined, {});
-
-    expect(throwError).toHaveBeenCalled();
-  });
-
+      expect(result).toBeCloseTo(expected_value);
+    }
+  );
 });

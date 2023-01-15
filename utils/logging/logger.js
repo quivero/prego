@@ -1,10 +1,9 @@
 import * as winston from "winston";
-import * as sinon from "sinon";
 import logger from "morgan";
 
-const { createLogger, format, transports, config } = winston;
+const { createLogger, format, transports } = winston;
 
-const { combine, timestamp, label, printf } = format;
+const { label } = format;
 
 /*
   We may define our own logging level. The default are given below

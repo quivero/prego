@@ -16,7 +16,6 @@ import {
   filenameHasExtension,
   createDirectory,
   saveFilenameContentObject,
-  loadJSONfromFile,
 } from "../file/file.js";
 
 import {
@@ -51,12 +50,7 @@ export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
   const fname = `${bps_root_path}/${blueprint_name}`;
   const tokens = fname.split(".");
 
-  if (tokens[tokens.length - 1] === "json") {
-    const blueprint = require(fname);
-
-    return blueprint;
-  }
-  return {};
+  return tokens[tokens.length - 1] === "json" ? require(fname) : {};
 };
 
 /**
@@ -118,10 +112,8 @@ export const processBlueprints = (bps_root_path, blueprintFn) => {
  * @return next_ndoes
  */
 export const getBlueprintNextNodes = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
-
   return objectReduce(
-    nodes,
+    blueprint.blueprint_spec.nodes,
     (next_nodes, node_key, node_value) => {
       if (node_value.type.toLowerCase() === "flow") {
         next_nodes[node_value.id] = Object.values(node_value.next);
@@ -143,8 +135,6 @@ export const getBlueprintNextNodes = (blueprint) => {
  * @return edges
  */
 export const getBlueprintFromToEdgeTuples = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
-
   return objectReduce(
     getBlueprintNextNodes(blueprint),
     (edge_nodes, curr_node_key, curr_node_value) => {
@@ -195,8 +185,6 @@ export const reachableNodesFromStartNodes = (blueprint) => {
 export const reachableFinishNodesFromStartNodes = (blueprint) => {
   const start_finish_nodes = startAndFinishNodes(blueprint);
   const reachable_nodes = reachableNodesFromStartNodes(blueprint);
-
-  const bp_graph = parseBlueprintToGraph(blueprint);
 
   for (const start_node_key of start_finish_nodes.start_nodes) {
     reachable_nodes[start_node_key] = _.intersection(
@@ -337,7 +325,6 @@ export const getBlueprintAllNodesByType = (blueprint) => {
  */
 export const getBlueprintNodeToTypeMap = (blueprint) => {
   const node_type_map = {};
-  const nodes = [];
 
   for (const type of node_types) {
     getBlueprintNodesByType(blueprint, type).forEach((node_key) => {
@@ -355,8 +342,6 @@ export const getBlueprintNodeToTypeMap = (blueprint) => {
  * @param {Graph} graph
  */
 export const parseBlueprintToGraph = (blueprint) => {
-  const { nodes } = blueprint.blueprint_spec;
-
   const graph = new Graph(true);
 
   graph.addEdges(
@@ -516,6 +501,7 @@ export const startAndFinishNodes = (blueprint) => {
   const { nodes } = blueprint.blueprint_spec;
   const startNodes = [];
   const finishNodes = [];
+  let startAndFinishNodes;
 
   for (const node of nodes) {
     if (node.type.toLowerCase() === "start") {
@@ -527,7 +513,12 @@ export const startAndFinishNodes = (blueprint) => {
     }
   }
 
-  return { start_nodes: [...startNodes], finish_nodes: [...finishNodes] };
+  startAndFinishNodes = {
+    start_nodes: [...startNodes],
+    finish_nodes: [...finishNodes],
+  };
+
+  return startAndFinishNodes;
 };
 
 /**
@@ -599,7 +590,7 @@ export const fromStartToFinishAllPaths = (blueprint, start_key, finish_key) => {
 
   let is_undefined = false;
   if (start_index === undefined) {
-    console.Warning(
+    console.warn(
       `Warning: Claimed start vertex key ${start_key} is not available within nodes`
     );
     is_undefined = true;

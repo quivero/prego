@@ -1,5 +1,5 @@
 import { agentMorganReporter, log_message } from "../logging/logger.js";
-import { lowerCase } from "lodash";
+import _ from "lodash";
 
 /**
  * @abstract throw an error with prescribed unable task message
@@ -27,7 +27,7 @@ export const typeOf = (value) => {
     case "object":
       return value === null
         ? "null"
-        : lowerCase(
+        : _.lowerCase(
             Object.prototype.toString.call(value).match(/^\[object (.*)\]$/)[1]
           );
 

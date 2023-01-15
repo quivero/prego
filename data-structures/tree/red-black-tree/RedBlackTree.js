@@ -37,9 +37,7 @@ export default class RedBlackTree extends BinarySearchTree {
    * @return {boolean}
    */
   remove(value) {
-    throwError(
-      `Can't remove ${value}. Remove method is not implemented yet`
-    );
+    throwError(`Can't remove ${value}. Remove method is not implemented yet`);
   }
 
   /**

@@ -3,16 +3,20 @@ import { createVertices, createEdges } from "../utils/graph.js";
 import GraphVertex from "../GraphVertex";
 import GraphEdge from "../GraphEdge";
 
+import { throwError } from "../../../utils/sys/sys.js";
+
+jest.mock("../../../utils/sys/sys.js");
+
+let result, expected;
+
 describe("GraphVertex", () => {
   it("should throw an error when trying to create vertex without value", () => {
-    let vertex = null;
+    new GraphVertex();
 
-    function createEmptyVertex() {
-      vertex = new GraphVertex();
-    }
+    result = throwError;
+    expected = 1;
 
-    expect(vertex).toBeNull();
-    expect(createEmptyVertex).toThrow();
+    expect(result).toHaveBeenCalledTimes(expected);
   });
 
   it("should create graph vertex", () => {

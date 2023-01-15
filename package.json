@@ -1,13 +1,26 @@
 {
   "name": "prego",
-  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./data-structures/*.js": "./data-structures/*.js",
+    "./data-structures/*": "./data-structures/*.js",
+    "./algorithms/*.js": "./algorithms/*.js",
+    "./algorithms/*": "./algorithms/*.js",
+    "./utils/*.js": "./utils/*.js",
+    "./utils/*": "./utils/*.js"
+  },
+  "imports": {
+    "#data-structures/*.js": "./data-structures/*.js",
+    "#algorithms/*.js": "./algorithms/*.js",
+    "#utils/*.js": "./utils/*.js"
+  },
   "type": "module",
   "version": "6.1.0",
   "description": "Package to handle quiver-based structures",
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quivero/quivero-api.git"
+    "url": "git+https://github.com/quivero/prego.git"
   },
   "keywords": [
     "data-structures",
@@ -16,9 +29,9 @@
   "author": "brunolnetto",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/quivero/quivero-api/issues"
+    "url": "https://github.com/quivero/prego/issues"
   },
-  "homepage": "https://github.com/quivero/quivero-api#readme",
+  "homepage": "https://github.com/quivero/prego#readme",
   "scripts": {
     "build": "npm run node:build && npm run docker:build",
     "node:build": "./utils/sscripts/node-build.sh",
@@ -27,7 +40,8 @@
     "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
     "update": "bash ./utils/sscripts/update.sh",
     "start": "nodemon --trace-warnings --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
-    "test": "jest",
+    "test:clear_cache": "jest  --clearCache",
+    "test": "npm run test:clear_cache && jest",
     "test:watch": "jest --watchAll",
     "test:ci": "jest --collect-coverage --coverage --ci",
     "release": "np --any-branch",
@@ -48,6 +62,7 @@
     "fs": "^0.0.2",
     "husky": "^8.0.2",
     "jest-light-runner": "^0.4.1",
+    "link-module-alias": "^1.2.0",
     "lodash": "^4.17.21",
     "lodash.multicombinations": "^1.0.0",
     "lodash.multipermutations": "^1.0.0",
@@ -79,7 +94,6 @@
     "jest": "29.3.1",
     "jest-progress-bar-reporter": "^1.0.25",
     "jest-slow-test-reporter": "^1.0.0",
-    "jest-snapshot": "^29.3.1",
     "lodash.combinations": "18.11.1",
     "node-notifier": "^10.0.1",
     "nodemon": "^2.0.20",
@@ -92,11 +106,5 @@
   "engines": {
     "node": " >=16.0.0",
     "npm": ">=6.9.0"
-  },
-  "_moduleAliases": {
-    "@root": ".",
-    "@data-structures": "data-structures",
-    "@algorithms": "algorithms",
-    "@utils": "utils"
   }
 }

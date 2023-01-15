@@ -3,12 +3,7 @@ import {
   processBlueprint,
   processBlueprints,
   summarizeBlueprint,
-  castBlueprintPathsToDiagram,
-  generateValidBlueprintPathDiagrams,
-  fromStartToFinishCombsAllPaths,
 } from "../utils/workflow/parsers.js";
-
-import { loadJSONfromFile, createDirectory } from "../utils/file/file.js";
 
 import { statusImgPath } from "../utils/logging/status.js";
 
@@ -26,9 +21,6 @@ app.get("/", (req, res) => {
 
   const READ_ALL_BPS = true;
   let processed_blueprint = {};
-  const paths = {};
-  const paths_ = {};
-  const bp_graph = {};
 
   if (READ_ALL_BPS) {
     processed_blueprint = processBlueprints(bps_root, (blueprint) =>
@@ -51,5 +43,6 @@ app.get("/", (req, res) => {
     );
   }
 });
+
 
 // [END app]

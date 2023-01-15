@@ -5,7 +5,7 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN echo $PWD
+RUN echo "$PWD"
 
 RUN chown -R node:node /home/node/app
 

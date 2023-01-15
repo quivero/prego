@@ -24,10 +24,14 @@ export const objectInit = (keys, init_value) => {
  * @return {Object}
  */
 export const objectMap = (object, mapFn) =>
-  Object.keys(object).reduce((result, key) => {
-    result[key] = mapFn(key, object[key]);
-    return result;
-  }, {});
+  _.reduce(
+    Object.keys(object),
+    (result, key) => {
+      result[key] = mapFn(key, object[key]);
+      return result;
+    },
+    {}
+  );
 
 /**
  * @abstract returns a reduced object
@@ -37,7 +41,8 @@ export const objectMap = (object, mapFn) =>
  * @return {Object}
  */
 export const objectReduce = (object, reduceFn, init_val) =>
-  Object.entries(_.cloneDeep(object)).reduce(
+  _.reduce(
+    Object.entries(_.cloneDeep(object)),
     (result, [key, value]) => reduceFn(result, key, value),
     init_val
   );
@@ -114,29 +119,26 @@ export const objectIntersection = (
   equalFn,
   keyFn,
   valueFn
-) =>
-  objectReduce(
+) => {
+  let intersec_fun, key;
+
+  return objectReduce(
     r_object,
     (curr_intersec, r_key, r_value) => {
-      objectForEach(
-        l_object,
-        (l_key, l_value) => {
-          if (equalFn(r_key, r_value, l_key, l_value)) {
-            curr_intersec[keyFn(r_key, r_value, l_key, l_value)] = valueFn(
-              r_key,
-              r_value,
-              l_key,
-              l_value
-            );
-          }
-        },
-        {}
-      );
+      intersec_fun = (l_key, l_value) => {
+        if (equalFn(r_key, r_value, l_key, l_value)) {
+          key = keyFn(r_key, r_value, l_key, l_value);
+          curr_intersec[key] = valueFn(r_key, r_value, l_key, l_value);
+        }
+      };
+
+      objectForEach(l_object, intersec_fun, {});
 
       return curr_intersec;
     },
     {}
   );
+};
 
 /**
  * @abstract returns true for two equal json objects
@@ -189,3 +191,20 @@ export const objectFlatten = (obj) => {
  * @return {Object}
  */
 export const objectHasKey = (object, key) => Object.keys(object).includes(key);
+
+/**
+ * @abstract JSON object has $key string among keys
+ *
+ *
+ * @param {Object} object
+ * @param {String} key
+ * @return {Object}
+ */
+export const objectHasKeys = (object, keys) => {
+  return _.reduce(
+    keys,
+    (ObjecthasKeysSoFar, key) =>
+      ObjecthasKeysSoFar && objectHasKey(object, key),
+    true
+  );
+};

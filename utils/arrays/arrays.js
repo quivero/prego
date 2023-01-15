@@ -49,7 +49,6 @@ export const nRandMinMax = (n, min_val, max_val) => {
  */
 export const nRandMinsMaxs = (min_max_vec) => {
   let n_array = [];
-  let msg = "";
   let n = min_max_vec.length;
 
   for (let i = 0; i < n; i += 1) {
@@ -192,9 +191,9 @@ export const isCyclicEqual = (control_, treatment_) => {
 export const sort = (arr, sort_type = 0) => {
   arr.sort((a, b) => a - b);
 
-  if (sort_type == 0) {
+  if (sort_type === 0) {
     arr.reverse();
-  } else if (sort_type == 1) {
+  } else if (sort_type === 1) {
     // Do nothing
   } else {
     throwError("Sorting types are 0 and 1 for descending and ascending order.");
@@ -308,9 +307,8 @@ export const removeArrayDuplicates = (list) => {
 
 export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
-    throwError(
-      "Size of array must be greater or equal to the product of n by m"
-    );
+    const err_message  = "Size of array must be greater or equal to the product of n by m"
+    throwError(err_message);
   }
 
   let curr_comb = [];
@@ -432,7 +430,7 @@ export function* euler(sets) {
   let is_unique = true;
   for (let set_key in sets) {
     is_unique &=
-      sets[set_key].length == removeArrayDuplicates(sets[set_key]).length;
+      sets[set_key].length === removeArrayDuplicates(sets[set_key]).length;
   }
 
   if (!is_unique) {
