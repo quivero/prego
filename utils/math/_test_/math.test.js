@@ -16,7 +16,7 @@ import { throwError } from "../../sys/sys.js";
 
 jest.mock("../../sys/sys");
 
-describe("combinatorics", () => {
+describe("math", () => {
   it("should return number decimal part", () => {
     expect(decimalPart(4.2)).toBeCloseTo(0.2);
   });
@@ -43,11 +43,8 @@ describe("combinatorics", () => {
   });
 
   it("should throw error for xor with non 0/1 input", () => {
-    function non01XorInput() {
-      return xor(0, 2);
-    }
-
-    expect(non01XorInput).toThrow();
+    xor(0, 2);
+    expect(throwError).toHaveBeenCalled();
   });
 
   it("should return cartesian coordinates", () => {

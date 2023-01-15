@@ -3,19 +3,16 @@ import GraphEdge from "../../../data-structures/graph/GraphEdge";
 import Graph from "../../../data-structures/graph/Graph";
 import prim from "../prim";
 
-import { throwError } from "../../../utils/sys/sys.js";
-
-jest.mock("../../../utils/sys/sys.js");
+jest.mock("../../../utils/sys/sys");
 
 describe("prim", () => {
   it("should fire an error for directed graph", () => {
-    function applyPrimToDirectedGraph() {
+    function undirectedGraphThrowError() {
       const graph = new Graph(true);
-
       prim(graph);
     }
-
-    expect(applyPrimToDirectedGraph).toThrowError();
+    
+    expect(undirectedGraphThrowError).toThrow();
   });
 
   it("should find minimum spanning tree", () => {
@@ -41,16 +38,16 @@ describe("prim", () => {
     const graph = new Graph();
 
     graph.addEdges([
-      edgeAB,
-      edgeAD,
-      edgeAC,
-      edgeBC,
-      edgeBE,
-      edgeDF,
-      edgeEC,
-      edgeEF,
-      edgeFC,
-      edgeFG,
+      edgeAB, 
+      edgeAD, 
+      edgeAC, 
+      edgeBC, 
+      edgeBE, 
+      edgeDF, 
+      edgeEC, 
+      edgeEF, 
+      edgeFC, 
+      edgeFG, 
     ]);
 
     expect(graph.getWeight()).toEqual(46);

@@ -20,7 +20,7 @@ export const createVertices = (labels) => {
 
 export const createEdges = (vertices_tuples) => {
   const edges = [];
-  
+
   vertices_tuples.forEach((vertices_tuple) => {
     const edge = new GraphEdge(vertices_tuple[0], vertices_tuple[1]);
     edges.push(edge);

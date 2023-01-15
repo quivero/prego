@@ -11,6 +11,7 @@ import { throwError } from "../../sys/sys.js";
 
 jest.mock("../../sys/sys");
 
+let distance_value;
 let result;
 let expected;
 
@@ -162,9 +163,10 @@ describe("distance", () => {
     const coord_1 = [0, 0];
     const coord_2 = [1, 1];
 
-    distance(coord_1, coord_2, "n_norm", {});
+    result = distance(coord_1, coord_2, "n_norm", {});
+    expected = Math.sqrt(2);
 
-    expect(distance(coord_1, coord_2, "n_norm", {})).toBeCloseTo(Math.sqrt(2));
+    expect(result).toBeCloseTo(expected);
   });
 
   it("should return greatest absolute difference for infinity norm", () => {

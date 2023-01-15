@@ -11,7 +11,7 @@ describe("MeshVertex", () => {
 
     result = throwError;
     expected = 1;
-    
+
     expect(result).toHaveBeenCalledTimes(expected);
   });
 

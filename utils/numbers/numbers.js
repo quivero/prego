@@ -84,7 +84,7 @@ export const degreeToRadian = (degree_angle) => (Math.PI * degree_angle) / 180;
 export const hav = (theta) => Math.sin(theta / 2) ** 2;
 
 /**
- * @abstract return 
+ * @abstract return
  *
  * @param {Array} radian_angle
  * @return {Array}
