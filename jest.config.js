@@ -1,3 +1,4 @@
+// jest.config.js
 export default {
   // The bail config option can be used here to have Jest stop running tests after
   // the first failure.
@@ -42,6 +43,13 @@ export default {
       functions: 95,
       lines: 95,
     },
+  },
+
+  // Handle module aliases (this will be automatically configured for you soon)
+  moduleNameMapper: {
+    '^@utils/(.*)$': '<rootDir>/utils/$1',
+    '^@algorithms/(.*)$': '<rootDir>/algorithms/$1',
+    '^@data-structures/(.*)$': '<rootDir>/data-structures/$1',
   },
 
   notify: true,
