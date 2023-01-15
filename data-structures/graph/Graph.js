@@ -1,15 +1,15 @@
 import _ from "lodash";
 
-import Queue from "../queue/Queue.js";
-import stronglyConnectedComponents from "../../algorithms/strongly-connected-components/stronglyConnectedComponents.js";
+import Queue from "@data-structures/queue/Queue.js";
+import stronglyConnectedComponents from "@algorithms/strongly-connected-components/stronglyConnectedComponents.js";
 
-import eulerianPath from "../../algorithms/eulerian-path/eulerianPath.js";
-import hamiltonianCycle from "../../algorithms/hamiltonian-cycle/hamiltonianCycle.js";
+import eulerianPath from "@algorithms//eulerian-path/eulerianPath.js";
+import hamiltonianCycle from "@algorithms//hamiltonian-cycle/hamiltonianCycle.js";
 
-import depthFirstSearch from "../../algorithms/depth-first-search/depthFirstSearch.js";
+import depthFirstSearch from "@algorithms//depth-first-search/depthFirstSearch.js";
 import VisitMetadata from "./VisitMetadata.js";
 
-import graphBridges from "../../algorithms/bridges/graphBridges.js";
+import graphBridges from "@algorithms//bridges/graphBridges.js";
 
 import {
   cartesianProduct,

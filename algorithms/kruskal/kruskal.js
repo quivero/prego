@@ -1,7 +1,7 @@
-import Graph from "../../data-structures/graph/Graph";
-import QuickSort from "../sorting/quick-sort/QuickSort";
-import DisjointSet from "../../data-structures/disjoint-set/DisjointSet";
-import throwError from "../../utils/sys/sys";
+import Graph from "@data-structures/graph/Graph";
+import QuickSort from "@algorithms/sorting/quick-sort/QuickSort";
+import DisjointSet from "@data-structures/disjoint-set/DisjointSet";
+import throwError from "@utils/sys/sys";
 
 /**
  * @param {Graph} graph
