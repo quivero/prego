@@ -25,8 +25,8 @@ let F = new GraphVertex("F");
 let G = new GraphVertex("G");
 let H = new GraphVertex("H");
 
-let AB, AC, AD, AE, AF, BC, BD, BE, BF, CA, CB, 
-    CD, CE, CF, DA, DB, DC, DE, DF, EA, EB, EC, 
+let AB, AC, AD, AE, AF, BC, BD, BE, BF, CA, CB,
+    CD, CE, CF, DA, DB, DC, DE, DF, EA, EB, EC,
     EF, EG, FA, FB, FC, FD, FG, FH, GF, GH;
 
 let trivia;

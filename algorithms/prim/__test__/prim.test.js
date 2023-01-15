@@ -5,12 +5,12 @@ import prim from "../prim";
 
 jest.mock("../../../utils/sys/sys");
 
-let A = new GraphVertex("A"); 
-let B = new GraphVertex("B"); 
-let C = new GraphVertex("C"); 
-let D = new GraphVertex("D"); 
+let A = new GraphVertex("A");
+let B = new GraphVertex("B");
+let C = new GraphVertex("C");
+let D = new GraphVertex("D");
 let E = new GraphVertex("E");
-let F = new GraphVertex("F"); 
+let F = new GraphVertex("F");
 let G = new GraphVertex("G");
 
 let edgeAB, edgeAD, edgeAC, edgeBC, edgeBE, edgeBD,
@@ -57,9 +57,9 @@ describe("prim", () => {
 
     graph = new Graph();
 
-    edges = [ 
-      edgeAB, edgeAD, edgeAC, edgeBC, edgeBE, 
-      edgeDF, edgeEC, edgeEF, edgeFC, edgeFG 
+    edges = [
+      edgeAB, edgeAD, edgeAC, edgeBC, edgeBE,
+      edgeDF, edgeEC, edgeEF, edgeFC, edgeFG
     ];
 
     graph.addEdges(edges);
