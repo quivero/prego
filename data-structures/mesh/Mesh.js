@@ -18,7 +18,7 @@ export default class Mesh extends Graph {
 
   distance(vertex_1_key, vertex_2_key) {
     const coordinates_1 = this.vertices[vertex_1_key].coordinates;
-    const coordinates_2 = this.vertices[vertex_2_key].coordinates
+    const coordinates_2 = this.vertices[vertex_2_key].coordinates;
 
     return this.distance_function(coordinates_1, coordinates_2);
   }
@@ -30,7 +30,8 @@ export default class Mesh extends Graph {
     path.forEach((vertex_index, index) => {
       if (index !== 0) {
         path_length += this.distance(
-          indices_to_keys[path[index - 1]], indices_to_keys[vertex_index]
+          indices_to_keys[path[index - 1]],
+          indices_to_keys[vertex_index]
         );
       }
     });

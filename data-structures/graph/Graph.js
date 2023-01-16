@@ -1,15 +1,15 @@
 import _ from "lodash";
 
-import Queue from "../queue/Queue.js";
-import stronglyConnectedComponents from "../../algorithms/strongly-connected-components/stronglyConnectedComponents.js";
+import Queue from "@data-structures/queue/Queue.js";
+import stronglyConnectedComponents from "@algorithms/strongly-connected-components/stronglyConnectedComponents.js";
 
-import eulerianPath from "../../algorithms/eulerian-path/eulerianPath.js";
-import hamiltonianCycle from "../../algorithms/hamiltonian-cycle/hamiltonianCycle.js";
+import eulerianPath from "@algorithms//eulerian-path/eulerianPath.js";
+import hamiltonianCycle from "@algorithms//hamiltonian-cycle/hamiltonianCycle.js";
 
-import depthFirstSearch from "../../algorithms/depth-first-search/depthFirstSearch.js";
+import depthFirstSearch from "@algorithms//depth-first-search/depthFirstSearch.js";
 import VisitMetadata from "./VisitMetadata.js";
 
-import graphBridges from "../../algorithms/bridges/graphBridges.js";
+import graphBridges from "@algorithms//bridges/graphBridges.js";
 
 import {
   cartesianProduct,
@@ -18,9 +18,9 @@ import {
   getAllIndexes,
   hasElement,
   sort,
-} from "../../utils/arrays/arrays.js";
+} from "@utils/arrays/arrays.js";
 
-import { throwError, warn } from "../../utils/sys/sys.js";
+import { throwError, warn } from "@utils/sys/sys.js";
 
 import { createEdgesFromVerticesValues } from "./utils/graph.js";
 
@@ -30,7 +30,7 @@ import {
   objectFilter,
   objectKeyFind,
   objectReduce,
-} from "../../utils/objects/objects.js";
+} from "@utils/objects/objects.js";
 
 import GraphVertex from "./GraphVertex.js";
 import GraphEdge from "./GraphEdge.js";
@@ -1436,8 +1436,10 @@ export default class Graph {
    */
   getIslandsAdjacencyList() {
     const bridge_end_to_island = this.getBridgeEndToIsland();
-    const bendToIsland_map_fun = (to_bridge_end) => bridge_end_to_island[to_bridge_end];
-    const island_adj_fun = (island_id, from_to_dict) => from_to_dict.to.map(bendToIsland_map_fun);
+    const bendToIsland_map_fun = (to_bridge_end) =>
+      bridge_end_to_island[to_bridge_end];
+    const island_adj_fun = (island_id, from_to_dict) =>
+      from_to_dict.to.map(bendToIsland_map_fun);
 
     return objectMap(this.getIslandsToFromBridgeEnd(), island_adj_fun);
   }

@@ -1,5 +1,5 @@
-import Comparator from "../../utils/comparator/Comparator.js";
-import { throwError } from "../../utils/sys/sys.js";
+import Comparator from "@utils/comparator/Comparator.js";
+import { throwError } from "@utils/sys/sys.js";
 
 /**
  * Parent class for Min and Max Heaps.

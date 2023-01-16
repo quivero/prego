@@ -5,7 +5,7 @@ import GraphVertex from "../GraphVertex.js";
 import GraphEdge from "../GraphEdge.js";
 import Graph from "../Graph.js";
 
-import { objectInit, objectMap } from "../../../utils/objects/objects.js";
+import { objectInit, objectMap } from "@utils/objects/objects.js";
 
 export const createVertices = (labels) => {
   const vertices = [];
@@ -31,10 +31,8 @@ export const createEdges = (vertices_tuples) => {
 
 export const createEdgesFromVerticesValues = (vertices_values_tuples) => {
   const vertex_id_to_obj = objectMap(
-    objectInit(
-      _.uniq(_.flatten(vertices_values_tuples)), {}
-      ),
-      (vertex_key, obj) => new GraphVertex(vertex_key)
+    objectInit(_.uniq(_.flatten(vertices_values_tuples)), {}),
+    (vertex_key, obj) => new GraphVertex(vertex_key)
   );
 
   return createEdges(
