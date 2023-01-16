@@ -78,7 +78,7 @@ For diagrams rendering, you need to:
 
 ### As a solution
 
-There are similar libraries in different languages for the particular case of data-structure "graph" e.g. [networkx](https://networkx.org/documentation/stable/reference/classes/index.html): they provide multiple concepts for graph formalization and defition whose current author's knowledge lacks. Hence, it seems reasonable to offer similar features in these direction.
+There are similar libraries in different languages for the particular case of data-structure "graph" e.g. [networkx](https://networkx.org/documentation/stable/reference/classes/index.html): they provide multiple concepts for graph formalization and defition whose current author's knowledge lacks. Hence, it seems reasonable to offer similar features in these directions.
 
 ### As a package
 
