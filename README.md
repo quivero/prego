@@ -6,7 +6,7 @@
 [![Code coverage report](https://codecov.io/gh/quivero/prego/branch/main/graph/badge.svg?token=U6VOO56PDL)](https://app.codecov.io/gh/quivero/prego)
 [![downloads](https://img.shields.io/npm/dm/quivero-api)](https://www.npmjs.com/package/quivero-api)
 
-This is a npm data-structure package and application service: The former is work in progress; the latter exhibits a more mature form. It is a bootstrap from this project: https://github.com/trekhleb/javascript-algorithms.
+This is a npm data-structure application service and package: The former is work in progress; the latter exhibits a more mature form. It is a bootstrap from this project: https://github.com/trekhleb/javascript-algorithms.
 
 ## Table of contents
 
