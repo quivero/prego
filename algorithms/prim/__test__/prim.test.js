@@ -13,8 +13,18 @@ let E = new GraphVertex("E");
 let F = new GraphVertex("F");
 let G = new GraphVertex("G");
 
-let edgeAB, edgeAD, edgeAC, edgeBC, edgeBE, edgeBD,
-    edgeCD, edgeDF, edgeEC, edgeEF, edgeFG, edgeFC;
+let edgeAB,
+  edgeAD,
+  edgeAC,
+  edgeBC,
+  edgeBE,
+  edgeBD,
+  edgeCD,
+  edgeDF,
+  edgeEC,
+  edgeEF,
+  edgeFG,
+  edgeFC;
 
 let graph;
 let edges;
@@ -58,8 +68,16 @@ describe("prim", () => {
     graph = new Graph();
 
     edges = [
-      edgeAB, edgeAD, edgeAC, edgeBC, edgeBE,
-      edgeDF, edgeEC, edgeEF, edgeFC, edgeFG
+      edgeAB,
+      edgeAD,
+      edgeAC,
+      edgeBC,
+      edgeBE,
+      edgeDF,
+      edgeEC,
+      edgeEF,
+      edgeFC,
+      edgeFG,
     ];
 
     graph.addEdges(edges);
@@ -67,12 +85,18 @@ describe("prim", () => {
     minimumSpanningTree = prim(graph);
 
     trivia = [
-      [ graph.getWeight(), 46 ],
-      [ minimumSpanningTree.getWeight(), 24 ],
-      [ minimumSpanningTree.getAllVertices().length, graph.getAllVertices().length ],
-      [ minimumSpanningTree.getAllEdges().length, graph.getAllVertices().length - 1 ],
-      [ minimumSpanningTree.toString(), "A_B,A_C,E_C,A_D,F_C,F_G" ]
-    ]
+      [graph.getWeight(), 46],
+      [minimumSpanningTree.getWeight(), 24],
+      [
+        minimumSpanningTree.getAllVertices().length,
+        graph.getAllVertices().length,
+      ],
+      [
+        minimumSpanningTree.getAllEdges().length,
+        graph.getAllVertices().length - 1,
+      ],
+      [minimumSpanningTree.toString(), "A_B,A_C,E_C,A_D,F_C,F_G"],
+    ];
 
     for (let index in trivia) {
       result = trivia[index][0];
@@ -91,19 +115,25 @@ describe("prim", () => {
 
     graph = new Graph();
 
-    edges = [ edgeAB, edgeAD, edgeBC, edgeBD, edgeCD ]
+    edges = [edgeAB, edgeAD, edgeBC, edgeBD, edgeCD];
 
     graph.addEdges(edges);
 
     minimumSpanningTree = prim(graph);
 
     trivia = [
-      [ graph.getWeight(), 9 ],
-      [ minimumSpanningTree.getWeight(), 3 ],
-      [ minimumSpanningTree.getAllVertices().length, graph.getAllVertices().length ],
-      [ minimumSpanningTree.getAllEdges().length, graph.getAllVertices().length - 1 ],
-      [ minimumSpanningTree.toString(), "A_B,B_C,C_D" ]
-    ]
+      [graph.getWeight(), 9],
+      [minimumSpanningTree.getWeight(), 3],
+      [
+        minimumSpanningTree.getAllVertices().length,
+        graph.getAllVertices().length,
+      ],
+      [
+        minimumSpanningTree.getAllEdges().length,
+        graph.getAllVertices().length - 1,
+      ],
+      [minimumSpanningTree.toString(), "A_B,B_C,C_D"],
+    ];
 
     for (let index in trivia) {
       result = trivia[index][0];

@@ -93,5 +93,5 @@ export const geographicalToSpherical = (lat_degree, lng_degree) => {
   const lng_rad = degreeToRadian(lng_degree);
   const lat_rad = degreeToRadian(lat_degree);
 
-  return [ Math.PI/2 - lat_rad, lng_rad ]
-}
+  return [Math.PI / 2 - lat_rad, lng_rad];
+};

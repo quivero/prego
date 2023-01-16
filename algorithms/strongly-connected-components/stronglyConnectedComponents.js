@@ -1,5 +1,5 @@
-import Stack from "../../data-structures/stack/Stack.js";
-import depthFirstSearch from "../depth-first-search/depthFirstSearch.js";
+import Stack from "@data-structures/stack/Stack.js";
+import depthFirstSearch from "@algorithms/depth-first-search/depthFirstSearch.js";
 
 /**
  * @param {Graph} graph

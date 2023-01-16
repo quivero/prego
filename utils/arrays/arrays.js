@@ -307,7 +307,8 @@ export const removeArrayDuplicates = (list) => {
 
 export function* mSetsOfnTuples(array, n, m) {
   if (m > Math.floor(array.length / n)) {
-    const err_message  = "Size of array must be greater or equal to the product of n by m"
+    const err_message =
+      "Size of array must be greater or equal to the product of n by m";
     throwError(err_message);
   }
 

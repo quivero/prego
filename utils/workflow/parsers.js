@@ -2,9 +2,9 @@ import _ from "lodash";
 import fs from "fs";
 
 import { createRequire } from "module";
-import Graph from "../../data-structures/graph/Graph.js";
+import Graph from "@data-structures/graph/Graph.js";
 
-import { createEdgesFromVerticesValues } from "../../data-structures/graph/utils/graph.js";
+import { createEdgesFromVerticesValues } from "@data-structures/graph/utils/graph.js";
 
 import {
   getAllIndexes,

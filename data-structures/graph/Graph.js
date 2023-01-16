@@ -18,9 +18,9 @@ import {
   getAllIndexes,
   hasElement,
   sort,
-} from "../../utils/arrays/arrays.js";
+} from "@utils/arrays/arrays.js";
 
-import { throwError, warn } from "../../utils/sys/sys.js";
+import { throwError, warn } from "@utils/sys/sys.js";
 
 import { createEdgesFromVerticesValues } from "./utils/graph.js";
 
@@ -30,7 +30,7 @@ import {
   objectFilter,
   objectKeyFind,
   objectReduce,
-} from "../../utils/objects/objects.js";
+} from "@utils/objects/objects.js";
 
 import GraphVertex from "./GraphVertex.js";
 import GraphEdge from "./GraphEdge.js";
@@ -1436,8 +1436,10 @@ export default class Graph {
    */
   getIslandsAdjacencyList() {
     const bridge_end_to_island = this.getBridgeEndToIsland();
-    const bendToIsland_map_fun = (to_bridge_end) => bridge_end_to_island[to_bridge_end];
-    const island_adj_fun = (island_id, from_to_dict) => from_to_dict.to.map(bendToIsland_map_fun);
+    const bendToIsland_map_fun = (to_bridge_end) =>
+      bridge_end_to_island[to_bridge_end];
+    const island_adj_fun = (island_id, from_to_dict) =>
+      from_to_dict.to.map(bendToIsland_map_fun);
 
     return objectMap(this.getIslandsToFromBridgeEnd(), island_adj_fun);
   }
