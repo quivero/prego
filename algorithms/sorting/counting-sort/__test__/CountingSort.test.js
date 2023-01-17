@@ -1,11 +1,16 @@
 import CountingSort from "../CountingSort";
+
 import {
-  equalArr,
-  notSortedArr,
-  reverseArr,
-  sortedArr,
   SortTester,
 } from "@algorithms/sorting/SortTester.js";
+
+import {
+  arr,
+  sorted_arr,
+  reverse_arr,
+  ones_arr
+} from '../../fixtures'
+
 
 // Complexity constants.
 const SORTED_ARRAY_VISITING_COUNT = 60;
@@ -27,18 +32,18 @@ describe("CountingSort", () => {
     const sorter = new CountingSort({ visitingCallback });
 
     // Detect biggest number in array in prior.
-    const biggestElement = Math.max(...notSortedArr);
+    const biggestElement = Math.max(...arr);
 
     // Detect smallest number in array in prior.
-    const smallestElement = Math.min(...notSortedArr);
+    const smallestElement = Math.min(...arr);
 
-    const sortedArray = sorter.sort(
-      notSortedArr,
+    const sorted_array = sorter.sort(
+      arr,
       smallestElement,
       biggestElement
     );
 
-    expect(sortedArray).toEqual(sortedArr);
+    expect(sorted_array).toEqual(sorted_arr);
     // Normally visitingCallback is being called 60 times but in this case
     // it should be called only 40 times.
     expect(visitingCallback).toHaveBeenCalledTimes(40);
@@ -47,7 +52,7 @@ describe("CountingSort", () => {
   it("should visit EQUAL array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
-      equalArr,
+      ones_arr,
       EQUAL_ARRAY_VISITING_COUNT
     );
   });
@@ -55,7 +60,7 @@ describe("CountingSort", () => {
   it("should visit SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
-      sortedArr,
+      sorted_arr,
       SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -63,7 +68,7 @@ describe("CountingSort", () => {
   it("should visit NOT SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
-      notSortedArr,
+      arr,
       NOT_SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -71,7 +76,7 @@ describe("CountingSort", () => {
   it("should visit REVERSE SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
-      reverseArr,
+      reverse_arr,
       REVERSE_SORTED_ARRAY_VISITING_COUNT
     );
   });

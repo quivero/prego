@@ -1,11 +1,15 @@
 import InsertionSort from "../InsertionSort";
+
 import {
-  equalArr,
-  notSortedArr,
-  reverseArr,
-  sortedArr,
   SortTester,
 } from "@algorithms/sorting/SortTester.js";
+
+import {
+  arr,
+  sorted_arr,
+  reverse_arr,
+  ones_arr
+} from '../../fixtures'
 
 // Complexity constants.
 const SORTED_ARRAY_VISITING_COUNT = 19;
@@ -33,7 +37,7 @@ describe("InsertionSort", () => {
   it("should visit EQUAL array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       InsertionSort,
-      equalArr,
+      ones_arr,
       EQUAL_ARRAY_VISITING_COUNT
     );
   });
@@ -41,7 +45,7 @@ describe("InsertionSort", () => {
   it("should visit SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       InsertionSort,
-      sortedArr,
+      sorted_arr,
       SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -49,7 +53,7 @@ describe("InsertionSort", () => {
   it("should visit NOT SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       InsertionSort,
-      notSortedArr,
+      arr,
       NOT_SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -57,7 +61,7 @@ describe("InsertionSort", () => {
   it("should visit REVERSE SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       InsertionSort,
-      reverseArr,
+      reverse_arr,
       REVERSE_SORTED_ARRAY_VISITING_COUNT
     );
   });
