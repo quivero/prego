@@ -22,10 +22,10 @@ describe("sys", () => {
 
   it("should return data types", () => {
     trivia = [
-      [ typeOf("string"), "string" ],   
-      [ typeOf(42)      , "number" ],         
-      [ typeOf({})      , "object" ],         
-      [ typeOf(() => {}), "function" ],   
+      [ typeOf("string"), "string" ],
+      [ typeOf(42)      , "number" ],
+      [ typeOf({})      , "object" ],
+      [ typeOf(() => {}), "function" ],
       [ typeOf(null)    , "null" ]
     ]
 
