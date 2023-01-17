@@ -1,6 +1,16 @@
 {
   "name": "prego",
   "type": "module",
+  "imports": {
+    "@utils/*": "./utils/*.js",
+    "@utils/*.js": "./utils/*.js",
+    "@algorithms/*": "./algorithms/*.js",
+    "@algorithms/*.js": "./algorithms/*.js",
+    "@dstructures/*": "./data-structures/*.js",
+    "@dstructures/*.js": "./data-structures/*.js",
+    "@galgorithms/*": "./data-structures/graph/algorithms/*.js",
+    "@galgorithms/*.js": "./data-structures/graph/algorithms/*.js"
+  },
   "version": "6.1.0",
   "description": "Package to handle quiver-based structures",
   "repository": {
@@ -24,7 +34,7 @@
     "docker:deploy": "./utils/sscripts/docker-deploy.sh $npm_config_tag $npm_config_from $npm_config_to",
     "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
     "update": "bash ./utils/sscripts/update.sh",
-    "start": "nodemon --trace-warnings --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
+    "start": "nodemon --trace-warnings --experimental-modules ./src/index.js",
     "test:clear_cache": "jest  --clearCache",
     "test": "npm run test:clear_cache && jest",
     "test:watch": "jest --watchAll",
@@ -58,6 +68,7 @@
     "@matteoh2o1999/github-actions-jest-reporter": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "5.48.1",
     "@typescript-eslint/parser": "5.48.1",
+    "dotenv": "^16.0.3",
     "eslint-nibble": "8.1.0",
     "eslint-plugin-jest": "^27.1.7",
     "eslint-plugin-jest-extended": "^2.0.0",
