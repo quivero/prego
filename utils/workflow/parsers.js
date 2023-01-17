@@ -2,9 +2,9 @@ import _ from "lodash";
 import fs from "fs";
 
 import { createRequire } from "module";
-import Graph from "@data-structures/graph/Graph.js";
+import Graph from "../../data-structures/graph/Graph.js";
 
-import { createEdgesFromVerticesValues } from "@data-structures/graph/utils/graph.js";
+import { createEdgesFromVerticesValues } from "../../data-structures/graph/utils/graph.js";
 
 import {
   getAllIndexes,
@@ -19,7 +19,7 @@ import {
 } from "../file/file.js";
 
 import {
-  objectReduce,
+  objectReduce, 
   objectFilter,
   objectFlatten,
   objectKeyFind,
@@ -698,21 +698,23 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
  * @param {Object} blueprint
  * @return {object} all_paths
  */
-export const generateValidBlueprintPathDiagrams = (
-  blueprint,
-  bps_root,
-  diagrams_destination_folder
+export const generateBlueprintDiagrams = (
+  blueprint, bps_root, relative_destination_folder
 ) => {
   const blueprint_validity = blueprintValidity(blueprint);
+  let route_key;
+  let relative_path_folder;
+  let processed_blueprint;
+  let abs_path_folder;
 
   if (blueprint_validity.is_valid) {
-    let path_folder = "";
-    const processed_blueprint = castBlueprintPathsToDiagram(blueprint);
+    relative_path_folder = "";
+    processed_blueprint = castBlueprintPathsToDiagram(blueprint);
 
-    createDirectory(bps_root, diagrams_destination_folder);
+    createDirectory(bps_root, relative_destination_folder);
 
     for (const start_finish in processed_blueprint.from_to) {
-      path_folder = `${diagrams_destination_folder}/${blueprint.name}`;
+      path_folder = `${relative_destination_folder}/${blueprint.name}`;
       createDirectory(bps_root, path_folder);
 
       path_folder = `${path_folder}/${start_finish}`;
@@ -721,16 +723,18 @@ export const generateValidBlueprintPathDiagrams = (
       processed_blueprint.from_to[start_finish] = objectReduce(
         processed_blueprint.from_to[start_finish],
         (result, path_index, route) => {
-          result[`path_${start_finish}_index_${path_index}`] = route;
+          route_key = `path_${start_finish}_index_${path_index}`
+          result[route_key] = route;
 
           return result;
         },
         {}
       );
 
+      abs_path_folder = `${bps_root}/${path_folder}`
+
       saveFilenameContentObject(
-        processed_blueprint.from_to[start_finish],
-        `${bps_root}/${path_folder}`
+        processed_blueprint.from_to[start_finish], abs_path_folder
       );
     }
   }
@@ -849,11 +853,11 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
     from_node_text += ": " + nodes[from_node_key].name;
 
     /*
-// Add descriptive object (bag content, for example) to node
-    from_node_text += "<br> { ";
-    from_node_text += "<br> key: value";
-    from_node_text += " <br> }";
-*/
+    // Add descriptive object (bag content, for example) to node
+        from_node_text += "<br> { ";
+        from_node_text += "<br> key: value";
+        from_node_text += " <br> }";
+    */
 
     from_node_text += '"';
 
@@ -869,11 +873,11 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
     to_node_text += ": " + nodes[to_node_key].name;
 
     /*
-// Add descriptive object (bag content, for example) to node
-    to_node_text += "<br> { ";
-    to_node_text += "<br> key: value";
-    to_node_text += " <br> }";
-*/
+    // Add descriptive object (bag content, for example) to node
+        to_node_text += "<br> { ";
+        to_node_text += "<br> key: value";
+        to_node_text += " <br> }";
+    */
 
     to_node_text += '"';
 

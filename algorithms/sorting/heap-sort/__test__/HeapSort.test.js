@@ -5,7 +5,7 @@ import {
   reverseArr,
   sortedArr,
   SortTester,
-} from "../../SortTester";
+} from "@algorithms/sorting/SortTester.js";
 
 // Complexity constants.
 // These numbers don't take into account up/dow heapifying of the heap.

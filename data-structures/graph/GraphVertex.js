@@ -1,4 +1,4 @@
-import LinkedList from "@data-structures/linked-list/LinkedList.js";
+import LinkedList from "../linked-list/LinkedList.js";
 import { throwError } from "@utils/sys/sys.js";
 
 export default class GraphVertex {

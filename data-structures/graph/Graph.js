@@ -1,15 +1,14 @@
 import _ from "lodash";
 
-import Queue from "@data-structures/queue/Queue.js";
-import stronglyConnectedComponents from "@algorithms/strongly-connected-components/stronglyConnectedComponents.js";
+import Queue from "@dstructures/queue/Queue";
 
-import eulerianPath from "@algorithms//eulerian-path/eulerianPath.js";
-import hamiltonianCycle from "@algorithms//hamiltonian-cycle/hamiltonianCycle.js";
+import stronglyConnectedComponents from "@galgorithms/strongly-connected-components/stronglyConnectedComponents";
+import eulerianPath from "@galgorithms/eulerian-path/eulerianPath";
+import hamiltonianCycle from "@galgorithms/hamiltonian-cycle/hamiltonianCycle";
+import depthFirstSearch from "@galgorithms/depth-first-search/depthFirstSearch";
+import graphBridges from "@galgorithms/bridges/graphBridges";
 
-import depthFirstSearch from "@algorithms//depth-first-search/depthFirstSearch.js";
 import VisitMetadata from "./VisitMetadata.js";
-
-import graphBridges from "@algorithms//bridges/graphBridges.js";
 
 import {
   cartesianProduct,
@@ -19,11 +18,8 @@ import {
   hasElement,
   sort,
 } from "@utils/arrays/arrays.js";
-
 import { throwError, warn } from "@utils/sys/sys.js";
-
-import { createEdgesFromVerticesValues } from "./utils/graph.js";
-
+import { createEdgesFromVerticesValues } from "@gutils/graph.js";
 import {
   objectInit,
   objectMap,
@@ -37,7 +33,6 @@ import GraphEdge from "./GraphEdge.js";
 
 export default class Graph {
   #cycles;
-
   #density;
 
   /**

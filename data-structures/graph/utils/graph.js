@@ -5,15 +5,17 @@ import GraphVertex from "../GraphVertex.js";
 import GraphEdge from "../GraphEdge.js";
 import Graph from "../Graph.js";
 
-import { objectInit, objectMap } from "@utils/objects/objects.js";
+import { objectInit, objectMap } from "@utils/objects/objects";
 
 export const createVertices = (labels) => {
   const vertices = [];
 
-  labels.forEach((label) => {
+  const vertex_gen = (label) => {
     const vertex = new GraphVertex(label);
     vertices.push(vertex);
-  });
+  }
+
+  labels.forEach(vertex_gen);
 
   return vertices;
 };
@@ -21,10 +23,12 @@ export const createVertices = (labels) => {
 export const createEdges = (vertices_tuples) => {
   const edges = [];
 
-  vertices_tuples.forEach((vertices_tuple) => {
+  const edge_gen = (vertices_tuple) => {
     const edge = new GraphEdge(vertices_tuple[0], vertices_tuple[1]);
     edges.push(edge);
-  });
+  }
+
+  vertices_tuples.forEach(edge_gen);
 
   return edges;
 };
@@ -35,12 +39,12 @@ export const createEdgesFromVerticesValues = (vertices_values_tuples) => {
     (vertex_key, obj) => new GraphVertex(vertex_key)
   );
 
-  return createEdges(
-    vertices_values_tuples.map((vertices_values_tuple) => [
-      vertex_id_to_obj[vertices_values_tuple[0]],
-      vertex_id_to_obj[vertices_values_tuple[1]],
-    ])
-  );
+  const edge_value_to_id_mapper = (vertices_values_tuple) => [
+    vertex_id_to_obj[vertices_values_tuple[0]],
+    vertex_id_to_obj[vertices_values_tuple[1]],
+  ]
+
+  return createEdges(vertices_values_tuples.map(edge_value_to_id_mapper));
 };
 
 export const createCompleteUndirectedGraph = (vertices_keys) => {

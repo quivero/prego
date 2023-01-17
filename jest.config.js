@@ -48,8 +48,10 @@ export default {
   // Handle module aliases (this will be automatically configured for you soon)
   moduleNameMapper: {
     "^@utils/(.*)$": "<rootDir>/utils/$1",
+    "^@gutils/(.*)$": "<rootDir>/data-structures/graph/utils/$1",
     "^@algorithms/(.*)$": "<rootDir>/algorithms/$1",
-    "^@data-structures/(.*)$": "<rootDir>/data-structures/$1",
+    "^@galgorithms/(.*)$": "<rootDir>/data-structures/graph/algorithms/$1",
+    "^@dstructures/(.*)$": "<rootDir>/data-structures/$1"
   },
 
   notify: true,
