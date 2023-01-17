@@ -1,8 +1,8 @@
 import GraphVertex from "@dstructures/graph/GraphVertex";
-import GraphEdge   from "@dstructures/graph/GraphEdge";
-import Graph       from "@dstructures/graph/Graph";
+import GraphEdge from "@dstructures/graph/GraphEdge";
+import Graph from "@dstructures/graph/Graph";
 
-import breadthFirstSearch from '../breadthFirstSearch' 
+import breadthFirstSearch from "../breadthFirstSearch";
 
 describe("breadthFirstSearch", () => {
   it("should perform BFS operation on graph", () => {

@@ -13,7 +13,7 @@ export const createVertices = (labels) => {
   const vertex_gen = (label) => {
     const vertex = new GraphVertex(label);
     vertices.push(vertex);
-  }
+  };
 
   labels.forEach(vertex_gen);
 
@@ -26,7 +26,7 @@ export const createEdges = (vertices_tuples) => {
   const edge_gen = (vertices_tuple) => {
     const edge = new GraphEdge(vertices_tuple[0], vertices_tuple[1]);
     edges.push(edge);
-  }
+  };
 
   vertices_tuples.forEach(edge_gen);
 
@@ -42,7 +42,7 @@ export const createEdgesFromVerticesValues = (vertices_values_tuples) => {
   const edge_value_to_id_mapper = (vertices_values_tuple) => [
     vertex_id_to_obj[vertices_values_tuple[0]],
     vertex_id_to_obj[vertices_values_tuple[1]],
-  ]
+  ];
 
   return createEdges(vertices_values_tuples.map(edge_value_to_id_mapper));
 };

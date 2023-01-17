@@ -51,7 +51,7 @@ export default {
     "^@gutils/(.*)$": "<rootDir>/data-structures/graph/utils/$1",
     "^@algorithms/(.*)$": "<rootDir>/algorithms/$1",
     "^@galgorithms/(.*)$": "<rootDir>/data-structures/graph/algorithms/$1",
-    "^@dstructures/(.*)$": "<rootDir>/data-structures/$1"
+    "^@dstructures/(.*)$": "<rootDir>/data-structures/$1",
   },
 
   notify: true,

@@ -1,6 +1,6 @@
 import GraphVertex from "@dstructures/graph/GraphVertex";
-import GraphEdge   from "@dstructures/graph/GraphEdge";
-import Graph       from "@dstructures/graph/Graph";
+import GraphEdge from "@dstructures/graph/GraphEdge";
+import Graph from "@dstructures/graph/Graph";
 
 import kruskal from "../kruskal";
 

@@ -19,7 +19,7 @@ import {
 } from "../file/file.js";
 
 import {
-  objectReduce, 
+  objectReduce,
   objectFilter,
   objectFlatten,
   objectKeyFind,
@@ -699,7 +699,9 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
  * @return {object} all_paths
  */
 export const generateBlueprintDiagrams = (
-  blueprint, bps_root, relative_destination_folder
+  blueprint,
+  bps_root,
+  relative_destination_folder
 ) => {
   const blueprint_validity = blueprintValidity(blueprint);
   let route_key;
@@ -723,7 +725,7 @@ export const generateBlueprintDiagrams = (
       processed_blueprint.from_to[start_finish] = objectReduce(
         processed_blueprint.from_to[start_finish],
         (result, path_index, route) => {
-          route_key = `path_${start_finish}_index_${path_index}`
+          route_key = `path_${start_finish}_index_${path_index}`;
           result[route_key] = route;
 
           return result;
@@ -731,10 +733,11 @@ export const generateBlueprintDiagrams = (
         {}
       );
 
-      abs_path_folder = `${bps_root}/${path_folder}`
+      abs_path_folder = `${bps_root}/${path_folder}`;
 
       saveFilenameContentObject(
-        processed_blueprint.from_to[start_finish], abs_path_folder
+        processed_blueprint.from_to[start_finish],
+        abs_path_folder
       );
     }
   }

@@ -1,6 +1,6 @@
 import GraphVertex from "@dstructures/graph/GraphVertex";
-import GraphEdge   from "@dstructures/graph/GraphEdge";
-import Graph       from "@dstructures/graph/Graph";
+import GraphEdge from "@dstructures/graph/GraphEdge";
+import Graph from "@dstructures/graph/Graph";
 import { createVertices } from "@gutils/graph";
 
 import bfTravellingSalesman from "../bfTravellingSalesman";
@@ -14,9 +14,9 @@ let trivia, result, expected;
 describe("bfTravellingSalesman", () => {
   it("should solve problem for simple graph", () => {
     const graph = new Graph(true);
-    
-    [ A, B, C, D ] = createVertices([ "A", "B", "C", "D" ]);
-    
+
+    [A, B, C, D] = createVertices(["A", "B", "C", "D"]);
+
     AB = new GraphEdge(A, B, 1);
     BD = new GraphEdge(B, D, 1);
     DC = new GraphEdge(D, C, 1);
@@ -30,26 +30,24 @@ describe("bfTravellingSalesman", () => {
     BC = new GraphEdge(B, C, 3);
     CB = new GraphEdge(C, B, 9);
 
-    edges = [ 
-      AB, BD, DC, CA, BA, DB, CD, AC, AD, DA, BC, CB, 
-    ];
+    edges = [AB, BD, DC, CA, BA, DB, CD, AC, AD, DA, BC, CB];
 
     graph.addEdges(edges);
 
     const salesmanPath = bfTravellingSalesman(graph);
 
     trivia = [
-      [ salesmanPath.length, 4 ],
-      [ salesmanPath[0].getKey(), A.getKey() ],
-      [ salesmanPath[1].getKey(), B.getKey() ],
-      [ salesmanPath[2].getKey(), D.getKey() ],
-      [ salesmanPath[3].getKey(), C.getKey() ]
-    ]
+      [salesmanPath.length, 4],
+      [salesmanPath[0].getKey(), A.getKey()],
+      [salesmanPath[1].getKey(), B.getKey()],
+      [salesmanPath[2].getKey(), D.getKey()],
+      [salesmanPath[3].getKey(), C.getKey()],
+    ];
 
     for (const item of trivia) {
       result = item[0];
       expected = item[1];
-      
+
       expect(result).toBe(expected);
     }
   });
