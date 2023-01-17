@@ -1,7 +1,9 @@
 import { throwError, typeOf, warn } from "../sys.js";
-import { log_message } from "../../logging/logger.js";
+import { log_message } from "@utils/logging/logger.js";
 
-jest.mock("../../logging/logger.js");
+jest.mock("@utils/logging/logger.js");
+
+let expected, result, trivia;
 
 describe("sys", () => {
   it("should throw error", () => {
@@ -19,10 +21,19 @@ describe("sys", () => {
   });
 
   it("should return data types", () => {
-    expect(typeOf("string")).toBe("string");
-    expect(typeOf(42)).toBe("number");
-    expect(typeOf({})).toBe("object");
-    expect(typeOf(() => {})).toBe("function");
-    expect(typeOf(null)).toBe("null");
+    trivia = [
+      [ typeOf("string"), "string" ],   
+      [ typeOf(42)      , "number" ],         
+      [ typeOf({})      , "object" ],         
+      [ typeOf(() => {}), "function" ],   
+      [ typeOf(null)    , "null" ]
+    ]
+
+    for (const item of trivia) {
+      result = item[0];
+      expected = item[1];
+
+      expect(result).toBe(expected);
+    }
   });
 });
