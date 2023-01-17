@@ -57,7 +57,7 @@ export default {
   notify: true,
 
   reporters: [
-    ["jest-slow-test-reporter", { numTests: 10, color: true }],
+    ["jest-slow-test-reporter", { numTests: 20, color: true }],
     "jest-progress-bar-reporter",
   ],
 };
