@@ -4,8 +4,8 @@
   "imports": {
     "#utils/*": "./utils/*.js",
     "#utils/*.js": "./utils/*.js",
-    "#gutils/*": "./data-structures/graph/algorithms/utils/*.js",
-    "#gutils/*.js": "./data-structures/graph/algorithms/utils/*.js",
+    "#gutils/*": "./data-structures/graph/utils/*.js",
+    "#gutils/*.js": "./data-structures/graph/utils/*.js",
     "#algorithms/*": "./algorithms/*.js",
     "#algorithms/*.js": "./algorithms/*.js",
     "#dstructures/*": "./data-structures/*.js",
