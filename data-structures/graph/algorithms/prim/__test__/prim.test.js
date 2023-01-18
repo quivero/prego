@@ -2,11 +2,7 @@ import GraphVertex from "@dstructures/graph/GraphVertex";
 import GraphEdge from "@dstructures/graph/GraphEdge";
 import Graph from "@dstructures/graph/Graph";
 
-import { throwError } from "@utils/sys/sys";
-
 import prim from "../prim";
-
-jest.mock("@utils/sys/sys");
 
 let A = new GraphVertex("A");
 let B = new GraphVertex("B");
