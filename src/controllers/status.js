@@ -9,7 +9,7 @@ export const statusPage_controller = (req, res) => {
   statusCode = req.params.code;
   animal = req.params.animal;
   relativeStatusPath = statusImgPath(animal, statusCode);
-  absoluteStatusPath = `${curr_dir}/${statusPath}`;
+  absoluteStatusPath = `${curr_dir}/${relativeStatusPath}`;
 
   res.sendFile(absoluteStatusPath);
 };
