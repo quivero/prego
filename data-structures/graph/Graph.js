@@ -44,7 +44,6 @@ class VisitMetadata {
   }
 }
 
-
 export default class Graph {
   #cycles;
   #density;

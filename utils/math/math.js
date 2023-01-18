@@ -17,11 +17,11 @@ export const decimalPart = (number) => number - Math.floor(number);
  * @return {boolean}
  */
 export const xor = (a, b) => {
-  const condition = ![0, 1].includes(a) || ![0, 1].includes(b); 
-  
-  return condition ? 
-    throwError("Variables a and b must be either boolean or numbers 0/1!") : 
-    Boolean(a * (1 - b) + b * (1 - a));
+  const condition = ![0, 1].includes(a) || ![0, 1].includes(b);
+
+  return condition
+    ? throwError("Variables a and b must be either boolean or numbers 0/1!")
+    : Boolean(a * (1 - b) + b * (1 - a));
 };
 
 /**

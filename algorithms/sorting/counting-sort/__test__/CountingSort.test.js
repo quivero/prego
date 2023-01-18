@@ -1,16 +1,8 @@
 import CountingSort from "../CountingSort";
 
-import {
-  SortTester,
-} from "@algorithms/sorting/SortTester.js";
+import { SortTester } from "@algorithms/sorting/SortTester.js";
 
-import {
-  arr,
-  sorted_arr,
-  reverse_arr,
-  ones_arr
-} from '../../fixtures'
-
+import { arr, sorted_arr, reverse_arr, ones_arr } from "../../fixtures";
 
 // Complexity constants.
 const SORTED_ARRAY_VISITING_COUNT = 60;
@@ -37,11 +29,7 @@ describe("CountingSort", () => {
     // Detect smallest number in array in prior.
     const smallestElement = Math.min(...arr);
 
-    const sorted_array = sorter.sort(
-      arr,
-      smallestElement,
-      biggestElement
-    );
+    const sorted_array = sorter.sort(arr, smallestElement, biggestElement);
 
     expect(sorted_array).toEqual(sorted_arr);
     // Normally visitingCallback is being called 60 times but in this case

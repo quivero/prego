@@ -1,15 +1,8 @@
 import HeapSort from "../HeapSort";
 
-import {
-  SortTester,
-} from "@algorithms/sorting/SortTester.js";
+import { SortTester } from "@algorithms/sorting/SortTester.js";
 
-import {
-  arr,
-  sorted_arr,
-  reverse_arr,
-  ones_arr
-} from '../../fixtures'
+import { arr, sorted_arr, reverse_arr, ones_arr } from "../../fixtures";
 
 // Complexity constants.
 // These numbers don't take into account up/dow heapifying of the heap.
