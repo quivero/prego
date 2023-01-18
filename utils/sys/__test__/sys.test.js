@@ -29,6 +29,7 @@ describe("sys", () => {
       [ typeOf(null)    , "null" ]
     ]
 
+
     for (const item of trivia) {
       result = item[0];
       expected = item[1];

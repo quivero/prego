@@ -1,11 +1,8 @@
 import BubbleSort from "../BubbleSort";
-import {
-  equalArr,
-  notSortedArr,
-  reverseArr,
-  sortedArr,
-  SortTester,
-} from "#algorithms/sorting/SortTester.js";
+
+import { SortTester } from "#algorithms/sorting/SortTester.js";
+
+import { arr, sorted_arr, reverse_arr, ones_arr } from "../../fixtures";
 
 // Complexity constants.
 const SORTED_ARRAY_VISITING_COUNT = 20;
@@ -33,7 +30,7 @@ describe("BubbleSort", () => {
   it("should visit EQUAL array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       BubbleSort,
-      equalArr,
+      ones_arr,
       EQUAL_ARRAY_VISITING_COUNT
     );
   });
@@ -41,7 +38,7 @@ describe("BubbleSort", () => {
   it("should visit SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       BubbleSort,
-      sortedArr,
+      sorted_arr,
       SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -49,7 +46,7 @@ describe("BubbleSort", () => {
   it("should visit NOT SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       BubbleSort,
-      notSortedArr,
+      arr,
       NOT_SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -57,7 +54,7 @@ describe("BubbleSort", () => {
   it("should visit REVERSE SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       BubbleSort,
-      reverseArr,
+      reverse_arr,
       REVERSE_SORTED_ARRAY_VISITING_COUNT
     );
   });

@@ -6,6 +6,7 @@ import prim from "../prim";
 
 jest.mock("#utils/sys/sys");
 
+
 let A = new GraphVertex("A");
 let B = new GraphVertex("B");
 let C = new GraphVertex("C");

@@ -22,6 +22,7 @@ export const xor = (a, b) => {
   return condition ?
     throwError("Variables a and b must be either boolean or numbers 0/1!") :
     Boolean(a * (1 - b) + b * (1 - a));
+
 };
 
 /**

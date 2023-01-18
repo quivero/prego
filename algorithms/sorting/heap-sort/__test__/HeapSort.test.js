@@ -1,11 +1,8 @@
 import HeapSort from "../HeapSort";
-import {
-  equalArr,
-  notSortedArr,
-  reverseArr,
-  sortedArr,
-  SortTester,
-} from "#algorithms/sorting/SortTester.js";
+
+import { SortTester } from "#algorithms/sorting/SortTester.js";
+
+import { arr, sorted_arr, reverse_arr, ones_arr } from "../../fixtures";
 
 // Complexity constants.
 // These numbers don't take into account up/dow heapifying of the heap.
@@ -31,7 +28,7 @@ describe("HeapSort", () => {
   it("should visit EQUAL array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       HeapSort,
-      equalArr,
+      ones_arr,
       EQUAL_ARRAY_VISITING_COUNT
     );
   });
@@ -39,7 +36,7 @@ describe("HeapSort", () => {
   it("should visit SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       HeapSort,
-      sortedArr,
+      sorted_arr,
       SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -47,7 +44,7 @@ describe("HeapSort", () => {
   it("should visit NOT SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       HeapSort,
-      notSortedArr,
+      arr,
       NOT_SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -55,7 +52,7 @@ describe("HeapSort", () => {
   it("should visit REVERSE SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       HeapSort,
-      reverseArr,
+      reverse_arr,
       REVERSE_SORTED_ARRAY_VISITING_COUNT
     );
   });

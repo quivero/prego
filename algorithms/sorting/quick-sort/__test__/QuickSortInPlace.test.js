@@ -1,11 +1,8 @@
 import QuickSortInPlace from "../QuickSortInPlace";
-import {
-  equalArr,
-  notSortedArr,
-  reverseArr,
-  sortedArr,
-  SortTester,
-} from "#algorithms/sorting/SortTester.js";
+
+import { SortTester } from "#algorithms/sorting/SortTester.js";
+
+import { arr, sorted_arr, reverse_arr, ones_arr } from "../../fixtures";
 
 // Complexity constants.
 const SORTED_ARRAY_VISITING_COUNT = 19;
@@ -29,7 +26,7 @@ describe("QuickSortInPlace", () => {
   it("should visit EQUAL array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
-      equalArr,
+      ones_arr,
       EQUAL_ARRAY_VISITING_COUNT
     );
   });
@@ -37,7 +34,7 @@ describe("QuickSortInPlace", () => {
   it("should visit SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
-      sortedArr,
+      sorted_arr,
       SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -45,7 +42,7 @@ describe("QuickSortInPlace", () => {
   it("should visit NOT SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
-      notSortedArr,
+      arr,
       NOT_SORTED_ARRAY_VISITING_COUNT
     );
   });
@@ -53,7 +50,7 @@ describe("QuickSortInPlace", () => {
   it("should visit REVERSE SORTED array element specified number of times", () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
-      reverseArr,
+      reverse_arr,
       REVERSE_SORTED_ARRAY_VISITING_COUNT
     );
   });

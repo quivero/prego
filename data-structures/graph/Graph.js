@@ -8,8 +8,6 @@ import hamiltonianCycle from "#galgorithms/hamiltonian-cycle/hamiltonianCycle";
 import depthFirstSearch from "#galgorithms/depth-first-search/depthFirstSearch";
 import graphBridges from "#galgorithms/bridges/graphBridges";
 
-import VisitMetadata from "./VisitMetadata.js";
-
 import {
   cartesianProduct,
   euler,
@@ -20,6 +18,7 @@ import {
 } from "#utils/arrays/arrays.js";
 import { throwError, warn } from "#utils/sys/sys.js";
 import { createEdgesFromVerticesValues } from "#gutils/graph.js";
+
 import {
   objectInit,
   objectMap,
@@ -30,6 +29,19 @@ import {
 
 import GraphVertex from "./GraphVertex.js";
 import GraphEdge from "./GraphEdge.js";
+
+/**
+ * Helper class for visited vertex metadata.
+ */
+class VisitMetadata {
+  constructor({ discoveryTime, lowDiscoveryTime }) {
+    this.discoveryTime = discoveryTime;
+    this.lowDiscoveryTime = lowDiscoveryTime;
+    // We need this in order to check graph root node, whether it has two
+    // disconnected children or not.
+    this.independentChildrenCount = 0;
+  }
+}
 
 export default class Graph {
   #cycles;
