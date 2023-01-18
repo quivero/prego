@@ -1,5 +1,5 @@
 import MinHeap from "../MinHeap";
-import Comparator from "../../../utils/comparator/Comparator";
+import Comparator from "@utils/comparator/Comparator";
 
 describe("MinHeap", () => {
   it("should create an empty min heap", () => {

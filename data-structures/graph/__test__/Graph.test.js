@@ -5,11 +5,11 @@ import GraphEdge from "../GraphEdge";
 
 import { createEdges, createEdgesFromVerticesValues } from "../utils/graph.js";
 
-import { ones, isCyclicEqual } from "../../../utils/arrays/arrays";
+import { ones, isCyclicEqual } from "@utils/arrays/arrays";
 
-import { throwError, warn } from "../../../utils/sys/sys.js";
+import { throwError, warn } from "@utils/sys/sys.js";
 
-jest.mock("../../../utils/sys/sys.js");
+jest.mock("@utils/sys/sys.js");
 
 let preamble, expected, result;
 

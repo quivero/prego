@@ -1,6 +1,6 @@
 import Mesh from "../Mesh";
 import MeshVertex from "../MeshVertex";
-import { distance } from "../../../utils/distances/distance.js";
+import { distance } from "@utils/distances/distance.js";
 
 describe("Mesh", () => {
   it("should return a defined object with metric validation", () => {

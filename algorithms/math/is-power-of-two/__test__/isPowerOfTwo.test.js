@@ -1,23 +1,34 @@
 import isPowerOfTwo from "../isPowerOfTwo";
 
+let trivia, result, expected;
+
 describe("isPowerOfTwo", () => {
   it("should check if the number is made by multiplying twos", () => {
-    expect(isPowerOfTwo(-1)).toBe(false);
-    expect(isPowerOfTwo(0)).toBe(false);
-    expect(isPowerOfTwo(1)).toBe(true);
-    expect(isPowerOfTwo(2)).toBe(true);
-    expect(isPowerOfTwo(3)).toBe(false);
-    expect(isPowerOfTwo(4)).toBe(true);
-    expect(isPowerOfTwo(5)).toBe(false);
-    expect(isPowerOfTwo(6)).toBe(false);
-    expect(isPowerOfTwo(7)).toBe(false);
-    expect(isPowerOfTwo(8)).toBe(true);
-    expect(isPowerOfTwo(10)).toBe(false);
-    expect(isPowerOfTwo(12)).toBe(false);
-    expect(isPowerOfTwo(16)).toBe(true);
-    expect(isPowerOfTwo(31)).toBe(false);
-    expect(isPowerOfTwo(64)).toBe(true);
-    expect(isPowerOfTwo(1024)).toBe(true);
-    expect(isPowerOfTwo(1023)).toBe(false);
+    trivia = [
+      [isPowerOfTwo(-1), false],
+      [isPowerOfTwo(0), false],
+      [isPowerOfTwo(1), true],
+      [isPowerOfTwo(2), true],
+      [isPowerOfTwo(3), false],
+      [isPowerOfTwo(4), true],
+      [isPowerOfTwo(5), false],
+      [isPowerOfTwo(6), false],
+      [isPowerOfTwo(7), false],
+      [isPowerOfTwo(8), true],
+      [isPowerOfTwo(10), false],
+      [isPowerOfTwo(12), false],
+      [isPowerOfTwo(16), true],
+      [isPowerOfTwo(31), false],
+      [isPowerOfTwo(64), true],
+      [isPowerOfTwo(1024), true],
+      [isPowerOfTwo(1023), false],
+    ];
+
+    for (const item of trivia) {
+      result = item[0];
+      expected = item[1];
+
+      expect(result).toBe(expected);
+    }
   });
 });

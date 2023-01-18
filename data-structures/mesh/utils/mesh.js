@@ -2,11 +2,11 @@ import _ from "lodash";
 
 import MeshVertex from "../MeshVertex.js";
 
-import { generateToken } from "../../../utils/string/string.js";
+import { generateToken } from "@utils/string/string.js";
 
-import { throwError } from "../../../utils/sys/sys.js";
+import { throwError } from "@utils/sys/sys.js";
 
-import { zip, nRandMinsMaxs } from "../../../utils/arrays/arrays.js";
+import { zip, nRandMinsMaxs } from "@utils/arrays/arrays.js";
 
 export const TOKEN_LENGTH = 5;
 

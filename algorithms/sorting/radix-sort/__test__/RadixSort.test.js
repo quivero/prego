@@ -1,5 +1,5 @@
 import RadixSort from "../RadixSort";
-import { SortTester } from "../../SortTester";
+import { SortTester } from "@algorithms/sorting/SortTester.js";
 
 // Complexity constants.
 const ARRAY_OF_STRINGS_VISIT_COUNT = 24;
