@@ -1,4 +1,4 @@
-import depthFirstSearch from "@galgorithms/depth-first-search/depthFirstSearch";
+import depthFirstSearch from "#galgorithms/depth-first-search/depthFirstSearch";
 
 /**
  * Detect cycle in undirected graph using Depth First Search.

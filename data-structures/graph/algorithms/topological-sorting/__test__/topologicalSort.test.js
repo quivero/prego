@@ -1,6 +1,6 @@
-import Graph from "@dstructures/graph/Graph";
+import Graph from "#dstructures/graph/Graph";
 
-import { createVertices, createEdges } from "@dstructures/graph/utils/graph";
+import { createVertices, createEdges } from "#dstructures/graph/utils/graph";
 
 import topologicalSort from "../topologicalSort";
 

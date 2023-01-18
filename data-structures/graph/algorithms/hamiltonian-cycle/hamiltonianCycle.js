@@ -1,4 +1,4 @@
-import GraphVertex from "@dstructures/graph/GraphVertex.js";
+import GraphVertex from "#dstructures/graph/GraphVertex.js";
 
 /**
  * @param {number[][]} adjacencyMatrix

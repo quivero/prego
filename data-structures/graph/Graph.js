@@ -1,12 +1,12 @@
 import _ from "lodash";
 
-import Queue from "@dstructures/queue/Queue";
+import Queue from "#dstructures/queue/Queue";
 
-import stronglyConnectedComponents from "@galgorithms/strongly-connected-components/stronglyConnectedComponents";
-import eulerianPath from "@galgorithms/eulerian-path/eulerianPath";
-import hamiltonianCycle from "@galgorithms/hamiltonian-cycle/hamiltonianCycle";
-import depthFirstSearch from "@galgorithms/depth-first-search/depthFirstSearch";
-import graphBridges from "@galgorithms/bridges/graphBridges";
+import stronglyConnectedComponents from "#galgorithms/strongly-connected-components/stronglyConnectedComponents";
+import eulerianPath from "#galgorithms/eulerian-path/eulerianPath";
+import hamiltonianCycle from "#galgorithms/hamiltonian-cycle/hamiltonianCycle";
+import depthFirstSearch from "#galgorithms/depth-first-search/depthFirstSearch";
+import graphBridges from "#galgorithms/bridges/graphBridges";
 
 import VisitMetadata from "./VisitMetadata.js";
 
@@ -17,16 +17,16 @@ import {
   getAllIndexes,
   hasElement,
   sort,
-} from "@utils/arrays/arrays.js";
-import { throwError, warn } from "@utils/sys/sys.js";
-import { createEdgesFromVerticesValues } from "@gutils/graph.js";
+} from "#utils/arrays/arrays.js";
+import { throwError, warn } from "#utils/sys/sys.js";
+import { createEdgesFromVerticesValues } from "#gutils/graph.js";
 import {
   objectInit,
   objectMap,
   objectFilter,
   objectKeyFind,
   objectReduce,
-} from "@utils/objects/objects.js";
+} from "#utils/objects/objects.js";
 
 import GraphVertex from "./GraphVertex.js";
 import GraphEdge from "./GraphEdge.js";

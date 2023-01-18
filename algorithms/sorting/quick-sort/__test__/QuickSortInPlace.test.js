@@ -5,7 +5,7 @@ import {
   reverseArr,
   sortedArr,
   SortTester,
-} from "@algorithms/sorting/SortTester.js";
+} from "#algorithms/sorting/SortTester.js";
 
 // Complexity constants.
 const SORTED_ARRAY_VISITING_COUNT = 19;

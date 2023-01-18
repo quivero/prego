@@ -6,9 +6,9 @@ import {
   createRandomMVertices,
 } from "../mesh.js";
 
-import { throwError } from "@utils/sys/sys.js";
+import { throwError } from "#utils/sys/sys.js";
 
-jest.mock("@utils/sys/sys.js");
+jest.mock("#utils/sys/sys.js");
 
 describe("MeshVertex", () => {
   it("should return n random arrays", () => {

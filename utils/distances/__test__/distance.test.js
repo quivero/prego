@@ -7,7 +7,7 @@ import {
   travelTime,
 } from "../distance.js";
 
-import { throwError } from "@utils/sys/sys.js";
+import { throwError } from "#utils/sys/sys.js";
 
 jest.mock("../../sys/sys");
 

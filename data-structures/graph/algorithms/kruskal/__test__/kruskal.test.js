@@ -1,10 +1,10 @@
-import GraphVertex from "@dstructures/graph/GraphVertex";
-import GraphEdge from "@dstructures/graph/GraphEdge";
-import Graph from "@dstructures/graph/Graph";
+import GraphVertex from "#dstructures/graph/GraphVertex";
+import GraphEdge from "#dstructures/graph/GraphEdge";
+import Graph from "#dstructures/graph/Graph";
 
 import kruskal from "../kruskal";
 
-jest.mock("@utils/sys/sys");
+jest.mock("#utils/sys/sys");
 
 describe("kruskal", () => {
   it("should fire an error for directed graph", () => {

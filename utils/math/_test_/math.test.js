@@ -10,11 +10,11 @@ import {
 
 import _ from "lodash";
 
-import { nNorm } from "@utils/distances/distance.js";
+import { nNorm } from "#utils/distances/distance.js";
 
-import { throwError } from "@utils/sys/sys.js";
+import { throwError } from "#utils/sys/sys.js";
 
-jest.mock("@utils/sys/sys");
+jest.mock("#utils/sys/sys");
 
 describe("math", () => {
   it("should return number decimal part", () => {
