@@ -7,7 +7,7 @@ describe("combinatorics", () => {
   it("should return number k-partition summand terms", () => {
     result = partitions(3);
     expected = [[1, 1, 1], [2, 1], [3]];
-    
+
     expect(result).toEqual(expected);
   });
 
