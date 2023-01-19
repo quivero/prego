@@ -23,6 +23,7 @@ import {
   objectFilter,
   objectFlatten,
   objectKeyFind,
+  objectInit
 } from "../objects/objects.js";
 
 const node_types = [
@@ -699,28 +700,26 @@ export const fromStartToFinishCombsAllPaths = (blueprint) => {
  * @return {object} all_paths
  */
 export const generateBlueprintDiagrams = (
-  blueprint,
-  bps_root,
-  relative_destination_folder
+  blueprint, samples_root, relative_destination_folder
 ) => {
   const blueprint_validity = blueprintValidity(blueprint);
-  let route_key;
+  let route_key, processed_blueprint;
   let relative_path_folder;
-  let processed_blueprint;
-  let abs_path_folder;
+  let relative_start_finish_folder;
+  let absolute_start_finish_folder;
 
   if (blueprint_validity.is_valid) {
-    relative_path_folder = "";
+    relative_path_folder = '';
     processed_blueprint = castBlueprintPathsToDiagram(blueprint);
 
-    createDirectory(bps_root, relative_destination_folder);
+    createDirectory(samples_root, relative_destination_folder);
 
     for (const start_finish in processed_blueprint.from_to) {
-      path_folder = `${relative_destination_folder}/${blueprint.name}`;
-      createDirectory(bps_root, path_folder);
+      relative_path_folder = `${relative_destination_folder}/${blueprint.name}`;
+      createDirectory(samples_root, relative_path_folder);
 
-      path_folder = `${path_folder}/${start_finish}`;
-      createDirectory(bps_root, path_folder);
+      relative_start_finish_folder = `${relative_path_folder}/${start_finish}`;
+      createDirectory(samples_root, relative_start_finish_folder);
 
       processed_blueprint.from_to[start_finish] = objectReduce(
         processed_blueprint.from_to[start_finish],
@@ -729,15 +728,13 @@ export const generateBlueprintDiagrams = (
           result[route_key] = route;
 
           return result;
-        },
-        {}
+        }, {}
       );
+      
+      absolute_start_finish_folder = `${samples_root}/${relative_start_finish_folder}`;
 
-      abs_path_folder = `${bps_root}/${path_folder}`;
-
-      saveFilenameContentObject(
-        processed_blueprint.from_to[start_finish],
-        abs_path_folder
+      saveFilenameContentObject( 
+        processed_blueprint.from_to[start_finish], absolute_start_finish_folder
       );
     }
   }
@@ -754,7 +751,10 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   // Required variables
   const nodesConfig = diagramConfig.themes.nodes;
   const edgesConfig = diagramConfig.themes.edges;
-
+  const node_styles = [
+    "start_node", "finish_node", "bugged_node", "trail_node", "default"
+  ]
+  
   let from_node_key = "";
   let from_node_text = "";
 
@@ -789,125 +789,124 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
     str.replace(/\{/g, "").replace(/['"]+/g, "").replace(/\}/g, "");
 
   const path_line_numbers = path_edges.map((path_edge) =>
-    Object.keys(blueprint_graph.edges).indexOf(
-      `${path_edge[0]}_${path_edge[1]}`
-    )
+    Object.keys(blueprint_graph.edges).indexOf(`${path_edge[0]}_${path_edge[1]}`)
   );
 
   const breakline = "\n";
   const spacing = "      ";
   let diagram_body = `graph TD${breakline}`;
-
+  
+  const diagramTypeToNode = objectInit(node_styles, []);
   const diagramNodeType = {};
 
-  // Classification of nodes according to diagram
+  // Classification of nodes according to diagram. It may be extended.
   Object.keys(blueprint_graph.vertices).forEach((node_key) => {
     node_type = nodeToType[node_key].toLowerCase();
 
     // Only start and finish nodes are simultaneous
     if (node_type.includes("start")) {
-      diagramNodeType[node_key] = {
-        style: "start_node",
-      };
-    } else if (node_type.includes("finish")) {
-      diagramNodeType[node_key] = {
-        style: "finish_node",
-      };
-    } else if (invalid_nodes.includes(node_key)) {
-      diagramNodeType[node_key] = {
-        style: "bugged_node",
-      };
-    } else if (path_vertex_keys.includes(node_key)) {
-      diagramNodeType[node_key] = {
-        style: "trail_node",
-      };
-    } else {
-      diagramNodeType[node_key] = {
-        style: "default",
-      };
-    }
-
-    // Define the border for each node separarely. It may be extended.
-    if (node_type.includes("start")) {
+      diagramNodeType[node_key] = { style: "start_node" };
       diagramNodeType[node_key].border = "start_node";
+
+      diagramTypeToNode["start_node"].push(node_key) 
+      
     } else if (node_type.includes("finish")) {
+      diagramNodeType[node_key] = { style: "finish_node" };
       diagramNodeType[node_key].border = "finish_node";
-    } else if (node_type.includes("flow")) {
-      diagramNodeType[node_key].border = "flow_node";
-    } else if (path_vertex_keys.includes(node_key)) {
-      diagramNodeType[node_key].border = "trail_node";
+
+      diagramTypeToNode["finish_node"].push(node_key);
+
     } else if (invalid_nodes.includes(node_key)) {
+      diagramNodeType[node_key] = { style: "bugged_node" };
       diagramNodeType[node_key].border = "bugged_node";
+
+      diagramTypeToNode["bugged_node"].push(node_key);
+
+    } else if (path_vertex_keys.includes(node_key)) {
+      diagramNodeType[node_key] = { style: "trail_node" };
+      diagramNodeType[node_key].border = "trail_node";
+
+      diagramTypeToNode["trail_node"].push(node_key);
+
     } else {
+      diagramNodeType[node_key] = { style: "default" };
       diagramNodeType[node_key].border = "default";
-    }
-  });
 
-  // Edges lines definition
-  Object.values(blueprint_graph.edges).forEach((edge) => {
-    // From node
-    from_node_key = edge.startVertex.getKey();
-    node_border_type = diagramNodeType[from_node_key].border;
-
-    left_node_border = nodesConfig.borders[node_border_type].left;
-    right_node_border = nodesConfig.borders[node_border_type].right;
-
-    from_node_text = '"' + from_node_key;
-    from_node_text += ": " + nodes[from_node_key].name;
-
-    /*
-    // Add descriptive object (bag content, for example) to node
-        from_node_text += "<br> { ";
-        from_node_text += "<br> key: value";
-        from_node_text += " <br> }";
-    */
-
-    from_node_text += '"';
-
-    from_node_key = `${from_node_key}${left_node_border}${from_node_text}${right_node_border}`;
-
-    // To node
-    to_node_key = edge.endVertex.getKey();
-    node_border_type = diagramNodeType[to_node_key].border;
-    left_node_border = nodesConfig.borders[node_border_type].left;
-    right_node_border = nodesConfig.borders[node_border_type].right;
-
-    to_node_text = '"' + to_node_key;
-    to_node_text += ": " + nodes[to_node_key].name;
-
-    /*
-    // Add descriptive object (bag content, for example) to node
-        to_node_text += "<br> { ";
-        to_node_text += "<br> key: value";
-        to_node_text += " <br> }";
-    */
-
-    to_node_text += '"';
-
-    to_node_key = `${to_node_key}${left_node_border}${to_node_text}${right_node_border}`;
-
-    // Arrow
-    if (hasElement(path_edges, edge.getKeyTuple())) {
-      link_str = edgesConfig.trail.link;
-    } else {
-      link_str = edgesConfig.default.link;
+      diagramTypeToNode["default"].push(node_key);
     }
 
-    link_str += ">";
+    // Exception: Flow nodes do not have a particular style but border
+    if (node_type.includes("flow")) {
+      diagramNodeType[node_key].border = "flow_node";
+    }
 
-    string_tmp = `${from_node_key} ${link_str} ${to_node_key}`;
-    diagram_body += spacing + string_tmp + breakline;
   });
+
+  // **** Edges lines definition ****
+  Object.values(blueprint_graph.edges).forEach(
+    (edge) => {
+      // From node
+      from_node_key = edge.startVertex.getKey();
+      node_border_type = diagramNodeType[from_node_key].border;
+  
+      left_node_border = nodesConfig.borders[node_border_type].left;
+      right_node_border = nodesConfig.borders[node_border_type].right;
+  
+      from_node_text = '"' + from_node_key;
+      from_node_text += ": " + nodes[from_node_key].name;
+      
+      /*
+      // Add descriptive object (bag content, for example) to node
+          from_node_text += "<br> { ";
+          from_node_text += "<br> key: value";
+          from_node_text += " <br> }";
+      */
+  
+      from_node_text += '"';
+  
+      from_node_key = `${from_node_key}${left_node_border}${from_node_text}${right_node_border}`;
+  
+      // To node
+      to_node_key = edge.endVertex.getKey();
+      node_border_type = diagramNodeType[to_node_key].border;
+      left_node_border = nodesConfig.borders[node_border_type].left;
+      right_node_border = nodesConfig.borders[node_border_type].right;
+  
+      to_node_text = '"' + to_node_key;
+      to_node_text += ": " + nodes[to_node_key].name;
+  
+      /*
+      // Add descriptive object (bag content, for example) to node
+          to_node_text += "<br> { ";
+          to_node_text += "<br> key: value";
+          to_node_text += " <br> }";
+      */
+  
+      to_node_text += '"';
+  
+      to_node_key = `${to_node_key}${left_node_border}${to_node_text}${right_node_border}`;
+  
+      // Edge arrow
+      if (hasElement(path_edges, edge.getKeyTuple())) {
+        link_str = edgesConfig.trail.link;
+      } else {
+        link_str = edgesConfig.default.link;
+      }
+  
+      link_str += ">";
+  
+      string_tmp = `${from_node_key} ${link_str} ${to_node_key}`;
+      diagram_body += spacing + string_tmp + breakline;
+    }
+  );
 
   diagram_body += breakline;
-
+    
   // Edges style definition
-  path_line_numbers.forEach((path_line_number) => {
-    string_tmp = styleFormatter(JSON.stringify(edgesConfig.trail.style));
-
-    string_tmp = `linkStyle ${path_line_number} ${string_tmp}`;
-    diagram_body += spacing + string_tmp + breakline;
-  });
+  string_tmp = styleFormatter(JSON.stringify(edgesConfig.trail.style));
+  string_tmp = `linkStyle ${path_line_numbers} ${string_tmp}`;
+  
+  diagram_body += spacing + string_tmp + breakline;
 
   diagram_body += breakline;
 
@@ -921,12 +920,15 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
 
   diagram_body += breakline;
 
-  // Add node classes
-  Object.keys(diagramNodeType).forEach((node_key) => {
-    if (diagramNodeType[node_key].style !== "default") {
-      string_tmp = `class ${node_key} ${diagramNodeType[node_key].style}`;
+  // Add node classes 
+  Object.entries(diagramTypeToNode).forEach((entry) => {
+    const [ node_style, node_keys ] = entry;
+    
+    if ( node_style !== "default" && node_keys.length !== 0 ) {
+      string_tmp = `class ${node_keys} ${node_style}`;
       diagram_body += spacing + string_tmp + breakline;
     }
+    
   });
 
   return diagram_body;
