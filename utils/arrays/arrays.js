@@ -429,28 +429,55 @@ export function* upperTriangularHyperindexes(length, dim) {
   yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
 }
 
-/**
- * @abstract returns each tuple [key, elems] of the Euler diagram
- * systematic in a generator-wise fashion
- *
- * @param {Array} sets
- * @return {Array} keys_elems
+export function* eulerGenerator(sets) {
+  /**
+ *   @abstract returns each tuple [key, elems] of the Euler diagram
+ *   systematic in a generator-wise fashion
+ *   Rationale:
+ *      1. Begin with the available sets and their exclusive elements;
+ *      2. Compute complementary elements to current key-set;
+ *      3. In case complementary set-keys AND current set content are not empty, continue;
+ *      Otherwise, go to next key-set;
+ *      4. Find the euler diagram on complementary sets;
+ *      5. Compute exclusive combination elements;
+ *      6. In case there are exclusive elements to combination:
+ *      6.a Yield exclusive combination elements;
+ *      6.b Remove exclusive combination elements from current key-set;
+ *   @param {object} sets
+ *   @return {object} keys_elems
  */
-export function* euler(sets) {
-  let is_unique = true;
-  for (let set_key in sets) {
-    is_unique &=
-      sets[set_key].length === removeArrayDuplicates(sets[set_key]).length;
+
+  // There are no sets
+  if (
+    sets.constructor !== {}.constructor &&
+    sets.constructor !== [].constructor
+  ) {
+    throw new TypeError(
+      "Ill-conditioned input. It must be either a json-like or array of arrays object!",
+    );
   }
 
-  if (!is_unique) {
-    throwError("Each array must NOT have duplicates!");
+  let is_unique_set_arr = true;
+
+  for (const value of Object.values(sets)) {
+    is_unique_set_arr &= unique(value).length === value.length;
   }
 
-  if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
+  if (!is_unique_set_arr) {
+    console.warn("Each array MUST NOT have duplicates");
+    sets = objectReduce(
+      sets,
+      (result, __, key) => {
+        result[key] = unique(sets[key]);
+        return result;
+      }, {},
+    );
+  }
 
   if (Object.values(sets).length === 0)
-    throwError("There must at least ONE set!");
+    throw new TypeError("There must at least ONE set!");
+
+  if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
   const sets_keys_fun = (sets_) =>
     Object.keys(sets_).filter((key) => sets_[key].length !== 0);
