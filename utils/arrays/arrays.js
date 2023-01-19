@@ -314,7 +314,9 @@ export const removeArrayDuplicates = (list) => {
   return unique;
 };
 
-export function* mSetsOfnTuples(array, n, m) {
+export function* mSetsOfnTuples(array, m, n) {
+  let arr_diff;
+
   if (m > Math.floor(array.length / n)) {
     const err_message =
       "Size of array must be greater or equal to the product of n by m";
@@ -322,18 +324,14 @@ export function* mSetsOfnTuples(array, n, m) {
   }
 
   let curr_comb = [];
-
   for (const head_comb of _.combinations(array, n)) {
-    curr_comb = [head_comb];
+    curr_comb = [ head_comb ];
 
     if (m === 1) {
       yield curr_comb;
     } else {
-      for (const tail_comb of mSetsOfnTuples(
-        _.difference(array, head_comb),
-        n,
-        m - 1
-      )) {
+      arr_diff = _.difference(array, head_comb);
+      for (const tail_comb of mSetsOfnTuples(arr_diff, n, m - 1)) {
         yield curr_comb.concat(tail_comb);
       }
     }

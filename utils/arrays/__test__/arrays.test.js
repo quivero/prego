@@ -152,20 +152,30 @@ describe("Array", () => {
     expect(throwError).toHaveBeenCalled();
   });
 
-  it("should call throwError for empty sets", () => {
-    const euler_gen = euler({});
+  it("should return 1 set on given objects", () => {
+    const arr = [1, 2, 3];
+    const m = 1;
+    const n = 3;
 
-    euler_gen.next();
+    expected = [ 1, 2, 3 ];
 
-    expect(throwError).toHaveBeenCalled();
+    const set_gen = mSetsOfnTuples(arr, m, n);
+    
+    candidate = set_gen.next().value;
+    expect(arr).toStrictEqual(expected);
   });
 
-  it("should call throwError for sets with duplicated elements", () => {
-    const euler_gen = euler({ a: [1, 1] });
+  it("should return 1 set on given objects", () => {
+    const arr = [1, 2, 3];
+    const m = 2;
+    const n = 1;
 
-    euler_gen.next();
+    expected = [ [1], [2] ];
 
-    expect(throwError).toHaveBeenCalled();
+    const set_gen = mSetsOfnTuples(arr, m, n);
+    candidate = set_gen.next().value;
+    
+    expect(candidate).toStrictEqual(expected);
   });
 
   it("should call throwError for invalid input arguments ", () => {

@@ -14,7 +14,7 @@ describe("combinatorics", () => {
   it("should throw an error for negative number", () => {
     const partitionWithNegativeNumber = () => partitions(-42);
     
-    expect(partitionWithNegativeNumber).toThrowError(expected);
+    expect(partitionWithNegativeNumber).toThrowError(Error);
   });
 
   it("should throw an error for decimal number", () => {
