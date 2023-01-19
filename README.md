@@ -1,4 +1,4 @@
-![prego_title](https://github.com/quivero/prego/blob/c54d7ffbafff66b6b31db36daf9d5a7938304ebd/images/prego_tiny.png)
+![nail it](https://github.com/quivero/prego/blob/main/images/prego_tiny.png?raw=true)
 
 # Prego
 
