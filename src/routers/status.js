@@ -5,7 +5,7 @@ import { statusPage_controller } from "../controllers/status.js";
 let status_router = Router();
 
 status_router.get(
-    "/page/:animal/:code", 
+    "/page/:animal/:code",
     statusPage_controller
 );
 

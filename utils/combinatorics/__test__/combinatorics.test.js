@@ -7,13 +7,13 @@ describe("combinatorics", () => {
   it("should return number k-partition summand terms", () => {
     result = partitions(3);
     expected = [[1, 1, 1], [2, 1], [3]];
-    
+
     expect(result).toEqual(expected);
   });
 
   it("should throw an error for negative number", () => {
     const partitionWithNegativeNumber = () => partitions(-42);
-    
+
     expect(partitionWithNegativeNumber).toThrowError(expected);
   });
 
@@ -28,7 +28,7 @@ describe("cardvecCombinations", () => {
   it("should return combinations for given cardinality vector", () => {
     result = cardvecCombinations([1, 2, 3], [1, 2]);
     expected = [ [[1], [[2, 3]]], [[2], [[1, 3]]], [[3], [[1, 2]]], ];
-    
+
     expect(result).toBe(expected);
   });
 

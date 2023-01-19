@@ -9,7 +9,7 @@ import {
 let workflow_router = Router();
 
 workflow_router.get(
-  '/create/summary', 
+  '/create/summary',
   summarizeBlueprints_controller
 );
 

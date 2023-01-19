@@ -6,7 +6,7 @@ import { decimalPart } from "../math/math.js";
 import { throwError } from "../sys/sys.js";
 
 /*
- * @abstract returns unique partitions of an integer with 
+ * @abstract returns unique partitions of an integer with
  * Source: https://cs.stackexchange.com/questions/150270/vector-of-1s-and-sum-of-elements
  * @param {Integer} number
  * @param {Integer} n_summands
@@ -37,7 +37,7 @@ export const partitions = (n) => {
 };
 
 /**
- * @abstract returns 
+ * @abstract returns
  *
  * @param {Array} points
  * @param {Array} card_vec
@@ -54,22 +54,21 @@ export const cardvecCombinations = (points, card_vec) => {
   if (points.length !== card_vec.reduce((a, b) => a + b)) {
     error_msg = "The sum of card_vec elements MUST be equal to points cardinality"
     throwError(error_msg);
-    
+
   } else if (card_vec.length === 1) {
     return [points];
   } else {
     for (const elem_0_comb of _.combinations(points, elem_0)) {
       blob_comb = [elem_0_comb];
       points_diff = _.difference(points, elem_0_comb);
-  
+
       elem_1_combs = cardvecCombinations(points_diff, card_vec.slice(1));
-  
+
       blob_comb.push(elem_1_combs);
       blob_combs.push(blob_comb);
     }
-  
+
     return blob_combs;
   }
-  
-};
 
+};

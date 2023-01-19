@@ -21,7 +21,7 @@ const generateBlueprintDiagram_handler = (blueprint) => {
 export const summarizeBlueprint_controller = (req, res) => {
   const blueprint_name = req.params.blueprint_name;
   const blueprint_fname = `${blueprint_name}.json`;
-  
+
   res.send(
     processBlueprint(
       absolute_blueprints_root, blueprint_fname, summarizeBlueprint_handler
