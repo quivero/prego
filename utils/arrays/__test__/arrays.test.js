@@ -24,9 +24,11 @@ import {
   sequentialArrayBlobs,
 } from "../arrays";
 
-import { throwError } from "../../sys/sys.js";
+import { throwError } from "#utils/sys/sys.js";
 
-jest.mock("../../sys/sys");
+jest.mock("#utils/sys/sys");
+
+let candidate, expected;
 
 afterEach(() => {
   // restore the spy created with spyOn
@@ -142,9 +144,9 @@ describe("Array", () => {
 
   it("should call throwError for invalid blob scenario ", () => {
     const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const n = 5;
     const m = 3;
-
+    const n = 5;
+    
     const set_gen = mSetsOfnTuples(arr, n, m);
 
     set_gen.next();

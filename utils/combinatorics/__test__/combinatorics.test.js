@@ -29,7 +29,7 @@ describe("cardvecCombinations", () => {
     result = cardvecCombinations([1, 2, 3], [1, 2]);
     expected = [ [[1], [[2, 3]]], [[2], [[1, 3]]], [[3], [[1, 2]]], ];
     
-    expect(result).toBe(expected);
+    expect(result).toStrictEqual(expected);
   });
 
   it("should throw error ", () => {
