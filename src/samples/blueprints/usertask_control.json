@@ -1,108 +1,105 @@
 {
-  'name': 'testUserTask',
-  'description': 'Start a flow, commit activity and verify timeout',
-  'blueprint_spec': {
-    'requirements': [
-      'core'
+  "name": "testUserTask",
+  "description": "Start a flow, commit activity and verify timeout",
+  "blueprint_spec": {
+    "requirements": [
+      "core"
     ],
-    'prepare': [],
-    'nodes': [
+    "prepare": [],
+    "nodes": [
       {
-        'id': '1',
-        'type': 'Start',
-        'name': 'Start flow action',
-        'next': '2',
-        'parameters': {
-          'input_schema': {
-            'type': 'object',
-            'properties': {
-              'flow': {
-                'action': {
-                  'type': 'string'
+        "id": "1",
+        "type": "Start",
+        "name": "Start flow action",
+        "next": "2",
+        "parameters": {
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "flow": {
+                "action": {
+                  "type": "string"
                 }
               }
             }
           }
         },
-        'lane_id': 'everyone'
+        "lane_id": "everyone"
       },
       {
-        'id': '2',
-        'name': 'VERIFY-ACTION',
-        'next': {
-          'START': '3',
-          'CONTINUE': '3',
-          'default': '5'
+        "id": "2",
+        "name": "VERIFY-ACTION",
+        "next": {
+          "START": "3",
+          "CONTINUE": "3",
+          "default": "5"
         },
-        'type': 'Flow',
-        'lane_id': 'everyone',
-        'parameters': {
-          'input': {
-            'action': {
-              '$ref': 'bag.flow.action'
+        "type": "Flow",
+        "lane_id": "everyone",
+        "parameters": {
+          "input": {
+            "action": {
+              "$ref": "bag.flow.action"
             }
           }
         }
       },
       {
-        'id': '3',
-        'type': 'UserTask',
-        'name': 'CHOOSE-ACTION',
-        'next': '4',
-        'lane_id': 'everyone',
-        'parameters': {
-          'action': 'PROVIDE_NEXT_ACTION',
-          'input': {
-            'current_action': {
-              '$ref': 'bag.flow.action'
+        "id": "3",
+        "type": "UserTask",
+        "name": "CHOOSE-ACTION",
+        "next": "4",
+        "lane_id": "everyone",
+        "parameters": {
+          "action": "PROVIDE_NEXT_ACTION",
+          "input": {
+            "current_action": {
+              "$ref": "bag.flow.action"
             }
           },
-          'activity_manager': 'commit',
-          'timeout': 10,
-          'activity_schema': {
-            'type': 'object',
-            'properties': {},
-            'required': [
-              'qty',
-              'flavors'
-            ]
+          "activity_manager": "commit",
+          "timeout": 10,
+          "activity_schema": {
+            "type": "object",
+            "properties": {},
+            "required": [ "qty", "flavors" ]
           }
         }
       },
       {
-        'id': '4',
-        'type': 'Flow',
-        'name': 'VERIFY-TIMEOUT',
-        'next': {
-          'true': '5',
-          'default': '3'
+        "id": "4",
+        "type": "Flow",
+        "name": "VERIFY-TIMEOUT",
+        "next": {
+          "true": "5",
+          "default": "3"
         },
-        'lane_id': 'everyone',
-        'parameters': {
-          'input': {
-            'is_timeout': {
-              '$ref': 'result.activities[0].is_continue'
+        "lane_id": "everyone",
+        "parameters": {
+          "input": {
+            "is_timeout": {
+              "$ref": "result.activities[0].is_continue"
             }
           }
         }
       },
       {
-        'id': '5',
-        'type': 'Finish',
-        'name': 'Finish Praise',
-        'next': null,
-        'lane_id': 'everyone'
+        "id": "5",
+        "type": "Finish",
+        "name": "Finish Praise",
+        "next": null,
+        "lane_id": "everyone"
       }
     ],
-    'lanes': [
+    "lanes": [
       {
-        'id': 'everyone',
-        'name': 'free lane',
-        'rule': {
-          '$js': '({actor_data, bag}) => true'
+        "id": "everyone",
+        "name": "free lane",
+        "rule": {
+          "$js": "({actor_data, bag}) => true"
         }
       }
     ],
-    'environment': {}
+    "environment": {}
   }
 }
