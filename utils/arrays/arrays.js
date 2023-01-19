@@ -16,6 +16,15 @@ const SET_DELIMITER = ",";
 export const ones = (n) => Array(n).fill(1);
 
 /**
+ * @abstract returns list with unique elements
+ *
+ * @param {Object} object
+ * @param {function} reduceFn
+ * @return {Object}
+ */
+export const unique = (lst) => [...new Set(lst)];
+
+/**
  * @abstract returns a vector with element each between given min_val and max_val
  *
  * @param {Number} min_val
@@ -452,6 +461,7 @@ export function* euler(sets) {
   let comb_intersec_key = "";
   let comb_intersec = [];
   let comb_excl = [];
+  let compl_sets = {};
 
   let sets_keys = sets_keys_fun(sets);
 
@@ -462,25 +472,23 @@ export function* euler(sets) {
       .map((compl_set_key) => String(compl_set_key));
 
     if (compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
-      for (const comb_elements of euler(
-        objectReduce(
+      compl_sets = objectReduce(
           compl_sets_keys,
           (result, __, compl_set_key) => {
             result[compl_set_key] = sets[compl_set_key];
             return result;
-          },
-          {}
-        )
-      )) {
+          }, {},)
+
+      for (const comb_elements of eulerGenerator(compl_sets)) {
         comb_str = comb_elements[0];
         celements = comb_elements[1];
 
         comb_excl = _.difference(celements, sets[set_key]);
         if (comb_excl.length !== 0) {
-          // Exclusive elements of group except current analysis set
+          // 1. Exclusive elements of group except current analysis set
           yield [comb_str, comb_excl];
 
-          comb_str.split(SET_DELIMITER).forEach((ckey) => {
+          comb_str.split(",").forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_excl);
           });
 
@@ -489,14 +497,12 @@ export function* euler(sets) {
 
         comb_intersec = _.intersection(celements, sets[set_key]);
         if (comb_intersec.length !== 0) {
-          // Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key]
-            .concat(comb_str.split(SET_DELIMITER))
-            .join(",");
+          // 2. Intersection of analysis element and exclusive group
+          comb_intersec_key = [set_key].concat(comb_str.split(",")).join(",");
 
           yield [comb_intersec_key, comb_intersec];
 
-          comb_str.split(SET_DELIMITER).forEach((ckey) => {
+          comb_str.split(",").forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_intersec);
           });
 
@@ -506,11 +512,15 @@ export function* euler(sets) {
         sets_keys = sets_keys_fun(sets);
       }
 
+      // 3. Set-key exclusive elements
       if (sets[set_key].length !== 0) {
         yield [String(set_key), sets[set_key]];
+        sets[set_key] = [];
       }
     }
   }
 }
 
-export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)]);
+export const euler = (sets) => {
+  return Object.fromEntries([...eulerGenerator(sets)]);
+}

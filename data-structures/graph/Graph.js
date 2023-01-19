@@ -10,7 +10,7 @@ import graphBridges from "#galgorithms/bridges/graphBridges";
 
 import {
   cartesianProduct,
-  euler,
+  eulerGenerator,
   removeArrayDuplicates,
   getAllIndexes,
   hasElement,
@@ -1808,7 +1808,7 @@ export default class Graph {
    * @return {object}
    */
   *getCyclesVenn(cycle_indices) {
-    yield* euler(cycle_indices);
+    yield* eulerGenerator(cycle_indices);
   }
 
   /**

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import {
   ones,
+  unique,
   zip,
   getAllIndexes,
   countDict,
@@ -11,7 +12,6 @@ import {
   isCyclicEqual,
   getUniques,
   euler,
-  spreadEuler,
   removeElements,
   hasElement,
   sort,
@@ -36,6 +36,18 @@ afterEach(() => {
 describe("Array", () => {
   it("should get an array of ones", () => {
     expect(ones(5)).toStrictEqual([1, 1, 1, 1, 1]);
+  });
+
+  it("should return unique array elements", () => {
+    const object_ = unique(["a", 1, { a: 1 }, "a"]);
+
+    expect(object_).toEqual(["a", 1, { a: 1 }]);
+  });
+
+  it("should return unique array elements", () => {
+    const object_ = unique(["a", 1, { a: 1 }, "a"]);
+
+    expect(object_).toEqual(["a", 1, { a: 1 }]);
   });
 
   it("should get a random number between 0 and 1", () => {
@@ -274,71 +286,82 @@ describe("hasElement", () => {
   });
 });
 
-describe("Extended euler diagram", () => {
-  it("should validate information from Extended Venn Diagram", () => {
-    const list_1 = [1, 2, 3, 4, 5];
-    const list_2 = [4, 5, 6, 7];
+global.console.warn = jest.fn()
 
-    expect(spreadEuler([list_1, list_2])).toEqual({
-      "0,1": [4, 5],
-      0: [1, 2, 3],
-      1: [6, 7],
-    });
+describe("euler", () => {
+  it("should throw Typerror for ill-conditioned input", () => {
+    const illConditionedInput = () => euler("");
+
+    expect(illConditionedInput).toThrow(TypeError);
   });
 
-  it("should validate information from Extended Venn Diagram", () => {
-    const list_1 = [1, 2];
-    const list_2 = [3, 4];
+  it("should throw Typerror for ill-conditioned input", () => {
+    const  illConditionedInput = () => euler([]);
 
-    const expected = {
-      0: [1, 2],
-      1: [3, 4],
-    };
-
-    expect(spreadEuler([list_1, list_2])).toEqual(expected);
+    expect(illConditionedInput).toThrow("There must at least ONE set!");
   });
 
-  it("should return m n-tuples of the array given", () => {
-    expect([...mSetsOfnTuples([1, 2, 3, 4], 2, 2)]).toEqual([
-      [
-        [1, 2],
-        [3, 4],
-      ],
-      [
-        [1, 3],
-        [2, 4],
-      ],
-      [
-        [1, 4],
-        [2, 3],
-      ],
-      [
-        [2, 3],
-        [1, 4],
-      ],
-      [
-        [2, 4],
-        [1, 3],
-      ],
-      [
-        [3, 4],
-        [1, 2],
-      ],
-    ]);
+  it("should warn once for duplicated set entries", () => {
+    euler({ a: [1, 1, 2] });
+
+    expect(console.warn).toBeCalledTimes(1)
+    expect(console.warn).toBeCalledWith('Each array MUST NOT have duplicates');
   });
 
-  it("should return a multiple set interactions", () => {
+  it("should return a multiple set interactions - Sample 1", () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
 
-    const expected = {
+    const result = {
       0: [1, 3],
       1: [4, 5],
       2: [6, 7],
       "0,1,2": [2],
     };
 
-    expect(spreadEuler([list_1, list_2, list_3])).toEqual(expected);
+    expect(euler([list_1, list_2, list_3])).toEqual(result);
+  });
+
+  it("should return a multiple set interactions - Sample 1", () => {
+    const list_1 = [1, 2, 3];
+    const list_2 = [2, 4, 5];
+    const list_3 = [2, 6, 7];
+
+    const result = {
+      0: [1, 3],
+      1: [4, 5],
+      2: [6, 7],
+      "0,1,2": [2],
+    };
+
+    expect(euler([list_1, list_2, list_3])).toEqual(result);
+  });
+
+  it("should return a multiple set interactions - Sample 2", () => {
+    const list_1 = [1, 2, 3];
+    const list_2 = [2, 4, 5];
+    const list_3 = [2, 6, 7];
+
+    const result = {
+      0: [1, 3],
+      1: [4, 5],
+      2: [6, 7],
+      "0,1,2": [2],
+    };
+
+    expect(euler([list_1, list_2, list_3])).toEqual(result);
+  });
+
+  it("should validate empty exclusivity from Euler Diagram", () => {
+    const list_1 = [1, 2, 3, 4, 5, 6];
+    const list_2 = [4, 5, 6];
+
+    const result = {
+      0: [1, 2, 3],
+      "0,1": [4, 5, 6],
+    };
+
+    expect(euler([list_1, list_2])).toEqual(result);
   });
 });
