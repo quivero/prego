@@ -1081,6 +1081,17 @@ describe("Graph", () => {
     expect(result).toEqual(expected);
   });
 
+  it("should return false for not strongly connected directed graph", () => {
+    graph = new Graph(true);
+
+    graph.addVertices([A, B, C, D]);
+
+    result = graph.isStronglyConnected();
+    expected = false;
+
+    expect(result).toEqual(expected);
+  });
+
   it("should return circuits in a directed graph", () => {
     // A directed graph
     const graph = new Graph(true);
