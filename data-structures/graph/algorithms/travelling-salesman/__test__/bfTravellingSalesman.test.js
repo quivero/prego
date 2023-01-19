@@ -1,6 +1,6 @@
-import GraphEdge from "@dstructures/graph/GraphEdge";
-import Graph from "@dstructures/graph/Graph";
-import { createVertices } from "@gutils/graph";
+import GraphEdge from "#dstructures/graph/GraphEdge";
+import Graph from "#dstructures/graph/Graph";
+import { createVertices } from "#gutils/graph";
 
 import bfTravellingSalesman from "../bfTravellingSalesman";
 

@@ -1,6 +1,6 @@
 import BinaryTreeNode from "../BinaryTreeNode";
-import Comparator from "@utils/comparator/Comparator";
-import throwError from "@utils/sys/sys";
+import Comparator from "#utils/comparator/Comparator";
+import throwError from "#utils/sys/sys";
 
 export default class BinarySearchTreeNode extends BinaryTreeNode {
   /**

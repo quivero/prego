@@ -5,7 +5,7 @@ import GraphVertex from "../GraphVertex.js";
 import GraphEdge from "../GraphEdge.js";
 import Graph from "../Graph.js";
 
-import { objectInit, objectMap } from "@utils/objects/objects";
+import { objectInit, objectMap } from "#utils/objects/objects";
 
 export const createVertices = (labels) => {
   const vertices = [];

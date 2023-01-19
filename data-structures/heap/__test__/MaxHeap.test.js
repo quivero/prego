@@ -1,5 +1,5 @@
 import MaxHeap from "../MaxHeap";
-import Comparator from "@utils/comparator/Comparator";
+import Comparator from "#utils/comparator/Comparator";
 
 describe("MaxHeap", () => {
   it("should create an empty max heap", () => {

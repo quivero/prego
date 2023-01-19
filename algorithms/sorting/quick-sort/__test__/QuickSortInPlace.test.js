@@ -1,6 +1,6 @@
 import QuickSortInPlace from "../QuickSortInPlace";
 
-import { SortTester } from "@algorithms/sorting/SortTester.js";
+import { SortTester } from "#algorithms/sorting/SortTester.js";
 
 import { arr, sorted_arr, reverse_arr, ones_arr } from "../../fixtures";
 

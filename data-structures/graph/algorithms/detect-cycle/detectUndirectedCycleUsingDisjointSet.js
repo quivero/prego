@@ -1,4 +1,4 @@
-import DisjointSet from "@dstructures/disjoint-set/DisjointSet";
+import DisjointSet from "#dstructures/disjoint-set/DisjointSet";
 
 /**
  * Detect cycle in undirected graph using disjoint sets.
