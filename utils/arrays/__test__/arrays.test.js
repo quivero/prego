@@ -146,7 +146,7 @@ describe("Array", () => {
     const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const m = 3;
     const n = 5;
-    
+
     const set_gen = mSetsOfnTuples(arr, n, m);
 
     set_gen.next();
@@ -162,7 +162,7 @@ describe("Array", () => {
     expected = [ 1, 2, 3 ];
 
     const set_gen = mSetsOfnTuples(arr, m, n);
-    
+
     candidate = set_gen.next().value;
     expect(arr).toStrictEqual(expected);
   });
@@ -176,7 +176,7 @@ describe("Array", () => {
 
     const set_gen = mSetsOfnTuples(arr, m, n);
     candidate = set_gen.next().value;
-    
+
     expect(candidate).toStrictEqual(expected);
   });
 
