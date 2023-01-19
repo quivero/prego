@@ -794,9 +794,9 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   const spacing = "    ";
 
   let diagram_body = `graph TD` + breakline;
-  
+
   diagram_body += breakline;
-  
+
   const diagramTypeToNode = objectInit(node_styles, []);
   const diagramNodeType = {};
 
@@ -921,15 +921,15 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
 
   diagram_body += breakline;
 
-  // Add node classes 
+  // Add node classes
   Object.entries(diagramTypeToNode).forEach((entry) => {
     const [ node_style, node_keys ] = entry;
-    
+
     if ( node_style !== "default" && node_keys.length !== 0 ) {
       string_tmp = `class ${node_keys} ${node_style}`;
       diagram_body += spacing + string_tmp + breakline;
     }
-    
+
   });
 
   return diagram_body;
