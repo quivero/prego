@@ -778,9 +778,7 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
 
   const path_edges = blueprint_graph
     .convertEdgesToVerticesIndices(blueprint_graph.getEdgesFromChain(path))
-    .map((path_edge) =>
-      blueprint_graph.convertVerticesIndexestoKeys(path_edge)
-    );
+    .map((path_edge) => blueprint_graph.convertVerticesIndexestoKeys(path_edge));
 
   const invalid_nodes = getBlueprintInvalidNodes(blueprint);
   const path_vertex_keys = blueprint_graph.convertVerticesIndexestoKeys(path);
@@ -793,8 +791,11 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   );
 
   const breakline = "\n";
-  const spacing = "      ";
-  let diagram_body = `graph TD${breakline}`;
+  const spacing = "    ";
+
+  let diagram_body = `graph TD` + breakline;
+  
+  diagram_body += breakline;
   
   const diagramTypeToNode = objectInit(node_styles, []);
   const diagramNodeType = {};
@@ -921,15 +922,16 @@ export const castBlueprintToDiagram = (blueprint, path = []) => {
   diagram_body += breakline;
 
   // Add node classes 
-  Object.entries(diagramTypeToNode).forEach((entry) => {
-    const [ node_style, node_keys ] = entry;
-    
-    if ( node_style !== "default" && node_keys.length !== 0 ) {
-      string_tmp = `class ${node_keys} ${node_style}`;
-      diagram_body += spacing + string_tmp + breakline;
+  Object.entries(diagramTypeToNode).forEach(
+    (entry) => {
+      const [ node_style, node_keys ] = entry;
+      
+      if ( node_style !== "default" && node_keys.length !== 0 ) {
+        string_tmp = `class ${node_keys} ${node_style}`;
+        diagram_body += spacing + string_tmp + breakline;
+      }
     }
-    
-  });
+  );
 
   return diagram_body;
 };
