@@ -62,7 +62,10 @@
           "activity_schema": {
             "type": "object",
             "properties": {},
-            "required": [ "qty", "flavors" ]
+            "required": [
+              "qty",
+              "flavors"
+            ]
           }
         }
       },
