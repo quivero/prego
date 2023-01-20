@@ -75,8 +75,8 @@ describe("PriorityQueue", () => {
 
     priorityQueue.add(10, 1);
     priorityQueue.add(5, 2);
-    priorityQueue.add(100, 0);
-    priorityQueue.add(200, 0);
+    priorityQueue.add(100);
+    priorityQueue.add(200);
 
     expect(priorityQueue.peek()).toBe(100);
 
@@ -94,8 +94,8 @@ describe("PriorityQueue", () => {
 
     priorityQueue.add(10, 1);
     priorityQueue.add(5, 2);
-    priorityQueue.add(100, 0);
-    priorityQueue.add(200, 0);
+    priorityQueue.add(100);
+    priorityQueue.add(200);
 
     priorityQueue.changePriority(200, 10);
     priorityQueue.changePriority(10, 20);
@@ -114,8 +114,8 @@ describe("PriorityQueue", () => {
 
     priorityQueue.add(10, 1);
     priorityQueue.add(5, 2);
-    priorityQueue.add(100, 0);
-    priorityQueue.add(200, 0);
+    priorityQueue.add(100);
+    priorityQueue.add(200);
     priorityQueue.add(15, 15);
 
     expect(priorityQueue.hasValue(70)).toBe(false);

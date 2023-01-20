@@ -427,6 +427,8 @@ export function* upperTriangularHyperindexes(length, dim) {
   yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
 }
 
+const SETKEY_DELIMITER = ",";
+
 export function* eulerGenerator(sets) {
   /**
  *   @abstract returns each tuple [key, elems] of the Euler diagram
@@ -498,45 +500,51 @@ export function* eulerGenerator(sets) {
 
     if (compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
       compl_sets = objectReduce(
-          compl_sets_keys,
-          (result, __, compl_set_key) => {
-            result[compl_set_key] = sets[compl_set_key];
-            return result;
-          }, {},)
-
+            compl_sets_keys,
+            (result, __, compl_set_key) => {
+              result[compl_set_key] = sets[compl_set_key];
+              return result;
+            }, {} )
+      
       for (const comb_elements of eulerGenerator(compl_sets)) {
         comb_str = comb_elements[0];
         celements = comb_elements[1];
-
+        
+        // 1. Exclusive set elements on complement to current analysis set
         comb_excl = _.difference(celements, sets[set_key]);
         if (comb_excl.length !== 0) {
-          // 1. Exclusive elements of group except current analysis set
           yield [comb_str, comb_excl];
-
-          comb_str.split(",").forEach((ckey) => {
-            sets[ckey] = _.difference(sets[ckey], comb_excl);
-          });
+          
+          comb_str.split(SETKEY_DELIMITER).forEach(
+            (ckey) => {
+              sets[ckey] = _.difference(sets[ckey], comb_excl);
+            }
+          );
 
           sets[set_key] = _.difference(sets[set_key], comb_excl);
         }
 
+        // 2. Intersection of analysis element and exclusive group
         comb_intersec = _.intersection(celements, sets[set_key]);
         if (comb_intersec.length !== 0) {
-          // 2. Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key].concat(comb_str.split(",")).join(",");
+          comb_intersec_key = [
+            set_key].concat(comb_str.split(SETKEY_DELIMITER)
+          ).join(SETKEY_DELIMITER);
 
           yield [comb_intersec_key, comb_intersec];
 
-          comb_str.split(",").forEach((ckey) => {
-            sets[ckey] = _.difference(sets[ckey], comb_intersec);
-          });
+          comb_str.split(SETKEY_DELIMITER).forEach(
+            (ckey) => {
+              sets[ckey] = _.difference(sets[ckey], comb_intersec);
+            }
+          );
 
           sets[set_key] = _.difference(sets[set_key], comb_intersec);
         }
 
         sets_keys = sets_keys_fun(sets);
       }
-
+      
       // 3. Set-key exclusive elements
       if (sets[set_key].length !== 0) {
         yield [String(set_key), sets[set_key]];

@@ -376,4 +376,18 @@ describe("euler", () => {
 
     expect(euler([list_1, list_2])).toEqual(result);
   });
+
+  it("should validate empty exclusivity from Euler Diagram", () => {
+    const list_1 = [1, 2, 3, 4, 5, 6];
+    const list_2 = [4, 5, 6, 7, 8, 9];
+
+    const result = {
+      0: [1, 2, 3],
+      "0,1": [4, 5, 6],
+      1: [7, 8, 9],
+    };
+
+    expect(euler([list_1, list_2])).toEqual(result);
+  });
+  
 });

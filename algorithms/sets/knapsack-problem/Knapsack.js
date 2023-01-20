@@ -78,41 +78,24 @@ export default class Knapsack {
 
     // Fill the first column with zeros since it would mean that there is
     // no items we can add to knapsack in case if weight limitation is zero.
-    for (
-      let itemIndex = 0;
-      itemIndex < this.possibleItems.length;
-      itemIndex += 1
-    ) {
+    for (let itemIndex = 0; itemIndex < numberOfRows; itemIndex += 1) {
       knapsackMatrix[itemIndex][0] = 0;
     }
 
     // Fill the first row with max possible values we would get by just adding
     // or not adding the first item to the knapsack.
-    for (
-      let weightIndex = 1;
-      weightIndex <= this.weightLimit;
-      weightIndex += 1
-    ) {
+    for (let weightIndex = 1; weightIndex <= numberOfColumns; weightIndex += 1) {
       const itemIndex = 0;
       const itemWeight = this.possibleItems[itemIndex].weight;
       const itemValue = this.possibleItems[itemIndex].value;
-      knapsackMatrix[itemIndex][weightIndex] =
-        itemWeight <= weightIndex ? itemValue : 0;
+
+      knapsackMatrix[itemIndex][weightIndex] = itemWeight <= weightIndex ? itemValue : 0;
     }
 
     // Go through combinations of how we may add items to knapsack and
-    // define what weight/value we would receive using Dynamic Programming
-    // approach.
-    for (
-      let itemIndex = 1;
-      itemIndex < this.possibleItems.length;
-      itemIndex += 1
-    ) {
-      for (
-        let weightIndex = 1;
-        weightIndex <= this.weightLimit;
-        weightIndex += 1
-      ) {
+    // define what weight/value we would receive using Dynamic Programming approach.
+    for (let itemIndex = 1; itemIndex < numberOfRows; itemIndex += 1) {
+      for (let weightIndex = 1; weightIndex <= numberOfColumns; weightIndex += 1) {
         const currentItemWeight = this.possibleItems[itemIndex].weight;
         const currentItemValue = this.possibleItems[itemIndex].value;
 
@@ -120,22 +103,20 @@ export default class Knapsack {
           // In case if item's weight is bigger then currently allowed weight
           // then we can't add it to knapsack and the max possible value we can
           // gain at the moment is the max value we got for previous item.
-          knapsackMatrix[itemIndex][weightIndex] =
-            knapsackMatrix[itemIndex - 1][weightIndex];
+          knapsackMatrix[itemIndex][weightIndex] = knapsackMatrix[itemIndex - 1][weightIndex];
         } else {
-          // Else we need to consider the max value we can gain at this point by adding
+          // Otherwise, we need to consider the max value we can gain at this point by adding
           // current value or just by keeping the previous item for current weight.
           knapsackMatrix[itemIndex][weightIndex] = Math.max(
-            currentItemValue +
-              knapsackMatrix[itemIndex - 1][weightIndex - currentItemWeight],
+            currentItemValue + knapsackMatrix[itemIndex - 1][weightIndex - currentItemWeight],
             knapsackMatrix[itemIndex - 1][weightIndex]
           );
         }
       }
     }
 
-    // Now let's trace back the knapsack matrix to see what items we're going to add
-    // to the knapsack.
+    // Now let's trace back the knapsack matrix to see what items we're going 
+    // to add on knapsack.
     let itemIndex = this.possibleItems.length - 1;
     let weightIndex = this.weightLimit;
 
@@ -143,27 +124,22 @@ export default class Knapsack {
       const currentItem = this.possibleItems[itemIndex];
       const prevItem = this.possibleItems[itemIndex - 1];
 
-      // Check if matrix value came from top (from previous item).
-      // In this case this would mean that we need to include previous item
+      // Check if matrix value came from top (from previous item):
+      // this would mean that we need to include previous item 
       // to the list of selected items.
       if (
         knapsackMatrix[itemIndex][weightIndex] &&
-        knapsackMatrix[itemIndex][weightIndex] ===
-          knapsackMatrix[itemIndex - 1][weightIndex]
+        knapsackMatrix[itemIndex][weightIndex] === knapsackMatrix[itemIndex - 1][weightIndex]
       ) {
         // Check if there are several items with the same weight but with the different values.
         // We need to add highest item in the matrix that is possible to get the highest value.
         const prevSumValue = knapsackMatrix[itemIndex - 1][weightIndex];
         const prevPrevSumValue = knapsackMatrix[itemIndex - 2][weightIndex];
-        if (
-          !prevSumValue ||
-          (prevSumValue && prevPrevSumValue !== prevSumValue)
-        ) {
+        
+        if( !prevSumValue || (prevSumValue && prevPrevSumValue !== prevSumValue)) {
           this.selectedItems.push(prevItem);
         }
-      } else if (
-        knapsackMatrix[itemIndex - 1][weightIndex - currentItem.weight]
-      ) {
+      } else if (knapsackMatrix[itemIndex - 1][weightIndex - currentItem.weight]) {
         this.selectedItems.push(prevItem);
         weightIndex -= currentItem.weight;
       }
@@ -172,25 +148,20 @@ export default class Knapsack {
     }
   }
 
-  // Solve unbounded knapsack problem.
-  // Greedy approach.
+  // Solve unbounded knapsack problem: Greedy approach.
   solveUnboundedKnapsackProblem() {
     this.sortPossibleItemsByValue();
     this.sortPossibleItemsByValuePerWeightRatio();
 
-    for (
-      let itemIndex = 0;
-      itemIndex < this.possibleItems.length;
-      itemIndex += 1
-    ) {
+    const n_items = this.possibleItems.length;
+
+    for (let itemIndex = 0; itemIndex < n_items; itemIndex += 1 ) {
       if (this.totalWeight < this.weightLimit) {
         const currentItem = this.possibleItems[itemIndex];
 
-        // Detect how much of current items we can push to knapsack.
+        // Detect amount of current items we may push to knapsack.
         const availableWeight = this.weightLimit - this.totalWeight;
-        const maxPossibleItemsCount = Math.floor(
-          availableWeight / currentItem.weight
-        );
+        const maxPossibleItemsCount = Math.floor(availableWeight / currentItem.weight);
 
         if (maxPossibleItemsCount > currentItem.itemsInStock) {
           // If we have more items in stock then it is allowed to add
@@ -210,16 +181,14 @@ export default class Knapsack {
   get totalValue() {
     /** @var {KnapsackItem} item */
     return this.selectedItems.reduce(
-      (accumulator, item) => accumulator + item.totalValue,
-      0
+      (accumulator, item) => accumulator + item.totalValue, 0
     );
   }
 
   get totalWeight() {
     /** @var {KnapsackItem} item */
     return this.selectedItems.reduce(
-      (accumulator, item) => accumulator + item.totalWeight,
-      0
+      (accumulator, item) => accumulator + item.totalWeight,  0
     );
   }
 }

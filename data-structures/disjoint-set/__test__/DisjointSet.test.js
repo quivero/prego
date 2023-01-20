@@ -26,6 +26,9 @@ describe("DisjointSet", () => {
 
     disjointSet.makeSet("A");
 
+    // Branching: try to define a second time without success
+    disjointSet.makeSet("A");
+
     expect(disjointSet.find("A")).toBe("A");
     expect(disjointSet.find("B")).toBeNull();
 
