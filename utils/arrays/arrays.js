@@ -505,16 +505,16 @@ export function* eulerGenerator(sets) {
               result[compl_set_key] = sets[compl_set_key];
               return result;
             }, {} )
-      
+
       for (const comb_elements of eulerGenerator(compl_sets)) {
         comb_str = comb_elements[0];
         celements = comb_elements[1];
-        
+
         // 1. Exclusive set elements on complement to current analysis set
         comb_excl = _.difference(celements, sets[set_key]);
         if (comb_excl.length !== 0) {
           yield [comb_str, comb_excl];
-          
+
           comb_str.split(SETKEY_DELIMITER).forEach(
             (ckey) => {
               sets[ckey] = _.difference(sets[ckey], comb_excl);
@@ -544,7 +544,7 @@ export function* eulerGenerator(sets) {
 
         sets_keys = sets_keys_fun(sets);
       }
-      
+
       // 3. Set-key exclusive elements
       if (sets[set_key].length !== 0) {
         yield [String(set_key), sets[set_key]];
