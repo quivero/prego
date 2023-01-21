@@ -1,7 +1,4 @@
-import { 
-  assert, 
-  batchAssert
-} from "../assertions";
+import { assert, batchAssert } from "../assertions";
 
 const items = [
   [42, (result) => expect(result).toBeDefined()],

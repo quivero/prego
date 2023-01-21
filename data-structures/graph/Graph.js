@@ -714,41 +714,39 @@ export default class Graph {
 
     if (this.isDirected) {
       /** @param {GraphEdge} edge */
-      this.getAllEdges().forEach(
-        (edge) => {
-          edge_key = edge.getKey();
+      this.getAllEdges().forEach((edge) => {
+        edge_key = edge.getKey();
 
-          if (!is_reversed[edge_key]) {
-            // Delete straight edge from graph and from vertices.
-            this.deleteEdge(edge);
+        if (!is_reversed[edge_key]) {
+          // Delete straight edge from graph and from vertices.
+          this.deleteEdge(edge);
 
-            // Reverse the edge.
-            edge.reverse();
+          // Reverse the edge.
+          edge.reverse();
 
-            reversed_edge_key = edge.getKey();
+          reversed_edge_key = edge.getKey();
 
-            if (this.edges[reversed_edge_key] !== undefined) {
-              const edge_twin = this.edges[reversed_edge_key];
+          if (this.edges[reversed_edge_key] !== undefined) {
+            const edge_twin = this.edges[reversed_edge_key];
 
-              // Delete edge twin from graph and from vertices.
-              this.deleteEdge(edge_twin);
+            // Delete edge twin from graph and from vertices.
+            this.deleteEdge(edge_twin);
 
-              // Reverse edge twin
-              edge_twin.reverse();
+            // Reverse edge twin
+            edge_twin.reverse();
 
-              // Add edge twin
-              this.addEdge(edge_twin);
+            // Add edge twin
+            this.addEdge(edge_twin);
 
-              is_reversed[reversed_edge_key] = true;
-            }
-
-            // Add reversed edge back to the graph and its vertices.
-            this.addEdge(edge);
-
-            is_reversed[edge_key] = true;
+            is_reversed[reversed_edge_key] = true;
           }
+
+          // Add reversed edge back to the graph and its vertices.
+          this.addEdge(edge);
+
+          is_reversed[edge_key] = true;
         }
-      );
+      });
     } else {
       warn("The reverse of an undirected graph is identical to itself!");
       return;
@@ -1620,7 +1618,13 @@ export default class Graph {
    * @return {Array[Array]} cycle
    */
   #tarjanCycleMethod(
-    origin_index, curr_index, finish_recur, points, marked_stack, marked, is_finish
+    origin_index,
+    curr_index,
+    finish_recur,
+    points,
+    marked_stack,
+    marked,
+    is_finish
   ) {
     const adjList = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
@@ -1654,7 +1658,13 @@ export default class Graph {
           // Non visited adjacent vertices
           if (marked[adj_index] === false) {
             this.#tarjanCycleMethod(
-              origin_index, adj_index, finish_recur, points, marked_stack, marked, is_finish
+              origin_index,
+              adj_index,
+              finish_recur,
+              points,
+              marked_stack,
+              marked,
+              is_finish
             );
           }
         }

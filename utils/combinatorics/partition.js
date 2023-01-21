@@ -48,13 +48,13 @@ export const cardvecCombinations = (points, card_vec) => {
   let blob_combs = [];
   let blob_comb = [];
   let elem_1_combs = [];
-  let  points_diff;
+  let points_diff;
   let error_msg;
 
   if (points.length !== card_vec.reduce((a, b) => a + b)) {
-    error_msg = "The sum of card_vec elements MUST be equal to points cardinality"
+    error_msg =
+      "The sum of card_vec elements MUST be equal to points cardinality";
     throwError(error_msg);
-
   } else if (card_vec.length === 1) {
     return [points];
   } else {
@@ -70,5 +70,4 @@ export const cardvecCombinations = (points, card_vec) => {
 
     return blob_combs;
   }
-
 };

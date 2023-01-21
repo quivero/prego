@@ -1,6 +1,6 @@
-import express from 'express';
+import express from "express";
 
-import { morganMiddleware } from '../utils/logging/logger.js';
+import { morganMiddleware } from "../utils/logging/logger.js";
 
 const parserConfig = { extended: true };
 

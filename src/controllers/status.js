@@ -1,4 +1,4 @@
-import { statusImgPath } from '../../utils/logging/status.js';
+import { statusImgPath } from "../../utils/logging/status.js";
 
 const curr_dir = `${process.cwd()}`;
 let relativeStatusPath, absoluteStatusPath;
