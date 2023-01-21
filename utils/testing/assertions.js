@@ -25,8 +25,8 @@ export const assert = (item) => {
     } else {
       const callbackValidity =
         "Last element on item must be a callback function!";
-
-      throw Error(callbackValidity);
+      
+      throw Error(item);
     }
   } else {
     const description = "Test element may have structure: ";
@@ -37,4 +37,7 @@ export const assert = (item) => {
   }
 };
 
-export const batchAssert = (items) => items.forEach((item) => assert(item));
+export const batchAssert = (items) => {
+  expect.assertions(items.length);
+  items.forEach((item) => assert(item))
+};

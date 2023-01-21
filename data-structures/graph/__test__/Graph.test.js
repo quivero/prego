@@ -3,27 +3,34 @@ import Graph from "../Graph";
 import GraphVertex from "../GraphVertex";
 import GraphEdge from "../GraphEdge";
 
-import { createEdges, createEdgesFromVerticesValues } from "../utils/graph.js";
+import { 
+  createVertices,
+  createEdges, 
+  createEdgesFromVerticesValues,
+  resetVertices
+} from "#gutils/graph.js";
 
 import { ones, isCyclicEqual } from "#utils/arrays/arrays";
+
+import { batchAssert } from "#utils/testing/assertions.js";
 
 import { throwError, warn } from "#utils/sys/sys.js";
 
 jest.mock("#utils/sys/sys.js");
 
 let preamble, expected, result;
-
 let graph, graph_;
 let edges_vertices, edges;
 
-let A = new GraphVertex("A");
-let B = new GraphVertex("B");
-let C = new GraphVertex("C");
-let D = new GraphVertex("D");
-let E = new GraphVertex("E");
-let F = new GraphVertex("F");
-let G = new GraphVertex("G");
-let H = new GraphVertex("H");
+const toBeAssert = (result, expected) => expect(result).toBe(expected);
+const toEqualAssert = (result, expected) => expect(result).toEqual(expected);
+const toStrictEqualAssert = (result, expected) => expect(result).toStrictEqual(expected);
+const toBeDefinedAssert = (result) => expect(result).toBeDefined();
+const toBeUndefinedAssert = (result) => expect(result).toBeUndefined();
+
+let A, B, C, D, E, F, G, H;
+
+[A, B, C, D, E, F, G, H] = createVertices(["A", "B", "C", "D", "E", "F", "G", "H"]);
 
 let AB,
   AC,
@@ -68,14 +75,7 @@ afterEach(() => {
 
 beforeEach(() => {
   // restore the spy created with spyOn
-  A.deleteAllEdges();
-  B.deleteAllEdges();
-  C.deleteAllEdges();
-  D.deleteAllEdges();
-  E.deleteAllEdges();
-  F.deleteAllEdges();
-  G.deleteAllEdges();
-  H.deleteAllEdges();
+  [A, B, C, D, E, F, G, H] = resetVertices([A, B, C, D, E, F, G, H]);
 });
 
 describe("Graph", () => {
@@ -89,17 +89,12 @@ describe("Graph", () => {
 
     graph = preamble();
     trivia = [
-      [graph.toString(graph.getVertexByKey(A.getKey())), ""],
-      [graph.getVertexByKey(A.getKey()), A],
-      [graph.getVertexByKey(B.getKey()), B],
+      [ graph.toString(graph.getVertexByKey(A.getKey())), "", toBeAssert ],
+      [ graph.getVertexByKey(A.getKey()), A, toBeAssert ],
+      [ graph.getVertexByKey(B.getKey()), B, toBeAssert ],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toBe(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should get vertex by its index", () => {
@@ -123,11 +118,7 @@ describe("Graph", () => {
   it("should serialize and deserialize graph", () => {
     graph_ = new Graph(true);
 
-    [AB, BC, CD] = createEdgesFromVerticesValues([
-      ["A", "B"],
-      ["B", "C"],
-      ["C", "D"],
-    ]);
+    [AB, BC, CD] = createEdgesFromVerticesValues([ ["A", "B"], ["B", "C"], ["C", "D"], ]);
 
     preamble = () => {
       graph = new Graph(true);
@@ -144,15 +135,8 @@ describe("Graph", () => {
 
     expected = {
       isDirected: true,
-      nodes: [
-        { id: "A", value: 0 },
-        { id: "B", value: 0 },
-        { id: "C", value: 0 },
-      ],
-      edges: [
-        { source: "A", target: "B", weight: 0 },
-        { source: "B", target: "C", weight: 0 },
-      ],
+      nodes: [ { id: "A", value: 0 }, { id: "B", value: 0 }, { id: "C", value: 0 } ],
+      edges: [ { source: "A", target: "B", weight: 0 }, { source: "B", target: "C", weight: 0 } ],
     };
 
     expect(result).toEqual(expected);
@@ -185,10 +169,10 @@ describe("Graph", () => {
     edges = graph_.getAllEdges();
 
     trivia = [
-      [graph_.getNumVertices(), 4],
-      [edges.length, 3],
-      [edges[0].toString(), "A_B"],
-      [edges[1].toString(), "B_C"],
+      [ graph_.getNumVertices(), 4 ],
+      [ edges.length, 3 ],
+      [ edges[0].toString(), "A_B" ],
+      [ edges[1].toString(), "B_C" ],
     ];
 
     for (let index in trivia) {
@@ -292,13 +276,7 @@ describe("Graph", () => {
 
     // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
-      [A, B],
-      [B, C],
-      [C, D],
-      [C, E],
-      [E, B],
-      [C, F],
-      [F, B],
+      [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B], 
     ]);
 
     // Add edges
@@ -316,13 +294,7 @@ describe("Graph", () => {
 
     // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
-      [A, B],
-      [B, C],
-      [C, D],
-      [C, E],
-      [E, B],
-      [C, F],
-      [F, B],
+      [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B],
     ]);
 
     // Add edges
@@ -352,8 +324,7 @@ describe("Graph", () => {
     graph = new Graph(true);
 
     [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
+      [A, B], [B, C],
     ]);
 
     // Add vertices
@@ -403,8 +374,7 @@ describe("Graph", () => {
     graph = new Graph();
 
     [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
+      [A, B], [B, C],
     ]);
 
     graph.addEdges([AB, BC]);
@@ -457,10 +427,7 @@ describe("Graph", () => {
   it("should get edges by vertex keys", () => {
     graph = new Graph();
 
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
+    [AB, BC] = createEdges([ [A, B], [B, C] ]);
 
     graph.addEdges([AB, BC]);
 
@@ -473,10 +440,7 @@ describe("Graph", () => {
   it("should get edges by vertex keys", () => {
     graph = new Graph();
 
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
+    [AB, BC] = createEdges([ [A, B], [B, C] ]);
 
     graph.addEdges([AB, BC]);
 
@@ -501,10 +465,7 @@ describe("Graph", () => {
   it("should get undefined for undefined start vertex index", () => {
     graph = new Graph();
 
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
+    [AB, BC] = createEdges([ [A, B], [B, C] ]);
 
     graph.addEdges([AB, BC]);
 
@@ -519,10 +480,7 @@ describe("Graph", () => {
   it("should get undefined for undefined start vertex index", () => {
     graph = new Graph();
 
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
+    [AB, BC] = createEdges([ [A, B], [B, C] ]);
 
     graph.addEdges([AB, BC]);
 
@@ -573,34 +531,22 @@ describe("Graph", () => {
     const graphB = graph.getVertexByKey(B.getKey());
 
     trivia = [
-      [graph.getAllVertices().length, 2],
-      [graph.getAllVertices()[0], A],
-      [graph.getAllVertices()[1], B],
-      [graph.toString(), "A_B"],
-      [graphA],
-      [graphB],
-      [graph.getVertexByKey("unknown")],
-      [graphA.getNeighbors().length, 1],
-      [graphA.getNeighbors()[0], B],
-      [graphA.getNeighbors()[0], graphB],
-      [graphB.getNeighbors().length, 1],
-      [graphB.getNeighbors()[0], A],
-      [graphB.getNeighbors()[0], graphA],
+      [ graph.getAllVertices().length, 2, toBeDefinedAssert ],
+      [ graph.getAllVertices()[0], A, toEqualAssert ],
+      [ graph.getAllVertices()[1], B, toEqualAssert ],
+      [ graph.toString(), "A_B", toBeAssert ],
+      [ graphA, toBeDefinedAssert ],
+      [ graphB, toBeDefinedAssert ],
+      [ graph.getVertexByKey("unknown"), toBeUndefinedAssert ],
+      [ graphA.getNeighbors().length, 1, toBeAssert ],
+      [ graphA.getNeighbors()[0], B, toEqualAssert ],
+      [ graphA.getNeighbors()[0], graphB, toEqualAssert ],
+      [ graphB.getNeighbors().length, 1, toBeAssert ],
+      [ graphB.getNeighbors()[0], A, toBeAssert ],
+      [ graphB.getNeighbors()[0], graphA, toBeAssert ],
     ];
 
-    expect(trivia[0][0]).toBe(trivia[0][1]);
-    expect(trivia[1][0]).toEqual(trivia[1][1]);
-    expect(trivia[2][0]).toEqual(trivia[2][1]);
-    expect(trivia[3][0]).toBe(trivia[3][1]);
-    expect(trivia[4][0]).toBeDefined();
-    expect(trivia[5][0]).toBeDefined();
-    expect(trivia[6][0]).toBeUndefined();
-    expect(trivia[7][0]).toBe(trivia[7][1]);
-    expect(trivia[8][0]).toEqual(trivia[8][1]);
-    expect(trivia[9][0]).toEqual(trivia[9][1]);
-    expect(trivia[10][0]).toBe(trivia[10][1]);
-    expect(trivia[11][0]).toEqual(trivia[11][1]);
-    expect(trivia[12][0]).toEqual(trivia[12][1]);
+    batchAssert(trivia);
   });
 
   it("should add edges to directed graph", () => {
@@ -613,22 +559,16 @@ describe("Graph", () => {
     const graphB = graph.getVertexByKey(B.getKey());
 
     trivia = [
-      [graph.toString(), "A_B"],
-      [graphA],
-      [graphB],
-      [graphA.getNeighbors().length, 1],
-      [graphA.getNeighbors()[0], B],
-      [graphA.getNeighbors()[0], graphB],
-      [graphB.getNeighbors().length, 0],
+      [ graph.toString(), "A_B", toBeAssert ],
+      [ graphA, toBeDefinedAssert ],
+      [ graphB, toBeDefinedAssert ],
+      [ graphA.getNeighbors().length, 1, toBeAssert ],
+      [ graphA.getNeighbors()[0], B, toEqualAssert ],
+      [ graphA.getNeighbors()[0], graphB, toEqualAssert ],
+      [ graphB.getNeighbors().length, 0, toBeAssert ],
     ];
-
-    expect(trivia[0][0]).toBe(trivia[0][1]);
-    expect(trivia[1][0]).toBeDefined();
-    expect(trivia[2][0]).toBeDefined();
-    expect(trivia[3][0]).toBe(trivia[3][1]);
-    expect(trivia[4][0]).toEqual(trivia[4][0]);
-    expect(trivia[5][0]).toEqual(trivia[5][0]);
-    expect(trivia[6][0]).toBe(trivia[6][0]);
+    
+    batchAssert(trivia);
   });
 
   it("should check if vertex and edge exist", () => {
@@ -641,16 +581,11 @@ describe("Graph", () => {
     graph.addEdge(AB);
 
     trivia = [
-      [graph.hasVertex(A.getKey()), true],
-      [graph.hasEdge(AB.getKey()), true],
+      [ graph.hasVertex(A.getKey()), true, toBeAssert ],
+      [ graph.hasEdge(AB.getKey()), true, toBeAssert ],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toBe(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should copy directed graph but undirected", () => {
@@ -802,16 +737,11 @@ describe("Graph", () => {
     graph.addEdges([AB, BC, CD]);
 
     trivia = [
-      [graph.isEulerian(), false],
-      [graph.isEulerianCycle(), false],
+      [ graph.isEulerian(), false, toStrictEqualAssert ],
+      [ graph.isEulerianCycle(), false, toStrictEqualAssert ],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toStrictEqual(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should return true for an eulerian directed graph", () => {
@@ -826,16 +756,11 @@ describe("Graph", () => {
     graph.addEdges([AB, BC, CD, DA]);
 
     trivia = [
-      [graph.isEulerian(), true],
-      [graph.isEulerianCycle(), true],
+      [graph.isEulerian(), true, toStrictEqualAssert],
+      [graph.isEulerianCycle(), true, toStrictEqualAssert],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toStrictEqual(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should return false for an directed graph with different in and out edge flow", () => {
@@ -971,20 +896,39 @@ describe("Graph", () => {
     const n_vertices = graph.getNumVertices();
 
     trivia = [
-      [graph.getInOutDegreeList(0), { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 }],
-      [graph.getInOutDegreeList(1), { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 }],
-      [graph.volume(_.range(n_vertices), 0), 6],
-      [graph.volume(_.range(n_vertices), 1), 6],
-      [graph.getForwardDegrees(), ones(6)],
-      [graph.getReverseDegrees(), ones(6)],
+      [ 
+        graph.getInOutDegreeList(0), 
+        { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
+        toEqualAssert
+      ], 
+      [ 
+        graph.getInOutDegreeList(1), 
+        { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
+        toEqualAssert
+      ],
+      [ 
+        graph.volume(_.range(n_vertices), 0), 
+        6,
+        toEqualAssert
+      ],
+      [ 
+        graph.volume(_.range(n_vertices), 1), 
+        6,
+        toEqualAssert
+      ],
+      [ 
+        graph.getForwardDegrees(), 
+        ones(6),
+        toEqualAssert
+      ],
+      [ 
+        graph.getReverseDegrees(), 
+        ones(6),
+        toEqualAssert
+      ],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toEqual(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should return true for bipartite graph", () => {
@@ -1197,17 +1141,12 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 2],
-      [articulationPointsSet[0], vertices_indices[C.getKey()]],
-      [articulationPointsSet[1], vertices_indices[B.getKey()]],
+      [ articulationPointsSet.length, 2, toBeAssert ],
+      [ articulationPointsSet[0], vertices_indices[C.getKey()], toBeAssert ],
+      [ articulationPointsSet[1], vertices_indices[B.getKey()], toBeAssert ],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toBe(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should find articulation points in simple graph", () => {
@@ -1222,7 +1161,10 @@ describe("Graph", () => {
 
     const ids = graph.convertVerticestoVerticesIndices([A, B, C, D]);
 
-    expect(_.isEqual(ids, [0, 1, 2, 3])).toBe(true);
+    result = ids; 
+    expected = [0, 1, 2, 3];
+
+    expect(result).toStrictEqual(expected)
   });
 
   it("should return vertices indices from edge", () => {
@@ -1325,19 +1267,14 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 4],
-      [articulationPointsSet[0], vertices_indices[F.getKey()]],
-      [articulationPointsSet[1], vertices_indices[E.getKey()]],
-      [articulationPointsSet[2], vertices_indices[D.getKey()]],
-      [articulationPointsSet[3], vertices_indices[C.getKey()]],
+      [ articulationPointsSet.length, 4, toBeAssert],
+      [ articulationPointsSet[0], vertices_indices[F.getKey()], toBeAssert],
+      [ articulationPointsSet[1], vertices_indices[E.getKey()], toBeAssert],
+      [ articulationPointsSet[2], vertices_indices[D.getKey()], toBeAssert],
+      [ articulationPointsSet[3], vertices_indices[C.getKey()], toBeAssert],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toBe(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should find articulation points in graph starting with articulation root vertex", () => {
@@ -1360,19 +1297,14 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 4],
-      [articulationPointsSet[0], vertices_indices[F.getKey()]],
-      [articulationPointsSet[1], vertices_indices[E.getKey()]],
-      [articulationPointsSet[2], vertices_indices[C.getKey()]],
-      [articulationPointsSet[3], vertices_indices[D.getKey()]],
+      [articulationPointsSet.length, 4, toBeAssert ],
+      [articulationPointsSet[0], vertices_indices[F.getKey()], toBeAssert ],
+      [articulationPointsSet[1], vertices_indices[E.getKey()], toBeAssert ],
+      [articulationPointsSet[2], vertices_indices[C.getKey()], toBeAssert ],
+      [articulationPointsSet[3], vertices_indices[D.getKey()], toBeAssert ],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toBe(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should find articulation points in yet another graph #1", () => {
@@ -1627,18 +1559,17 @@ describe("Graph", () => {
     trivia = [
       [
         graph.islands(),
-        {
+        { 
           0: { bridge_ends: [3], inner_vertices: [4, 5] },
           1: { bridge_ends: [1], inner_vertices: [0, 2] },
         },
+        toStrictEqualAssert
       ],
-      [graph.islandsHabitants(), { 0: [3, 4, 5], 1: [1, 0, 2] }],
+      [ graph.islandsHabitants(), { 0: [3, 4, 5], 1: [1, 0, 2] }, toStrictEqualAssert ],
       [
         graph.getIslandBridgeEndIODict(),
-        {
-          0: { source: [], target: [3] },
-          1: { source: [1], target: [] },
-        },
+        { 0: { source: [], target: [3] }, 1: { source: [1], target: [] }, },
+        toStrictEqualAssert
       ],
       [
         graph.getIslandInnerReachability(),
@@ -1646,18 +1577,17 @@ describe("Graph", () => {
           0: { 3: [4, 5], 4: [5], 5: [] },
           1: { 0: [1, 2], 1: [], 2: [1] },
         },
+        toStrictEqualAssert
       ],
-      [graph.getIslandIOReachability(), { 0: { 3: [] }, 1: {} }],
-      [graph.getIslandToBridgeEndList(), { 0: [3], 1: [1] }],
-      [graph.getBridgeEndToIsland(), { 3: 0, 1: 1 }],
-      [graph.getIslandFromBridgeEnd(3), 0],
-      [graph.getIslandFromBridgeEnd(1), 1],
+      [ graph.getIslandIOReachability(), { 0: { 3: [] }, 1: {} }, toStrictEqualAssert ],
+      [ graph.getIslandToBridgeEndList(), { 0: [3], 1: [1] }, toStrictEqualAssert ],
+      [ graph.getBridgeEndToIsland(), { 3: 0, 1: 1 }, toStrictEqualAssert ],
+      [ graph.getIslandFromBridgeEnd(3), 0, toStrictEqualAssert ],
+      [ graph.getIslandFromBridgeEnd(1), 1, toStrictEqualAssert ],
       [
         graph.getIslandsToFromBridgeEnd(),
-        {
-          0: { from: [1], to: [] },
-          1: { from: [], to: [3] },
-        },
+        { 0: { from: [1], to: [] }, 1: { from: [], to: [3] }, },
+        toStrictEqualAssert
       ],
       [
         graph
@@ -1665,25 +1595,23 @@ describe("Graph", () => {
           .getAllEdges()
           .map((edge) => edge.getKey()),
         ["1_0"],
+        toStrictEqualAssert
       ],
-      [graph.getIslandsAdjacencyList(), { 0: [], 1: [0] }],
+      [ graph.getIslandToBridgeEndList(), { 0: [3], 1: [1] }, toStrictEqualAssert ],
+      [ graph.getIslandsAdjacencyList(), { 0: [], 1: [0] }, toStrictEqualAssert ],
       [
         graph.getIslandsFromToIslands(),
         {
           0: { to: [], from: [1] },
           1: { to: [0], from: [] },
         },
+        toStrictEqualAssert
       ],
-      [islands_graphs[0].getAllVerticesKeys(), ["D", "E", "F"]],
-      [islands_graphs[1].getAllVerticesKeys(), ["A", "B", "C"]],
+      [ islands_graphs[0].getAllVerticesKeys(), ["D", "E", "F"], toStrictEqualAssert ],
+      [ islands_graphs[1].getAllVerticesKeys(), ["A", "B", "C"], toStrictEqualAssert ],
     ];
 
-    for (let index in trivia) {
-      result = trivia[index][0];
-      expected = trivia[index][1];
-
-      expect(result).toStrictEqual(expected);
-    }
+    batchAssert(trivia);
   });
 
   it("should return islands properties", () => {
@@ -1709,10 +1637,7 @@ describe("Graph", () => {
     graph = new Graph(true);
 
     // Edges
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
+    [AB, BC] = createEdges([ [A, B], [B, C] ]);
 
     // Add edges
     graph.addEdges([AB, BC]);
@@ -1762,28 +1687,20 @@ describe("Graph", () => {
     const graphCA = graph.findEdge(C, A);
 
     trivia = [
-      [graphAC],
-      [graphCA],
-      [graphEdgeBA],
-      [graphAB, AB],
-      [graphAB.weight, 10],
+      [ graphAC, toBeUndefinedAssert ],
+      [ graphCA, toBeUndefinedAssert ],
+      [ graphEdgeBA, toBeUndefinedAssert ],
+      [ graphAB, AB, toBeAssert ],
+      [ graphAB.weight, 10, toBeAssert ],
     ];
 
-    expect(trivia[0][0]).toBeUndefined();
-    expect(trivia[1][0]).toBeUndefined();
-    expect(trivia[2][0]).toBeUndefined();
-
-    expect(trivia[3][0]).toBe(trivia[3][1]);
-    expect(trivia[4][0]).toBe(trivia[4][1]);
+    batchAssert(trivia);
   });
 
   it("should return vertex neighbors", () => {
     graph = new Graph(true);
 
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
+    [AB, BC] = createEdges([ [A, B], [B, C] ]);
 
     graph.addEdges([AB, AC]);
 

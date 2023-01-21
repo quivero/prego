@@ -33,6 +33,8 @@ export const createEdges = (vertices_tuples) => {
   return edges;
 };
 
+export const resetVertices = (vertices) => vertices.map( (vertex) => vertex.deleteAllEdges() );
+
 export const createEdgesFromVerticesValues = (vertices_values_tuples) => {
   const vertex_id_to_obj = objectMap(
     objectInit(_.uniq(_.flatten(vertices_values_tuples)), {}),
