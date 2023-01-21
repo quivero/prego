@@ -115,7 +115,7 @@ export default class Knapsack {
       }
     }
 
-    // Now let's trace back the knapsack matrix to see what items we're going 
+    // Now let's trace back the knapsack matrix to see what items we're going
     // to add on knapsack.
     let itemIndex = this.possibleItems.length - 1;
     let weightIndex = this.weightLimit;
@@ -125,7 +125,7 @@ export default class Knapsack {
       const prevItem = this.possibleItems[itemIndex - 1];
 
       // Check if matrix value came from top (from previous item):
-      // this would mean that we need to include previous item 
+      // this would mean that we need to include previous item
       // to the list of selected items.
       if (
         knapsackMatrix[itemIndex][weightIndex] &&
@@ -135,7 +135,7 @@ export default class Knapsack {
         // We need to add highest item in the matrix that is possible to get the highest value.
         const prevSumValue = knapsackMatrix[itemIndex - 1][weightIndex];
         const prevPrevSumValue = knapsackMatrix[itemIndex - 2][weightIndex];
-        
+
         if( !prevSumValue || (prevSumValue && prevPrevSumValue !== prevSumValue)) {
           this.selectedItems.push(prevItem);
         }

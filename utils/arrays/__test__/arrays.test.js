@@ -389,5 +389,5 @@ describe("euler", () => {
 
     expect(euler([list_1, list_2])).toEqual(result);
   });
-  
+
 });
