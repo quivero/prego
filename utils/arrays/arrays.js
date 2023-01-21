@@ -16,6 +16,15 @@ const SET_DELIMITER = ",";
 export const ones = (n) => Array(n).fill(1);
 
 /**
+ * @abstract returns list with unique elements
+ *
+ * @param {Object} object
+ * @param {function} reduceFn
+ * @return {Object}
+ */
+export const unique = (lst) => [...new Set(lst)];
+
+/**
  * @abstract returns a vector with element each between given min_val and max_val
  *
  * @param {Number} min_val
@@ -305,7 +314,9 @@ export const removeArrayDuplicates = (list) => {
   return unique;
 };
 
-export function* mSetsOfnTuples(array, n, m) {
+export function* mSetsOfnTuples(array, m, n) {
+  let arr_diff;
+
   if (m > Math.floor(array.length / n)) {
     const err_message =
       "Size of array must be greater or equal to the product of n by m";
@@ -313,18 +324,14 @@ export function* mSetsOfnTuples(array, n, m) {
   }
 
   let curr_comb = [];
-
   for (const head_comb of _.combinations(array, n)) {
-    curr_comb = [head_comb];
+    curr_comb = [ head_comb ];
 
     if (m === 1) {
       yield curr_comb;
     } else {
-      for (const tail_comb of mSetsOfnTuples(
-        _.difference(array, head_comb),
-        n,
-        m - 1
-      )) {
+      arr_diff = _.difference(array, head_comb);
+      for (const tail_comb of mSetsOfnTuples(arr_diff, n, m - 1)) {
         yield curr_comb.concat(tail_comb);
       }
     }
@@ -420,28 +427,57 @@ export function* upperTriangularHyperindexes(length, dim) {
   yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
 }
 
-/**
- * @abstract returns each tuple [key, elems] of the Euler diagram
- * systematic in a generator-wise fashion
- *
- * @param {Array} sets
- * @return {Array} keys_elems
+const SETKEY_DELIMITER = ",";
+
+export function* eulerGenerator(sets) {
+  /**
+ *   @abstract returns each tuple [key, elems] of the Euler diagram
+ *   systematic in a generator-wise fashion
+ *   Rationale:
+ *      1. Begin with the available sets and their exclusive elements;
+ *      2. Compute complementary elements to current key-set;
+ *      3. In case complementary set-keys AND current set content are not empty, continue;
+ *      Otherwise, go to next key-set;
+ *      4. Find the euler diagram on complementary sets;
+ *      5. Compute exclusive combination elements;
+ *      6. In case there are exclusive elements to combination:
+ *      6.a Yield exclusive combination elements;
+ *      6.b Remove exclusive combination elements from current key-set;
+ *   @param {object} sets
+ *   @return {object} keys_elems
  */
-export function* euler(sets) {
-  let is_unique = true;
-  for (let set_key in sets) {
-    is_unique &=
-      sets[set_key].length === removeArrayDuplicates(sets[set_key]).length;
+
+  // There are no sets
+  if (
+    sets.constructor !== {}.constructor &&
+    sets.constructor !== [].constructor
+  ) {
+    throw new TypeError(
+      "Ill-conditioned input. It must be either a json-like or array of arrays object!",
+    );
   }
 
-  if (!is_unique) {
-    throwError("Each array must NOT have duplicates!");
+  let is_unique_set_arr = true;
+
+  for (const value of Object.values(sets)) {
+    is_unique_set_arr &= unique(value).length === value.length;
   }
 
-  if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
+  if (!is_unique_set_arr) {
+    console.warn("Each array MUST NOT have duplicates");
+    sets = objectReduce(
+      sets,
+      (result, __, key) => {
+        result[key] = unique(sets[key]);
+        return result;
+      }, {},
+    );
+  }
 
   if (Object.values(sets).length === 0)
-    throwError("There must at least ONE set!");
+    throw new TypeError("There must at least ONE set!");
+
+  if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
   const sets_keys_fun = (sets_) =>
     Object.keys(sets_).filter((key) => sets_[key].length !== 0);
@@ -452,6 +488,7 @@ export function* euler(sets) {
   let comb_intersec_key = "";
   let comb_intersec = [];
   let comb_excl = [];
+  let compl_sets = {};
 
   let sets_keys = sets_keys_fun(sets);
 
@@ -462,43 +499,45 @@ export function* euler(sets) {
       .map((compl_set_key) => String(compl_set_key));
 
     if (compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
-      for (const comb_elements of euler(
-        objectReduce(
-          compl_sets_keys,
-          (result, __, compl_set_key) => {
-            result[compl_set_key] = sets[compl_set_key];
-            return result;
-          },
-          {}
-        )
-      )) {
+      compl_sets = objectReduce(
+            compl_sets_keys,
+            (result, __, compl_set_key) => {
+              result[compl_set_key] = sets[compl_set_key];
+              return result;
+            }, {} )
+
+      for (const comb_elements of eulerGenerator(compl_sets)) {
         comb_str = comb_elements[0];
         celements = comb_elements[1];
 
+        // 1. Exclusive set elements on complement to current analysis set
         comb_excl = _.difference(celements, sets[set_key]);
         if (comb_excl.length !== 0) {
-          // Exclusive elements of group except current analysis set
           yield [comb_str, comb_excl];
 
-          comb_str.split(SET_DELIMITER).forEach((ckey) => {
-            sets[ckey] = _.difference(sets[ckey], comb_excl);
-          });
+          comb_str.split(SETKEY_DELIMITER).forEach(
+            (ckey) => {
+              sets[ckey] = _.difference(sets[ckey], comb_excl);
+            }
+          );
 
           sets[set_key] = _.difference(sets[set_key], comb_excl);
         }
 
+        // 2. Intersection of analysis element and exclusive group
         comb_intersec = _.intersection(celements, sets[set_key]);
         if (comb_intersec.length !== 0) {
-          // Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key]
-            .concat(comb_str.split(SET_DELIMITER))
-            .join(",");
+          comb_intersec_key = [
+            set_key].concat(comb_str.split(SETKEY_DELIMITER)
+          ).join(SETKEY_DELIMITER);
 
           yield [comb_intersec_key, comb_intersec];
 
-          comb_str.split(SET_DELIMITER).forEach((ckey) => {
-            sets[ckey] = _.difference(sets[ckey], comb_intersec);
-          });
+          comb_str.split(SETKEY_DELIMITER).forEach(
+            (ckey) => {
+              sets[ckey] = _.difference(sets[ckey], comb_intersec);
+            }
+          );
 
           sets[set_key] = _.difference(sets[set_key], comb_intersec);
         }
@@ -506,11 +545,15 @@ export function* euler(sets) {
         sets_keys = sets_keys_fun(sets);
       }
 
+      // 3. Set-key exclusive elements
       if (sets[set_key].length !== 0) {
         yield [String(set_key), sets[set_key]];
+        sets[set_key] = [];
       }
     }
   }
 }
 
-export const spreadEuler = (lists) => Object.fromEntries([...euler(lists)]);
+export const euler = (sets) => {
+  return Object.fromEntries([...eulerGenerator(sets)]);
+}

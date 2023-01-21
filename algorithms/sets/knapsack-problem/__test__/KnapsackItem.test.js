@@ -11,7 +11,7 @@ describe("KnapsackItem", () => {
       [knapsackItem.weight, 2],
       [knapsackItem.quantity, 1],
       [knapsackItem.valuePerWeightRatio, 1.5],
-      [knapsackItem.toString(), "v3 w2 x 1"],
+      [knapsackItem.toString(), "v3 w2 x1"],
       [knapsackItem.totalValue, 3],
       [knapsackItem.totalWeight, 2],
     ];
@@ -30,7 +30,7 @@ describe("KnapsackItem", () => {
       [knapsackItem.weight, 2],
       [knapsackItem.quantity, 0],
       [knapsackItem.valuePerWeightRatio, 1.5],
-      [knapsackItem.toString(), "v3 w2 x 0"],
+      [knapsackItem.toString(), "v3 w2 x0"],
       [knapsackItem.totalValue, 0],
       [knapsackItem.totalWeight, 0],
     ];
@@ -49,7 +49,7 @@ describe("KnapsackItem", () => {
       [knapsackItem.weight, 2],
       [knapsackItem.quantity, 2],
       [knapsackItem.valuePerWeightRatio, 1.5],
-      [knapsackItem.toString(), "v3 w2 x 2"],
+      [knapsackItem.toString(), "v3 w2 x2"],
       [knapsackItem.totalValue, 6],
       [knapsackItem.totalWeight, 4],
     ];
