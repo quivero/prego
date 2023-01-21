@@ -41,3 +41,9 @@ export const batchAssert = (items) => {
   expect.assertions(items.length);
   items.forEach((item) => assert(item))
 };
+
+export const toBeAssert = (result, expected) => expect(result).toBe(expected);
+export const toBeEqualAssert = (result, expected) => expect(result).toEqual(expected);
+export const toStrictEqualAssert = (result, expected) => expect(result).toStrictEqual(expected);
+export const toBeDefinedAssert = (result) => expect(result).toBeDefined();
+export const toBeUndefinedAssert = (result) => expect(result).toBeUndefined();
