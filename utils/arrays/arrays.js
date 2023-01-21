@@ -2,7 +2,6 @@ import _ from "lodash";
 import "lodash.combinations";
 
 import { objectReduce } from "../objects/objects.js";
-
 import { throwError } from "../sys/sys.js";
 
 const SET_DELIMITER = ",";
@@ -321,18 +320,18 @@ export function* mSetsOfnTuples(array, m, n) {
     const err_message =
       "Size of array must be greater or equal to the product of n by m";
     throwError(err_message);
-  }
+  } else {
+    let curr_comb = [];
+    for (const head_comb of _.combinations(array, n)) {
+      curr_comb = [ head_comb ];
 
-  let curr_comb = [];
-  for (const head_comb of _.combinations(array, n)) {
-    curr_comb = [ head_comb ];
-
-    if (m === 1) {
-      yield curr_comb;
-    } else {
-      arr_diff = _.difference(array, head_comb);
-      for (const tail_comb of mSetsOfnTuples(arr_diff, n, m - 1)) {
-        yield curr_comb.concat(tail_comb);
+      if (m === 1) {
+        yield curr_comb;
+      } else {
+        arr_diff = _.difference(array, head_comb);
+        for (const tail_comb of mSetsOfnTuples(arr_diff, n, m - 1)) {
+          yield curr_comb.concat(tail_comb);
+        }
       }
     }
   }
@@ -446,115 +445,113 @@ export function* eulerGenerator(sets) {
  *   @param {object} sets
  *   @return {object} keys_elems
  */
+  const are_sets = sets.constructor !== {}.constructor && sets.constructor !== [].constructor;
+  let error_msg; 
 
   // There are no sets
-  if (
-    sets.constructor !== {}.constructor &&
-    sets.constructor !== [].constructor
-  ) {
-    throw new TypeError(
-      "Ill-conditioned input. It must be either a json-like or array of arrays object!",
-    );
-  }
+  if (are_sets) {
+    error_msg = "Ill-conditioned input. It must be either a json-like or array of arrays object!";
+    throw TypeError(error_msg);
+  } else {
+    let is_unique_set_arr = true;
 
-  let is_unique_set_arr = true;
+    for (const value of Object.values(sets)) {
+      is_unique_set_arr &= unique(value).length === value.length;
+    }
 
-  for (const value of Object.values(sets)) {
-    is_unique_set_arr &= unique(value).length === value.length;
-  }
+    if (!is_unique_set_arr) {
+      console.warn("Each array MUST NOT have duplicates");
+      sets = objectReduce(
+        sets,
+        (result, __, key) => {
+          result[key] = unique(sets[key]);
+          return result;
+        }, {},
+      );
+    }
 
-  if (!is_unique_set_arr) {
-    console.warn("Each array MUST NOT have duplicates");
-    sets = objectReduce(
-      sets,
-      (result, __, key) => {
-        result[key] = unique(sets[key]);
-        return result;
-      }, {},
-    );
-  }
+    if (Object.values(sets).length === 0)
+      throw new TypeError("There must at least ONE set!");
 
-  if (Object.values(sets).length === 0)
-    throw new TypeError("There must at least ONE set!");
+    if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
-  if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
+    const sets_keys_fun = (sets_) =>
+      Object.keys(sets_).filter((key) => sets_[key].length !== 0);
 
-  const sets_keys_fun = (sets_) =>
-    Object.keys(sets_).filter((key) => sets_[key].length !== 0);
+    let compl_sets_keys = [];
+    let comb_str = "";
+    let celements = [];
+    let comb_intersec_key = "";
+    let comb_intersec = [];
+    let comb_excl = [];
+    let compl_sets = {};
 
-  let compl_sets_keys = [];
-  let comb_str = "";
-  let celements = [];
-  let comb_intersec_key = "";
-  let comb_intersec = [];
-  let comb_excl = [];
-  let compl_sets = {};
+    let sets_keys = sets_keys_fun(sets);
 
-  let sets_keys = sets_keys_fun(sets);
+    // Traverse the combination lattice
+    for (const set_key of sets_keys) {
+      compl_sets_keys = _.difference(sets_keys, [set_key])
+        .filter((compl_set_key) => sets[compl_set_key].length !== 0)
+        .map((compl_set_key) => String(compl_set_key));
 
-  // Traverse the combination lattice
-  for (const set_key of sets_keys) {
-    compl_sets_keys = _.difference(sets_keys, [set_key])
-      .filter((compl_set_key) => sets[compl_set_key].length !== 0)
-      .map((compl_set_key) => String(compl_set_key));
-
-    if (compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
-      compl_sets = objectReduce(
-          compl_sets_keys,
-          (result, __, compl_set_key) => {
-            result[compl_set_key] = sets[compl_set_key];
-            return result;
-          }, {} 
-      )
-      
-      for (const comb_elements of eulerGenerator(compl_sets)) {
-        comb_str = comb_elements[0];
-        celements = comb_elements[1];
+      if (compl_sets_keys.length !== 0 && sets[set_key].length !== 0) {
+        compl_sets = objectReduce(
+            compl_sets_keys,
+            (result, __, compl_set_key) => {
+              result[compl_set_key] = sets[compl_set_key];
+              return result;
+            }, {} 
+        )
         
-        // 1. Exclusive set elements on complement to current analysis set
-        comb_excl = _.difference(celements, sets[set_key]);
-        if (comb_excl.length !== 0) {
-          yield [comb_str, comb_excl];
+        for (const comb_elements of eulerGenerator(compl_sets)) {
+          comb_str = comb_elements[0];
+          celements = comb_elements[1];
           
-          comb_str.split(SETKEY_DELIMITER).forEach(
-            (ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_excl);
-            }
-          );
+          // 1. Exclusive set elements on complement to current analysis set
+          comb_excl = _.difference(celements, sets[set_key]);
+          if (comb_excl.length !== 0) {
+            yield [comb_str, comb_excl];
+            
+            comb_str.split(SETKEY_DELIMITER).forEach(
+              (ckey) => {
+                sets[ckey] = _.difference(sets[ckey], comb_excl);
+              }
+            );
 
-          sets[set_key] = _.difference(sets[set_key], comb_excl);
+            sets[set_key] = _.difference(sets[set_key], comb_excl);
+          }
+
+          // 2. Intersection of analysis element and exclusive group
+          comb_intersec = _.intersection(celements, sets[set_key]);
+          if (comb_intersec.length !== 0) {
+            comb_intersec_key = [
+              set_key].concat(comb_str.split(SETKEY_DELIMITER)
+            ).join(SETKEY_DELIMITER);
+
+            yield [comb_intersec_key, comb_intersec];
+
+            comb_str.split(SETKEY_DELIMITER).forEach(
+              (ckey) => {
+                sets[ckey] = _.difference(sets[ckey], comb_intersec);
+              }
+            );
+
+            sets[set_key] = _.difference(sets[set_key], comb_intersec);
+          }
+
+          sets_keys = sets_keys_fun(sets);
         }
-
-        // 2. Intersection of analysis element and exclusive group
-        comb_intersec = _.intersection(celements, sets[set_key]);
-        if (comb_intersec.length !== 0) {
-          comb_intersec_key = [
-            set_key].concat(comb_str.split(SETKEY_DELIMITER)
-          ).join(SETKEY_DELIMITER);
-
-          yield [comb_intersec_key, comb_intersec];
-
-          comb_str.split(SETKEY_DELIMITER).forEach(
-            (ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_intersec);
-            }
-          );
-
-          sets[set_key] = _.difference(sets[set_key], comb_intersec);
+        
+        // 3. Set-key exclusive elements
+        if (sets[set_key].length !== 0) {
+          yield [String(set_key), sets[set_key]];
+          sets[set_key] = [];
         }
-
-        sets_keys = sets_keys_fun(sets);
-      }
-      
-      // 3. Set-key exclusive elements
-      if (sets[set_key].length !== 0) {
-        yield [String(set_key), sets[set_key]];
-        sets[set_key] = [];
       }
     }
   }
+
+  
 }
 
-export const euler = (sets) => {
-  return Object.fromEntries([...eulerGenerator(sets)]);
-}
+export const euler = (sets) => Object.fromEntries([...eulerGenerator(sets)]);

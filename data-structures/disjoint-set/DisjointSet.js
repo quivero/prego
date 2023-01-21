@@ -61,27 +61,28 @@ export default class DisjointSet {
 
     if (rootKeyA === null || rootKeyB === null) {
       throwError("One or two values are not in sets");
-    }
-
-    if (rootKeyA === rootKeyB) {
-      // In case if both elements are already in the same set then just return its key.
+    } else {
+      if (rootKeyA === rootKeyB) {
+        // In case if both elements are already in the same set then just return its key.
+        return this;
+      }
+  
+      const rootA = this.items[rootKeyA];
+      const rootB = this.items[rootKeyB];
+  
+      if (rootA.getRank() < rootB.getRank()) {
+        // If rootB's tree is bigger then make rootB to be a new root.
+        rootB.addChild(rootA);
+  
+        return this;
+      }
+  
+      // If rootA's tree is bigger then make rootA to be a new root.
+      rootA.addChild(rootB);
+  
       return this;
     }
 
-    const rootA = this.items[rootKeyA];
-    const rootB = this.items[rootKeyB];
-
-    if (rootA.getRank() < rootB.getRank()) {
-      // If rootB's tree is bigger then make rootB to be a new root.
-      rootB.addChild(rootA);
-
-      return this;
-    }
-
-    // If rootA's tree is bigger then make rootA to be a new root.
-    rootA.addChild(rootB);
-
-    return this;
   }
 
   /**
@@ -95,8 +96,8 @@ export default class DisjointSet {
 
     if (rootKeyA === null || rootKeyB === null) {
       throwError("One or two values are not in sets");
+    } else {
+      return rootKeyA === rootKeyB;
     }
-
-    return rootKeyA === rootKeyB;
   }
 }

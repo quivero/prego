@@ -143,7 +143,7 @@ describe("Array", () => {
   });
 
   it("should call throwError for invalid blob scenario ", () => {
-    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const arr = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ];
     const m = 3;
     const n = 5;
 
@@ -308,7 +308,7 @@ describe("euler", () => {
   });
 
   it("should throw Typerror for ill-conditioned input", () => {
-    const  illConditionedInput = () => euler([]);
+    const illConditionedInput = () => euler([]);
 
     expect(illConditionedInput).toThrow("There must at least ONE set!");
   });
