@@ -706,7 +706,7 @@ export default class Graph {
   reverse() {
     const is_reversed = {};
     let edge_key, reversed_edge_key;
-    
+
     for (const edge of this.getAllEdges()) {
       edge_key = edge.getKey();
       is_reversed[edge_key] = false;

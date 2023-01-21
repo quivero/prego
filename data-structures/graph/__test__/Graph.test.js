@@ -3,9 +3,9 @@ import Graph from "../Graph";
 import GraphVertex from "../GraphVertex";
 import GraphEdge from "../GraphEdge";
 
-import { 
+import {
   createVertices,
-  createEdges, 
+  createEdges,
   createEdgesFromVerticesValues,
   resetVertices
 } from "#gutils/graph.js";
@@ -276,7 +276,7 @@ describe("Graph", () => {
 
     // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
-      [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B], 
+      [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B],
     ]);
 
     // Add edges
@@ -567,7 +567,7 @@ describe("Graph", () => {
       [ graphA.getNeighbors()[0], graphB, toBeEqualAssert ],
       [ graphB.getNeighbors().length, 0, toBeAssert ],
     ];
-    
+
     batchAssert(trivia);
   });
 
@@ -896,8 +896,8 @@ describe("Graph", () => {
     const n_vertices = graph.getNumVertices();
 
     trivia = [
-      [ 
-        graph.getInOutDegreeList(0), 
+      [
+        graph.getInOutDegreeList(0),
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
         toBeEqualAssert
       ], 
@@ -906,23 +906,23 @@ describe("Graph", () => {
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
         toBeEqualAssert
       ],
-      [ 
-        graph.volume(_.range(n_vertices), 0), 
+      [
+        graph.volume(_.range(n_vertices), 0),
         6,
         toBeEqualAssert
       ],
-      [ 
-        graph.volume(_.range(n_vertices), 1), 
+      [
+        graph.volume(_.range(n_vertices), 1),
         6,
         toBeEqualAssert
       ],
-      [ 
-        graph.getForwardDegrees(), 
+      [
+        graph.getForwardDegrees(),
         ones(6),
         toBeEqualAssert
       ],
-      [ 
-        graph.getReverseDegrees(), 
+      [
+        graph.getReverseDegrees(),
         ones(6),
         toBeEqualAssert
       ],
@@ -934,47 +934,12 @@ describe("Graph", () => {
   it("should return true for bipartite graph", () => {
     graph = new Graph(true);
 
-    [AD, AE, AF, BD, BE, BF, CD, CE, CF, DA, DB, DC, EA, EB, EC, FA, FB, FC] =
-      createEdges([
-        [A, D],
-        [A, E],
-        [A, F],
-        [B, D],
-        [B, E],
-        [B, F],
-        [C, D],
-        [C, E],
-        [C, F],
-        [D, A],
-        [D, B],
-        [D, C],
-        [E, A],
-        [E, B],
-        [E, C],
-        [F, A],
-        [F, B],
-        [F, C],
-      ]);
-    graph.addEdges([
-      AD,
-      AE,
-      AF,
-      BD,
-      BE,
-      BF,
-      CD,
-      CE,
-      CF,
-      DA,
-      DB,
-      DC,
-      EA,
-      EB,
-      EC,
-      FA,
-      FB,
-      FC,
-    ]);
+    edges_vertices = [
+      [A, D], [A, E], [A, F], [B, D], [B, E], [B, F], [C, D], [C, E], [C, F], 
+      [D, A], [D, B], [D, C], [E, A], [E, B], [E, C], [F, A], [F, B], [F, C],
+    ]
+    
+    graph.addEdges(createEdges(edges_vertices));
 
     expected = graph.isBipartite();
     result = true;
@@ -986,19 +951,12 @@ describe("Graph", () => {
     // A directed graph
     const graph = new Graph(false);
 
-    // Edges
-    const [AB, AC, BC, BD, DE, DF, FE] = createEdges([
-      [A, B],
-      [A, C],
-      [B, C],
-      [B, D],
-      [D, E],
-      [D, F],
-      [F, E],
-    ]);
+    edges_vertices = [
+      [A, B], [A, C], [B, C], [B, D], [D, E], [D, F], [F, E],
+    ];
 
     // Add edges
-    graph.addEdges([AB, AC, BC, BD, DE, DF, FE]);
+    graph.addEdges(createEdges(edges_vertices));
 
     expected = graph.isBipartite();
     result = false;
@@ -1161,7 +1119,7 @@ describe("Graph", () => {
 
     const ids = graph.convertVerticestoVerticesIndices([A, B, C, D]);
 
-    result = ids; 
+    result = ids;
     expected = [0, 1, 2, 3];
 
     expect(result).toStrictEqual(expected)
@@ -1508,7 +1466,7 @@ describe("Graph", () => {
     trivia = [
       [
         graph.islands(),
-        { 
+        {
           0: { bridge_ends: [3], inner_vertices: [4, 5] },
           1: { bridge_ends: [1], inner_vertices: [0, 2] },
         },

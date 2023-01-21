@@ -1,3 +1,5 @@
+![nail it](https://github.com/quivero/prego/blob/main/images/prego_tiny.png?raw=true)
+
 # Prego
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/330043511b8240faa6161331a11e2abb)](https://app.codacy.com/gh/quivero/prego?utm_source=github.com&utm_medium=referral&utm_content=quivero/prego&utm_campaign=Badge_Grade_Settings)
