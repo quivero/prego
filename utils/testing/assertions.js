@@ -25,7 +25,7 @@ export const assert = (item) => {
     } else {
       const callbackValidity =
         "Last element on item must be a callback function!";
-      
+
       throw Error(item);
     }
   } else {

@@ -504,9 +504,9 @@ export function* eulerGenerator(sets) {
           (result, __, compl_set_key) => {
             result[compl_set_key] = sets[compl_set_key];
             return result;
-          }, {} 
+          }, {}
       )
-      
+
       for (const comb_elements of eulerGenerator(compl_sets)) {
         comb_str = comb_elements[0];
         celements = comb_elements[1];

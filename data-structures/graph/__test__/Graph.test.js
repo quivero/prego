@@ -3,9 +3,9 @@ import Graph from "../Graph";
 import GraphVertex from "../GraphVertex";
 import GraphEdge from "../GraphEdge";
 
-import { 
+import {
   createVertices,
-  createEdges, 
+  createEdges,
   createEdgesFromVerticesValues,
   resetVertices
 } from "#gutils/graph.js";
@@ -276,7 +276,7 @@ describe("Graph", () => {
 
     // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
-      [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B], 
+      [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B],
     ]);
 
     // Add edges
@@ -567,7 +567,7 @@ describe("Graph", () => {
       [ graphA.getNeighbors()[0], graphB, toEqualAssert ],
       [ graphB.getNeighbors().length, 0, toBeAssert ],
     ];
-    
+
     batchAssert(trivia);
   });
 
@@ -896,33 +896,33 @@ describe("Graph", () => {
     const n_vertices = graph.getNumVertices();
 
     trivia = [
-      [ 
-        graph.getInOutDegreeList(0), 
-        { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
-        toEqualAssert
-      ], 
-      [ 
-        graph.getInOutDegreeList(1), 
+      [
+        graph.getInOutDegreeList(0),
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
         toEqualAssert
       ],
-      [ 
-        graph.volume(_.range(n_vertices), 0), 
+      [
+        graph.getInOutDegreeList(1),
+        { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
+        toEqualAssert
+      ],
+      [
+        graph.volume(_.range(n_vertices), 0),
         6,
         toEqualAssert
       ],
-      [ 
-        graph.volume(_.range(n_vertices), 1), 
+      [
+        graph.volume(_.range(n_vertices), 1),
         6,
         toEqualAssert
       ],
-      [ 
-        graph.getForwardDegrees(), 
+      [
+        graph.getForwardDegrees(),
         ones(6),
         toEqualAssert
       ],
-      [ 
-        graph.getReverseDegrees(), 
+      [
+        graph.getReverseDegrees(),
         ones(6),
         toEqualAssert
       ],
@@ -1161,7 +1161,7 @@ describe("Graph", () => {
 
     const ids = graph.convertVerticestoVerticesIndices([A, B, C, D]);
 
-    result = ids; 
+    result = ids;
     expected = [0, 1, 2, 3];
 
     expect(result).toStrictEqual(expected)
@@ -1559,7 +1559,7 @@ describe("Graph", () => {
     trivia = [
       [
         graph.islands(),
-        { 
+        {
           0: { bridge_ends: [3], inner_vertices: [4, 5] },
           1: { bridge_ends: [1], inner_vertices: [0, 2] },
         },
