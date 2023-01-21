@@ -1,5 +1,5 @@
-import { 
-  assert, 
+import {
+  assert,
   batchAssert
 } from "../assertions";
 

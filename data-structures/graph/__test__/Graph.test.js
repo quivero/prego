@@ -12,13 +12,13 @@ import {
 
 import { ones, isCyclicEqual } from "#utils/arrays/arrays";
 
-import { 
+import {
   batchAssert,
   toBeAssert,
   toBeEqualAssert,
   toStrictEqualAssert,
   toBeDefinedAssert,
-  toBeUndefinedAssert 
+  toBeUndefinedAssert
 } from "#utils/testing/assertions.js";
 
 import { throwError, warn } from "#utils/sys/sys.js";
@@ -1030,7 +1030,7 @@ describe("Graph", () => {
     graph = new Graph();
 
     edges_vertices = [ [A, B], [B, C], [C, D] ];
-    
+
     graph.addEdges(createEdges(edges_vertices));
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
@@ -1144,7 +1144,7 @@ describe("Graph", () => {
     edges_vertices = [
       [D, E], [A, B], [B, C], [A, C], [C, D], [E, G], [E, F], [G, F], [F, H],
     ];
-    
+
     graph.addEdges(createEdges(edges_vertices));
 
     const articulationPointsSet = Object.values(graph.articulationPoints());
@@ -1789,7 +1789,7 @@ describe("Graph", () => {
     for (const element of trivia){
       result = element[0];
       expected = element[1];
-    
+
       expect(result).toBe(expected);
     }
 
@@ -2255,7 +2255,7 @@ describe("Graph", () => {
   it("should return vertices indices", () => {
     graph = new Graph();
     edges_vertices = [ [A, B], [B, C], [C, D], [B, D] ];
-    
+
     graph.addEdges(createEdges(edges_vertices));
 
     result = graph.getVerticesKeystoIndices();
@@ -2266,11 +2266,11 @@ describe("Graph", () => {
 
   it("should generate adjacency matrix for undirected graph", () => {
     graph = new Graph();
-    
-    edges_vertices = [ 
+
+    edges_vertices = [
       [A, B], [B, C], [C, D], [B, D],
     ];
-    
+
     graph.addEdges(createEdges(edges_vertices));
 
     result = graph.getAdjacencyMatrix();
