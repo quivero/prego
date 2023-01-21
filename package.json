@@ -80,6 +80,7 @@
     "jest-progress-bar-reporter": "^1.0.25",
     "jest-slow-test-reporter": "^1.0.0",
     "lodash.combinations": "18.11.1",
+    "node-notifier": "^10.0.1",
     "nodemon": "^2.0.20",
     "np": "^3.0.4",
     "npm-check-engine": "1.0.0",
