@@ -870,9 +870,9 @@ describe("Graph", () => {
         graph.getInOutDegreeList(0),
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
         toBeEqualAssert
-      ], 
-      [ 
-        graph.getInOutDegreeList(1), 
+      ],
+      [
+        graph.getInOutDegreeList(1),
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
         toBeEqualAssert
       ],
@@ -905,10 +905,10 @@ describe("Graph", () => {
     graph = new Graph(true);
 
     edges_vertices = [
-      [A, D], [A, E], [A, F], [B, D], [B, E], [B, F], [C, D], [C, E], [C, F], 
+      [A, D], [A, E], [A, F], [B, D], [B, E], [B, F], [C, D], [C, E], [C, F],
       [D, A], [D, B], [D, C], [E, A], [E, B], [E, C], [F, A], [F, B], [F, C],
     ]
-    
+
     graph.addEdges(createEdges(edges_vertices));
 
     expected = graph.isBipartite();
@@ -1164,7 +1164,7 @@ describe("Graph", () => {
   it("should find articulation points in yet another graph #1", () => {
     graph = new Graph();
 
-    edges_vertices = [ [A, B], [A, C],[B, C], [C, D], [D, E] ] 
+    edges_vertices = [ [A, B], [A, C],[B, C], [C, D], [D, E] ]
 
     edges = createEdges(edges_vertices);
     graph.addEdges(edges);
@@ -1253,11 +1253,11 @@ describe("Graph", () => {
 
   it("should return true for strongly connected graph", () => {
     const graph = new Graph(true);
-    
+
     edges_vertices = [
       [A, B], [B, C], [C, D], [D, A], [E, F], [F, G], [G, H], [H, E], [D, E],
     ];
-    
+
     graph.addEdges(createEdges(edges_vertices));
 
     const SCComponents = graph.getStronglyConnectedComponents();
@@ -1301,7 +1301,7 @@ describe("Graph", () => {
       [ edges[0].getKey(), "E_F", toBeEqualAssert ],
       [ edges[1].getKey(), "A_B", toBeEqualAssert ],
     ]
-    
+
     batchAssert(trivia);
   });
 
@@ -1529,7 +1529,7 @@ describe("Graph", () => {
     const graph = new Graph(true);
 
     graph.addVertex(D);
-    
+
     graph.addEdges(createEdges([ [A, B], [A, C], ]));
 
     result = graph.reachableNodes("A");
@@ -1658,7 +1658,7 @@ describe("Graph", () => {
   });
 
   it("should return the list of all added edges", () => {
-    graph = new Graph(true);  
+    graph = new Graph(true);
 
     graph.addEdges(createEdges([ [A, B], [B, C] ]));
 
@@ -1744,7 +1744,7 @@ describe("Graph", () => {
     edges_vertices = [
       [A, B], [B, C], [C, D], [C, E], [E, B], [C, F], [F, B],
     ];
-    
+
     // Add edges
     graph_.addEdges(createEdges(edges_vertices));
 
@@ -1929,7 +1929,7 @@ describe("Graph", () => {
     graph = new Graph(true);
 
     // Vertices
-    edges_vertices = [ 
+    edges_vertices = [
       [ A, B ], [ B, C ], [ C, D ], [ C, E ], [ E, B ], [ C, F ], [ F, B ]
     ]
 
@@ -1938,7 +1938,7 @@ describe("Graph", () => {
 
     result = graph.acyclicPaths(A, F);
     expected = [[0, 1, 2, 5]];
-    
+
     expect(result).toEqual(expected);
   });
 
