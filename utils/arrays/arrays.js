@@ -111,23 +111,6 @@ export const getAllIndexes = (arr, val) => {
 };
 
 /**
- * @abstract returns array with elements equal to array tuple
- *
- * @param {Array} array_1
- * @param {Array} array_2
- * @return {Array}
- */
-export const zip = (arr_1, arr_2) => {
-  if (arr_1.length !== arr_2.length) {
-    throwError("Arrays must have the same length.");
-  }
-
-  const arr_tuple = arr_1.map((e, i) => [e, arr_2[i]]);
-
-  return arr_tuple;
-};
-
-/**
  * @abstract returns dictionary with number prime factors
  *
  * @param {Integer} number

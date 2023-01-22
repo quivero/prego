@@ -18,7 +18,7 @@ import {
   toBeEqualAssert,
   toStrictEqualAssert,
   toBeDefinedAssert,
-  toBeUndefinedAssert,
+  toBeUndefinedAssert
 } from "#utils/testing/assertions.js";
 
 import { throwError, warn } from "#utils/sys/sys.js";
@@ -31,16 +31,10 @@ let edges_vertices, edges;
 
 let A, B, C, D, E, F, G, H;
 
-[A, B, C, D, E, F, G, H] = createVertices([
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-]);
+let vertices_keys;
+
+vertices_keys = [ "A", "B", "C", "D", "E", "F", "G", "H"];
+[A, B, C, D, E, F, G, H] = createVertices(vertices_keys);
 
 let AB, AC, AD, BC, BD, BE, CD, CE, CF, DA, DE, EB, EF, FA, FB;
 
@@ -68,9 +62,9 @@ describe("Graph", () => {
 
     graph = preamble();
     trivia = [
-      [graph.toString(graph.getVertexByKey(A.getKey())), "", toBeAssert],
-      [graph.getVertexByKey(A.getKey()), A, toBeAssert],
-      [graph.getVertexByKey(B.getKey()), B, toBeAssert],
+      [ graph.toString(graph.getVertexByKey(A.getKey())), "", toBeAssert],
+      [ graph.getVertexByKey(A.getKey()), A, toBeAssert],
+      [ graph.getVertexByKey(B.getKey()), B, toBeAssert],
     ];
 
     batchAssert(trivia);
@@ -1114,11 +1108,7 @@ describe("Graph", () => {
   it("should find articulation points in simple graph", () => {
     graph = new Graph();
 
-    edges_vertices = [
-      [A, B],
-      [B, C],
-      [C, D],
-    ];
+    edges_vertices = [ [A, B], [B, C], [C, D] ];
 
     graph.addEdges(createEdges(edges_vertices));
 
@@ -2681,12 +2671,7 @@ describe("Graph", () => {
 
   it("should return vertices indices", () => {
     graph = new Graph();
-    edges_vertices = [
-      [A, B],
-      [B, C],
-      [C, D],
-      [B, D],
-    ];
+    edges_vertices = [ [A, B], [B, C], [C, D], [B, D] ];
 
     graph.addEdges(createEdges(edges_vertices));
 
@@ -2700,10 +2685,7 @@ describe("Graph", () => {
     graph = new Graph();
 
     edges_vertices = [
-      [A, B],
-      [B, C],
-      [C, D],
-      [B, D],
+      [A, B], [B, C], [C, D], [B, D],
     ];
 
     graph.addEdges(createEdges(edges_vertices));

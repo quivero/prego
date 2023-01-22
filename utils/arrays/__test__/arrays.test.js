@@ -100,14 +100,6 @@ describe("Array", () => {
     expect(throwError).toHaveBeenCalled();
   });
 
-  it("should receive a zipped array with two arrays entries", () => {
-    expect(zip([1, 2, 3], ["a", "b", "c"])).toStrictEqual([
-      [1, "a"],
-      [2, "b"],
-      [3, "c"],
-    ]);
-  });
-
   it("should get all indexes of given value within array", () => {
     expect(getAllIndexes([1, 2, 3, 3], 1)).toStrictEqual([0]);
     expect(getAllIndexes([1, 2, 3, 3], 2)).toStrictEqual([1]);
