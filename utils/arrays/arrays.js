@@ -1,4 +1,10 @@
-import _ from "lodash";
+import { 
+  difference, 
+  range, 
+  isEqual, 
+  intersection,
+  combinations
+} from "lodash";
 import "lodash.combinations";
 
 import { objectReduce } from "../objects/objects.js";
@@ -119,7 +125,7 @@ export const getAllIndexes = (arr, val) => {
 export const countDict = (arr) => {
   const obj = {};
 
-  for (const i of _.range(arr.length)) {
+  for (const i of range(arr.length)) {
     obj[arr[i]] = (obj[arr[i]] || 0) + 1;
   }
 
@@ -162,7 +168,7 @@ export const isCyclicEqual = (control_, treatment_) => {
   }
 
   for (let i = 0; i < treatment_.length; i += 1) {
-    if (_.isEqual(cyclicSort(treatment_, i), control_)) {
+    if (isEqual(cyclicSort(treatment_, i), control_)) {
       return true;
     }
   }
@@ -210,7 +216,7 @@ export const sequentialArrayBlobs = (arr) => {
   if (arr.length === 1) {
     return { 0: arr };
   }
-  for (const index of _.range(arr.length)) {
+  for (const index of range(arr.length)) {
     if (index > 0) {
       if (arr[index] - arr[index - 1] > 1) {
         blobs[counter] = arr.slice(head_index, index);
@@ -236,7 +242,7 @@ export const sequentialArrayBlobs = (arr) => {
  */
 export const hasElement = (arr, elem) => {
   for (let i = 0; i <= arr.length; i += 1) {
-    if (_.isEqual(arr[i], elem)) {
+    if (isEqual(arr[i], elem)) {
       return true;
     }
   }
@@ -285,7 +291,7 @@ export const removeArrayDuplicates = (list) => {
     let has_item = false;
 
     unique.forEach((unique_item) => {
-      has_item = has_item || _.isEqual(item, unique_item);
+      has_item = has_item || isEqual(item, unique_item);
     });
 
     if (!has_item) {
@@ -305,13 +311,13 @@ export function* mSetsOfnTuples(array, m, n) {
     throwError(err_message);
   } else {
     let curr_comb = [];
-    for (const head_comb of _.combinations(array, n)) {
+    for (const head_comb of combinations(array, n)) {
       curr_comb = [head_comb];
 
       if (m === 1) {
         yield curr_comb;
       } else {
-        arr_diff = _.difference(array, head_comb);
+        arr_diff = difference(array, head_comb);
         for (const tail_comb of mSetsOfnTuples(arr_diff, n, m - 1)) {
           yield curr_comb.concat(tail_comb);
         }
@@ -335,7 +341,7 @@ export const getUniques = (vec) => Array.from(new Set(vec));
  * @return {Array} arr_with_uniques
  */
 export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
-  for (const i of _.range(0, length)) {
+  for (const i of range(0, length)) {
     if (curr_dim === 1) {
       yield i;
     } else {
@@ -357,7 +363,7 @@ export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
  * @return {Array} arr_with_uniques
  */
 export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
-  for (const i of _.range(index, length)) {
+  for (const i of range(index, length)) {
     if (curr_dim === 1) {
       yield i;
     } else {
@@ -476,7 +482,7 @@ export function* eulerGenerator(sets) {
 
     // Traverse the combination lattice
     for (const set_key of sets_keys) {
-      compl_sets_keys = _.difference(sets_keys, [set_key])
+      compl_sets_keys = difference(sets_keys, [set_key])
         .filter((compl_set_key) => sets[compl_set_key].length !== 0)
         .map((compl_set_key) => String(compl_set_key));
 
@@ -495,19 +501,19 @@ export function* eulerGenerator(sets) {
           celements = comb_elements[1];
 
           // 1. Exclusive set elements on complement to current analysis set
-          comb_excl = _.difference(celements, sets[set_key]);
+          comb_excl = difference(celements, sets[set_key]);
           if (comb_excl.length !== 0) {
             yield [comb_str, comb_excl];
 
             comb_str.split(SETKEY_DELIMITER).forEach((ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_excl);
+              sets[ckey] = difference(sets[ckey], comb_excl);
             });
 
-            sets[set_key] = _.difference(sets[set_key], comb_excl);
+            sets[set_key] = difference(sets[set_key], comb_excl);
           }
 
           // 2. Intersection of analysis element and exclusive group
-          comb_intersec = _.intersection(celements, sets[set_key]);
+          comb_intersec = intersection(celements, sets[set_key]);
           if (comb_intersec.length !== 0) {
             comb_intersec_key = [set_key]
               .concat(comb_str.split(SETKEY_DELIMITER))
@@ -516,10 +522,10 @@ export function* eulerGenerator(sets) {
             yield [comb_intersec_key, comb_intersec];
 
             comb_str.split(SETKEY_DELIMITER).forEach((ckey) => {
-              sets[ckey] = _.difference(sets[ckey], comb_intersec);
+              sets[ckey] = difference(sets[ckey], comb_intersec);
             });
 
-            sets[set_key] = _.difference(sets[set_key], comb_intersec);
+            sets[set_key] = difference(sets[set_key], comb_intersec);
           }
 
           sets_keys = sets_keys_fun(sets);
