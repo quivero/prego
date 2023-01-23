@@ -1,11 +1,11 @@
 import _ from 'lodash'
-import { 
-    buildAssertion, 
+import {
+    buildAssertion,
     buildScenario,
-    batchAssert 
+    batchAssert
 } from '../assertions'
 
-/* 
+/*
  * assert fixtures
  */
 export const assertFixtures = [
@@ -21,7 +21,7 @@ export const validAssertLength2Item = assertFixtures[1];
 export const invalidAssertItemLength = [ '42' ];
 export const invalidAssertCallbackItem = [ '42', '42' ];
 
-/* 
+/*
  * atest fixtures
  */
 export let validAtestScenario;
@@ -46,4 +46,3 @@ exercise = (resources) => {
 teardown = () => {};
 
 validAtestScenario = buildScenario(setup, prepare, exercise, teardown);
-

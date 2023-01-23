@@ -1,12 +1,12 @@
 
-import { 
-  assert, 
-  batchAssert, 
+import {
+  assert,
+  batchAssert,
   atest,
   batchAtest
 } from '../assertions'
 
-import { 
+import {
   assertFixtures,
   validAssertLength1Item,
   validAssertLength2Item,
@@ -19,10 +19,10 @@ import {
 let fixtures, scenarios;
 
 describe(
-  'assert', 
+  'assert',
   () => {
       it(
-          'should assert on result-callback pattern', 
+          'should assert on result-callback pattern',
           () => {
               expect.assertions(1);
               assert(validAssertLength1Item);
@@ -30,7 +30,7 @@ describe(
       );
 
       it(
-          'should assert on result-expected-callback pattern', 
+          'should assert on result-expected-callback pattern',
           () => {
               expect.assertions(1);
               assert(validAssertLength2Item);
@@ -38,15 +38,15 @@ describe(
       );
 
       it(
-          'should throw error on item with length different than 2 or 3', 
-          () => {    
+          'should throw error on item with length different than 2 or 3',
+          () => {
               const invalidArgumentFunction = () => assert(invalidAssertItemLength);
               expect(invalidArgumentFunction).toThrow(Error);
           }
       );
 
       it(
-          'should throw error on invalid callback function', 
+          'should throw error on invalid callback function',
           () => {
               const invalidCallbackFunction = () => assert(invalidAssertCallbackItem);
               expect(invalidCallbackFunction).toThrow(Error);
@@ -56,10 +56,10 @@ describe(
 );
 
 describe(
-  'batchAssert', 
+  'batchAssert',
   () => {
       it(
-          'should assert asserts in batch', 
+          'should assert asserts in batch',
           () => {
               expect.assertions(assertFixtures.length);
               batchAssert(assertFixtures)
@@ -69,10 +69,10 @@ describe(
 )
 
 describe(
-  'atest', 
+  'atest',
   () => {
       it(
-          'should assert atest', 
+          'should assert atest',
           () => atest(validAtestFixture, validAtestScenario)
       );
   }
@@ -80,10 +80,10 @@ describe(
 
 
 describe(
-  'batchAtest', 
+  'batchAtest',
   () => {
       it(
-          'should assert atest', 
+          'should assert atest',
           () => {
               fixtures = [ validAtestFixture, validAtestFixture ];
               scenarios = [ validAtestScenario, validAtestScenario ]
