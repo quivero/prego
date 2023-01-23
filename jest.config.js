@@ -16,17 +16,15 @@ export default {
   // If the test path matches any of the patterns, it will be skipped.
   testPathIgnorePatterns: [
     "<rootDir>/node_modules/",
-    "<rootDir>/utils/logging/",
+    "<rootDir>/utils/logging/"
   ],
 
   // If the file path matches any of the patterns, coverage information will be skipped.
   coveragePathIgnorePatterns: [
-    "<rootDir>/utils/logging/",
     "<rootDir>/node_modules/",
-  ],
-
-  // The pattern Jest uses to detect test files.
-  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$",
+    "<rootDir>/utils/testing/__test__/fixtures.js",
+    "<rootDir>/utils/logging"
+  ], 
 
   // This option sets the URL for the jsdom environment.
   // It is reflected in properties such as location.href.
@@ -61,3 +59,4 @@ export default {
     "jest-progress-bar-reporter",
   ],
 };
+
