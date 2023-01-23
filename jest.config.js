@@ -24,7 +24,7 @@ export default {
     "<rootDir>/node_modules/",
     "<rootDir>/utils/testing/__test__/fixtures.js",
     "<rootDir>/utils/logging"
-  ], 
+  ],
 
   // This option sets the URL for the jsdom environment.
   // It is reflected in properties such as location.href.
@@ -59,4 +59,3 @@ export default {
     "jest-progress-bar-reporter",
   ],
 };
-
