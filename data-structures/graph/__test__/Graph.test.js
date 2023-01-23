@@ -1,6 +1,5 @@
-import _, { create } from "lodash";
+import _ from "lodash";
 import Graph from "../Graph";
-import GraphVertex from "../GraphVertex";
 import GraphEdge from "../GraphEdge";
 
 import {
