@@ -72,6 +72,7 @@ addItems = [
 ];
 
 export let additionScenario_1, additionScenario_2;
+let exercise_1, exercise_2;
 
 const addCallback = (fixture_) => fixture_.a + fixture_.b;
 
