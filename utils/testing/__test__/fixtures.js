@@ -1,18 +1,18 @@
 import _ from "lodash";
-import { 
-    assert, 
-    batchAssert, 
-    atest, 
+import {
+    assert,
+    batchAssert,
+    atest,
     batchAtest,
-    buildAssertion, 
-    buildScenario 
+    buildAssertion,
+    buildScenario
 } from "../assertions";
 
 const expectToBeDefined = (result) => expect(result).toBeDefined();
 const expectToBe = (result, expected) => expect(result).toBe(expected);
 
-/*------------------------- 
- | assert design 
+/*-------------------------
+ | assert design
  *-------------------------*/
 export const assertFixtures = [
   [ 42, expectToBeDefined ],
@@ -27,8 +27,8 @@ export const validAssertLength2Item = assertFixtures[1];
 export const invalidAssertItemLength = ["42"];
 export const invalidAssertCallbackItem = ["42", "42"];
 
-/*------------------------- 
- | atest design 
+/*-------------------------
+ | atest design
  *-------------------------*/
 export let validAtestScenario;
 let setup, prepare, exercise, teardown;
@@ -53,8 +53,8 @@ teardown = () => {};
 
 validAtestScenario = buildScenario(setup, prepare, exercise, teardown);
 
-/*------------------------- 
- | assert design 
+/*-------------------------
+ | assert design
  *-------------------------*/
 const emptyCallback = () => {};
 const identityCallback = (fixture_) => fixture_;
