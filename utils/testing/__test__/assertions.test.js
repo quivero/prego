@@ -1,43 +1,85 @@
-import { assert, batchAssert } from "../assertions";
+import {
+    assert,
+    batchAssert,
+    atest,
+    batchAtest,
+    rehearsal,
+    validate
+} from "../assertions";
 
-const items = [
-  [42, (result) => expect(result).toBeDefined()],
-  ["42", "42", (result, expected) => expect(result).toBe(expected)],
-];
+import {
+  assertFixtures,
+  validAssertLength1Item,
+  validAssertLength2Item,
+  invalidAssertItemLength,
+  invalidAssertCallbackItem,
+  validAtestFixture,
+  validAtestScenario,
+  addScenes
+} from "./fixtures";
 
-// Valid samples
-const validLength1Item = items[0];
-const validLength2Item = items[1];
-
-// Error-prone samples
-const invalidArgumentLengthItem = ["42"];
-const invalidCallbackItem = ["42", "42"];
+let fixtures, scenarios;
 
 describe("assert", () => {
   it("should assert on result-callback pattern", () => {
     expect.assertions(1);
-    assert(validLength1Item);
+    assert(validAssertLength1Item);
   });
 
   it("should assert on result-expected-callback pattern", () => {
     expect.assertions(1);
-    assert(validLength2Item);
+    assert(validAssertLength2Item);
   });
 
   it("should throw error on item with length different than 2 or 3", () => {
-    const invalidArgumentFunction = () => assert(invalidArgumentLengthItem);
+    const invalidArgumentFunction = () => assert(invalidAssertItemLength);
     expect(invalidArgumentFunction).toThrow(Error);
   });
 
   it("should throw error on invalid callback function", () => {
-    const invalidCallbackFunction = () => assert(invalidCallbackItem);
+    const invalidCallbackFunction = () => assert(invalidAssertCallbackItem);
     expect(invalidCallbackFunction).toThrow(Error);
   });
 });
 
 describe("batchAssert", () => {
   it("should assert asserts in batch", () => {
-    expect.assertions(items.length);
-    batchAssert(items);
+    expect.assertions(assertFixtures.length);
+    batchAssert(assertFixtures);
   });
 });
+
+describe("atest", () => {
+  it("should assert atest", () => atest(validAtestFixture, validAtestScenario));
+});
+
+describe("batchAtest", () => {
+  it("should assert batchAtest", () => {
+    fixtures = [validAtestFixture, validAtestFixture];
+    scenarios = [validAtestScenario, validAtestScenario];
+
+    batchAtest(fixtures, scenarios);
+  });
+});
+
+describe("batchAtest", () => {
+    it("should assert batchAtest", () => {
+        fixtures = [validAtestFixture, validAtestFixture];
+        scenarios = [validAtestScenario, validAtestScenario];
+
+        batchAtest(fixtures, scenarios);
+    });
+});
+
+/*
+*  Test design
+*/
+
+let scenes;
+
+/** Description **/
+scenes = [
+    ["add", () => rehearsal(addScenes)],
+];
+
+validate(scenes);

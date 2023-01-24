@@ -100,14 +100,6 @@ describe("Array", () => {
     expect(throwError).toHaveBeenCalled();
   });
 
-  it("should receive a zipped array with two arrays entries", () => {
-    expect(zip([1, 2, 3], ["a", "b", "c"])).toStrictEqual([
-      [1, "a"],
-      [2, "b"],
-      [3, "c"],
-    ]);
-  });
-
   it("should get all indexes of given value within array", () => {
     expect(getAllIndexes([1, 2, 3, 3], 1)).toStrictEqual([0]);
     expect(getAllIndexes([1, 2, 3, 3], 2)).toStrictEqual([1]);
@@ -159,7 +151,7 @@ describe("Array", () => {
     const m = 1;
     const n = 3;
 
-    expected = [ 1, 2, 3 ];
+    expected = [1, 2, 3];
 
     const set_gen = mSetsOfnTuples(arr, m, n);
 
@@ -172,7 +164,7 @@ describe("Array", () => {
     const m = 2;
     const n = 1;
 
-    expected = [ [1], [2] ];
+    expected = [[1], [2]];
 
     const set_gen = mSetsOfnTuples(arr, m, n);
     candidate = set_gen.next().value;
@@ -298,7 +290,7 @@ describe("hasElement", () => {
   });
 });
 
-global.console.warn = jest.fn()
+global.console.warn = jest.fn();
 
 describe("euler", () => {
   it("should throw Typerror for ill-conditioned input", () => {
@@ -308,7 +300,7 @@ describe("euler", () => {
   });
 
   it("should throw Typerror for ill-conditioned input", () => {
-    const  illConditionedInput = () => euler([]);
+    const illConditionedInput = () => euler([]);
 
     expect(illConditionedInput).toThrow("There must at least ONE set!");
   });
@@ -316,8 +308,8 @@ describe("euler", () => {
   it("should warn once for duplicated set entries", () => {
     euler({ a: [1, 1, 2] });
 
-    expect(console.warn).toBeCalledTimes(1)
-    expect(console.warn).toBeCalledWith('Each array MUST NOT have duplicates');
+    expect(console.warn).toBeCalledTimes(1);
+    expect(console.warn).toBeCalledWith("Each array MUST NOT have duplicates");
   });
 
   it("should return a multiple set interactions - Sample 1", () => {
@@ -389,5 +381,4 @@ describe("euler", () => {
 
     expect(euler([list_1, list_2])).toEqual(result);
   });
-
 });

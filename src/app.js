@@ -1,6 +1,6 @@
-import express from 'express';
-import { prewares, poswares } from './middlewares.js';
-import base_router_tuples from './routers/router_bundler.js';
+import express from "express";
+import { prewares, poswares } from "./middlewares.js";
+import base_router_tuples from "./routers/router_bundler.js";
 
 let base_route_string, router;
 

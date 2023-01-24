@@ -62,9 +62,7 @@ export default class GraphVertex {
    * @param {GraphEdge} edge
    */
   deleteEdges(edges) {
-    edges.forEach((edge) => {
-      this.edges.delete(edge);
-    });
+    edges.forEach((edge) => this.edges.delete(edge) );
   }
 
   /**
