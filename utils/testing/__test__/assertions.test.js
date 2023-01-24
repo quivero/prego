@@ -1,7 +1,7 @@
-import { 
-    assert, 
-    batchAssert, 
-    atest, 
+import {
+    assert,
+    batchAssert,
+    atest,
     batchAtest,
     rehearsal,
     validate
