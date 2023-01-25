@@ -103,7 +103,7 @@ addScenes = [
   buildScene('must sum numbers using batchAssert', () => batchAssert(addItems)),
   buildScene('must sum numbers using batchAssert', () => batchAssert(addItems)),
   buildScene(
-    'must sum numbers using atest', 
+    'must sum numbers using atest',
     () => atest(additionFixture_1, additionScript_1)
   ),
   buildScene(
@@ -111,7 +111,7 @@ addScenes = [
     () => {
       const fixtures = [ additionFixture_1, additionFixture_2 ];
       const scenarios =  [ additionScript_1, additionScript_2 ];
-    
+
       batchAtest(fixtures, scenarios);
     }
   )
@@ -120,4 +120,3 @@ addScenes = [
 addRehearsals = [
     buildRehearsal('add', () => rehearse(addScenes)),
 ];
-
