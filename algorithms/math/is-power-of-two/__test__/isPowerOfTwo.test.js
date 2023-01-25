@@ -1,9 +1,9 @@
-import isPowerOfTwo from "../isPowerOfTwo";
+import isPowerOfTwo from '../isPowerOfTwo';
 
 let trivia, result, expected;
 
-describe("isPowerOfTwo", () => {
-  it("should check if the number is made by multiplying twos", () => {
+describe('isPowerOfTwo', () => {
+  it('should check if the number is made by multiplying twos', () => {
     trivia = [
       [isPowerOfTwo(-1), false],
       [isPowerOfTwo(0), false],

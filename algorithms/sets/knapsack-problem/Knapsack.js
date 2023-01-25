@@ -1,4 +1,4 @@
-import MergeSort from "#algorithms/sorting/merge-sort/MergeSort";
+import MergeSort from '#algorithms/sorting/merge-sort/MergeSort';
 
 export default class Knapsack {
   /**
