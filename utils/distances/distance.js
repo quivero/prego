@@ -1,10 +1,10 @@
-import _ from "lodash";
+import _ from 'lodash';
 
-import { objectHasKey } from "../objects/objects.js";
-import { hav } from "../numbers/numbers.js";
-import { vecArg, sphericalToCartesian, isSpherical } from "../math/math.js";
-import { throwError } from "../sys/sys.js";
-import { log } from "../logging/logger.js";
+import { objectHasKey } from '../objects/objects.js';
+import { hav } from '../numbers/numbers.js';
+import { vecArg, sphericalToCartesian, isSpherical } from '../math/math.js';
+import { throwError } from '../sys/sys.js';
+import { log } from '../logging/logger.js';
 
 /**
  * @abstract n-norm of a number
@@ -26,7 +26,7 @@ export const nNorm = (arr, n) =>
  */
 export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   if (n < 1) {
-    throwError("The exponent n must be a number greater or equal to 1!");
+    throwError('The exponent n must be a number greater or equal to 1!');
     return;
   }
 
@@ -106,14 +106,14 @@ export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
  */
 export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
   let notification_message =
-    "There must exist property '_placeholder_' on config argument 'methodConfig'!";
+    'There must exist property \'_placeholder_\' on config argument \'methodConfig\'!';
 
   switch (method) {
-    case "n_norm":
+    case 'n_norm':
       let exponent;
 
-      if (!objectHasKey(methodConfig, "exponent")) {
-        log("warn", notification_message.replace("_placeholder_", "radius"));
+      if (!objectHasKey(methodConfig, 'exponent')) {
+        log('warn', notification_message.replace('_placeholder_', 'radius'));
         exponent = 2;
       } else {
         exponent = methodConfig.exponent;
@@ -121,18 +121,18 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
 
       return nNormDistance(coordinate_1, coordinate_2, exponent);
 
-    case "sphere":
+    case 'sphere':
       const are_coords_spherical =
         !isSpherical(coordinate_1) || !isSpherical(coordinate_2);
 
-      return !objectHasKey(methodConfig, "radius")
-        ? throwError(notification_message.replace("_placeholder_", "radius"))
+      return !objectHasKey(methodConfig, 'radius')
+        ? throwError(notification_message.replace('_placeholder_', 'radius'))
         : are_coords_spherical
-        ? throwError("Provided coordinates are not spherical!")
+        ? throwError('Provided coordinates are not spherical!')
         : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
 
     default:
-      throwError("There are only available methods: ['n_norm', 'sphere']");
+      throwError('There are only available methods: [\'n_norm\', \'sphere\']');
       return 1;
   }
 };

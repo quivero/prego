@@ -1,20 +1,20 @@
-import GraphVertex from "#dstructures/graph/GraphVertex";
-import GraphEdge from "#dstructures/graph/GraphEdge";
-import Graph from "#dstructures/graph/Graph";
+import GraphVertex from '#dstructures/graph/GraphVertex';
+import GraphEdge from '#dstructures/graph/GraphEdge';
+import Graph from '#dstructures/graph/Graph';
 
-import depthFirstSearch from "../depthFirstSearch";
+import depthFirstSearch from '../depthFirstSearch';
 
-describe("depthFirstSearch", () => {
-  it("should perform DFS operation on graph", () => {
+describe('depthFirstSearch', () => {
+  it('should perform DFS operation on graph', () => {
     const graph = new Graph(true);
 
-    const vertexA = new GraphVertex("A");
-    const vertexB = new GraphVertex("B");
-    const vertexC = new GraphVertex("C");
-    const vertexD = new GraphVertex("D");
-    const vertexE = new GraphVertex("E");
-    const vertexF = new GraphVertex("F");
-    const vertexG = new GraphVertex("G");
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+    const vertexG = new GraphVertex('G');
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
@@ -36,7 +36,7 @@ describe("depthFirstSearch", () => {
       edgeDG,
     ]);
 
-    expect(graph.toString()).toBe("A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G");
+    expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G');
 
     const enterVertexCallback = jest.fn();
     const leaveVertexCallback = jest.fn();
@@ -106,16 +106,16 @@ describe("depthFirstSearch", () => {
     }
   });
 
-  it("allow users to redefine vertex visiting logic", () => {
+  it('allow users to redefine vertex visiting logic', () => {
     const graph = new Graph(true);
 
-    const vertexA = new GraphVertex("A");
-    const vertexB = new GraphVertex("B");
-    const vertexC = new GraphVertex("C");
-    const vertexD = new GraphVertex("D");
-    const vertexE = new GraphVertex("E");
-    const vertexF = new GraphVertex("F");
-    const vertexG = new GraphVertex("G");
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
+    const vertexG = new GraphVertex('G');
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);
@@ -137,7 +137,7 @@ describe("depthFirstSearch", () => {
       edgeDG,
     ]);
 
-    expect(graph.toString()).toBe("A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G");
+    expect(graph.toString()).toBe('A_B,B_C,C_G,A_D,A_E,E_F,F_D,D_G');
 
     const enterVertexCallback = jest.fn();
     const leaveVertexCallback = jest.fn();

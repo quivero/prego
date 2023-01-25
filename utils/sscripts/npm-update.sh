@@ -6,5 +6,5 @@ ncu -u && npm update
 
 # Submit to git
 git add package.json package-lock.json
-git commit -m "config/ package*.json"
+git commit -m 'config/ package*.json'
 git push

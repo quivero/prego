@@ -16,7 +16,7 @@ as a collection of elements, with two principal operations:
 The order in which elements come off a stack gives rise to its
 alternative name, LIFO (last in, first out). Additionally, a
 peek operation may give access to the top without modifying
-the stack. The name "stack" for this type of structure comes
+the stack. The name 'stack' for this type of structure comes
 from the analogy to a set of physical items stacked on top of
 each other, which makes it easy to take an item off the top
 of the stack, while getting to an item deeper in the stack

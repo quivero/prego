@@ -1,12 +1,12 @@
-import _ from "lodash";
+import _ from 'lodash';
 
-import Queue from "#dstructures/queue/Queue";
+import Queue from '#dstructures/queue/Queue';
 
-import stronglyConnectedComponents from "#galgorithms/strongly-connected-components/stronglyConnectedComponents";
-import eulerianPath from "#galgorithms/eulerian-path/eulerianPath";
-import hamiltonianCycle from "#galgorithms/hamiltonian-cycle/hamiltonianCycle";
-import depthFirstSearch from "#galgorithms/depth-first-search/depthFirstSearch";
-import graphBridges from "#galgorithms/bridges/graphBridges";
+import stronglyConnectedComponents from '#galgorithms/strongly-connected-components/stronglyConnectedComponents';
+import eulerianPath from '#galgorithms/eulerian-path/eulerianPath';
+import hamiltonianCycle from '#galgorithms/hamiltonian-cycle/hamiltonianCycle';
+import depthFirstSearch from '#galgorithms/depth-first-search/depthFirstSearch';
+import graphBridges from '#galgorithms/bridges/graphBridges';
 
 import {
   cartesianProduct,
@@ -15,9 +15,9 @@ import {
   getAllIndexes,
   hasElement,
   sort,
-} from "#utils/arrays/arrays.js";
-import { throwError, warn } from "#utils/sys/sys.js";
-import { createEdgesFromVerticesValues } from "#gutils/graph.js";
+} from '#utils/arrays/arrays.js';
+import { throwError, warn } from '#utils/sys/sys.js';
+import { createEdgesFromVerticesValues } from '#gutils/graph.js';
 
 import {
   objectInit,
@@ -25,10 +25,10 @@ import {
   objectFilter,
   objectKeyFind,
   objectReduce,
-} from "#utils/objects/objects.js";
+} from '#utils/objects/objects.js';
 
-import GraphVertex from "./GraphVertex.js";
-import GraphEdge from "./GraphEdge.js";
+import GraphVertex from './GraphVertex.js';
+import GraphEdge from './GraphEdge.js';
 
 /**
  * Helper class for visited vertex metadata.
@@ -87,7 +87,7 @@ export default class Graph {
     // Check if vertex has been already added.
     if (Object.keys(this.vertices).includes(newVertex.label)) {
       throwError(
-        "Vertex has already been added before. Please, choose other key!"
+        'Vertex has already been added before. Please, choose other key!'
       );
     }
 
@@ -246,11 +246,11 @@ export default class Graph {
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
     const edges = [];
 
-    let from_edge_key = "";
-    let to_edge_key = "";
+    let from_edge_key = '';
+    let to_edge_key = '';
 
     if (!this.isChain(index_chain)) {
-      throwError("Provided chain is not a valid for this graph!");
+      throwError('Provided chain is not a valid for this graph!');
     } else {
       index_chain.forEach((vertex, index) => {
         from_edge_key = vertices_indexes_to_keys[index_chain[index]];
@@ -546,7 +546,7 @@ export default class Graph {
     if (this.edges[edge.getKey()]) {
       delete this.edges[edge.getKey()];
     } else {
-      warn("Edge not found in graph");
+      warn('Edge not found in graph');
       return;
     }
 
@@ -748,7 +748,7 @@ export default class Graph {
         }
       });
     } else {
-      warn("The reverse of an undirected graph is identical to itself!");
+      warn('The reverse of an undirected graph is identical to itself!');
       return;
     }
 
@@ -2290,7 +2290,7 @@ export default class Graph {
         acyclic_path = acyclic_paths[path_index];
 
         for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
-          connected_cycles_indexes = _.split(cycles_connection[0], ",").map(
+          connected_cycles_indexes = _.split(cycles_connection[0], ',').map(
             (cycle_index) => Number(cycle_index)
           );
 
@@ -2415,7 +2415,7 @@ export default class Graph {
    */
   deserialize(graph_json) {
     if (graph_json.isDirected !== this.isDirected) {
-      throwError("This direction is different from serialization direction.");
+      throwError('This direction is different from serialization direction.');
     } else {
       this.addVertices(
         objectFilter(

@@ -1,5 +1,5 @@
-import LinkedList from "../linked-list/LinkedList.js";
-import { throwError } from "#utils/sys/sys.js";
+import LinkedList from '../linked-list/LinkedList.js';
+import { throwError } from '#utils/sys/sys.js';
 
 export default class GraphVertex {
   /**
@@ -7,7 +7,7 @@ export default class GraphVertex {
    */
   constructor(label, value = 0) {
     if (label === undefined) {
-      throwError("Graph vertex must have a value");
+      throwError('Graph vertex must have a value');
     }
 
     /**

@@ -15,7 +15,7 @@ como um conjunto de nós conectados.
 Uma estrutura de dados em árvore pode ser definida recursivamente como
 (localmente) uma coleção de nós (começando no nó raíz), aonde cada nó
 é uma estrutura de dados consistindo de um valor, junto com uma lista
-de referências aos nós (os "filhos"), com as restrições de que nenhuma
+de referências aos nós (os 'filhos'), com as restrições de que nenhuma
 referência é duplicada e nenhuma aponta para a raiz.
 
 Uma árvore não ordenada simples; neste diagrama, o nó rotulado como `7`

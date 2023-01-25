@@ -9,7 +9,7 @@ export default class Comparator {
   }
 
   /**
-   * Default comparison function. It just assumes that "a" and "b" are strings or numbers.
+   * Default comparison function. It just assumes that 'a' and 'b' are strings or numbers.
    * @param {(string|number)} a
    * @param {(string|number)} b
    * @returns {number}
@@ -33,7 +33,7 @@ export default class Comparator {
   }
 
   /**
-   * Checks if variable "a" is less than "b".
+   * Checks if variable 'a' is less than 'b'.
    * @param {*} a
    * @param {*} b
    * @return {boolean}
@@ -43,7 +43,7 @@ export default class Comparator {
   }
 
   /**
-   * Checks if variable "a" is greater than "b".
+   * Checks if variable 'a' is greater than 'b'.
    * @param {*} a
    * @param {*} b
    * @return {boolean}
@@ -53,7 +53,7 @@ export default class Comparator {
   }
 
   /**
-   * Checks if variable "a" is less than or equal to "b".
+   * Checks if variable 'a' is less than or equal to 'b'.
    * @param {*} a
    * @param {*} b
    * @return {boolean}
@@ -63,7 +63,7 @@ export default class Comparator {
   }
 
   /**
-   * Checks if variable "a" is greater than or equal to "b".
+   * Checks if variable 'a' is greater than or equal to 'b'.
    * @param {*} a
    * @param {*} b
    * @return {boolean}

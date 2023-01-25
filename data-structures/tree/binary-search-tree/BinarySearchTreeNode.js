@@ -1,6 +1,6 @@
-import BinaryTreeNode from "../BinaryTreeNode";
-import Comparator from "#utils/comparator/Comparator";
-import throwError from "#utils/sys/sys";
+import BinaryTreeNode from '../BinaryTreeNode';
+import Comparator from '#utils/comparator/Comparator';
+import throwError from '#utils/sys/sys';
 
 export default class BinarySearchTreeNode extends BinaryTreeNode {
   /**
@@ -92,7 +92,7 @@ export default class BinarySearchTreeNode extends BinaryTreeNode {
     const nodeToRemove = this.find(value);
 
     if (!nodeToRemove) {
-      throwError("Item not found in the tree");
+      throwError('Item not found in the tree');
     }
 
     const { parent } = nodeToRemove;

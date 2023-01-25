@@ -13,7 +13,7 @@ a chave de `C`.
 
 ![Heap](https://upload.wikimedia.org/wikipedia/commons/3/38/Max-Heap.svg)
 
-O nó no "topo" do _heap_, cujo não possui pais, é chamado de nó raiz.
+O nó no 'topo' do _heap_, cujo não possui pais, é chamado de nó raiz.
 
 ## References
 

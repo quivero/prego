@@ -1,19 +1,19 @@
-import Graph from "#dstructures/graph/Graph";
+import Graph from '#dstructures/graph/Graph';
 
-import { createVertices, createEdges } from "#dstructures/graph/utils/graph";
+import { createVertices, createEdges } from '#dstructures/graph/utils/graph';
 
-import topologicalSort from "../topologicalSort";
+import topologicalSort from '../topologicalSort';
 
 let nodes_labels, edges_vertices;
 let graph, edges;
 let A, B, C, D, E, F, G, H;
 let AC, BC, BD, CE, DF, EF, EH, FG;
 
-describe("topologicalSort", () => {
-  it("should do topological sorting on graph", () => {
+describe('topologicalSort', () => {
+  it('should do topological sorting on graph', () => {
     graph = new Graph(true);
 
-    nodes_labels = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    nodes_labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     [A, B, C, D, E, F, G, H] = createVertices(nodes_labels);
 
     edges_vertices = [

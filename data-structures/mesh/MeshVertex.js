@@ -1,4 +1,4 @@
-import GraphVertex from "../graph/GraphVertex.js";
+import GraphVertex from '../graph/GraphVertex.js';
 
 export default class MeshVertex extends GraphVertex {
   /**

@@ -1,4 +1,4 @@
-import Heap from "./Heap.js";
+import Heap from './Heap.js';
 
 export default class MinHeap extends Heap {
   /**

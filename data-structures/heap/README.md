@@ -22,7 +22,7 @@ to the key of `C`
 
 ![Heap](https://upload.wikimedia.org/wikipedia/commons/3/38/Max-Heap.svg)
 
-The node at the "top" of the heap with no parents is
+The node at the 'top' of the heap with no parents is
 called the root node.
 
 ## References

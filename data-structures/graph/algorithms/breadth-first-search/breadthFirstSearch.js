@@ -1,4 +1,4 @@
-import Queue from "#dstructures/queue/Queue";
+import Queue from '#dstructures/queue/Queue';
 
 /**
  * @typedef {Object} Callbacks

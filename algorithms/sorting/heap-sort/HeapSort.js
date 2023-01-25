@@ -1,5 +1,5 @@
-import Sort from "../Sort";
-import MinHeap from "#dstructures/heap/MinHeap.js";
+import Sort from '../Sort';
+import MinHeap from '#dstructures/heap/MinHeap.js';
 
 export default class HeapSort extends Sort {
   sort(originalArray) {

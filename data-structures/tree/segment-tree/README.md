@@ -17,7 +17,7 @@ children of each node corresponds to the two halves of
 the array corresponding to the node.
 
 We build the tree bottom up, with the value of each node
-being the "minimum" (or any other function) of its children's values. This will
+being the 'minimum' (or any other function) of its children's values. This will
 take `O(n log n)` time. The number
 of operations done is the height of the tree, which
 is `O(log n)`. To do range queries, each node splits the

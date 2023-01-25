@@ -1,4 +1,4 @@
-import isPowerOfTwo from "#algorithms/math/is-power-of-two/isPowerOfTwo";
+import isPowerOfTwo from '#algorithms/math/is-power-of-two/isPowerOfTwo';
 
 export default class SegmentTree {
   /**
