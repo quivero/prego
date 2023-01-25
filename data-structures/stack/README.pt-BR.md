@@ -9,7 +9,7 @@ que serve como uma coleção de elementos com duas operações principais:
 A ordem em que os elementos saem de um _stack_ dá origem ao seu
 nome alternativo, LIFO (last in, first out). Adicionalmente, uma
 espiar a operação pode dar acesso ao topo sem modificar o _stack_.
-O nome "stack" para este tipo de estrutura vem da analogia de
+O nome 'stack' para este tipo de estrutura vem da analogia de
 um conjunto de itens físicos empilhados uns sobre os outros,
 o que facilita retirar um item do topo da pilha, enquanto para chegar a
 um item mais profundo na pilha pode exigir a retirada de

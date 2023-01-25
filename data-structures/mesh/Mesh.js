@@ -1,4 +1,4 @@
-import Graph from "../graph/Graph";
+import Graph from '../graph/Graph';
 
 export default class Mesh extends Graph {
   #metric;

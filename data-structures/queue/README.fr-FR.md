@@ -5,8 +5,8 @@ sorte particulière de structure de données abstraite dans lequel
 les entités de la collection sont conservées dans l'ordre et les
 opérations principales sur la collection sont le résultat de l'ajout
 d'entités à la position terminale arrière, connue sous le nom de mise
-en file d'attente ("enqueue"), et de la suppression des entités de la
-position terminale avant, appelée retrait de la file d'attente ("dequeu").
+en file d'attente ('enqueue'), et de la suppression des entités de la
+position terminale avant, appelée retrait de la file d'attente ('dequeu').
 
 Cela fait de la file d'attente une structure de données PEPS (premier entré,
 premier sorti), en anglais FIFO (first in, first out). Dans une structure de données

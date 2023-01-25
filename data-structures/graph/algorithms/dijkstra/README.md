@@ -6,7 +6,7 @@ road networks.
 
 The algorithm exists in many variants; Dijkstra's original variant
 found the shortest path between two nodes, but a more common
-variant fixes a single node as the "source" node and finds
+variant fixes a single node as the 'source' node and finds
 shortest paths from the source to all other nodes in the graph,
 producing a shortest-path tree.
 

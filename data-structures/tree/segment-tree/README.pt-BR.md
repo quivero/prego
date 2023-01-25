@@ -14,7 +14,7 @@ metade da _array_. Similarmente, os filhos de cada nó correspondem ao número
 das duas metadas da _array_ correspondente do nó.
 
 Nós construímos a árvore debaixo para cima, com o valor de cada nó sendo o
-"mínimo" (ou qualquer outra função) dos valores de seus filhos. Isto consumirá
+'mínimo' (ou qualquer outra função) dos valores de seus filhos. Isto consumirá
 tempo `O(n log n)`. O número de oprações realizadas é equivalente a altura da
 árvore, pela qual consome tempo `O(log n)`. Para fazer consultas de intervalos,
 cada nó divide a consulta em duas partes, sendo uma sub consulta para cada filho.

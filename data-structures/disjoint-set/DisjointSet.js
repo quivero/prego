@@ -1,5 +1,5 @@
-import DisjointSetItem from "./DisjointSetItem";
-import { throwError } from "#utils/sys/sys.js";
+import DisjointSetItem from './DisjointSetItem';
+import { throwError } from '#utils/sys/sys.js';
 
 export default class DisjointSet {
   /**
@@ -60,7 +60,7 @@ export default class DisjointSet {
     const rootKeyB = this.find(valueB);
 
     if (rootKeyA === null || rootKeyB === null) {
-      throwError("One or two values are not in sets");
+      throwError('One or two values are not in sets');
     } else {
       if (rootKeyA === rootKeyB) {
         // In case if both elements are already in the same set then just return its key.
@@ -94,7 +94,7 @@ export default class DisjointSet {
     const rootKeyB = this.find(valueB);
 
     if (rootKeyA === null || rootKeyB === null) {
-      throwError("One or two values are not in sets");
+      throwError('One or two values are not in sets');
     } else {
       return rootKeyA === rootKeyB;
     }

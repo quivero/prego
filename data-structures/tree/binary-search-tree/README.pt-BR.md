@@ -3,7 +3,7 @@
 Na ciência da computação **binary search trees** (BST), algumas vezes
 chamadas de árvores binárias ordenadas (_ordered or sorted binary trees_),
 é um tipo particular de container: estruturas de dados que armazenam
-"itens" (como números, nomes, etc.) na memória. Permite pesquisa rápida,
+'itens' (como números, nomes, etc.) na memória. Permite pesquisa rápida,
 adição e remoção de itens além de poder ser utilizado para implementar
 tanto conjuntos dinâmicos de itens ou, consultar tabelas que permitem
 encontrar um item por seu valor chave. E.g. encontrar o número de
