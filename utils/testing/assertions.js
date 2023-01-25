@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 export const assert = (item) => {
   let result, expected;
@@ -8,7 +8,7 @@ export const assert = (item) => {
   if (isValidAssertItem) {
     const callback = item[item_length - 1];
 
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
       switch (item_length) {
         case 2:
           result = item[0];
@@ -27,14 +27,14 @@ export const assert = (item) => {
       }
     } else {
       const callbackValidity =
-        "Last element on item must be a callback function!";
+        'Last element on item must be a callback function!';
 
       throw Error(callbackValidity);
     }
   } else {
-    const description = "Test element may have structure: ";
-    const validArgument_1 = "[result, assertion_callback]";
-    const validArgument_2 = "[result, expected, assertion_callback]";
+    const description = 'Test element may have structure: ';
+    const validArgument_1 = '[result, assertion_callback]';
+    const validArgument_2 = '[result, expected, assertion_callback]';
 
     const schemas = `${validArgument_1} or ${validArgument_2}`;
 
