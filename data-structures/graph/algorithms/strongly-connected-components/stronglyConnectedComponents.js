@@ -1,5 +1,5 @@
-import Stack from '#dstructures/stack/Stack.js';
-import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
+import Stack from "#dstructures/stack/Stack.js";
+import depthFirstSearch from "../depth-first-search/depthFirstSearch.js";
 
 /**
  * @param {Graph} graph

@@ -1,5 +1,5 @@
-import * as winston from 'winston';
-import logger from 'morgan';
+import * as winston from "winston";
+import logger from "morgan";
 
 const { createLogger, format, transports } = winston;
 
@@ -24,11 +24,11 @@ const { label } = format;
  *
  * @param {String} label_msg
  */
-export const logging = (label_msg = 'default') => {
+export const logging = (label_msg = "default") => {
   const logger_setup = {
     format: format.combine(
       label({ label: label_msg }),
-      format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss.sss A' }),
+      format.timestamp({ format: "DD/MM/YYYY HH:mm:ss.sss A" }),
       format.colorize(),
       format.printf(
         (info) =>
@@ -56,18 +56,18 @@ export const log_message = (logger, level, message) => {
   });
 };
 
-export const agentMorganReporter = logging('morgan');
+export const agentMorganReporter = logging("morgan");
 
 /**
  * @abstract Morgan middleware to log app access
  *
  */
 export const morganMiddleware = logger(
-  ':method :url :status :res[content-length] - :response-time ms',
+  ":method :url :status :res[content-length] - :response-time ms",
   {
     stream: {
       // Configure Morgan to use our custom logger with the http severity
-      write: (message) => agentMorganReporter.log('info', message),
+      write: (message) => agentMorganReporter.log("info", message),
     },
   }
 );

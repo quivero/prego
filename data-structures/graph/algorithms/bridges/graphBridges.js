@@ -1,4 +1,4 @@
-import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
+import depthFirstSearch from "../depth-first-search/depthFirstSearch.js";
 
 /**
  * Helper class for visited vertex metadata.

@@ -1,10 +1,10 @@
-import _ from 'lodash';
-import 'lodash.combinations';
+import _ from "lodash";
+import "lodash.combinations";
 
-import { objectReduce } from '../objects/objects.js';
-import { throwError } from '../sys/sys.js';
+import { objectReduce } from "../objects/objects.js";
+import { throwError } from "../sys/sys.js";
 
-const SET_DELIMITER = ',';
+const SET_DELIMITER = ",";
 
 /**
  * @abstract returns an array of ones with length n
@@ -62,11 +62,11 @@ export const nRandMinsMaxs = (min_max_vec) => {
   for (let i = 0; i < n; i += 1) {
     if (min_max_vec[i].length !== 2) {
       throwError(
-        'Entry ' +
+        "Entry " +
           String(i) +
-          ' have 2 entries. We found ' +
+          " have 2 entries. We found " +
           String(min_max_vec[i].length) +
-          '!'
+          "!"
       );
       return;
     }
@@ -74,13 +74,13 @@ export const nRandMinsMaxs = (min_max_vec) => {
     let min_val = min_max_vec[i][0];
     let max_val = min_max_vec[i][1];
 
-    if (typeof min_val !== 'number' && typeof max_val !== 'number') {
-      throwError('Min and max values must be numbers!');
+    if (typeof min_val !== "number" && typeof max_val !== "number") {
+      throwError("Min and max values must be numbers!");
       return;
     }
 
     if (min_val > max_val) {
-      throwError('error', 'Min value must be lower than Max value!');
+      throwError("error", "Min value must be lower than Max value!");
       return;
     }
 
@@ -110,7 +110,6 @@ export const getAllIndexes = (arr, val) => {
   return indexes;
 };
 
-
 /**
  * @abstract returns dictionary with number prime factors
  *
@@ -136,7 +135,7 @@ export const countDict = (arr) => {
  */
 export const cyclicSort = (array, index) => {
   if (array.length < index) {
-    const category = 'Error';
+    const category = "Error";
     const subject = `Provided index ${index}`;
     const condition = `greater than array length ${array.length}`;
 
@@ -188,7 +187,7 @@ export const sort = (arr, sort_type = 0) => {
   } else if (sort_type === 1) {
     // Do nothing
   } else {
-    throwError('Sorting types are 0 and 1 for descending and ascending order.');
+    throwError("Sorting types are 0 and 1 for descending and ascending order.");
   }
 
   return arr;
@@ -302,7 +301,7 @@ export function* mSetsOfnTuples(array, m, n) {
 
   if (m > Math.floor(array.length / n)) {
     const err_message =
-      'Size of array must be greater or equal to the product of n by m';
+      "Size of array must be greater or equal to the product of n by m";
     throwError(err_message);
   } else {
     let curr_comb = [];
@@ -382,7 +381,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
  */
 export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
-    throwError('Dimension and length must be positive natural numbers!');
+    throwError("Dimension and length must be positive natural numbers!");
   }
 
   for (const indexes of formationFn(length, dim, dim)) {
@@ -410,7 +409,7 @@ export function* upperTriangularHyperindexes(length, dim) {
   yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
 }
 
-const SETKEY_DELIMITER = ',';
+const SETKEY_DELIMITER = ",";
 
 export function* eulerGenerator(sets) {
   /**
@@ -436,7 +435,7 @@ export function* eulerGenerator(sets) {
   // There are no sets
   if (are_sets) {
     error_msg =
-      'Ill-conditioned input. It must be either a json-like or array of arrays object!';
+      "Ill-conditioned input. It must be either a json-like or array of arrays object!";
     throw TypeError(error_msg);
   } else {
     let is_unique_set_arr = true;
@@ -446,7 +445,7 @@ export function* eulerGenerator(sets) {
     }
 
     if (!is_unique_set_arr) {
-      console.warn('Each array MUST NOT have duplicates');
+      console.warn("Each array MUST NOT have duplicates");
       sets = objectReduce(
         sets,
         (result, __, key) => {
@@ -458,7 +457,7 @@ export function* eulerGenerator(sets) {
     }
 
     if (Object.values(sets).length === 0)
-      throw new TypeError('There must at least ONE set!');
+      throw new TypeError("There must at least ONE set!");
 
     if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
@@ -466,9 +465,9 @@ export function* eulerGenerator(sets) {
       Object.keys(sets_).filter((key) => sets_[key].length !== 0);
 
     let compl_sets_keys = [];
-    let comb_str = '';
+    let comb_str = "";
     let celements = [];
-    let comb_intersec_key = '';
+    let comb_intersec_key = "";
     let comb_intersec = [];
     let comb_excl = [];
     let compl_sets = {};

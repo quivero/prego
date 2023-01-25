@@ -1,16 +1,16 @@
-import GraphVertex from '#dstructures/graph/GraphVertex';
-import GraphEdge from '#dstructures/graph/GraphEdge';
-import Graph from '#dstructures/graph/Graph';
+import GraphVertex from "#dstructures/graph/GraphVertex";
+import GraphEdge from "#dstructures/graph/GraphEdge";
+import Graph from "#dstructures/graph/Graph";
 
-import hamiltonianCycle from '../hamiltonianCycle';
+import hamiltonianCycle from "../hamiltonianCycle";
 
-describe('hamiltonianCycle', () => {
-  it('should find hamiltonian paths in graph', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
+describe("hamiltonianCycle", () => {
+  it("should find hamiltonian paths in graph", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAE = new GraphEdge(vertexA, vertexE);
@@ -66,12 +66,12 @@ describe('hamiltonianCycle', () => {
     expect(hamiltonianCycleSet[3][4].getKey()).toBe(vertexC.getKey());
   });
 
-  it('should return false for graph without Hamiltonian path', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-    const vertexC = new GraphVertex('C');
-    const vertexD = new GraphVertex('D');
-    const vertexE = new GraphVertex('E');
+  it("should return false for graph without Hamiltonian path", () => {
+    const vertexA = new GraphVertex("A");
+    const vertexB = new GraphVertex("B");
+    const vertexC = new GraphVertex("C");
+    const vertexD = new GraphVertex("D");
+    const vertexE = new GraphVertex("E");
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeAE = new GraphEdge(vertexA, vertexE);

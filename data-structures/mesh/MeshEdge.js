@@ -1,4 +1,4 @@
-import GraphEdge from '../graph/GraphEdge';
+import GraphEdge from "../graph/GraphEdge";
 
 export default class MeshEdge extends GraphEdge {
   /**

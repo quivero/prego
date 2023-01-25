@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export const emptyCallback = () => {};
 export const identityCallback = (fixture_) => fixture_;
@@ -11,7 +11,7 @@ export const assert = (item) => {
   if (isValidAssertItem) {
     const callback = item[item_length - 1];
 
-    if (typeof callback === 'function') {
+    if (typeof callback === "function") {
       switch (item_length) {
         case 2:
           result = item[0];
@@ -30,14 +30,14 @@ export const assert = (item) => {
       }
     } else {
       const callbackValidity =
-        'Last element on item must be a callback function!';
+        "Last element on item must be a callback function!";
 
       throw Error(callbackValidity);
     }
   } else {
-    const description = 'Test element may have structure: ';
-    const validArgument_1 = '[result, assertion_callback]';
-    const validArgument_2 = '[result, expected, assertion_callback]';
+    const description = "Test element may have structure: ";
+    const validArgument_1 = "[result, assertion_callback]";
+    const validArgument_2 = "[result, expected, assertion_callback]";
 
     const schemas = `${validArgument_1} or ${validArgument_2}`;
 
@@ -52,8 +52,8 @@ const verifyExperiment = (experiments) => {
     _.zip(
       experiments.results,
       experiments.expectations,
-      experiments.assertionMaps,
-    ),
+      experiments.assertionMaps
+    )
   );
 };
 
@@ -78,14 +78,12 @@ export const batchAtest = (fixtures, scenarios) => {
   });
 };
 
-export const rehearse = (scenes) => scenes.forEach(
-  (scene) => it(scene.description, scene.callback)
-);
-
+export const rehearse = (scenes) =>
+  scenes.forEach((scene) => it(scene.description, scene.callback));
 
 export const validate = (rehearsals) => {
-  rehearsals.forEach(
-    (rehearsal) => describe(rehearsal.name, rehearsal.callback)
+  rehearsals.forEach((rehearsal) =>
+    describe(rehearsal.name, rehearsal.callback)
   );
 };
 
@@ -109,7 +107,7 @@ export const buildScript = (setup, prepare, exercise, teardown) => {
 export const buildScene = (description, sceneCallback) => {
   return {
     description: description,
-    callback: sceneCallback
+    callback: sceneCallback,
   };
 };
 
@@ -118,7 +116,9 @@ export const buildRehearsal = (name, rehearsalCallback) => {
 };
 
 export const expectToBe = (result, expected) => expect(result).toBe(expected);
-export const expectToBeEqual = (result, expected) => expect(result).toEqual(expected);
-export const expectToStrictEqual = (result, expected) => expect(result).toStrictEqual(expected);
+export const expectToBeEqual = (result, expected) =>
+  expect(result).toEqual(expected);
+export const expectToStrictEqual = (result, expected) =>
+  expect(result).toStrictEqual(expected);
 export const expectToBeDefined = (result) => expect(result).toBeDefined();
 export const expectToBeUndefined = (result) => expect(result).toBeUndefined();

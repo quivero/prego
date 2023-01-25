@@ -1,17 +1,17 @@
-import _ from 'lodash';
+import _ from "lodash";
 import {
-    assert,
-    batchAssert,
-    atest,
-    batchAtest,
-    buildExercise,
-    buildScript,
-    buildScene,
-    buildRehearsal,
-    rehearse,
-    emptyCallback,
-    identityCallback
-} from '../assertions';
+  assert,
+  batchAssert,
+  atest,
+  batchAtest,
+  buildExercise,
+  buildScript,
+  buildScene,
+  buildRehearsal,
+  rehearse,
+  emptyCallback,
+  identityCallback,
+} from "../assertions";
 
 const expectToBeDefined = (result) => expect(result).toBeDefined();
 const expectToBe = (result, expected) => expect(result).toBe(expected);
@@ -20,8 +20,8 @@ const expectToBe = (result, expected) => expect(result).toBe(expected);
  | assert design
  *-------------------------*/
 export const assertFixtures = [
-  [ 42, expectToBeDefined ],
-  [ '42', '42', expectToBe ],
+  [42, expectToBeDefined],
+  ["42", "42", expectToBe],
 ];
 
 // Valid samples
@@ -29,8 +29,8 @@ export const validAssertLength1Item = assertFixtures[0];
 export const validAssertLength2Item = assertFixtures[1];
 
 // Error-prone samples
-export const invalidAssertItemLength = ['42'];
-export const invalidAssertCallbackItem = ['42', '42'];
+export const invalidAssertItemLength = ["42"];
+export const invalidAssertCallbackItem = ["42", "42"];
 
 /*-------------------------
  | atest design
@@ -38,9 +38,9 @@ export const invalidAssertCallbackItem = ['42', '42'];
 export let validAtestScript;
 let setup, prepare, exercise, teardown;
 
-export let validAtestFixture = '42';
+export let validAtestFixture = "42";
 const resultFunction = (fixture_) => fixture_;
-let expectedAtestResult = '42';
+let expectedAtestResult = "42";
 
 setup = () => {};
 
@@ -50,7 +50,7 @@ exercise = (resources) => {
   return buildExercise(
     resultFunction(resources),
     expectedAtestResult,
-    (result, expected) => expect(result).toBe(expected),
+    (result, expected) => expect(result).toBe(expected)
   );
 };
 
@@ -61,18 +61,13 @@ validAtestScript = buildScript(setup, prepare, exercise, teardown);
 /*-------------------------
  | assert design
  *-------------------------*/
-const add = (a, b) => a+b;
+const add = (a, b) => a + b;
 
 let addItem, addItems;
 export let addScenes, addRehearsals;
 
-addItem = [
-    add(1, 2), 3, expectToBe
-];
-addItems = [
-    addItem,
-    [ add(2, 3), 5, expectToBe ],
-];
+addItem = [add(1, 2), 3, expectToBe];
+addItems = [addItem, [add(2, 3), 5, expectToBe]];
 
 export let additionScript_1, additionScript_2;
 let exercise_1, exercise_2;
@@ -99,24 +94,18 @@ additionScript_1 = buildScript(setup, prepare, exercise_1, teardown);
 additionScript_2 = buildScript(setup, prepare, exercise_2, teardown);
 
 addScenes = [
-  buildScene('must sum numbers using assert', () => assert(addItem)),
-  buildScene('must sum numbers using batchAssert', () => batchAssert(addItems)),
-  buildScene('must sum numbers using batchAssert', () => batchAssert(addItems)),
-  buildScene(
-    'must sum numbers using atest',
-    () => atest(additionFixture_1, additionScript_1)
+  buildScene("must sum numbers using assert", () => assert(addItem)),
+  buildScene("must sum numbers using batchAssert", () => batchAssert(addItems)),
+  buildScene("must sum numbers using batchAssert", () => batchAssert(addItems)),
+  buildScene("must sum numbers using atest", () =>
+    atest(additionFixture_1, additionScript_1)
   ),
-  buildScene(
-    'must sum numbers using batchAtest',
-    () => {
-      const fixtures = [ additionFixture_1, additionFixture_2 ];
-      const scenarios =  [ additionScript_1, additionScript_2 ];
+  buildScene("must sum numbers using batchAtest", () => {
+    const fixtures = [additionFixture_1, additionFixture_2];
+    const scenarios = [additionScript_1, additionScript_2];
 
-      batchAtest(fixtures, scenarios);
-    }
-  )
+    batchAtest(fixtures, scenarios);
+  }),
 ];
 
-addRehearsals = [
-    buildRehearsal('add', () => rehearse(addScenes)),
-];
+addRehearsals = [buildRehearsal("add", () => rehearse(addScenes))];

@@ -1,9 +1,9 @@
-import isPowerOfTwoBitwise from '../isPowerOfTwoBitwise';
+import isPowerOfTwoBitwise from "../isPowerOfTwoBitwise";
 
 let trivia, expected, result;
 
-describe('isPowerOfTwoBitwise', () => {
-  it('should check if the number is made by multiplying twos', () => {
+describe("isPowerOfTwoBitwise", () => {
+  it("should check if the number is made by multiplying twos", () => {
     trivia = [
       [isPowerOfTwoBitwise(-1), false],
       [isPowerOfTwoBitwise(0), false],

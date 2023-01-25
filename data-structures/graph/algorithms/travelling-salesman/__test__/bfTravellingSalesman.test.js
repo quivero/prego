@@ -1,8 +1,8 @@
-import GraphEdge from '#dstructures/graph/GraphEdge';
-import Graph from '#dstructures/graph/Graph';
-import { createVertices } from '#gutils/graph';
+import GraphEdge from "#dstructures/graph/GraphEdge";
+import Graph from "#dstructures/graph/Graph";
+import { createVertices } from "#gutils/graph";
 
-import bfTravellingSalesman from '../bfTravellingSalesman';
+import bfTravellingSalesman from "../bfTravellingSalesman";
 
 let A, B, C, D;
 let AB, BD, DC, CA, BA, DB, CD, AC, AD, DA, BC, CB;
@@ -10,11 +10,11 @@ let AB, BD, DC, CA, BA, DB, CD, AC, AD, DA, BC, CB;
 let edges;
 let trivia, result, expected;
 
-describe('bfTravellingSalesman', () => {
-  it('should solve problem for simple graph', () => {
+describe("bfTravellingSalesman", () => {
+  it("should solve problem for simple graph", () => {
     const graph = new Graph(true);
 
-    [A, B, C, D] = createVertices(['A', 'B', 'C', 'D']);
+    [A, B, C, D] = createVertices(["A", "B", "C", "D"]);
 
     AB = new GraphEdge(A, B, 1);
     BD = new GraphEdge(B, D, 1);

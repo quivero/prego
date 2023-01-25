@@ -1,14 +1,14 @@
-import GraphEdge from '#dstructures/graph/GraphEdge';
-import Graph from '#dstructures/graph/Graph';
+import GraphEdge from "#dstructures/graph/GraphEdge";
+import Graph from "#dstructures/graph/Graph";
 
-import prim from '../prim';
-import { createVertices, resetVertices } from '#gutils/graph';
+import prim from "../prim";
+import { createVertices, resetVertices } from "#gutils/graph";
 
-jest.mock('#utils/sys/sys');
+jest.mock("#utils/sys/sys");
 
 let A, B, C, D, E, F, G;
 
-[A, B, C, D, E, F, G] = createVertices(['A', 'B', 'C', 'D', 'E', 'F', 'G']);
+[A, B, C, D, E, F, G] = createVertices(["A", "B", "C", "D", "E", "F", "G"]);
 
 let AB, AD, AC, BC, BE, BD, CD, DF, EC, EF, FG, FC;
 
@@ -23,14 +23,14 @@ beforeEach(() => {
   [A, B, C, D, E, F, G] = resetVertices([A, B, C, D, E, F, G]);
 });
 
-describe('prim', () => {
-  it('should fire an error for directed graph', () => {
+describe("prim", () => {
+  it("should fire an error for directed graph", () => {
     const undirectedGraphThrowError = () => prim(new Graph(true));
 
     expect(undirectedGraphThrowError).toThrow();
   });
 
-  it('should find minimum spanning tree', () => {
+  it("should find minimum spanning tree", () => {
     AB = new GraphEdge(A, B, 2);
     AD = new GraphEdge(A, D, 3);
     AC = new GraphEdge(A, C, 3);
@@ -61,7 +61,7 @@ describe('prim', () => {
         minimumSpanningTree.getAllEdges().length,
         graph.getAllVertices().length - 1,
       ],
-      [minimumSpanningTree.toString(), 'A_B,A_C,E_C,A_D,F_C,F_G'],
+      [minimumSpanningTree.toString(), "A_B,A_C,E_C,A_D,F_C,F_G"],
     ];
 
     for (let index in trivia) {
@@ -72,7 +72,7 @@ describe('prim', () => {
     }
   });
 
-  it('should find minimum spanning tree for simple graph', () => {
+  it("should find minimum spanning tree for simple graph", () => {
     AB = new GraphEdge(A, B, 1);
     AD = new GraphEdge(A, D, 3);
     BC = new GraphEdge(B, C, 1);
@@ -98,7 +98,7 @@ describe('prim', () => {
         minimumSpanningTree.getAllEdges().length,
         graph.getAllVertices().length - 1,
       ],
-      [minimumSpanningTree.toString(), 'A_B,B_C,C_D'],
+      [minimumSpanningTree.toString(), "A_B,B_C,C_D"],
     ];
 
     for (let index in trivia) {
