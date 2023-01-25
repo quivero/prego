@@ -4,9 +4,9 @@ import {
   batchAssert,
   atest,
   batchAtest,
-  buildExercise,
-  buildScript,
+  buildTask,
   buildScene,
+  buildAudition,
   buildRehearsal,
   rehearse,
   emptyCallback,
@@ -35,77 +35,98 @@ export const invalidAssertCallbackItem = ["42", "42"];
 /*-------------------------
  | atest design
  *-------------------------*/
-export let validAtestScript;
-let setup, prepare, exercise, teardown;
+export let validAtestScene;
+let setup, prepare, perform, teardown;
 
 export let validAtestFixture = "42";
 const resultFunction = (fixture_) => fixture_;
 let expectedAtestResult = "42";
 
-setup = () => {};
+setup = emptyCallback;
 
 prepare = (fixture_) => fixture_;
 
-exercise = (resources) => {
-  return buildExercise(
+perform = (resources) => {
+  return buildTask(
     resultFunction(resources),
     expectedAtestResult,
     (result, expected) => expect(result).toBe(expected)
   );
 };
 
-teardown = () => {};
+teardown = emptyCallback;
 
-validAtestScript = buildScript(setup, prepare, exercise, teardown);
+validAtestScene = buildScene(setup, prepare, perform, teardown);
 
 /*-------------------------
  | assert design
  *-------------------------*/
-const add = (a, b) => a + b;
-
 let addItem, addItems;
-export let addScenes, addRehearsals;
+let additionFixture, additionFixtures;
+let additionExpectation, additionExpectations;
+let additionTask, additionTasks;
+let additionScene, additionScenes;
+let additionRehearsals;
+
+export let additionAuditions;
+
+const add = (a, b) => a + b;
 
 addItem = [add(1, 2), 3, expectToBe];
 addItems = [addItem, [add(2, 3), 5, expectToBe]];
 
-export let additionScript_1, additionScript_2;
-let exercise_1, exercise_2;
+const addCallback = (fixture_) => add(fixture_.a, fixture_.b);
 
-const addCallback = (fixture_) => fixture_.a + fixture_.b;
+// Fixture-expectation tuple
+additionFixture = { a: 1, b: 2 };
+additionExpectation = 3;
 
-export const additionFixture_1 = { a: 1, b: 2 };
-export const additionFixture_2 = { a: 2, b: 3 };
+// Fixture-expectation tuples
+additionFixtures = [additionFixture, { a: 2, b: 3 }];
+additionExpectations = [additionExpectation, 5];
 
-const expectedAddResult_1 = 3;
-const expectedAddResult_2 = 5;
-
+// Script
 setup = emptyCallback;
 prepare = identityCallback;
-
-exercise_1 = (resources) =>
-  buildExercise(addCallback(resources), expectedAddResult_1, expectToBe);
-exercise_2 = (resources) =>
-  buildExercise(addCallback(resources), expectedAddResult_2, expectToBe);
-
 teardown = emptyCallback;
 
-additionScript_1 = buildScript(setup, prepare, exercise_1, teardown);
-additionScript_2 = buildScript(setup, prepare, exercise_2, teardown);
+// Single scene
+additionTask = (resources) => buildTask(
+                                addCallback(resources),
+                                additionExpectation,
+                                expectToBe
+                              );
 
-addScenes = [
-  buildScene("must sum numbers using assert", () => assert(addItem)),
-  buildScene("must sum numbers using batchAssert", () => batchAssert(addItems)),
-  buildScene("must sum numbers using batchAssert", () => batchAssert(addItems)),
-  buildScene("must sum numbers using atest", () =>
-    atest(additionFixture_1, additionScript_1)
+additionScene = buildScene(setup, prepare, additionTask, teardown);
+
+// Multiple scenes
+additionTasks = additionExpectations.map(
+  (additionExpectation_) =>  {
+    return (resources) => buildTask(
+      addCallback(resources), additionExpectation_, expectToBe
+    );
+  }
+);
+
+additionScenes = additionTasks.map(
+  (additionTask_) => buildScene(setup, prepare, additionTask_, teardown)
+);
+
+additionRehearsals = [
+  buildRehearsal(
+    "must sum numbers using assert",
+    () => assert(addItem)
   ),
-  buildScene("must sum numbers using batchAtest", () => {
-    const fixtures = [additionFixture_1, additionFixture_2];
-    const scenarios = [additionScript_1, additionScript_2];
-
-    batchAtest(fixtures, scenarios);
-  }),
+  buildRehearsal("must sum numbers using batchAtest", () =>
+    batchAtest(additionFixtures, additionScenes)
+  ),
+  buildRehearsal(
+    "must sum numbers using atest",
+    () => atest(additionFixture, additionScene)),
+    buildRehearsal(
+    "must sum numbers using batchAtest",
+    () => batchAtest(additionFixtures, additionScenes)
+  )
 ];
 
-addRehearsals = [buildRehearsal("add", () => rehearse(addScenes))];
+additionAuditions = [buildAudition("add", () => rehearse(additionRehearsals))];

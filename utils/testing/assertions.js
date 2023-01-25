@@ -49,18 +49,15 @@ export const batchAssert = (items) => items.forEach((item) => assert(item));
 
 const verifyExperiment = (experiments) => {
   batchAssert(
-    _.zip(
-      experiments.results,
-      experiments.expectations,
-      experiments.assertionMaps
-    )
+    _.zip(experiments.result, experiments.expectation, experiments.assertionMap)
   );
 };
 
 export const atest = (fixtures, scenario) => {
   scenario.setup();
 
-  const experiment = scenario.exercise(scenario.prepare(fixtures));
+  const augmented_fixtures = scenario.prepare(fixtures);
+  const experiment = scenario.exercise(augmented_fixtures);
 
   verifyExperiment(experiment);
 
@@ -78,8 +75,8 @@ export const batchAtest = (fixtures, scenarios) => {
   });
 };
 
-export const rehearse = (scenes) =>
-  scenes.forEach((scene) => it(scene.description, scene.callback));
+export const rehearse = (auditions) =>
+  auditions.forEach((scene) => it(scene.description, scene.callback));
 
 export const validate = (rehearsals) => {
   rehearsals.forEach((rehearsal) =>
@@ -87,15 +84,15 @@ export const validate = (rehearsals) => {
   );
 };
 
-export const buildExercise = (results, expectations, assertionMaps) => {
+export const buildTask = (result, expectation, assertionMap) => {
   return {
-    results: results,
-    expectations: expectations,
-    assertionMaps: assertionMaps,
+    result: result,
+    expectation: expectation,
+    assertionMap: assertionMap,
   };
 };
 
-export const buildScript = (setup, prepare, exercise, teardown) => {
+export const buildScene = (setup, prepare, exercise, teardown) => {
   return {
     setup: setup,
     prepare: prepare,
@@ -104,15 +101,18 @@ export const buildScript = (setup, prepare, exercise, teardown) => {
   };
 };
 
-export const buildScene = (description, sceneCallback) => {
+export const buildRehearsal = (name, rehearsalCallback) => {
   return {
-    description: description,
-    callback: sceneCallback,
+    name: name,
+    callback: rehearsalCallback,
   };
 };
 
-export const buildRehearsal = (name, rehearsalCallback) => {
-  return { name: name, callback: rehearsalCallback };
+export const buildAudition = (description, auditionCallback) => {
+  return {
+    description: description,
+    callback: auditionCallback
+  };
 };
 
 export const expectToBe = (result, expected) => expect(result).toBe(expected);
