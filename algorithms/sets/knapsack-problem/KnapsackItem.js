@@ -28,6 +28,6 @@ export default class KnapsackItem {
   }
 
   toString() {
-    return `v${this.value} w${this.weight} x ${this.quantity}`;
+    return `v${this.value} w${this.weight} x${this.quantity}`;
   }
 }

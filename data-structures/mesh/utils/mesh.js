@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { zip, range } from "lodash";
 
 import MeshVertex from "../MeshVertex.js";
 
@@ -6,7 +6,7 @@ import { generateToken } from "#utils/string/string.js";
 
 import { throwError } from "#utils/sys/sys.js";
 
-import { zip, nRandMinsMaxs } from "#utils/arrays/arrays.js";
+import { nRandMinsMaxs } from "#utils/arrays/arrays.js";
 
 export const TOKEN_LENGTH = 5;
 
@@ -36,7 +36,7 @@ export const createRandomMVertices = (n, bounds) => {
   let coordinates = [];
   let mesh_vertex = {};
 
-  for (let i in _.range(n)) {
+  for (let i in range(n)) {
     mesh_vertex = new MeshVertex(
       generateToken(TOKEN_LENGTH),
       nRandMinsMaxs(bounds)

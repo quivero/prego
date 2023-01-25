@@ -10,7 +10,7 @@ import graphBridges from "#galgorithms/bridges/graphBridges";
 
 import {
   cartesianProduct,
-  euler,
+  eulerGenerator,
   removeArrayDuplicates,
   getAllIndexes,
   hasElement,
@@ -705,14 +705,17 @@ export default class Graph {
    */
   reverse() {
     const is_reversed = {};
+    let edge_key, reversed_edge_key;
+
     for (const edge of this.getAllEdges()) {
-      is_reversed[edge.getKey()] = false;
+      edge_key = edge.getKey();
+      is_reversed[edge_key] = false;
     }
 
     if (this.isDirected) {
       /** @param {GraphEdge} edge */
       this.getAllEdges().forEach((edge) => {
-        const edge_key = edge.getKey();
+        edge_key = edge.getKey();
 
         if (!is_reversed[edge_key]) {
           // Delete straight edge from graph and from vertices.
@@ -721,7 +724,7 @@ export default class Graph {
           // Reverse the edge.
           edge.reverse();
 
-          const reversed_edge_key = edge.getKey();
+          reversed_edge_key = edge.getKey();
 
           if (this.edges[reversed_edge_key] !== undefined) {
             const edge_twin = this.edges[reversed_edge_key];
@@ -983,8 +986,7 @@ export default class Graph {
   isStronglyConnected() {
     const n_vertices = this.getNumVertices();
 
-    // Step 1: Mark all the vertices as not visited (For
-    // first DFS)
+    // Step 1: Mark all the vertices as not visited (For first DFS)
     const visited = new Array(this.V);
     for (let i = 0; i < n_vertices; i += 1) {
       visited[i] = false;
@@ -994,30 +996,6 @@ export default class Graph {
     this.DFSUtil(0, visited);
 
     // If DFS traversal doesn't visit all vertices, then return false.
-    for (let i = 0; i < n_vertices; i += 1) {
-      if (visited[i] === false) {
-        return false;
-      }
-    }
-
-    // Step 3: Create a reversed graph
-    const gr = this.copy();
-
-    if (this.isDirected) {
-      gr.reverse();
-    }
-
-    // Step 4: Mark all the vertices as not visited (For second DFS)
-    for (let i = 0; i < n_vertices; i += 1) {
-      visited[i] = false;
-    }
-
-    // Step 5: Do DFS for reversed graph starting from first vertex.
-    // Starting Vertex must be same starting point of first DFS
-    gr.DFSUtil(0, visited);
-
-    // If all vertices are not visited in second DFS, then
-    // return false
     for (let i = 0; i < n_vertices; i += 1) {
       if (visited[i] === false) {
         return false;
@@ -1808,7 +1786,7 @@ export default class Graph {
    * @return {object}
    */
   *getCyclesVenn(cycle_indices) {
-    yield* euler(cycle_indices);
+    yield* eulerGenerator(cycle_indices);
   }
 
   /**

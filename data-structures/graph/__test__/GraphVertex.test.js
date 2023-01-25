@@ -45,10 +45,7 @@ describe("GraphVertex", () => {
 
   it("should delete edges from vertex", () => {
     const [A, B, C] = createVertices(["A", "B", "C"]);
-    const [AB, AC] = createEdges([
-      [A, B],
-      [A, C],
-    ]);
+    const [AB, AC] = createEdges([ [A, B], [A, C] ]);
 
     A.addEdges([AB, AC]);
 
@@ -78,10 +75,7 @@ describe("GraphVertex", () => {
   it("should delete all edges from vertex", () => {
     const [A, B, C] = createVertices(["A", "B", "C"]);
 
-    const [AB, AC] = createEdges([
-      [A, B],
-      [A, C],
-    ]);
+    const [AB, AC] = createEdges([ [A, B], [A, C] ]);
 
     A.addEdges([AB, AC]);
 
@@ -126,10 +120,7 @@ describe("GraphVertex", () => {
   it("should return vertex neighbors in case if current node is end one", () => {
     const [A, B, C] = createVertices(["A", "B", "C"]);
 
-    const [edgeBA, edgeCA] = createEdges([
-      [B, A],
-      [C, A],
-    ]);
+    const [edgeBA, edgeCA] = createEdges([ [B, A], [C, A] ]);
 
     A.addEdges([edgeBA, edgeCA]);
 

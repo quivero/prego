@@ -22,8 +22,8 @@ describe("Knapsack", () => {
       [knapsack.totalValue, 9],
       [knapsack.totalWeight, 7],
       [knapsack.selectedItems.length, 2],
-      [knapsack.selectedItems[0].toString(), "v5 w4 x 1"],
-      [knapsack.selectedItems[1].toString(), "v4 w3 x 1"],
+      [knapsack.selectedItems[0].toString(), "v5 w4 x1"],
+      [knapsack.selectedItems[1].toString(), "v4 w3 x1"],
     ];
 
     for (const item of trivia) {
@@ -52,8 +52,8 @@ describe("Knapsack", () => {
       [knapsack.totalValue, 9],
       [knapsack.totalWeight, 7],
       [knapsack.selectedItems.length, 2],
-      [knapsack.selectedItems[0].toString(), "v5 w4 x 1"],
-      [knapsack.selectedItems[1].toString(), "v4 w3 x 1"],
+      [knapsack.selectedItems[0].toString(), "v5 w4 x1"],
+      [knapsack.selectedItems[1].toString(), "v4 w3 x1"],
     ];
 
     for (const item of trivia) {
@@ -112,9 +112,9 @@ describe("Knapsack", () => {
       [knapsack.totalValue, 16],
       [knapsack.totalWeight, 3],
       [knapsack.selectedItems.length, 3],
-      [knapsack.selectedItems[0].toString(), "v4 w1 x 1"],
-      [knapsack.selectedItems[1].toString(), "v5 w1 x 1"],
-      [knapsack.selectedItems[2].toString(), "v7 w1 x 1"],
+      [knapsack.selectedItems[0].toString(), "v4 w1 x1"],
+      [knapsack.selectedItems[1].toString(), "v5 w1 x1"],
+      [knapsack.selectedItems[2].toString(), "v7 w1 x1"],
     ];
 
     for (const item of trivia) {
@@ -144,11 +144,11 @@ describe("Knapsack", () => {
       [knapsack.totalValue, 84 + 20 + 12 + 10 + 5],
       [knapsack.totalWeight, 15],
       [knapsack.selectedItems.length, 5],
-      [knapsack.selectedItems[0].toString(), "v84 w7 x 1"],
-      [knapsack.selectedItems[1].toString(), "v20 w2 x 1"],
-      [knapsack.selectedItems[2].toString(), "v10 w1 x 1"],
-      [knapsack.selectedItems[3].toString(), "v12 w3 x 1"],
-      [knapsack.selectedItems[4].toString(), "v5 w2 x 1"],
+      [knapsack.selectedItems[0].toString(), "v84 w7 x1"],
+      [knapsack.selectedItems[1].toString(), "v20 w2 x1"],
+      [knapsack.selectedItems[2].toString(), "v10 w1 x1"],
+      [knapsack.selectedItems[3].toString(), "v12 w3 x1"],
+      [knapsack.selectedItems[4].toString(), "v5 w2 x1"],
     ];
 
     for (const item of trivia) {
@@ -177,9 +177,9 @@ describe("Knapsack", () => {
     [knapsack.totalValue, 84 + 84 + 20 + 10],
       [knapsack.totalWeight, 17],
       [knapsack.selectedItems.length, 3],
-      [knapsack.selectedItems[0].toString(), "v84 w7 x 2"],
-      [knapsack.selectedItems[1].toString(), "v20 w2 x 1"],
-      [knapsack.selectedItems[2].toString(), "v10 w1 x 1"];
+      [knapsack.selectedItems[0].toString(), "v84 w7 x2"],
+      [knapsack.selectedItems[1].toString(), "v20 w2 x1"],
+      [knapsack.selectedItems[2].toString(), "v10 w1 x1"];
 
     for (const item of trivia) {
       result = item[0];
@@ -207,11 +207,11 @@ describe("Knapsack", () => {
     [knapsack.totalValue, 3 * 84 + 2 * 5 + 1 * 12 + 6 * 10 + 8 * 20],
       [knapsack.totalWeight, 3 * 7 + 2 * 2 + 1 * 3 + 6 * 1 + 8 * 2],
       [knapsack.selectedItems.length, 5],
-      [knapsack.selectedItems[0].toString(), "v84 w7 x 3"],
-      [knapsack.selectedItems[1].toString(), "v20 w2 x 8"],
-      [knapsack.selectedItems[2].toString(), "v10 w1 x 6"],
-      [knapsack.selectedItems[3].toString(), "v12 w3 x 1"],
-      [knapsack.selectedItems[4].toString(), "v5 w2 x 2"];
+      [knapsack.selectedItems[0].toString(), "v84 w7 x3"],
+      [knapsack.selectedItems[1].toString(), "v20 w2 x8"],
+      [knapsack.selectedItems[2].toString(), "v10 w1 x6"],
+      [knapsack.selectedItems[3].toString(), "v12 w3 x1"],
+      [knapsack.selectedItems[4].toString(), "v5 w2 x2"];
 
     for (const item of trivia) {
       result = item[0];
