@@ -4,8 +4,13 @@ import {
     batchAssert,
     atest,
     batchAtest,
-    buildAssertion,
-    buildScenario
+    buildExercise,
+    buildScript,
+    buildScene,
+    buildRehearsal,
+    rehearse,
+    emptyCallback,
+    identityCallback
 } from '../assertions';
 
 const expectToBeDefined = (result) => expect(result).toBeDefined();
@@ -30,7 +35,7 @@ export const invalidAssertCallbackItem = ['42', '42'];
 /*-------------------------
  | atest design
  *-------------------------*/
-export let validAtestScenario;
+export let validAtestScript;
 let setup, prepare, exercise, teardown;
 
 export let validAtestFixture = '42';
@@ -42,7 +47,7 @@ setup = () => {};
 prepare = (fixture_) => fixture_;
 
 exercise = (resources) => {
-  return buildAssertion(
+  return buildExercise(
     resultFunction(resources),
     expectedAtestResult,
     (result, expected) => expect(result).toBe(expected),
@@ -51,17 +56,15 @@ exercise = (resources) => {
 
 teardown = () => {};
 
-validAtestScenario = buildScenario(setup, prepare, exercise, teardown);
+validAtestScript = buildScript(setup, prepare, exercise, teardown);
 
 /*-------------------------
  | assert design
  *-------------------------*/
-const emptyCallback = () => {};
-const identityCallback = (fixture_) => fixture_;
 const add = (a, b) => a+b;
 
 let addItem, addItems;
-export let addScenes;
+export let addScenes, addRehearsals;
 
 addItem = [
     add(1, 2), 3, expectToBe
@@ -71,7 +74,7 @@ addItems = [
     [ add(2, 3), 5, expectToBe ],
 ];
 
-export let additionScenario_1, additionScenario_2;
+export let additionScript_1, additionScript_2;
 let exercise_1, exercise_2;
 
 const addCallback = (fixture_) => fixture_.a + fixture_.b;
@@ -86,28 +89,35 @@ setup = emptyCallback;
 prepare = identityCallback;
 
 exercise_1 = (resources) =>
-  buildAssertion(addCallback(resources), expectedAddResult_1, expectToBe);
+  buildExercise(addCallback(resources), expectedAddResult_1, expectToBe);
 exercise_2 = (resources) =>
-  buildAssertion(addCallback(resources), expectedAddResult_2, expectToBe);
+  buildExercise(addCallback(resources), expectedAddResult_2, expectToBe);
 
 teardown = emptyCallback;
 
-additionScenario_1 = buildScenario(setup, prepare, exercise_1, teardown);
-additionScenario_2 = buildScenario(setup, prepare, exercise_2, teardown);
+additionScript_1 = buildScript(setup, prepare, exercise_1, teardown);
+additionScript_2 = buildScript(setup, prepare, exercise_2, teardown);
 
 addScenes = [
-  [ 'must sum numbers using assert', () => assert(addItem) ],
-  [ 'must sum numbers using batchAssert', () => batchAssert(addItems) ],
-  [
-    'must sum numbers using atest',
-    () => atest(additionFixture_1, additionScenario_1),
-  ],
-  [
+  buildScene('must sum numbers using assert', () => assert(addItem)),
+  buildScene('must sum numbers using batchAssert', () => batchAssert(addItems)),
+  buildScene('must sum numbers using batchAssert', () => batchAssert(addItems)),
+  buildScene(
+    'must sum numbers using atest', 
+    () => atest(additionFixture_1, additionScript_1)
+  ),
+  buildScene(
     'must sum numbers using batchAtest',
-    () =>
-      batchAtest(
-        [ additionFixture_1, additionFixture_2 ],
-        [ additionScenario_1, additionScenario_2 ],
-      ),
-  ],
+    () => {
+      const fixtures = [ additionFixture_1, additionFixture_2 ];
+      const scenarios =  [ additionScript_1, additionScript_2 ];
+    
+      batchAtest(fixtures, scenarios);
+    }
+  )
 ];
+
+addRehearsals = [
+    buildRehearsal('add', () => rehearse(addScenes)),
+];
+

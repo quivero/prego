@@ -1,5 +1,8 @@
 import _ from 'lodash';
 
+export const emptyCallback = () => {};
+export const identityCallback = (fixture_) => fixture_;
+
 export const assert = (item) => {
   let result, expected;
   const item_length = item.length;
@@ -75,29 +78,26 @@ export const batchAtest = (fixtures, scenarios) => {
   });
 };
 
-export const rehearsal = (scenes) => {
-  let testCaseName, testCaseCallback;
+export const rehearse = (scenes) => scenes.forEach(
+  (scene) => it(scene.description, scene.callback)
+);
 
-  scenes.forEach((scene) => {
-    testCaseName = scene[0];
-    testCaseCallback = scene[1];
 
-    it(testCaseName, testCaseCallback);
-  });
+export const validate = (rehearsals) => {
+  rehearsals.forEach(
+    (rehearsal) => describe(rehearsal.name, rehearsal.callback)
+  );
 };
 
-export const validate = (describeCases) => {
-  let describeName, describeCallback;
-
-  describeCases.forEach((describeCase) => {
-    describeName = describeCase[0];
-    describeCallback = describeCase[1];
-
-    describe(describeName, describeCallback);
-  });
+export const buildExercise = (results, expectations, assertionMaps) => {
+  return {
+    results: results,
+    expectations: expectations,
+    assertionMaps: assertionMaps,
+  };
 };
 
-export const buildScenario = (setup, prepare, exercise, teardown) => {
+export const buildScript = (setup, prepare, exercise, teardown) => {
   return {
     setup: setup,
     prepare: prepare,
@@ -106,12 +106,15 @@ export const buildScenario = (setup, prepare, exercise, teardown) => {
   };
 };
 
-export const buildAssertion = (results, expectations, assertionMaps) => {
+export const buildScene = (description, sceneCallback) => {
   return {
-    results: results,
-    expectations: expectations,
-    assertionMaps: assertionMaps,
+    description: description,
+    callback: sceneCallback
   };
+};
+
+export const buildRehearsal = (name, rehearsalCallback) => {
+  return { name: name, callback: rehearsalCallback };
 };
 
 export const expectToBe = (result, expected) => expect(result).toBe(expected);

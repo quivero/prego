@@ -3,7 +3,6 @@ import {
     batchAssert,
     atest,
     batchAtest,
-    rehearsal,
     validate
 } from '../assertions';
 
@@ -14,8 +13,8 @@ import {
   invalidAssertItemLength,
   invalidAssertCallbackItem,
   validAtestFixture,
-  validAtestScenario,
-  addScenes
+  validAtestScript,
+  addRehearsals
 } from './fixtures';
 
 let fixtures, scenarios;
@@ -50,13 +49,13 @@ describe('batchAssert', () => {
 });
 
 describe('atest', () => {
-  it('should assert atest', () => atest(validAtestFixture, validAtestScenario));
+  it('should assert atest', () => atest(validAtestFixture, validAtestScript));
 });
 
 describe('batchAtest', () => {
   it('should assert batchAtest', () => {
     fixtures = [validAtestFixture, validAtestFixture];
-    scenarios = [validAtestScenario, validAtestScenario];
+    scenarios = [validAtestScript, validAtestScript];
 
     batchAtest(fixtures, scenarios);
   });
@@ -64,22 +63,16 @@ describe('batchAtest', () => {
 
 describe('batchAtest', () => {
     it('should assert batchAtest', () => {
-        fixtures = [validAtestFixture, validAtestFixture];
-        scenarios = [validAtestScenario, validAtestScenario];
+        fixtures = [ validAtestFixture, validAtestFixture ];
+        scenarios = [ validAtestScript, validAtestScript ];
 
         batchAtest(fixtures, scenarios);
     });
 });
 
 /*
-*  Test design
+*  Rehearsal test design
 */
 
-let scenes;
+validate(addRehearsals);
 
-/** Description **/
-scenes = [
-    ['add', () => rehearsal(addScenes)],
-];
-
-validate(scenes);
