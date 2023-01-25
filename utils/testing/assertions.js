@@ -111,7 +111,7 @@ export const buildRehearsal = (name, rehearsalCallback) => {
 export const buildAudition = (description, auditionCallback) => {
   return {
     description: description,
-    callback: auditionCallback,
+    callback: auditionCallback
   };
 };
 
