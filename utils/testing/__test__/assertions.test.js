@@ -14,7 +14,7 @@ import {
   invalidAssertCallbackItem,
   validAtestFixture,
   validAtestScene,
-  additionAuditions
+  additionAuditions,
 } from "./fixtures";
 
 let fixtures, scenarios;

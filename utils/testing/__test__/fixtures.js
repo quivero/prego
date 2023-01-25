@@ -82,8 +82,8 @@ additionFixture = { a: 1, b: 2 };
 additionExpectation = 3;
 
 // Fixture-expectation tuples
-additionFixtures = [ additionFixture, { a: 2, b: 3 } ];
-additionExpectations = [ additionExpectation, 5 ];
+additionFixtures = [additionFixture, { a: 2, b: 3 }];
+additionExpectations = [additionExpectation, 5];
 
 // Script
 setup = emptyCallback;
@@ -91,44 +91,32 @@ prepare = identityCallback;
 teardown = emptyCallback;
 
 // Single scene
-additionTask = (resources) => buildTask(
-                                addCallback(resources), 
-                                additionExpectation, 
-                                expectToBe
-                              );
+additionTask = (resources) =>
+  buildTask(addCallback(resources), additionExpectation, expectToBe);
 
 additionScene = buildScene(setup, prepare, additionTask, teardown);
 
 // Multiple scenes
-additionTasks = additionExpectations.map(
-  (additionExpectation_) =>  {
-    return (resources) => buildTask(
-      addCallback(resources), additionExpectation_, expectToBe
-    );
-  }  
-); 
+additionTasks = additionExpectations.map((additionExpectation_) => {
+  return (resources) =>
+    buildTask(addCallback(resources), additionExpectation_, expectToBe);
+});
 
-additionScenes = additionTasks.map(
-  (additionTask_) => buildScene(setup, prepare, additionTask_, teardown)
+additionScenes = additionTasks.map((additionTask_) =>
+  buildScene(setup, prepare, additionTask_, teardown)
 );
 
 additionRehearsals = [
-  buildRehearsal(
-    "must sum numbers using assert", 
-    () => assert(addItem)
+  buildRehearsal("must sum numbers using assert", () => assert(addItem)),
+  buildRehearsal("must sum numbers using batchAssert", () =>
+    batchAssert(addItems)
   ),
-  buildRehearsal(
-    "must sum numbers using batchAssert", () => batchAssert(addItems)
+  buildRehearsal("must sum numbers using atest", () =>
+    atest(additionFixture, additionScene)
   ),
-  buildRehearsal(
-    "must sum numbers using atest", 
-    () => atest(additionFixture, additionScene)),
-    buildRehearsal(
-    "must sum numbers using batchAtest", 
-    () => batchAtest(additionFixtures, additionScenes)
-  )
+  buildRehearsal("must sum numbers using batchAtest", () =>
+    batchAtest(additionFixtures, additionScenes)
+  ),
 ];
 
-additionAuditions = [
-  buildAudition("add", () => rehearse(additionRehearsals))
-];
+additionAuditions = [buildAudition("add", () => rehearse(additionRehearsals))];
