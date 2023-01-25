@@ -105,15 +105,15 @@ export const buildScene = (setup, prepare, exercise, teardown) => {
 
 export const buildRehearsal = (name, rehearsalCallback) => {
   return {
-    name: name, 
+    name: name,
     callback: rehearsalCallback,
   };
 };
 
 export const buildAudition = (description, auditionCallback) => {
-  return { 
+  return {
     description: description,
-    callback: auditionCallback 
+    callback: auditionCallback
   };
 };
 

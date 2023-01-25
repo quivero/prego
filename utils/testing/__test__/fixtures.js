@@ -92,8 +92,8 @@ teardown = emptyCallback;
 
 // Single scene
 additionTask = (resources) => buildTask(
-                                addCallback(resources), 
-                                additionExpectation, 
+                                addCallback(resources),
+                                additionExpectation,
                                 expectToBe
                               );
 
@@ -105,8 +105,8 @@ additionTasks = additionExpectations.map(
     return (resources) => buildTask(
       addCallback(resources), additionExpectation_, expectToBe
     );
-  }  
-); 
+  }
+);
 
 additionScenes = additionTasks.map(
   (additionTask_) => buildScene(setup, prepare, additionTask_, teardown)
@@ -114,17 +114,17 @@ additionScenes = additionTasks.map(
 
 additionRehearsals = [
   buildRehearsal(
-    "must sum numbers using assert", 
+    "must sum numbers using assert",
     () => assert(addItem)
   ),
   buildRehearsal(
     "must sum numbers using batchAssert", () => batchAssert(addItems)
   ),
   buildRehearsal(
-    "must sum numbers using atest", 
+    "must sum numbers using atest",
     () => atest(additionFixture, additionScene)),
     buildRehearsal(
-    "must sum numbers using batchAtest", 
+    "must sum numbers using batchAtest",
     () => batchAtest(additionFixtures, additionScenes)
   )
 ];
