@@ -1,5 +1,5 @@
-import MinHeap from '../heap/MinHeap.js';
-import Comparator from '../../utils/comparator/Comparator.js';
+import MinHeap from "../heap/MinHeap.js";
+import Comparator from "../../utils/comparator/Comparator.js";
 
 // It is the same as min heap except that when comparing two elements
 // we take into account its priority instead of the element's value.

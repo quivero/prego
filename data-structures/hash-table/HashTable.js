@@ -1,4 +1,4 @@
-import LinkedList from '#dstructures/linked-list/LinkedList';
+import LinkedList from "#dstructures/linked-list/LinkedList";
 
 // Hash table size directly affects on the number of collisions.
 // The bigger the hash table size the less collisions you'll get.

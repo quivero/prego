@@ -7,7 +7,7 @@ import {
   sorted_other_arr,
   negative_arr,
   sorted_negative_arr,
-} from './fixtures';
+} from "./fixtures";
 
 let sorter, callbacks;
 
@@ -58,11 +58,11 @@ export class SortTester {
     sorter = new SortingClass(callbacks);
 
     trivia = [
-      [sorter.sort(['']), ['']],
-      [sorter.sort(['a']), ['a']],
-      [sorter.sort(['aa', 'a']), ['a', 'aa']],
-      [sorter.sort(['aa', 'q', 'bbbb', 'ccc']), ['q', 'aa', 'ccc', 'bbbb']],
-      [sorter.sort(['aa', 'aa']), ['aa', 'aa']],
+      [sorter.sort([""]), [""]],
+      [sorter.sort(["a"]), ["a"]],
+      [sorter.sort(["aa", "a"]), ["a", "aa"]],
+      [sorter.sort(["aa", "q", "bbbb", "ccc"]), ["q", "aa", "ccc", "bbbb"]],
+      [sorter.sort(["aa", "aa"]), ["aa", "aa"]],
     ];
 
     for (const item of trivia) {
@@ -87,10 +87,10 @@ export class SortTester {
     sorter = new SortingClass(callbacks);
 
     trivia = [
-      [sorter.sort(['bb', 'aa', 'c']), ['c', 'bb', 'aa']],
+      [sorter.sort(["bb", "aa", "c"]), ["c", "bb", "aa"]],
       [
-        sorter.sort(['aa', 'q', 'a', 'bbbb', 'ccc']),
-        ['q', 'a', 'aa', 'ccc', 'bbbb'],
+        sorter.sort(["aa", "q", "a", "bbbb", "ccc"]),
+        ["q", "a", "aa", "ccc", "bbbb"],
       ],
     ];
 

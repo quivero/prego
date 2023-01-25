@@ -1,5 +1,5 @@
-import { throwError } from '../sys/sys.js';
-import { nNorm } from '../distances/distance.js';
+import { throwError } from "../sys/sys.js";
+import { nNorm } from "../distances/distance.js";
 
 /**
  * @abstract decimal part of a number
@@ -20,7 +20,7 @@ export const xor = (a, b) => {
   const condition = ![0, 1].includes(a) || ![0, 1].includes(b);
 
   return condition
-    ? throwError('Variables a and b must be either boolean or numbers 0/1!')
+    ? throwError("Variables a and b must be either boolean or numbers 0/1!")
     : Boolean(a * (1 - b) + b * (1 - a));
 };
 
@@ -33,7 +33,7 @@ export const xor = (a, b) => {
  */
 export const abRandom = (min, max) => {
   if (min >= max) {
-    throwError('The latter number must be greater than the former.');
+    throwError("The latter number must be greater than the former.");
   }
 
   return min + (max - min) * Math.random();

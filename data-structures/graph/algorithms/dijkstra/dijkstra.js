@@ -1,4 +1,4 @@
-import PriorityQueue from '#dstructures/priority-queue/PriorityQueue';
+import PriorityQueue from "#dstructures/priority-queue/PriorityQueue";
 
 /**
  * @typedef {Object} ShortestPaths

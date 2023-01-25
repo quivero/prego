@@ -1,5 +1,5 @@
-import Stack from '#dstructures/stack/Stack';
-import depthFirstSearch from '#galgorithms/depth-first-search/depthFirstSearch';
+import Stack from "#dstructures/stack/Stack";
+import depthFirstSearch from "#galgorithms/depth-first-search/depthFirstSearch";
 
 /**
  * @param {Graph} graph

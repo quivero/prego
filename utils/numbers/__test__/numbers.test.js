@@ -5,14 +5,14 @@ import {
   degreeToRadian,
   hav,
   geographicalToSpherical,
-} from '../numbers.js';
+} from "../numbers.js";
 
-import { throwError } from '../../sys/sys.js';
+import { throwError } from "../../sys/sys.js";
 
-jest.mock('../../sys/sys');
+jest.mock("../../sys/sys");
 
-describe('numbers', () => {
-  it('should return number decimal part', () => {
+describe("numbers", () => {
+  it("should return number decimal part", () => {
     expect(primeFactors(1)).toEqual({
       1: 1,
     });
@@ -38,57 +38,57 @@ describe('numbers', () => {
     });
   });
 
-  it('should return converted radian to degree', () => {
+  it("should return converted radian to degree", () => {
     expect(radianToDegree(Math.PI)).toBe(180);
   });
 
-  it('should return converted degree to radian', () => {
+  it("should return converted degree to radian", () => {
     expect(degreeToRadian(180)).toBe(Math.PI);
   });
 
-  it('should convert geographical to spherical coordinates', () => {
+  it("should convert geographical to spherical coordinates", () => {
     expect(geographicalToSpherical(0, 0)).toStrictEqual([Math.PI / 2, 0]);
   });
 
-  it('should return haversine values', () => {
+  it("should return haversine values", () => {
     expect(hav(Math.PI)).toBeCloseTo(1);
     expect(hav(2 * Math.PI)).toBeCloseTo(0);
   });
 
-  it('should throw error for entry with decimal part on function primeFactors', () => {
+  it("should throw error for entry with decimal part on function primeFactors", () => {
     primeFactors(42.42);
 
     expect(throwError).toHaveBeenCalled();
   });
 
-  it('should throw error for entry with inappropriate entry on function primeFactors', () => {
-    primeFactors('42');
+  it("should throw error for entry with inappropriate entry on function primeFactors", () => {
+    primeFactors("42");
 
     expect(throwError).toHaveBeenCalled();
   });
 
-  it('should return true/false for prime/non-prime number ', () => {
+  it("should return true/false for prime/non-prime number ", () => {
     expect(isPrime(7)).toEqual(true);
     expect(isPrime(8)).toEqual(false);
   });
 
-  it('should throw error for inappropriate entry on function isPrime', () => {
-    isPrime('42');
+  it("should throw error for inappropriate entry on function isPrime", () => {
+    isPrime("42");
 
     expect(throwError).toHaveBeenCalled();
   });
 
-  it('should return true for prime number and false for ', () => {
+  it("should return true for prime number and false for ", () => {
     expect(isPrime(7)).toEqual(true);
     expect(isPrime(8)).toEqual(false);
   });
 
-  it('should throw error for negative number', () => {
+  it("should throw error for negative number", () => {
     primeFactors(-1);
     expect(throwError).toHaveBeenCalled();
   });
 
-  it('should throw error for non-natural number', () => {
+  it("should throw error for non-natural number", () => {
     primeFactors(4.2);
 
     expect(throwError).toHaveBeenCalled();

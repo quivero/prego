@@ -1,9 +1,9 @@
-import fs from 'fs';
-import { logging, log_message } from '../logging/logger.js';
+import fs from "fs";
+import { logging, log_message } from "../logging/logger.js";
 
-import { objectForEach } from '../objects/objects.js';
+import { objectForEach } from "../objects/objects.js";
 
-const logger = logging('file');
+const logger = logging("file");
 
 export const createDirectory = (root_path, name) => {
   const folder_path = `${root_path}/${name}`;
@@ -11,18 +11,18 @@ export const createDirectory = (root_path, name) => {
   if (fs.existsSync(folder_path)) {
     log_message(
       logger,
-      'info',
+      "info",
       `Directory ${root_path}/${name} already exists!`
     );
   } else {
     fs.mkdirSync(folder_path, (err) => {
       if (err) {
-        log_message(logger, 'error', err);
+        log_message(logger, "error", err);
       }
 
       log_message(
         logger,
-        'info',
+        "info",
         `Directory ${name} created successfully at path ${root_path}!`
       );
     });
@@ -49,7 +49,7 @@ export const saveStringtoFile = (path, name, string) => {
       throw err;
     }
 
-    log_message(logger, 'info', `String saved at file ${path}/${name}.txt`);
+    log_message(logger, "info", `String saved at file ${path}/${name}.txt`);
   });
 };
 
@@ -67,12 +67,12 @@ export const saveJSONtoFile = (root_path, json_object, name) => {
   // write JSON string to a file
   fs.writeFile(`${root_path}/${name}.json`, json_str, (err) => {
     if (err) {
-      log_message(logger, 'error', error);
+      log_message(logger, "error", error);
     }
 
     log_message(
       logger,
-      'info',
+      "info",
       `JSON file saved at file ${root_path}/${name}.json`
     );
   });
@@ -87,10 +87,10 @@ export const saveJSONtoFile = (root_path, json_object, name) => {
 export const loadJSONfromFile = (root_path, name) => {
   const filedata = fs.readFileSync(
     `${root_path + name}.json`,
-    'utf8',
+    "utf8",
     (error, data) => {
       if (error) {
-        log_message(logger, 'error', error);
+        log_message(logger, "error", error);
       }
     }
   );
@@ -99,4 +99,4 @@ export const loadJSONfromFile = (root_path, name) => {
 };
 
 export const filenameHasExtension = (filename, extension) =>
-  filename.split('.').length === 2 && filename.includes(extension);
+  filename.split(".").length === 2 && filename.includes(extension);
