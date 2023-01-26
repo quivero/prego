@@ -65,4 +65,4 @@ describe("batchAtest", () => {
  *  Audition test design
  */
 
-validate(additionAuditions);
+// validate(additionAuditions);

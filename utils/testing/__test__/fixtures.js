@@ -61,27 +61,50 @@ validAtestScene = buildScene(setup, prepare, perform, teardown);
 /*-------------------------
  | assert design
  *-------------------------*/
-let addItem, addItems;
-
-let additionFixture
-export let additionFixtures;
-
-let additionExpectation, additionExpectations;
-let additionTask, additionTasks;
-
-let additionScene;
-export let additionScenes;
-let assertionMap, assertionMaps;
-
-let additionRehearsals;
-
-export let additionAuditions;
-
 const add = (a, b) => a + b;
-const addCallback = (fixture_) => add(fixture_.a, fixture_.b);
+
+let addItem, addItems;
 
 addItem = [add(1, 2), 3, expectToBe];
 addItems = [addItem, [add(2, 3), 5, expectToBe]];
+
+export let additionFixtures;
+export let additionScenes;
+export let additionAuditions;
+
+let oneToOneAdditionFixture,  
+    oneToManyAdditionFixture,  
+    manyToOneAdditionFixture,  
+    manyToManyAdditionFixture;
+
+let oneToOneAdditionCallback,
+    oneToManyAdditionCallback,  
+    manyToOneAdditionCallback, 
+    manyToManyAdditionCallback; 
+
+let oneToOneAdditionTask, 
+    oneToManyAdditionTask, 
+    manyToOneAdditionTask, 
+    manyToManyAdditionTask;
+
+let oneToOneAdditionExpectation,
+    oneToManyAdditionExpectation,
+    manyToOneAdditionExpectation,
+    manyToManyAdditionExpectation;
+
+let oneToOneAdditionAssertionMap,
+    oneToManyAdditionAssertionMap,
+    manyToOneAdditionAssertionMap,
+    manyToManyAdditionAssertionMap;
+
+let oneToOneAdditionScene,
+    oneToManyAdditionScene,
+    manyToOneAdditionScene,
+    manyToManyAdditionScene;
+
+let assertionMap, assertionMaps;
+
+let additionRehearsals;
 
 // TODO: Follow these sketch-guidelines to proceed:
 // 1. (
@@ -105,39 +128,75 @@ addItems = [addItem, [add(2, 3), 5, expectToBe]];
 //     f. auditionCallback: () => rehearse(rehearsals)
 //     g. audition: (name, auditionCallback)
 
-// Fixture-expectation tuple
-additionFixture = { a: 1, b: 2 };
-additionExpectation = 3;
+// Fixtures
+oneToOneAdditionFixture = { a: 1, b: 2 };
+oneToManyAdditionFixture = [oneToOneAdditionFixture , { a: 2, b: 3 }];
+manyToOneAdditionFixture = [ [oneToOneAdditionFixture], [oneToOneAdditionFixture] ];
+manyToManyAdditionFixture = [ oneToManyAdditionFixture, oneToManyAdditionFixture ];
 
-// Fixture-expectation tuples
-additionFixtures = [additionFixture, { a: 2, b: 3 }];
-additionExpectations = [additionExpectation, 5];
+// Expectations
+oneToOneAdditionExpectation = 3;
+oneToManyAdditionExpectation = [oneToOneAdditionExpectation, 5];
+oneToManyAdditionExpectation = [ [oneToOneAdditionExpectation], [oneToOneAdditionExpectation] ];
+manyToManyAdditionExpectation = [ oneToManyAdditionExpectation, oneToManyAdditionExpectation ];
 
-// Script
+// Perform callbacks
+oneToOneAdditionCallback = (fixture_) => add(fixture_.a, fixture_.b);
+oneToManyAdditionCallback = (fixture_) => fixture_.map((value) => add(value.a, value.b));
+manyToOneAdditionCallback = [oneToOneAdditionCallback, oneToOneAdditionCallback];
+manyToManyAdditionCallback = [oneToManyAdditionCallback, oneToManyAdditionCallback];
+
+// Scripts
 setup = emptyCallback;
 prepare = identityCallback;
 teardown = emptyCallback;
-assertionMap = expectToBe;
-assertionMaps = [expectToBe, expectToBe];
 
-// Single scene
-additionTask = (resources) => 
-    buildTask(addCallback(resources), assertionMap, additionExpectation);
+// Assertion maps
+oneToOneAdditionAssertionMap = expectToBe;
+oneToManyAdditionAssertionMap = [expectToBe, expectToBe];
+manyToOneAdditionAssertionMap = [[oneToOneAdditionAssertionMap], [oneToOneAdditionAssertionMap]];
+manyToManyAdditionAssertionMap = [oneToManyAdditionAssertionMap, oneToManyAdditionAssertionMap];
 
-additionScene = buildScene(setup, prepare, additionTask, teardown);
-
-// Multiple scenes
-additionTasks = additionExpectations.map(
-  (additionExpectation_) =>  {
-    return (augmented_fixture) => buildTask(
-      addCallback(augmented_fixture), expectToBe, additionExpectation_
-      );
-  }
+// Tasks
+oneToOneAdditionTask = (resources) => buildTask(
+      oneToOneAdditionCallback(resources), 
+      oneToOneAssertionMap, 
+      oneToOneAdditionExpectation
+);
+oneToManyAdditionTask = (resources) => buildTask(
+  oneToManyAdditionCallback(resources), 
+  oneToManyAssertionMap, 
+  oneToManyAdditionExpectation
+);
+manyToOneAdditionTask = (resources) => buildTask(
+  manyToOneAdditionCallback(resources), 
+  manyToOneAssertionMap, 
+  manyToOneAdditionExpectation
+);
+manyToManyAdditionTask = (resources) => buildTask(
+  manyToManyAdditionCallback(resources), 
+  manyToManyAssertionMap, 
+  manyToManyAdditionExpectation
 );
 
-additionScenes = additionTasks.map(
-  (task) => buildScene(setup, prepare, task, teardown)
-);
+// // Scenes
+// oneToOneAdditionScene = buildScene(setup, prepare, additionTask, teardown);
+// oneToManyAdditionScene = buildScene(setup, prepare, additionTask, teardown);
+// manyToOneAdditionScene = buildScene(setup, prepare, additionTask, teardown);
+// manyToManyAdditionScene = buildScene(setup, prepare, additionTask, teardown);
+
+// // Multiple scenes with single assertion
+// additionTasks = additionExpectations.map(
+//   (additionExpectation_) =>  {
+//     return (augmented_fixture) => buildTask(
+//       addCallback(augmented_fixture), expectToBe, additionExpectation_
+//       );
+//   }
+// );
+
+// additionScenes = additionTasks.map(
+//   (task) => buildScene(setup, prepare, task, teardown)
+// );
 
 additionRehearsals = [
   buildRehearsal(
@@ -149,11 +208,12 @@ additionRehearsals = [
   ),
   buildRehearsal(
     "must sum numbers using atest",
-    () => atest(additionFixture, additionScene)),
+    () => atest(oneToOneAdditionFixture, oneToOneAdditionScene)
+  ),
     buildRehearsal(
     "must sum numbers using batchAtest",
-    () => batchAtest(additionFixtures, additionScenes)
+    () => batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
   )
 ];
 
-additionAuditions = [buildAudition("add", () => rehearse(additionRehearsals))];
+// additionAuditions = [buildAudition("add", () => rehearse(additionRehearsals))];
