@@ -72,19 +72,19 @@ export let additionFixtures;
 export let additionScenes;
 export let additionAuditions;
 
-let oneToOneAdditionFixture,  
-    oneToManyAdditionFixture,  
-    manyToOneAdditionFixture,  
+let oneToOneAdditionFixture,
+    oneToManyAdditionFixture,
+    manyToOneAdditionFixture,
     manyToManyAdditionFixture;
 
 let oneToOneAdditionCallback,
-    oneToManyAdditionCallback,  
-    manyToOneAdditionCallback, 
-    manyToManyAdditionCallback; 
+    oneToManyAdditionCallback,
+    manyToOneAdditionCallback,
+    manyToManyAdditionCallback;
 
-let oneToOneAdditionTask, 
-    oneToManyAdditionTask, 
-    manyToOneAdditionTask, 
+let oneToOneAdditionTask,
+    oneToManyAdditionTask,
+    manyToOneAdditionTask,
     manyToManyAdditionTask;
 
 let oneToOneAdditionExpectation,
@@ -109,7 +109,7 @@ let additionRehearsals;
 // TODO: Follow these sketch-guidelines to proceed:
 // 1. (
 //   fixtures,
-//   sceneScripts=(setup, prepare, perform, teardown), 
+//   sceneScripts=(setup, prepare, perform, teardown),
 //   sceneIntentions=(assertioMap, ?expectation)
 // ) --> tasks --> scenes --> rehearsal
 //     a. resource: (
@@ -117,8 +117,8 @@ let additionRehearsals;
 //         assertioMap, ?expectation
 //     )
 //     b. taskCallback: (resource) => buildTask(
-//          resource.script.perform(resource.fixture), 
-//          resource.assertionMap, 
+//          resource.script.perform(resource.fixture),
+//          resource.assertionMap,
 //          resource.expectation
 //     }
 //     c. task: (taskCallback, assertionMap, ?expectation)
@@ -154,30 +154,30 @@ manyToManyAdditionAssertionMap = [oneToManyAdditionAssertionMap, oneToManyAdditi
 
 // Tasks
 oneToOneAdditionTask = (resources) => buildTask(
-      oneToOneAdditionCallback(resources), 
-      oneToOneAssertionMap, 
+      oneToOneAdditionCallback(resources),
+      oneToOneAssertionMap,
       oneToOneAdditionExpectation
 );
 oneToManyAdditionTask = (resources) => buildTask(
-  oneToManyAdditionCallback(resources), 
-  oneToManyAssertionMap, 
+  oneToManyAdditionCallback(resources),
+  oneToManyAssertionMap,
   oneToManyAdditionExpectation
 );
 manyToOneAdditionTask = (resources) => buildTask(
-  manyToOneAdditionCallback(resources), 
-  manyToOneAssertionMap, 
+  manyToOneAdditionCallback(resources),
+  manyToOneAssertionMap,
   manyToOneAdditionExpectation
 );
 manyToManyAdditionTask = (resources) => buildTask(
-  manyToManyAdditionCallback(resources), 
-  manyToManyAssertionMap, 
+  manyToManyAdditionCallback(resources),
+  manyToManyAssertionMap,
   manyToManyAdditionExpectation
 );
 
-// Ideas: 
+// Ideas:
 // 1. Wrap (setup, prepare, teardown) to new-defined concept "bunware"
 // 2. Set (setup, prepare, teardown) default to (emptyCallback, identityCallback, emptyCallback)
-// 3. Break map "perform" on task into to new-defined "acts" 
+// 3. Break map "perform" on task into to new-defined "acts"
 
 // Scripts
 setup = emptyCallback;
@@ -205,11 +205,11 @@ teardown = emptyCallback;
 
 additionRehearsals = [
   buildRehearsal(
-    "must sum numbers using assert", 
+    "must sum numbers using assert",
     () => assert(addItem)
   ),
   buildRehearsal(
-    "must sum numbers using batchAssert", 
+    "must sum numbers using batchAssert",
     () => batchAssert(addItems)
   ),
   buildRehearsal(
