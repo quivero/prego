@@ -146,11 +146,6 @@ oneToManyAdditionCallback = (fixture_) => fixture_.map((value) => add(value.a, v
 manyToOneAdditionCallback = [oneToOneAdditionCallback, oneToOneAdditionCallback];
 manyToManyAdditionCallback = [oneToManyAdditionCallback, oneToManyAdditionCallback];
 
-// Scripts
-setup = emptyCallback;
-prepare = identityCallback;
-teardown = emptyCallback;
-
 // Assertion maps
 oneToOneAdditionAssertionMap = expectToBe;
 oneToManyAdditionAssertionMap = [expectToBe, expectToBe];
@@ -178,6 +173,15 @@ manyToManyAdditionTask = (resources) => buildTask(
   manyToManyAssertionMap, 
   manyToManyAdditionExpectation
 );
+
+// Ideas: 
+// 1. Wrap (setup, prepare, teardown) to new-defined concept "bunware"
+// 2. Set (setup, prepare, teardown) default to (emptyCallback, identityCallback, emptyCallback)
+
+// Scripts
+setup = emptyCallback;
+prepare = identityCallback;
+teardown = emptyCallback;
 
 // // Scenes
 // oneToOneAdditionScene = buildScene(setup, prepare,  oneToOne AdditionTask, teardown);
