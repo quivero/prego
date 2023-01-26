@@ -177,6 +177,7 @@ manyToManyAdditionTask = (resources) => buildTask(
 // Ideas: 
 // 1. Wrap (setup, prepare, teardown) to new-defined concept "bunware"
 // 2. Set (setup, prepare, teardown) default to (emptyCallback, identityCallback, emptyCallback)
+// 3. Break map "perform" on task into to new-defined "acts" 
 
 // Scripts
 setup = emptyCallback;
