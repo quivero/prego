@@ -47,7 +47,7 @@ export const assert = (item) => {
 
 export const batchAssert = (items) => items.forEach((item) => assert(item));
 
-const verifyExperiment = (experiments) => {
+const verifyGoal = (experiments) => {
   batchAssert(
     _.zip(experiments.result, experiments.expectation, experiments.assertionMap)
   );
@@ -57,9 +57,9 @@ export const atest = (fixtures, scenario) => {
   scenario.setup();
 
   const augmented_fixtures = scenario.prepare(fixtures);
-  const experiment = scenario.exercise(augmented_fixtures);
+  const act = scenario.perform(augmented_fixtures);
 
-  verifyExperiment(experiment);
+  verifyGoal(act);
 
   scenario.teardown();
 };
@@ -76,27 +76,29 @@ export const batchAtest = (fixtures, scenarios) => {
 };
 
 export const rehearse = (auditions) =>
-  auditions.forEach((scene) => it(scene.description, scene.callback));
+  auditions.forEach(
+    (scene) => it(scene.description, scene.callback)
+  );
 
 export const validate = (rehearsals) => {
-  rehearsals.forEach((rehearsal) =>
-    describe(rehearsal.name, rehearsal.callback)
+  rehearsals.forEach(
+    (rehearsal) => describe(rehearsal.name, rehearsal.callback)
   );
 };
 
-export const buildTask = (result, expectation, assertionMap) => {
+export const buildTask = (result, assertionMap, expectation) => {
   return {
     result: result,
-    expectation: expectation,
     assertionMap: assertionMap,
+    expectation: expectation,
   };
 };
 
-export const buildScene = (setup, prepare, exercise, teardown) => {
+export const buildScene = (setup, prepare, perform, teardown) => {
   return {
     setup: setup,
     prepare: prepare,
-    exercise: exercise,
+    perform: perform,
     teardown: teardown,
   };
 };
