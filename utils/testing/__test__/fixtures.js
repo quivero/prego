@@ -180,10 +180,10 @@ manyToManyAdditionTask = (resources) => buildTask(
 );
 
 // // Scenes
-// oneToOneAdditionScene = buildScene(setup, prepare, additionTask, teardown);
-// oneToManyAdditionScene = buildScene(setup, prepare, additionTask, teardown);
-// manyToOneAdditionScene = buildScene(setup, prepare, additionTask, teardown);
-// manyToManyAdditionScene = buildScene(setup, prepare, additionTask, teardown);
+// oneToOneAdditionScene = buildScene(setup, prepare,  oneToOne AdditionTask, teardown);
+// oneToManyAdditionScene = buildScene(setup, prepare, oneToManyAdditionTask, teardown);
+// manyToOneAdditionScene = buildScene(setup, prepare,  manyToOneAdditionTask, teardown);
+// manyToManyAdditionScene = buildScene(setup, prepare, manyToManyAdditionTask, teardown);
 
 // // Multiple scenes with single assertion
 // additionTasks = additionExpectations.map(
@@ -200,7 +200,8 @@ manyToManyAdditionTask = (resources) => buildTask(
 
 additionRehearsals = [
   buildRehearsal(
-    "must sum numbers using assert", () => assert(addItem)
+    "must sum numbers using assert", 
+    () => assert(addItem)
   ),
   buildRehearsal(
     "must sum numbers using batchAssert", 
