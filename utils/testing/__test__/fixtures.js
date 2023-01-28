@@ -6,6 +6,7 @@ import {
   atest,
   batchAtest,
   buildScene,
+  buildBunware,
   buildAct,
   buildAudition,
   buildRehearsal,
@@ -39,7 +40,7 @@ export const invalidAssertCallbackItem = ["42", "42"];
  | atest design
  *-------------------------*/
 export let validAtestAct;
-let setup, prepare, perform, teardown;
+let setup, prepare, perform, teardown, bunware;
 
 export let validAtestFixture = "42";
 const resultFunction = (fixture_) => fixture_;
@@ -61,7 +62,8 @@ perform = (resources) => {
 
 teardown = emptyCallback;
 
-validAtestAct = buildAct(setup, prepare, perform, teardown);
+bunware = buildBunware(setup, prepare, teardown);
+validAtestAct = buildAct(perform, bunware);
 
 /*-------------------------
  | assert design
@@ -129,7 +131,7 @@ let additionRehearsals;
 
 // Fixtures
 oneToOneAdditionFixture = { a: 1, b: 2 };
-oneToManyAdditionFixture = [oneToOneAdditionFixture, { a: 2, b: 3 }];
+oneToManyAdditionFixture = [ oneToOneAdditionFixture, { a: 2, b: 3 } ];
 manyToOneAdditionFixture = [
   [oneToOneAdditionFixture],
   [oneToOneAdditionFixture],
@@ -141,7 +143,7 @@ manyToManyAdditionFixture = [
 
 // Expectations
 oneToOneAdditionExpectation = 3;
-oneToManyAdditionExpectation = [oneToOneAdditionExpectation, 5];
+oneToManyAdditionExpectation = [ oneToOneAdditionExpectation, 5 ];
 oneToManyAdditionExpectation = [
   [oneToOneAdditionExpectation],
   [oneToOneAdditionExpectation],
@@ -177,7 +179,10 @@ oneToManyAdditionPerform = (augmented_fixture_) =>
     oneToManyAdditionExpectation
   );
 
-manyToOneAdditionPerform = [oneToOneAdditionPerform, oneToOneAdditionPerform];
+manyToOneAdditionPerform = [
+  oneToOneAdditionPerform, 
+  oneToOneAdditionPerform
+];
 
 manyToManyAdditionPerform = [
   oneToManyAdditionPerform,
@@ -185,45 +190,34 @@ manyToManyAdditionPerform = [
 ];
 
 // Ideas:
-// 1. Wrap (setup, prepare, teardown) to new-defined concept "bunware"
-// 2. Set (setup, prepare, teardown) default to (emptyCallback, identityCallback, emptyCallback)
-// 3. Break map "perform" on task into to new-defined concepts "acts" and "performance"
+// 1. [ x ] Wrap (setup, prepare, teardown) to new-defined concept "bunware"
+// 2. [ x ] Set (setup, prepare, teardown) default to (emptyCallback, identityCallback, emptyCallback)
+// 3. [ x ] Break map "perform" on task into to new-defined concepts "acts" and "performance"
 
 // Scripts
 setup = emptyCallback;
 prepare = identityCallback;
 teardown = emptyCallback;
 
-// // Scenes
-// oneToOneAdditionScene = buildScene(setup, prepare,  oneToOneAdditionPerform, teardown);
-// oneToManyAdditionScene = buildScene(setup, prepare, oneToManyAdditionPerform, teardown);
-// manyToOneAdditionScene = buildScene(setup, prepare,  manyToOneAdditionTask, teardown);
-// manyToManyAdditionScene = buildScene(setup, prepare, manyToManyAdditionTask, teardown);
-
-// // Multiple scenes with single assertion
-// additionTasks = additionExpectations.map(
-//   (additionExpectation_) =>  {
-//     return (augmented_fixture) => buildScene(
-//       addCallback(augmented_fixture), expectToBe, additionExpectation_
-//       );
-//   }
-// );
-
-// additionScenes = additionTasks.map(
-//   (task) => buildScene(setup, prepare, task, teardown)
-// );
-
 additionRehearsals = [
-  buildRehearsal("must sum numbers using assert", () => assert(addItem)),
-  buildRehearsal("must sum numbers using batchAssert", () =>
-    batchAssert(addItems)
+  buildRehearsal(
+    "must sum numbers using assert", 
+    () => assert(addItem)
   ),
-  buildRehearsal("must sum numbers using atest", () =>
-    atest(oneToOneAdditionFixture, oneToOneAdditionScene)
+  buildRehearsal(
+    "must sum numbers using batchAssert", 
+    () => batchAssert(addItems)
   ),
-  buildRehearsal("must sum numbers using batchAtest", () =>
-    batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
+  buildRehearsal(
+    "must sum numbers using atest", 
+    () => atest(oneToOneAdditionFixture, oneToOneAdditionScene)
+  ),
+  buildRehearsal(
+    "must sum numbers using batchAtest", 
+    () => batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
   ),
 ];
 
-// additionAuditions = [buildAudition("add", additionRehearsals)];
+// additionAuditions = [
+//   buildAudition("add", additionRehearsals)
+// ];

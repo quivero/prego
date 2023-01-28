@@ -1,43 +1,69 @@
-import _, { isArray, isObject, intersection } from "lodash";
+import _, { 
+  isArray, 
+  isObject, 
+  intersection, 
+  union, 
+  difference, 
+  every, 
+  isFunction 
+} from "lodash";
 import { isCondition } from "../sys/sys";
+
+import { 
+  bunwareCriteria,
+  assertItemCriteria
+} from "./assertionCriteriaStrings";
 
 export const emptyCallback = () => {};
 export const identityCallback = (fixture_) => fixture_;
 
+// Default item key strings
 let item2LengthKeys, item3LengthKeys;
 item2LengthKeys = ["result", "expectation"];
 item3LengthKeys = [...item2LengthKeys, "assertionMap"];
+
+// Possible bunware key strings
+const bunwareKeys = ["setup", "prepare", "teardown"];
+
+// Default bunware
+const defaultBunware = {
+  "setup": emptyCallback,
+  "prepare": identityCallback,
+  "teardown": emptyCallback
+}
 
 const assertionError = (item) => {
   const itemValuesTypes = Object.values(item).map((value) => typeof value);
   const itemKeys = Object.keys(item);
   const itemType = isArray(item) ? "array" : "object";
 
-  const description = "Assert test item must have structure: \n\n";
-
-  const validArgument_1 = "[result, assertionMap]";
-  const validArgument_2 = "[result, assertionMap, expected]";
-  const validArgument_3 = '{"result": object, "assertionMap": function}';
-
-  let key_value_1 = '"result": object, "expectation": object';
-  let key_value_2 = '"assertionMap": function';
-
-  const validArgument_4 = `{${key_value_1}, ${key_value_2}}`;
-
-  const schemas_1 = `1. ${validArgument_1}; \n`;
-  const schemas_2 = `2. ${validArgument_2}; \n`;
-  const schemas_3 = `3. ${validArgument_3}; \n`;
-  const schemas_4 = `4. ${validArgument_4}; \n`;
-
-  const schemas = ` ${schemas_1} ${schemas_2} ${schemas_3} ${schemas_4} \n`;
-
   const givenItemDescription = `keys [${itemKeys}] and value types [${itemValuesTypes}]`;
   const givenItemTypesMsg = `Given item has type ${itemType} with ${givenItemDescription}`;
 
-  const invalidAssertItemMsg = description + schemas + givenItemTypesMsg;
+  const invalidAssertItemMsg = assertItemCriteria + givenItemTypesMsg;
 
   return {
     message: invalidAssertItemMsg,
+    type: TypeError,
+  };
+};
+
+
+const bunwareTypeError = (fakeBunware) => {
+  const fakeBunwareType = typeof fakeBunware;
+  const fakeBunwareKeys = fakeBunwareType === "object" ? Object.keys(fakeBunware) : "[]";
+  const fakeBunwareValuesTypes = fakeBunwareType === "object" ? 
+    Object.values(fakeBunware).map((value) => typeof value) : "[]";
+  
+  let invalidBunwareObjectMsg = "";  
+  
+  const fakeBunwareDescription = `keys [${fakeBunwareKeys}] and value types [${fakeBunwareValuesTypes}]`;
+  const givenBunwareMsg = `Given bunware has type ${fakeBunwareType} with ${fakeBunwareDescription}`;
+
+  invalidBunwareObjectMsg = bunwareCriteria + givenBunwareMsg;
+
+  return {
+    message: invalidBunwareObjectMsg,
     type: TypeError,
   };
 };
@@ -71,6 +97,17 @@ export const isAssertItem = (item) => {
   } else return false;
 };
 
+export const isBunware = (candidate) => {
+  const candidateKeys = Object.keys(candidate);
+  const bunwareCandidateKeysUnion = union(bunwareKeys, candidateKeys);
+
+  const isObject_ = isObject(candidate);
+  const ObjectKeysLowerEqualThan3 = candidateKeys.length <= 3;
+  const areBunwareKeys = bunwareCandidateKeysUnion.length === 3;
+  
+  return isObject_ && ObjectKeysLowerEqualThan3 && areBunwareKeys; 
+}
+
 export const assert = (item) => {
   const assertionError_ = assertionError(item);
   const isValidAssertItemCondition = isAssertItem(item);
@@ -96,15 +133,14 @@ export const assert = (item) => {
   };
 
   isCondition(
-    isValidAssertItemCondition,
-    validAssertItemCallback,
-    item,
-    assertionError_.message,
-    assertionError_.type
+    isValidAssertItemCondition, validAssertItemCallback, item,
+    assertionError_.message, assertionError_.type
   );
 };
 
-export const batchAssert = (items) => items.forEach((item) => assert(item));
+export const batchAssert = (items) => items.forEach(
+  (item) => assert(item)
+);
 
 const verify = (performanceItems) => batchAssert(performanceItems);
 
@@ -133,9 +169,15 @@ export const rehearse = (auditions) =>
   auditions.forEach((scene) => it(scene.description, scene.callback));
 
 export const validate = (rehearsals) => {
-  rehearsals.forEach((rehearsal) =>
-    describe(rehearsal.name, rehearsal.callback)
-  );
+  rehearsals.forEach((rehearsal) => describe(rehearsal.name, rehearsal.callback));
+};
+
+export const buildBunware = (setup, prepare, teardown) => {
+  return {
+    "setup": setup, 
+    "prepare": prepare, 
+    "teardown": teardown
+  }
 };
 
 export const buildScene = (item) => {
@@ -170,28 +212,62 @@ export const buildScene = (item) => {
   };
 
   return isCondition(
-    isValidAssertItemCondition,
-    buildSceneFromValidItemCallback,
-    item,
-    assertionError_.message,
-    assertionError_.type
+    isValidAssertItemCondition, buildSceneFromValidItemCallback,  item,
+    assertionError_.message, assertionError_.type
   );
-};
+}; 
 
-export const buildAct = (setup, prepare, perform, teardown) => {
-  return {
-    setup: setup,
-    prepare: prepare,
-    perform: perform,
-    teardown: teardown,
+export const fillBunware = (candidate) => {
+  const isBunwareCondition = isBunware(candidate);
+  const bunwareError = bunwareTypeError(candidate);
+  
+  fillBunwareCallback = (bunware) => {
+    difference(bunwareKeys, Object.keys(bunware)).forEach(
+      (missingBunwareKey) =>  {
+          candidate.missingBunwareKey = defaultBunware.missingBunwareKey
+      }
+    );
+    
+    return candidate;
   };
+
+  return isCondition(
+    isBunwareCondition, fillBunwareCallback, candidate,
+    bunwareError.message, bunwareError.type
+  );
+}
+
+export const buildAct = (perform, bunware=defaultBunware) => {
+  const bunware_ = fillBunware(bunware);
+  const isFunction_ = isFunction(perform); 
+  let actArgs = {}; 
+  
+  actArgs.bunware = bunware_;
+  actArgs.perform = perform;
+  
+  const actCallback = (actArgs_) => {
+    return {
+      setup: actArgs_.bunware.setup,
+      prepare: actArgs_.bunware.prepare,
+      perform: actArgs_.perform, 
+      teardown: actArgs_.bunware.teardown
+    }
+  };
+  
+  const actDescription = "a function with 1 input and output argument";
+  const actPerformCriterium = `First argument \"perform\" must be ${actDescription}`;
+
+  return isCondition(
+    isFunction_, actCallback, actArgs,
+    actPerformCriterium, TypeError
+  );
 };
 
 export const buildRehearsal = (name, rehearsalCallback) => {
   return {
     name: name,
     callback: rehearsalCallback,
-  };
+  };  
 };
 
 export const buildAudition = (description, rehearsals) => {

@@ -94,34 +94,67 @@ export const expectToMatchObject = (result, expectation) =>
 // {0, 1, 2} arguments expectation
 // TODO:
 // 
-//   - toThrow
-//   - toThrowErrorMatchingSnapshot
-//   - toMatchSnapshot
-//   - toHaveProperty
-//   - toBeCloseTo
-//   - toMatchInlineSnapshot
-
+// [ x ] toThrow
+// [ x ] toThrowErrorMatchingSnapshot
+// [ x ] toMatchSnapshot
+// [ x ] toHaveProperty
+// [ x ] toBeCloseTo
+// [ x ] toMatchInlineSnapshot
+export const expectToThrow = (result, ...errorType) => 
+  expect(result).toThrow(...errorType);
+export const expectToThrowErrorMatchingSnapshot = (result, ...hint) => 
+  expect(result).toThrowErrorMatchingSnapshot(...hint);
+export const expectToMatchSnapshot = (photo, ...propertyMatchers_hint) => 
+  expect(photo).toMatchSnapshot(...propertyMatchers_hint);
+export const expectToHaveProperty = (object_, keyPath, ...value) => 
+  expect(object_).toHaveProperty(keyPath, ...value);
+export const expectToBeCloseTo = (value, number, ...numDigits) => 
+  expect(value).toBeCloseTo(number, ...numDigits);
+export const expectToMatchInlineSnapshot = (result, 
+  inlineSnapshot, 
+  ...propertyMatchers) => 
+  expect(result).toMatchInlineSnapshot(inlineSnapshot, ...propertyMatchers);
+  
 // Varyadic arguments expectation
 // TODO:
 // 
-//   - toHaveBeenCalledWith
-//   - toHaveBeenLastCalledWith
-//   - toHaveBeenNthCalledWith
-
+// [ x ] toHaveBeenCalledWith
+// [ x ] toHaveBeenLastCalledWith
+// [ x ] toHaveBeenNthCalledWith
+export const expectToHaveBeenCalledWith = (result, ...args) => 
+  expect(result).toHaveBeenCalledWith(...args);
+export const expectToHaveBeenLastCalledWith = (result, ...args) =>
+  toHaveBeenLastCalledWith(...args);
+export const expectToHaveBeenNthCalledWith = (functionHandler, callIndex, args) => {
+  expect(functionHandler).toHaveBeenNthCalledWith(callIndex, ...args)
+}
+  
 // Asymmetric Matchers
 // TODO: 
 // 
-// [   ] .anything()
-// [   ] .any(constructor)
-// [   ] .arrayContaining(array)
-// [   ] .not.arrayContaining(array)
-// [   ] .closeTo(number, numDigits?)
-// [   ] .objectContaining(object)
-// [   ] .not.objectContaining(object)
-// [   ] .stringContaining(string)
-// [   ] .not.stringContaining(string)
-// [   ] .stringMatching(string | regexp)
-// [   ] .not.stringMatching(string | regexp)
+// [ x ] .anything()                          
+// [ x ] .any(constructor)                     
+// [ x ] .arrayContaining(array)                    
+// [ x ] .not.arrayContaining(array)                    
+// [ x ] .closeTo(number, numDigits?)                    
+// [ x ] .objectContaining(object)                    
+// [ x ] .not.objectContaining(object)                    
+// [ x ] .stringContaining(string)                    
+// [ x ] .not.stringContaining(string)                    
+// [ x ] .stringMatching(string | regexp)                    
+// [ x ] .not.stringMatching(string | regexp)                    
+
+export const anythingAsyMatch = () => expect.anything();
+export const anyAsyMatch = (constructor) => expect.any(constructor);
+export const arrayContainingAsyMatch = (array) => expect.arrayContaining(array);
+export const notArrayContainingAsyMatch = (array) => expect.not.arrayContaining(array);
+export const closeToAsyMatch = (number, ...numDigits) => expect.closeTo(number, ...numDigits);
+export const objectContainingAsyMatch = (object) => expect.objectContaining(object);
+export const notObjectContainingAsyMatch = (object) => expect.not.objectContaining(object);
+export const stringContainingAsyMatch = (string) => expect.stringContaining(string);
+export const notStringContainingAsyMatch = (string) => expect.not.stringContaining(string);
+export const stringMatchingAsyMatch = (string_regexp) => expect.stringMatching(string_regexp);
+export const notStringMatchingAsyMatch = (string_regexp) => expect.not.stringMatching(string_regexp);
 
 // Assertion Count
 // TODO: 
