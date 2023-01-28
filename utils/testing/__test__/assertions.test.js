@@ -1,6 +1,15 @@
 import {
-  assert, batchAssert, atest, batchAtest, validate
+  assert,
+  batchAssert,
+  atest,
+  batchAtest,
+  // validate
 } from "../assertions";
+
+import {
+  expectHasAssertions,
+  expectAssertions
+} from "../expectTo"
 
 import {
   assertFixtures,
@@ -9,56 +18,48 @@ import {
   invalidAssertItemLength,
   invalidAssertCallbackItem,
   validAtestFixture,
-  validAtestScene,
+  validAtestAct,
   additionFixtures,
   additionScenes,
-  additionAuditions,
 } from "./fixtures";
 
 describe("assert", () => {
-  it(
-    "should assert on result-callback pattern", 
-    () => {
-      expect.assertions(1);
-      assert(validAssertLength1Item);
-    }
-  );
+  it("should assert on result-callback pattern", () => {
+    expectHasAssertions()
+    expectAssertions(1);
+    assert(validAssertLength1Item);
+  });
 
-  it(
-    "should assert on result-expected-callback pattern", 
-    () => {
-      expect.assertions(1);
-      assert(validAssertLength2Item);
-    }
-  );
+  it("should assert on result-expected-callback pattern", () => {
+    expectHasAssertions();
+    expectAssertions(1);
 
-  it(
-    "should throw error on item with length different than 2 or 3", 
-    () => expect(() => assert(invalidAssertItemLength)).toThrow(Error)
-  );
+    assert(validAssertLength2Item);
+  });
 
-  it(
-    "should throw error on invalid callback function", 
-    () => expect(() => assert(invalidAssertCallbackItem)).toThrow(Error)
-  );
+  it("should throw error on item with length different than 2 or 3", () =>
+    expect(() => assert(invalidAssertItemLength)).toThrow(Error));
+
+  it("should throw error on invalid callback function", () =>
+    expect(() => assert(invalidAssertCallbackItem)).toThrow(Error));
 });
 
 describe("batchAssert", () => {
-  it(
-    "should assert asserts in batch", 
-    () => {
-      expect.assertions(assertFixtures.length);
-      batchAssert(assertFixtures);
-    }
-  );
+  it("should assert asserts in batch", () => {
+    expectHasAssertions();
+    expectAssertions(assertFixtures.length);
+
+    batchAssert(assertFixtures);
+  });
 });
 
 describe("atest", () => {
-  it("should assert atest", () => atest(validAtestFixture, validAtestScene));
+  it("should assert atest", () => atest(validAtestFixture, validAtestAct));
 });
 
 describe("batchAtest", () => {
-  it("should assert batchAtest", () => batchAtest(additionFixtures, additionScenes));
+  it("should assert batchAtest", () =>
+    batchAtest(additionFixtures, additionScenes));
 });
 
 /*
