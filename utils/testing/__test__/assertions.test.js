@@ -24,46 +24,46 @@ import {
 } from "./fixtures";
 
 describe(
-  "assert", 
+  "assert",
   () => {
     it(
-      "should assert on result-callback pattern", 
+      "should assert on result-callback pattern",
       () => {
         expectHasAssertions()
         expectAssertions(1);
         assert(validAssertLength1Item);
       }
     );
-  
+
     it(
-      "should assert on result-expected-callback pattern", 
+      "should assert on result-expected-callback pattern",
       () => {
         expectHasAssertions();
         expectAssertions(1);
-    
+
         assert(validAssertLength2Item);
       }
     );
-  
+
     it(
-      "should throw error on item with length different than 2 or 3", 
+      "should throw error on item with length different than 2 or 3",
       () => expect(() => assert(invalidAssertItemLength)).toThrow(Error));
-  
+
     it(
-      "should throw error on invalid callback function", 
+      "should throw error on invalid callback function",
       () => expect(() => assert(invalidAssertCallbackItem)).toThrow(Error));
   }
 );
 
 describe(
-  "batchAssert", 
+  "batchAssert",
   () => {
     it(
-      "should assert asserts in batch", 
+      "should assert asserts in batch",
       () => {
         expectHasAssertions();
         expectAssertions(assertFixtures.length);
-    
+
         batchAssert(assertFixtures);
       }
     );
@@ -71,19 +71,19 @@ describe(
 );
 
 describe(
-  "atest", 
+  "atest",
   () => {
     it(
-      "should assert atest", 
+      "should assert atest",
       () => atest(validAtestFixture, validAtestAct));
   }
 );
 
 describe(
-  "batchAtest", 
+  "batchAtest",
   () => {
     it(
-      "should assert batchAtest", 
+      "should assert batchAtest",
       () => batchAtest(additionFixtures, additionScenes));
   }
 );

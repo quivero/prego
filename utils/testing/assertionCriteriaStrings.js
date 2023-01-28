@@ -24,7 +24,7 @@ export const assertItemCriteria = assertDescription + schemas;
 
 // Bunware
 const bunwareDescription = "A bunware has the following characteristics \n\n"
-  
+
 const bunwareProp1 = "1. Type object;";
 const bunwareProp2 = "2. Keys strings [\"setup\", \"prepare\", \"teardown\"];";
 const bunwareProp3 = "3. Value types [\"function\", \"function\", \"function\"];";
@@ -35,7 +35,6 @@ const bunwarePropComb1 = ` ${bunwareProp1}\n ${bunwareProp2}\n`;
 const bunwarePropComb2 = ` ${bunwareProp3}\n ${bunwareProp4}\n`;
 const bunwarePropComb3 = ` ${bunwareProp5}`
 
-const bunwareProps = `${bunwarePropComb1}${bunwarePropComb2}${bunwarePropComb3} \n\n `; 
+const bunwareProps = `${bunwarePropComb1}${bunwarePropComb2}${bunwarePropComb3} \n\n `;
 
 export const bunwareCriteria = bunwareDescription + bunwareProps;
-

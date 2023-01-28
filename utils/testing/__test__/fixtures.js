@@ -180,7 +180,7 @@ oneToManyAdditionPerform = (augmented_fixture_) =>
   );
 
 manyToOneAdditionPerform = [
-  oneToOneAdditionPerform, 
+  oneToOneAdditionPerform,
   oneToOneAdditionPerform
 ];
 
@@ -201,19 +201,19 @@ teardown = emptyCallback;
 
 additionRehearsals = [
   buildRehearsal(
-    "must sum numbers using assert", 
+    "must sum numbers using assert",
     () => assert(addItem)
   ),
   buildRehearsal(
-    "must sum numbers using batchAssert", 
+    "must sum numbers using batchAssert",
     () => batchAssert(addItems)
   ),
   buildRehearsal(
-    "must sum numbers using atest", 
+    "must sum numbers using atest",
     () => atest(oneToOneAdditionFixture, oneToOneAdditionScene)
   ),
   buildRehearsal(
-    "must sum numbers using batchAtest", 
+    "must sum numbers using batchAtest",
     () => batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
   ),
 ];
