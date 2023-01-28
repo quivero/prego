@@ -3,9 +3,9 @@
 // Anyone interested to extend this behavior must refer to URL content above with parsimony
 
 // Matchers
-// 
+//
 // TODO:
-// 
+//
 // [ x ] .toHaveBeenCalled()
 // [ x ] .toHaveReturned()
 // [ x ] .toBeDefined()
@@ -93,7 +93,7 @@ export const expectToMatchObject = (result, expectation) =>
 
 // {0, 1, 2} arguments expectation
 // TODO:
-// 
+//
 //   - toThrow
 //   - toThrowErrorMatchingSnapshot
 //   - toMatchSnapshot
@@ -103,14 +103,14 @@ export const expectToMatchObject = (result, expectation) =>
 
 // Varyadic arguments expectation
 // TODO:
-// 
+//
 //   - toHaveBeenCalledWith
 //   - toHaveBeenLastCalledWith
 //   - toHaveBeenNthCalledWith
 
 // Asymmetric Matchers
-// TODO: 
-// 
+// TODO:
+//
 // [   ] .anything()
 // [   ] .any(constructor)
 // [   ] .arrayContaining(array)
@@ -124,7 +124,7 @@ export const expectToMatchObject = (result, expectation) =>
 // [   ] .not.stringMatching(string | regexp)
 
 // Assertion Count
-// TODO: 
+// TODO:
 // [ x ] .assertions(number)
 // [ x ] .hasAssertions()
 

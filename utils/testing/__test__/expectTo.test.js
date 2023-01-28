@@ -28,25 +28,25 @@ import {
   } from "../expectTo"
 
   describe(
-    "expectTo", 
+    "expectTo",
     () => {
         it("assert defined values", () => expectToBeDefined(42))
         it("assert undefined values", () => expectToBeUndefined(undefined))
-        it("assert toHaveReturned", 
+        it("assert toHaveReturned",
         () => {
           const drink = jest.fn(() => true);
-      
+
           drink();
           expectToHaveReturned(drink)
         })
-        it("assert call and call number", 
+        it("assert call and call number",
           () => {
             const eat = jest.fn(() => false);
             const drink = jest.fn(() => true);
             const feast = (drinkCallback, eatCallback) => eatCallback() && drinkCallback();
-            
+
             feast(eat, drink);
-            
+
             expectToHaveBeenCalled(eat);
             expectToHaveBeenCalled(drink);
             expectToHaveBeenCalledTimes(eat, 1);
@@ -61,22 +61,22 @@ import {
 
             expectToHaveReturnedTimes(drink, 2);
         });
-        it("assert returned value", () => {    
+        it("assert returned value", () => {
             const beverage = {name: 'La Croix'};
             const drink = jest.fn(beverage => beverage.name);
-          
+
             drink(beverage);
-          
+
             expectToHaveReturnedWith(drink, 'La Croix');
         });
         test('assert last returned value', () => {
             const beverage1 = {name: 'La Croix (Lemon)'};
             const beverage2 = {name: 'La Croix (Orange)'};
             const drink = jest.fn(beverage => beverage.name);
-          
+
             drink(beverage1);
             drink(beverage2);
-          
+
             expectToHaveLastReturnedWith(drink, 'La Croix (Orange)');
         });
         test('the house has my desired features', () => {
@@ -96,7 +96,7 @@ import {
               wallColor: expect.stringMatching(/white|yellow/),
             },
           };
-          
+
           expectToMatchObject(houseForSale, desiredHouse);
         });
         it("assert length", () => {
@@ -123,7 +123,7 @@ import {
         });
         it('assert match', () => {
             const long_string = 'the quick fox jumped over the lazy dog';
-            
+
             expectToMatch(long_string, /lazy dog/);
             expectToMatch(long_string, new RegExp('lazy dog'));
           });
@@ -136,4 +136,3 @@ import {
         it("assert result toBeEqual expectation", () => expectToStrictEqual(42, 42));
     }
   );
-  
