@@ -22,7 +22,7 @@ describe("throwError/warn", () => {
 });
 
 describe(
-  "throwError/warn", 
+  "throwError/warn",
   () => {
     it("should return data types", () => {
       trivia = [
@@ -32,11 +32,11 @@ describe(
         [typeOf(() => {}), "function"],
         [typeOf(null), "null"],
       ];
-    
+
       for (const item of trivia) {
         result = item[0];
         expected = item[1];
-    
+
         expect(result).toBe(expected);
       }
     });
@@ -51,24 +51,24 @@ describe(
       const args = {};
       const error_msg = 'Wrong!';
       const errorClass = TypeError;
-      
+
       const isConditionFn = () => isCondition(
         condition, conditionCallback, args, error_msg, errorClass
       );
-      
+
       expect(isConditionFn).toThrowError(TypeError);
     });
-  
+
     it("should throw Error on missing errorClass", () => {
       const condition = 42 === '42'; // false
       const conditionCallback = (arg) => arg;
       const args = 7;
       const error_msg = 'Wrong!';
-      
+
       const isConditionFn = () => isCondition(
         condition, conditionCallback, args, error_msg
       );
-      
+
       expect(isConditionFn).toThrowError(Error);
     });
 
@@ -78,7 +78,7 @@ describe(
       const args = 7;
       const error_msg = 'Wrong!';
       const errorClass = Error;
-      
+
       const result = isCondition(
         condition, conditionCallback, args, error_msg, errorClass
       );

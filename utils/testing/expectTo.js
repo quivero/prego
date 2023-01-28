@@ -3,9 +3,9 @@
 // Anyone interested to extend this behavior must refer to URL content above with parsimony
 
 // Matchers
-// 
+//
 // TODO:
-// 
+//
 // [ x ] .toHaveBeenCalled()
 // [ x ] .toHaveReturned()
 // [ x ] .toBeDefined()
@@ -157,7 +157,7 @@ export const stringMatchingAsyMatch = (string_regexp) => expect.stringMatching(s
 export const notStringMatchingAsyMatch = (string_regexp) => expect.not.stringMatching(string_regexp);
 
 // Assertion Count
-// TODO: 
+// TODO:
 // [ x ] .assertions(number)
 // [ x ] .hasAssertions()
 
