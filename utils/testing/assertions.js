@@ -75,8 +75,8 @@ export const validate = (rehearsals) => {
 
 export const buildOrganization = (setup, prepare, teardown) => {
   return {
-    "setup": setup, 
-    "prepare": prepare, 
+    "setup": setup,
+    "prepare": prepare,
     "teardown": teardown
   }
 };
@@ -116,7 +116,7 @@ export const buildScene = (item) => {
     isValidAssertItemCondition, buildSceneCallback, item,
     assertionError_.message, assertionError_.type
   );
-}; 
+};
 
 export const fillOrganization = (candidate) => {
   const isOrganizationCondition = isOrganization(candidate);
@@ -157,7 +157,7 @@ export const buildAct = (script, organization=defaultOrganization) => {
       teardown: actArgs_.organization.teardown
     }
   };
-  
+
   const actDescription = "a function with 1 input and output argument";
   const actPerformCriterium = `First argument \"perform\" must be ${actDescription}`;
 
@@ -171,7 +171,7 @@ export const buildRehearsal = (name, rehearsalCallback) => {
   return {
     name: name,
     callback: rehearsalCallback,
-  };  
+  };
 };
 
 export const buildPlay = (description, rehearsals) => {
