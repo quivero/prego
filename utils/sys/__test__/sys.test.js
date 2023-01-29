@@ -79,9 +79,7 @@ describe(
       const error_msg = 'Wrong!';
       const errorClass = Error;
 
-      const result = isCondition(
-        condition, conditionCallback, args, error_msg, errorClass
-      );
+      const result = isCondition(condition, conditionCallback, args, error_msg, errorClass);
 
       expect(result).toBe(args);
     });
