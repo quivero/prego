@@ -15,7 +15,7 @@ export const areArrayElements = (array, truthCallback) => {
 export const whosWhat = (array, whatCallback) => {
   const theseElements = array.filter(whatCallback)
   let theseElementsIndexes = [];
-  let thisElementIndexes; 
+  let thisElementIndexes;
 
   theseElements.forEach(
     thisElement => {
@@ -23,9 +23,8 @@ export const whosWhat = (array, whatCallback) => {
       theseElementsIndexes = theseElementsIndexes.concat(thisElementIndexes);
     }
   );
-  
+
   return uniq(theseElementsIndexes);
 };
 export const whosTrue = (array) => whosWhat(array, isTrue);
 export const whosFalse = (array) => whosWhat(array, isFalse);
-

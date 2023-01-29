@@ -13,9 +13,9 @@ import {
   rehearse
 } from "../assertions";
 
-import { 
-  emptyCallback, 
-  identityCallback 
+import {
+  emptyCallback,
+  identityCallback
 } from "../defaults";
 
 import {
@@ -112,18 +112,18 @@ let additionRehearsals;
 
 // TODO?: Follow these sketch-guidelines to proceed:
 // 1. (
-//      fixtures: object, 
+//      fixtures: object,
 //      script: function,
 //      organization: object(
-//        setup: function, 
-//        prepare: function, 
+//        setup: function,
+//        prepare: function,
 //        teardown: function
 //      ),
 //      scene: object | Array (assertionMap, ?expectation)
 //    ) --> task --> scenes --> rehearsal
 //     a. resource: (
-//         fixtures: object, 
-//         script: function, 
+//         fixtures: object,
+//         script: function,
 //         organization: (setup, prepare, teardown)
 //     );
 //     b. taskCallback: (resource) => buildScene(

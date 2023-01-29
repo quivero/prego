@@ -43,7 +43,6 @@ const orgPropComb1 = ` ${organizationProp1}\n ${organizationProp2}\n`;
 const orgPropComb2 = ` ${organizationProp3}\n ${organizationProp4}\n`;
 const orgPropComb3 = ` ${organizationProp5}\n ${organizationProp6}\n`
 
-const orgProps = `${orgPropComb1}${orgPropComb2}${orgPropComb3} \n\n `; 
+const orgProps = `${orgPropComb1}${orgPropComb2}${orgPropComb3} \n\n `;
 
 export const organizationCriteria = orgDescription + orgProps;
-

@@ -1,9 +1,9 @@
 import _, { isArray, isFunction } from "lodash";
 import { isCondition } from "../sys/sys";
-import { 
+import {
   isAssertItem,
-  isOrganization, 
-  possibleOrganizationKeys 
+  isOrganization,
+  possibleOrganizationKeys
 } from "./checkers";
 import { organizationTypeError, assertionError } from "./errors";
 
@@ -130,7 +130,7 @@ export const fillOrganization = (candidate) => {
         organization[organizationKey] = organization[organizationKey] ?? defaultValue;
       }
     );
-    
+
     return organization;
   };
 
@@ -142,18 +142,18 @@ export const fillOrganization = (candidate) => {
 
 export const buildAct = (script, organization=defaultOrganization) => {
   const organization_ = fillOrganization(organization);
-  const isFunction_ = isFunction(script); 
-  
-  let actArgs = {}; 
-  
+  const isFunction_ = isFunction(script);
+
+  let actArgs = {};
+
   actArgs.organization = organization_;
   actArgs.perform = script;
-  
+
   const actCallback = (actArgs_) => {
     return {
       setup: actArgs_.organization.setup,
       prepare: actArgs_.organization.prepare,
-      perform: actArgs_.perform, 
+      perform: actArgs_.perform,
       teardown: actArgs_.organization.teardown
     }
   };
