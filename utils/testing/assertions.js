@@ -122,7 +122,7 @@ export const fillOrganization = (candidate) => {
   const isOrganizationCondition = isOrganization(candidate);
   const OrganizationError = organizationTypeError(candidate);
 
-  fillOrganizationCallback = (organization) => {
+  const fillOrganizationCallback = (organization) => {
     let defaultValue;
 
     possibleOrganizationKeys.forEach(
