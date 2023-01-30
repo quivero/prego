@@ -6,6 +6,7 @@ import {
     organizationCriteria,
     assertItemCriteria
 } from "./criteriaStrings";
+import { defaultArrayTruthMessage } from "./defaults";
 
 export const buildError = (errorClass, errorMessage) => {
   return  {
@@ -43,3 +44,15 @@ export const organizationTypeError = (fakeOrganization) => {
   return buildError(TypeError, invalidOrganizationObjectMsg);
 
 };
+
+const arrayTruthHeader = (falseElements) => {
+  const condition = `non-fulfilling elements on indexes [${falseElements}]`
+  
+  return `The provided array have condition ${condition}. `;
+}
+
+export const arrayTruthError = (falseElements, truthMessage=defaultArrayTruthMessage) => {
+  const TMessage = arrayTruthHeader(falseElements) + truthMessage;
+
+  return buildError(TypeError, TMessage);
+}

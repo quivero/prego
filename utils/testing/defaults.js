@@ -7,3 +7,5 @@ export const defaultOrganization = {
     "prepare": identityCallback,
     "teardown": emptyCallback
   }
+
+export const defaultArrayTruthMessage = "The requirement warning message is not provided.";

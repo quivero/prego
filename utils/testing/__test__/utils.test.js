@@ -1,10 +1,7 @@
 import { assert } from '../assertions';
+import { isTrue, isFalse, areTrue } from '../checkers';
 import { expectAssertions, expectToBe, expectToStrictEqual } from '../expectTo';
-import {
-  isTrue, isFalse, areTrue,
-  whosWhat, whosTrue, whosFalse,
-  areArrayElements, allIndexes
-} from '../utils'
+import { whosWhat, whosTrue, whosFalse, areArrayElements, allIndexes } from '../utils'
 
 describe(
     "utils",

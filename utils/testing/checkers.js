@@ -2,6 +2,14 @@ import { defaultOrganization } from "./defaults";
 import _, { isArray, union, intersection, isObject } from "lodash";
 
 /*-------------------------*\
+ | General                 |
+\*-------------------------*/
+
+export const isTrue = (element) => element === true;
+export const isFalse = (element) => element === false;
+export const areTrue = (array) => array.every(isTrue);
+
+/*-------------------------*\
  | Organization            |
 \*-------------------------*/
 
