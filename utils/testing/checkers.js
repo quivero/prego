@@ -31,14 +31,14 @@ export const areOrganizations = (candidates) => candidates.map(
   (candidate) => isOrganization(candidate)
 );
 
-/*-------------------------*\
- | Assert items            |
-\*-------------------------*/
+/*-------------------------------------------------*\
+ | Assert items                                    |
+\*-------------------------------------------------*/
 
 // Default item key strings
 let item2LengthKeys, item3LengthKeys;
-item2LengthKeys = ["result", "expectation"];
-item3LengthKeys = [...item2LengthKeys, "assertionMap"];
+item2LengthKeys = ["result", "assertionMap"];
+item3LengthKeys = [...item2LengthKeys, "expectation"];
 
 export const isAssertItem = (item) => {
   let keysCardinalityCondition;
@@ -60,7 +60,7 @@ export const isAssertItem = (item) => {
       intersection(object_keys, item2LengthKeys).length === 2 ||
       intersection(object_keys, item3LengthKeys).length === 3;
     functionTypeCondition = typeof item.assertionMap === "function";
-
+    
     return (
       keysCardinalityCondition &&
       necessaryKeysCondition &&
@@ -69,6 +69,20 @@ export const isAssertItem = (item) => {
   } else return false;
 };
 
-export const areAssertItem = (candidates) => candidates.map(
-  (candidate) => isAssertItem(candidate)
+
+export const areAssertItems = (candidates) => areTrue(
+  candidates.map(
+    (candidate) => isAssertItem(candidate)
+  )
 );
+
+
+/*-------------------------------------------------*\
+ | Assertifacts = Assert artifacts                 |
+\*-------------------------------------------------*/
+
+export const isAssertArtifact = (candidate) => {
+  return isArray(candidate) ? areAssertItems(candidate) : isAssertItem(candidate);
+};
+
+

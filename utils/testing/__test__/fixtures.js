@@ -1,17 +1,15 @@
 import _ from "lodash";
 import { zip } from "lodash";
 import {
-  assert,
-  batchAssert,
-  atest,
-  batchAtest,
+  assert, batchAssert, atest, batchAtest, rehearse
+} from "../assertions";
+import {
   buildScene,
   buildOrganization,
   buildAct,
-  buildPlay,
   buildRehearsal,
-  rehearse
-} from "../assertions";
+  buildPlay
+} from "../build"
 
 import {
   emptyCallback,
@@ -32,8 +30,8 @@ export const assertFixtures = [
 ];
 
 // Valid samples
-export const validAssertLength1Item = assertFixtures[0];
-export const validAssertLength2Item = assertFixtures[1];
+export const validAssertLength2Item = assertFixtures[0];
+export const validAssertLength3Item = assertFixtures[1];
 
 // Error-prone samples
 export const invalidAssertItemLength = ["42"];

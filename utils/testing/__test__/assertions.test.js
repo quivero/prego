@@ -9,8 +9,8 @@ import {
 
 import {
   assertFixtures,
-  validAssertLength1Item,
   validAssertLength2Item,
+  validAssertLength3Item,
   invalidAssertItemLength,
   invalidAssertCallbackItem,
   validAtestFixture,
@@ -27,7 +27,7 @@ describe(
       () => {
         hasAssertions()
         expectAssertions(1);
-        assert(validAssertLength1Item);
+        assert(validAssertLength2Item);
       }
     );
 
@@ -37,7 +37,7 @@ describe(
         hasAssertions();
         expectAssertions(1);
 
-        assert(validAssertLength2Item);
+        assert(validAssertLength3Item);
       }
     );
 
