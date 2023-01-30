@@ -7,4 +7,3 @@ export const defaultOrganization = {
     "prepare": identityCallback,
     "teardown": emptyCallback
   }
-  

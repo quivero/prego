@@ -1,11 +1,11 @@
-import _, { 
+import _, {
   isArray
 } from "lodash";
 
-import { 
+import {
     organizationCriteria,
     assertItemCriteria
-} from "./criteriaStrings";  
+} from "./criteriaStrings";
 
 export const buildError = (errorClass, errorMessage) => {
   return  {
@@ -23,18 +23,18 @@ export const assertionError = (fakeItem) => {
   const givenItemTypesMsg = `Given item has type ${itemType} with ${givenItemDescription}`;
 
   const invalidAssertItemMsg = assertItemCriteria + givenItemTypesMsg;
-  
+
   return buildError(TypeError, invalidAssertItemMsg);
 };
 
 export const organizationTypeError = (fakeOrganization) => {
   const fakeOrganizationType = typeof fakeOrganization;
   const fakeOrganizationKeys = fakeOrganizationType === "object" ? Object.keys(fakeOrganization) : "[]";
-  const fakeOrganizationValuesTypes = fakeOrganizationType === "object" ? 
+  const fakeOrganizationValuesTypes = fakeOrganizationType === "object" ?
     Object.values(fakeOrganization).map((value) => typeof value) : "[]";
-  
-  let invalidOrganizationObjectMsg = "";  
-  
+
+  let invalidOrganizationObjectMsg = "";
+
   const fakeOrganizationDescription = `keys [${fakeOrganizationKeys}] and value types [${fakeOrganizationValuesTypes}]`;
   const givenOrganizationMsg = `Given Organization has type ${fakeOrganizationType} with ${fakeOrganizationDescription}`;
 

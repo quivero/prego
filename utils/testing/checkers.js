@@ -11,17 +11,17 @@ export const possibleOrganizationKeys = Object.keys(defaultOrganization);
 export const isOrganization = (candidate) => {
   const candidateKeys = Object.keys(candidate);
   const organizationCandidateKeysUnion = union(possibleOrganizationKeys, candidateKeys);
-  
+
   const isObject_ = isObject(candidate);
   const objectKeysLowerEqualThan3 = candidateKeys.length <= 3;
   const areOrganizationKeys = organizationCandidateKeysUnion.length === 3;
-  
-  return isObject_ && objectKeysLowerEqualThan3 && areOrganizationKeys; 
+
+  return isObject_ && objectKeysLowerEqualThan3 && areOrganizationKeys;
 }
 
 export const areOrganizations = (candidates) => candidates.map(
   (candidate) => isOrganization(candidate)
-);  
+);
 
 /*-------------------------*\
  | Assert items            |
