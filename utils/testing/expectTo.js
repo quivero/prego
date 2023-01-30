@@ -32,15 +32,15 @@
 // [ x ] .toMatchObject(object)
 // [ x ] .toThrowErrorMatchingInlineSnapshot(inlineSnapshot)
 // [ x ] .toStrictEqual(value)
-// [   ] .toThrow(error?)
-// [   ] .toThrowErrorMatchingSnapshot(hint?)
-// [   ] .toMatchSnapshot(propertyMatchers?, hint?)
-// [   ] .toHaveProperty(keyPath, value?)
-// [   ] .toBeCloseTo(number, numDigits?)
-// [   ] .toMatchInlineSnapshot(propertyMatchers?, inlineSnapshot)
-// [   ] .toHaveBeenCalledWith(arg1, arg2, ...)
-// [   ] .toHaveBeenLastCalledWith(arg1, arg2, ...)
-// [   ] .toHaveBeenNthCalledWith(nthCall, arg1, arg2, ....)
+// [ x ] .toThrow(error?)
+// [ x ] .toThrowErrorMatchingSnapshot(hint?)
+// [ x ] .toMatchSnapshot(propertyMatchers?, hint?)
+// [ x ] .toHaveProperty(keyPath, value?)
+// [ x ] .toBeCloseTo(number, numDigits?)
+// [ x ] .toMatchInlineSnapshot(propertyMatchers?, inlineSnapshot)
+// [ x ] .toHaveBeenCalledWith(arg1, arg2, ...)
+// [ x ] .toHaveBeenLastCalledWith(arg1, arg2, ...)
+// [ x ] .toHaveBeenNthCalledWith(nthCall, arg1, arg2, ....)
 
 // 0 argument expectation
 export const expectToBeDefined = (result) => expect(result).toBeDefined();
@@ -124,9 +124,9 @@ export const expectToMatchInlineSnapshot = (result,
 export const expectToHaveBeenCalledWith = (result, ...args) =>
   expect(result).toHaveBeenCalledWith(...args);
 export const expectToHaveBeenLastCalledWith = (result, ...args) =>
-  toHaveBeenLastCalledWith(...args);
-export const expectToHaveBeenNthCalledWith = (functionHandler, callIndex, args) => {
-  expect(functionHandler).toHaveBeenNthCalledWith(callIndex, ...args)
+  expect(result).toHaveBeenLastCalledWith(...args);
+export const expectToHaveBeenNthCalledWith = (functionHandler, expectation) => {
+  expect(functionHandler).toHaveBeenNthCalledWith(expectation.callIndex, ...expectation.args);
 }
 
 // Asymmetric Matchers
@@ -161,5 +161,9 @@ export const notStringMatchingAsyMatch = (string_regexp) => expect.not.stringMat
 // [ x ] .assertions(number)
 // [ x ] .hasAssertions()
 
-export const expectAssertions = (number) => expect.assertions(number);
-export const expectHasAssertions = () => expect.hasAssertions()
+export const hasAssertions = () => expect.hasAssertions()
+export const expectAssertions = (number) => {
+  hasAssertions();
+  expect.assertions(number);
+};
+

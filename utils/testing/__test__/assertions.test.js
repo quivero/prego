@@ -1,14 +1,10 @@
 import {
-  assert,
-  batchAssert,
-  atest,
-  batchAtest,
+  assert, batchAssert, atest, batchAtest,
   // validate
 } from "../assertions";
 
 import {
-  expectHasAssertions,
-  expectAssertions
+  hasAssertions, expectAssertions
 } from "../expectTo"
 
 import {
@@ -29,7 +25,7 @@ describe(
     it(
       "should assert on result-callback pattern",
       () => {
-        expectHasAssertions()
+        hasAssertions()
         expectAssertions(1);
         assert(validAssertLength1Item);
       }
@@ -38,7 +34,7 @@ describe(
     it(
       "should assert on result-expected-callback pattern",
       () => {
-        expectHasAssertions();
+        hasAssertions();
         expectAssertions(1);
 
         assert(validAssertLength2Item);
@@ -61,7 +57,7 @@ describe(
     it(
       "should assert asserts in batch",
       () => {
-        expectHasAssertions();
+        hasAssertions();
         expectAssertions(assertFixtures.length);
 
         batchAssert(assertFixtures);
