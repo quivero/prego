@@ -1,5 +1,16 @@
 import { uniq } from "lodash";
+
 import { isTrue, isFalse, areTrue } from "./checkers";
+
+export const isCondition = (
+  condition, conditionCallback, args, error_msg, errorClass = Error
+) => {
+  if (condition) {
+    return conditionCallback(args);
+  } else {
+    throw errorClass(error_msg);
+  }
+};
 
 export const allIndexes = (arr, val) => arr.reduce(
   (acc, el, i) => (el === val ? [...acc, i] : acc), []

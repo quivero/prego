@@ -66,6 +66,27 @@ teardown = emptyCallback;
 organization = buildOrganization(setup, prepare, teardown);
 validAtestAct = buildAct(perform, organization);
 
+export const validOrganization1 = {"setup": () => {}};
+export const validOrganization2 = {"prepare": (x) => x};
+export const validOrganization3 = {"teardown": () => {}};
+export const validOrganization4 = { "setup": () => {}, "prepare": (x) => x };
+export const validOrganization5 = { "setup": () => {}, "teardown": () => {} };
+export const validOrganization6 = { 
+  "setup": () => {}, 
+  "prepare": (x) => x,
+  "teardown": () => {} 
+};
+
+export const validOrganizations = [ 
+  validOrganization1, validOrganization2, validOrganization3,
+  validOrganization4, validOrganization5, validOrganization6
+];
+
+export const invalidOrganization = {"setup_": () => {}};
+export const invalidOrganizations = [
+  validOrganization1, invalidOrganization
+];
+
 /*-------------------------
  | assert design
  *-------------------------*/

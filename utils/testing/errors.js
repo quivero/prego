@@ -1,11 +1,6 @@
-import _, {
-  isArray
-} from "lodash";
+import _, { isArray } from "lodash";
 
-import {
-    organizationCriteria,
-    assertItemCriteria
-} from "./criteriaStrings";
+import { organizationCriteria, assertItemCriteria } from "./criteriaStrings";
 import { defaultArrayTruthMessage } from "./defaults";
 
 export const buildError = (errorClass, errorMessage) => {

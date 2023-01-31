@@ -12,12 +12,15 @@ import {
 import { ones, isCyclicEqual } from "#utils/arrays/arrays";
 
 import {
-  batchAssert,
   expectToBe,
   expectToBeEqual,
   expectToStrictEqual,
   expectToBeDefined,
   expectToBeUndefined,
+} from "#utils/testing/expectTo.js";
+
+import {
+  batchAssert,
 } from "#utils/testing/assertions.js";
 
 import { throwError, warn } from "#utils/sys/sys.js";
@@ -61,9 +64,9 @@ describe("Graph", () => {
 
     graph = preamble();
     trivia = [
-      [graph.toString(graph.getVertexByKey(A.getKey())), "", expectToBe],
-      [graph.getVertexByKey(A.getKey()), A, expectToBe],
-      [graph.getVertexByKey(B.getKey()), B, expectToBe],
+      [graph.toString(graph.getVertexByKey(A.getKey())), expectToBe, ""],
+      [graph.getVertexByKey(A.getKey()), expectToBe, A],
+      [graph.getVertexByKey(B.getKey()), expectToBe, B],
     ];
 
     batchAssert(trivia);
@@ -540,19 +543,19 @@ describe("Graph", () => {
     const graphB = graph.getVertexByKey(B.getKey());
 
     trivia = [
-      [graph.getAllVertices().length, 2, expectToBeDefined],
-      [graph.getAllVertices()[0], A, expectToBeEqual],
-      [graph.getAllVertices()[1], B, expectToBeEqual],
-      [graph.toString(), "A_B", expectToBe],
+      [graph.getAllVertices().length, expectToBeDefined, 2 ],
+      [graph.getAllVertices()[0], expectToBeEqual, A ],
+      [graph.getAllVertices()[1], expectToBeEqual, B ],
+      [graph.toString(), expectToBe, "A_B" ],
       [graphA, expectToBeDefined],
       [graphB, expectToBeDefined],
-      [graph.getVertexByKey("unknown"), expectToBeUndefined],
-      [graphA.getNeighbors().length, 1, expectToBe],
-      [graphA.getNeighbors()[0], B, expectToBeEqual],
-      [graphA.getNeighbors()[0], graphB, expectToBeEqual],
-      [graphB.getNeighbors().length, 1, expectToBe],
-      [graphB.getNeighbors()[0], A, expectToBe],
-      [graphB.getNeighbors()[0], graphA, expectToBe],
+      [graph.getVertexByKey("unknown"), expectToBeUndefined ],
+      [graphA.getNeighbors().length, expectToBe, 1],
+      [graphA.getNeighbors()[0], expectToBeEqual, B],
+      [graphA.getNeighbors()[0], expectToBeEqual, graphB],
+      [graphB.getNeighbors().length, expectToBe, 1],
+      [graphB.getNeighbors()[0], expectToBe, A],
+      [graphB.getNeighbors()[0], expectToBe, graphA],
     ];
 
     batchAssert(trivia);
@@ -568,13 +571,13 @@ describe("Graph", () => {
     const graphB = graph.getVertexByKey(B.getKey());
 
     trivia = [
-      [graph.toString(), "A_B", expectToBe],
+      [graph.toString(), expectToBe, "A_B"],
       [graphA, expectToBeDefined],
       [graphB, expectToBeDefined],
-      [graphA.getNeighbors().length, 1, expectToBe],
-      [graphA.getNeighbors()[0], B, expectToBeEqual],
-      [graphA.getNeighbors()[0], graphB, expectToBeEqual],
-      [graphB.getNeighbors().length, 0, expectToBe],
+      [graphA.getNeighbors().length, expectToBe, 1       ],
+      [graphA.getNeighbors()[0], expectToBeEqual, B      ],
+      [graphA.getNeighbors()[0], expectToBeEqual, graphB ],
+      [graphB.getNeighbors().length, expectToBe, 0       ],
     ];
 
     batchAssert(trivia);
@@ -590,8 +593,8 @@ describe("Graph", () => {
     graph.addEdge(AB);
 
     trivia = [
-      [graph.hasVertex(A.getKey()), true, expectToBe],
-      [graph.hasEdge(AB.getKey()), true, expectToBe],
+      [graph.hasVertex(A.getKey()), expectToBe, true],
+      [graph.hasEdge(AB.getKey()),  expectToBe, true],
     ];
 
     batchAssert(trivia);
@@ -640,7 +643,7 @@ describe("Graph", () => {
     // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
       [A, B],
-      [B, C],
+      [B, C], 
       [C, D],
       [C, E],
       [E, B],
@@ -746,8 +749,8 @@ describe("Graph", () => {
     graph.addEdges([AB, BC, CD]);
 
     trivia = [
-      [graph.isEulerian(), false, expectToStrictEqual],
-      [graph.isEulerianCycle(), false, expectToStrictEqual],
+      [graph.isEulerian(),      expectToStrictEqual, false],
+      [graph.isEulerianCycle(), expectToStrictEqual, false],
     ];
 
     batchAssert(trivia);
@@ -765,8 +768,8 @@ describe("Graph", () => {
     graph.addEdges([AB, BC, CD, DA]);
 
     trivia = [
-      [graph.isEulerian(), true, expectToStrictEqual],
-      [graph.isEulerianCycle(), true, expectToStrictEqual],
+      [graph.isEulerian(), expectToStrictEqual, true],
+      [graph.isEulerianCycle(), expectToStrictEqual, true],
     ];
 
     batchAssert(trivia);
@@ -906,19 +909,17 @@ describe("Graph", () => {
 
     trivia = [
       [
-        graph.getInOutDegreeList(0),
+        graph.getInOutDegreeList(0), expectToBeEqual,
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
-        expectToBeEqual,
       ],
       [
-        graph.getInOutDegreeList(1),
+        graph.getInOutDegreeList(1), expectToBeEqual,
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
-        expectToBeEqual,
       ],
-      [graph.volume(_.range(n_vertices), 0), 6, expectToBeEqual],
-      [graph.volume(_.range(n_vertices), 1), 6, expectToBeEqual],
-      [graph.getForwardDegrees(), ones(6), expectToBeEqual],
-      [graph.getReverseDegrees(), ones(6), expectToBeEqual],
+      [graph.volume(_.range(n_vertices), 0), expectToBeEqual, 6       ],
+      [graph.volume(_.range(n_vertices), 1), expectToBeEqual, 6       ],
+      [graph.getForwardDegrees(),            expectToBeEqual, ones(6) ],
+      [graph.getReverseDegrees(),            expectToBeEqual, ones(6) ],
     ];
 
     batchAssert(trivia);
@@ -1119,9 +1120,9 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 2, expectToBe],
-      [articulationPointsSet[0], vertices_indices[C.getKey()], expectToBe],
-      [articulationPointsSet[1], vertices_indices[B.getKey()], expectToBe],
+      [articulationPointsSet.length, expectToBe, 2],
+      [articulationPointsSet[0], expectToBe, vertices_indices[C.getKey()]],
+      [articulationPointsSet[1], expectToBe, vertices_indices[B.getKey()]],
     ];
 
     batchAssert(trivia);
@@ -1200,8 +1201,8 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 1, expectToBe],
-      [articulationPointsSet[0], vertices_indices[C.getKey()], expectToBe],
+      [articulationPointsSet.length, expectToBe, 1],
+      [articulationPointsSet[0], expectToBe, vertices_indices[C.getKey()]],
     ];
 
     batchAssert(trivia);
@@ -1247,11 +1248,11 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 4, expectToBe],
-      [articulationPointsSet[0], vertices_indices[F.getKey()], expectToBe],
-      [articulationPointsSet[1], vertices_indices[E.getKey()], expectToBe],
-      [articulationPointsSet[2], vertices_indices[D.getKey()], expectToBe],
-      [articulationPointsSet[3], vertices_indices[C.getKey()], expectToBe],
+      [articulationPointsSet.length, expectToBe, 4],
+      [articulationPointsSet[0], expectToBe, vertices_indices[F.getKey()]],
+      [articulationPointsSet[1], expectToBe, vertices_indices[E.getKey()]],
+      [articulationPointsSet[2], expectToBe, vertices_indices[D.getKey()]],
+      [articulationPointsSet[3], expectToBe, vertices_indices[C.getKey()]],
     ];
 
     batchAssert(trivia);
@@ -1278,11 +1279,11 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 4, expectToBe],
-      [articulationPointsSet[0], vertices_indices[F.getKey()], expectToBe],
-      [articulationPointsSet[1], vertices_indices[E.getKey()], expectToBe],
-      [articulationPointsSet[2], vertices_indices[C.getKey()], expectToBe],
-      [articulationPointsSet[3], vertices_indices[D.getKey()], expectToBe],
+      [articulationPointsSet.length, expectToBe, 4],
+      [articulationPointsSet[0], expectToBe, vertices_indices[F.getKey()]],
+      [articulationPointsSet[1], expectToBe, vertices_indices[E.getKey()]],
+      [articulationPointsSet[2], expectToBe, vertices_indices[C.getKey()]],
+      [articulationPointsSet[3], expectToBe, vertices_indices[D.getKey()]],
     ];
 
     batchAssert(trivia);
@@ -1306,9 +1307,9 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 2, expectToBe],
-      [articulationPointsSet[0], vertices_indices[D.getKey()], expectToBe],
-      [articulationPointsSet[1], vertices_indices[C.getKey()], expectToBe],
+      [articulationPointsSet.length, expectToBe, 2],
+      [articulationPointsSet[0], expectToBe, vertices_indices[D.getKey()]],
+      [articulationPointsSet[1], expectToBe, vertices_indices[C.getKey()]],
     ];
 
     batchAssert(trivia);
@@ -1396,8 +1397,8 @@ describe("Graph", () => {
     const vertices_indices = graph.getVerticesKeystoIndices();
 
     trivia = [
-      [articulationPointsSet.length, 1, expectToBe],
-      [articulationPointsSet[0], vertices_indices[C.getKey()], expectToBe],
+      [articulationPointsSet.length, expectToBe, 1],
+      [articulationPointsSet[0], expectToBe, vertices_indices[C.getKey()]],
     ];
 
     batchAssert(trivia);
@@ -1475,8 +1476,8 @@ describe("Graph", () => {
     const edges = graph.getBridgeEdges();
 
     trivia = [
-      [edges[0].getKey(), "E_F", expectToBeEqual],
-      [edges[1].getKey(), "A_B", expectToBeEqual],
+      [edges[0].getKey(), expectToBeEqual, "E_F"],
+      [edges[1].getKey(), expectToBeEqual, "A_B"],
     ];
 
     batchAssert(trivia);
@@ -1553,79 +1554,72 @@ describe("Graph", () => {
     trivia = [
       [
         graph.islands(),
+        expectToStrictEqual,
         {
           0: { bridge_ends: [3], inner_vertices: [4, 5] },
           1: { bridge_ends: [1], inner_vertices: [0, 2] },
         },
-        expectToStrictEqual,
       ],
       [
         graph.islandsHabitants(),
-        { 0: [3, 4, 5], 1: [1, 0, 2] },
         expectToStrictEqual,
+        { 0: [3, 4, 5], 1: [1, 0, 2] },
       ],
       [
         graph.getIslandBridgeEndIODict(),
-        { 0: { source: [], target: [3] }, 1: { source: [1], target: [] } },
         expectToStrictEqual,
+        { 0: { source: [], target: [3] }, 1: { source: [1], target: [] } },
       ],
       [
         graph.getIslandInnerReachability(),
+        expectToStrictEqual,
         {
           0: { 3: [4, 5], 4: [5], 5: [] },
           1: { 0: [1, 2], 1: [], 2: [1] },
         },
-        expectToStrictEqual,
       ],
       [
         graph.getIslandIOReachability(),
-        { 0: { 3: [] }, 1: {} },
         expectToStrictEqual,
+        { 0: { 3: [] }, 1: {} },
       ],
       [
         graph.getIslandToBridgeEndList(),
-        { 0: [3], 1: [1] },
         expectToStrictEqual,
+        { 0: [3], 1: [1] },
       ],
-      [graph.getBridgeEndToIsland(), { 3: 0, 1: 1 }, expectToStrictEqual],
-      [graph.getIslandFromBridgeEnd(3), 0, expectToStrictEqual],
-      [graph.getIslandFromBridgeEnd(1), 1, expectToStrictEqual],
+      [graph.getBridgeEndToIsland(), expectToStrictEqual, { 3: 0, 1: 1 }],
+      [graph.getIslandFromBridgeEnd(3), expectToStrictEqual, 0],
+      [graph.getIslandFromBridgeEnd(1), expectToStrictEqual, 1],
       [
         graph.getIslandsToFromBridgeEnd(),
-        { 0: { from: [1], to: [] }, 1: { from: [], to: [3] } },
         expectToStrictEqual,
+        { 0: { from: [1], to: [] }, 1: { from: [], to: [3] } },
       ],
       [
         graph
           .getIslandGraph()
           .getAllEdges()
           .map((edge) => edge.getKey()),
-        ["1_0"],
         expectToStrictEqual,
+        ["1_0"],
       ],
       [
         graph.getIslandToBridgeEndList(),
-        { 0: [3], 1: [1] },
         expectToStrictEqual,
+        { 0: [3], 1: [1] },
       ],
-      [graph.getIslandsAdjacencyList(), { 0: [], 1: [0] }, expectToStrictEqual],
+      [graph.getIslandsAdjacencyList(), expectToStrictEqual, { 0: [], 1: [0] }],
       [
         graph.getIslandsFromToIslands(),
-        {
-          0: { to: [], from: [1] },
-          1: { to: [0], from: [] },
-        },
         expectToStrictEqual,
+        { 0: { to: [], from: [1] }, 1: { to: [0], from: [] } },
       ],
       [
-        islands_graphs[0].getAllVerticesKeys(),
-        ["D", "E", "F"],
-        expectToStrictEqual,
+        islands_graphs[0].getAllVerticesKeys(), expectToStrictEqual, ["D", "E", "F"], 
       ],
       [
-        islands_graphs[1].getAllVerticesKeys(),
-        ["A", "B", "C"],
-        expectToStrictEqual,
+        islands_graphs[1].getAllVerticesKeys(), expectToStrictEqual, ["A", "B", "C"],
       ],
     ];
 
@@ -1682,9 +1676,9 @@ describe("Graph", () => {
     trivia = [
       [graphAC, expectToBeUndefined],
       [graphCA, expectToBeUndefined],
-      [graphAB, AB, expectToBeEqual],
-      [graphEdgeBA, AB, expectToBeEqual],
-      [graphAB.weight, 10, expectToBe],
+      [graphAB, expectToBeEqual, AB ],
+      [graphEdgeBA, expectToBeEqual, AB ],
+      [graphAB.weight, expectToBe, 10],
     ];
 
     batchAssert(trivia);
@@ -1706,8 +1700,8 @@ describe("Graph", () => {
       [graphAC, expectToBeUndefined],
       [graphCA, expectToBeUndefined],
       [graphEdgeBA, expectToBeUndefined],
-      [graphAB, AB, expectToBe],
-      [graphAB.weight, 10, expectToBe],
+      [graphAB, expectToBe, AB],
+      [graphAB.weight, expectToBe, 10],
     ];
 
     batchAssert(trivia);
@@ -1726,9 +1720,9 @@ describe("Graph", () => {
     const neighbors = graph.getNeighbors(A);
 
     trivia = [
-      [neighbors.length, 2, expectToBeEqual],
-      [neighbors[0], B, expectToBeEqual],
-      [neighbors[1], C, expectToBeEqual],
+      [neighbors.length, expectToBeEqual, 2],
+      [neighbors[0], expectToBeEqual, B],
+      [neighbors[1], expectToBeEqual, C],
     ];
 
     batchAssert(trivia);
@@ -1746,8 +1740,8 @@ describe("Graph", () => {
     const neighbors = graph.getVerticesNeighbours([0]);
 
     trivia = [
-      [neighbors[0].length, 2, expectToBe],
-      [_.isEqual(neighbors[0], [1, 2]), true, expectToBe],
+      [neighbors[0].length, expectToBe, 2],
+      [_.isEqual(neighbors[0], [1, 2]), expectToBe, true],
     ];
 
     batchAssert(trivia);
@@ -1784,8 +1778,8 @@ describe("Graph", () => {
     );
 
     trivia = [
-      [graph.isReachable("A", "C"), true, expectToBe],
-      [graph.isReachable("A", "D"), false, expectToBe],
+      [graph.isReachable("A", "C"), expectToBe, true],
+      [graph.isReachable("A", "D"), expectToBe, false],
     ];
 
     batchAssert(trivia);
@@ -1802,8 +1796,8 @@ describe("Graph", () => {
     );
 
     trivia = [
-      [graph.isPredecessor("B", "A"), true, expectToBe],
-      [graph.isPredecessor("C", "A"), false, expectToBe],
+      [graph.isPredecessor("B", "A"), expectToBe, true],
+      [graph.isPredecessor("C", "A"), expectToBe, false],
     ];
 
     batchAssert(trivia);
@@ -1820,8 +1814,8 @@ describe("Graph", () => {
     graph.addEdges([AB, BC]);
 
     trivia = [
-      [graph.isPredecessor("B", "A"), true, expectToBe],
-      [graph.isPredecessor("C", "A"), false, expectToBe],
+      [graph.isPredecessor("B", "A"), expectToBe, true],
+      [graph.isPredecessor("C", "A"), expectToBe, false],
     ];
 
     batchAssert(trivia);
@@ -1938,9 +1932,9 @@ describe("Graph", () => {
     edges = graph.getAllEdges();
 
     trivia = [
-      [edges.length, 2, expectToBe],
-      [edges[0], AB, expectToBeEqual],
-      [edges[1], BC, expectToBeEqual],
+      [edges.length, expectToBe, 2],
+      [edges[0], expectToBeEqual, AB],
+      [edges[1], expectToBeEqual, BC],
     ];
 
     batchAssert(trivia);
@@ -2007,9 +2001,9 @@ describe("Graph", () => {
     graph.addVertices([A, B, C]);
 
     trivia = [
-      [graph.getVertexIndex(A), 0, expectToBeEqual],
-      [graph.getVertexIndex(B), 1, expectToBeEqual],
-      [graph.getVertexIndex(C), 2, expectToBeEqual],
+      [graph.getVertexIndex(A), expectToBeEqual, 0],
+      [graph.getVertexIndex(B), expectToBeEqual, 1],
+      [graph.getVertexIndex(C), expectToBeEqual, 2],
     ];
 
     batchAssert(trivia);
@@ -2074,17 +2068,12 @@ describe("Graph", () => {
     graph.deleteEdge(AB);
 
     trivia = [
-      [graph.getAllEdges().length, 2],
-      [graph.getAllEdges()[0].getKey(), BC.getKey()],
-      [graph.getAllEdges()[1].getKey(), AC.getKey()],
+      [graph.getAllEdges().length, expectToBe, 2],
+      [graph.getAllEdges()[0].getKey(), expectToBe, BC.getKey()],
+      [graph.getAllEdges()[1].getKey(), expectToBe, AC.getKey()],
     ];
 
-    for (const element of trivia) {
-      result = element[0];
-      expected = element[1];
-
-      expect(result).toBe(expected);
-    }
+    batchAssert(trivia);
 
     graph.deleteEdges(graph.getAllEdges());
 
@@ -2333,27 +2322,27 @@ describe("Graph", () => {
     }
 
     trivia = [
-      [hamiltonianCycleSet.length, 8, expectToBe],
-      [hamiltonianCycleSet[0][0], keysToIds[A.getKey()], expectToBe],
-      [hamiltonianCycleSet[0][1], keysToIds[B.getKey()], expectToBe],
-      [hamiltonianCycleSet[0][2], keysToIds[E.getKey()], expectToBe],
-      [hamiltonianCycleSet[0][3], keysToIds[D.getKey()], expectToBe],
-      [hamiltonianCycleSet[0][4], keysToIds[C.getKey()], expectToBe],
-      [hamiltonianCycleSet[1][0], keysToIds[A.getKey()], expectToBe],
-      [hamiltonianCycleSet[1][1], keysToIds[B.getKey()], expectToBe],
-      [hamiltonianCycleSet[1][2], keysToIds[C.getKey()], expectToBe],
-      [hamiltonianCycleSet[1][3], keysToIds[D.getKey()], expectToBe],
-      [hamiltonianCycleSet[1][4], keysToIds[E.getKey()], expectToBe],
-      [hamiltonianCycleSet[2][0], keysToIds[A.getKey()], expectToBe],
-      [hamiltonianCycleSet[2][1], keysToIds[E.getKey()], expectToBe],
-      [hamiltonianCycleSet[2][2], keysToIds[B.getKey()], expectToBe],
-      [hamiltonianCycleSet[2][3], keysToIds[D.getKey()], expectToBe],
-      [hamiltonianCycleSet[2][4], keysToIds[C.getKey()], expectToBe],
-      [hamiltonianCycleSet[3][0], keysToIds[A.getKey()], expectToBe],
-      [hamiltonianCycleSet[3][1], keysToIds[E.getKey()], expectToBe],
-      [hamiltonianCycleSet[3][2], keysToIds[D.getKey()], expectToBe],
-      [hamiltonianCycleSet[3][3], keysToIds[B.getKey()], expectToBe],
-      [hamiltonianCycleSet[3][4], keysToIds[C.getKey()], expectToBe],
+      [hamiltonianCycleSet.length, expectToBe, 8],
+      [hamiltonianCycleSet[0][0], expectToBe, keysToIds[A.getKey()]],
+      [hamiltonianCycleSet[0][1], expectToBe, keysToIds[B.getKey()]],
+      [hamiltonianCycleSet[0][2], expectToBe, keysToIds[E.getKey()]],
+      [hamiltonianCycleSet[0][3], expectToBe, keysToIds[D.getKey()]],
+      [hamiltonianCycleSet[0][4], expectToBe, keysToIds[C.getKey()]],
+      [hamiltonianCycleSet[1][0], expectToBe, keysToIds[A.getKey()]],
+      [hamiltonianCycleSet[1][1], expectToBe, keysToIds[B.getKey()]],
+      [hamiltonianCycleSet[1][2], expectToBe, keysToIds[C.getKey()]],
+      [hamiltonianCycleSet[1][3], expectToBe, keysToIds[D.getKey()]],
+      [hamiltonianCycleSet[1][4], expectToBe, keysToIds[E.getKey()]],
+      [hamiltonianCycleSet[2][0], expectToBe, keysToIds[A.getKey()]],
+      [hamiltonianCycleSet[2][1], expectToBe, keysToIds[E.getKey()]],
+      [hamiltonianCycleSet[2][2], expectToBe, keysToIds[B.getKey()]],
+      [hamiltonianCycleSet[2][3], expectToBe, keysToIds[D.getKey()]],
+      [hamiltonianCycleSet[2][4], expectToBe, keysToIds[C.getKey()]],
+      [hamiltonianCycleSet[3][0], expectToBe, keysToIds[A.getKey()]],
+      [hamiltonianCycleSet[3][1], expectToBe, keysToIds[E.getKey()]],
+      [hamiltonianCycleSet[3][2], expectToBe, keysToIds[D.getKey()]],
+      [hamiltonianCycleSet[3][3], expectToBe, keysToIds[B.getKey()]],
+      [hamiltonianCycleSet[3][4], expectToBe, keysToIds[C.getKey()]],
     ];
 
     batchAssert(trivia);
@@ -2420,38 +2409,38 @@ describe("Graph", () => {
     const hamiltonianCycleSet = graph.allPaths("C");
 
     trivia = [
-      [hamiltonianCycleSet.length, 8, expectToBe],
+      [hamiltonianCycleSet.length, expectToBe, 8],
       [
         isCyclicEqual(
           hamiltonianCycleSet[0].slice(1),
           assertHamiltonianCycles[0]
         ),
-        true,
         expectToBe,
+        true,
       ],
       [
         isCyclicEqual(
           hamiltonianCycleSet[1].slice(1),
           assertHamiltonianCycles[1]
         ),
-        true,
         expectToBe,
+        true,
       ],
       [
         isCyclicEqual(
           hamiltonianCycleSet[2].slice(1),
           assertHamiltonianCycles[2]
         ),
-        true,
         expectToBe,
+        true,
       ],
       [
         isCyclicEqual(
           hamiltonianCycleSet[3].slice(1),
           assertHamiltonianCycles[3]
         ),
-        true,
         expectToBe,
+        true,
       ],
     ];
 

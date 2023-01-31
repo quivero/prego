@@ -1,14 +1,16 @@
 import { isArray, isFunction } from "lodash";
-import { isCondition } from "../sys/sys";
+
+import { isCondition } from "./utils";
 import { 
-    isAssertItem, 
-    isOrganization, 
-    possibleOrganizationKeys 
+  isAssertItem, 
+  isOrganization, 
+  possibleOrganizationKeys 
 } from "./checkers";
 import { 
-    organizationTypeError, 
-    assertionError 
+  organizationTypeError, 
+  assertionError 
 } from "./errors";
+import { rehearse, validate } from "./assertions";
 
 
 export const buildScene = (item) => {
@@ -80,39 +82,37 @@ export const fillOrganization = (candidate) => {
   );
 }
 
+const actCallback = (actArgs) => {
+  return {
+    setup: actArgs.organization.setup,
+    prepare: actArgs.organization.prepare,
+    perform: actArgs.performance,
+    teardown: actArgs.organization.teardown
+  }
+};
 
 export const buildAct = (script, organization=defaultOrganization) => {
-  const organization_ = fillOrganization(organization);
-  const isFunction_ = isFunction(script);
+  organization = fillOrganization(organization);
   
-  let actArgs = {};
-  
-  actArgs.organization = organization_;
-  actArgs.perform = script;
-
-  const actCallback = (actArgs_) => {
-      return {
-      setup: actArgs_.organization.setup,
-      prepare: actArgs_.organization.prepare,
-      perform: actArgs_.perform,
-      teardown: actArgs_.organization.teardown
-      }
+  let actArgs = {
+    "organization": organization,
+    "performance": script
   };
 
   const actDescription = "a function with 1 input and output argument";
   const actPerformCriterium = `First argument \"perform\" must be ${actDescription}`;
   
   return isCondition(
-      isFunction_, actCallback, actArgs,
-      actPerformCriterium, TypeError
+    isFunction(script), actCallback, actArgs, 
+    actPerformCriterium, TypeError
   );
 };
 
 
-export const buildRehearsal = (name, rehearsalCallback) => {
+export const buildRehearsal = (name, acts) => {
   return {
       name: name,
-      callback: rehearsalCallback,
+      callback: () => rehearse(acts),
   };
 };
 
@@ -120,6 +120,6 @@ export const buildRehearsal = (name, rehearsalCallback) => {
 export const buildPlay = (description, rehearsals) => {
   return {
       description: description,
-      callback: () => rehearse(rehearsals),
+      callback: () => validate(rehearsals),
   };
 };

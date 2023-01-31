@@ -1,5 +1,6 @@
-import { defaultOrganization } from "./defaults";
 import _, { isArray, union, intersection, isObject } from "lodash";
+
+import { defaultOrganization } from "./defaults";
 
 /*-------------------------*\
  | General                 |
@@ -27,8 +28,8 @@ export const isOrganization = (candidate) => {
   return isObject_ && objectKeysLowerEqualThan3 && areOrganizationKeys;
 }
 
-export const areOrganizations = (candidates) => candidates.map(
-  (candidate) => isOrganization(candidate)
+export const areOrganizations = (candidates) => areTrue(
+  candidates.map( (candidate) => isOrganization(candidate) )
 );
 
 /*-------------------------------------------------*\
@@ -60,7 +61,7 @@ export const isAssertItem = (item) => {
       intersection(object_keys, item2LengthKeys).length === 2 ||
       intersection(object_keys, item3LengthKeys).length === 3;
     functionTypeCondition = typeof item.assertionMap === "function";
-    
+
     return (
       keysCardinalityCondition &&
       necessaryKeysCondition &&

@@ -1,55 +1,70 @@
 import { assert, batchAssert } from "../assertions";
-import { areAssertItems, isAssertArtifact, isAssertItem } from "../checkers";
+import { 
+  areAssertItems, 
+  areOrganizations, 
+  isAssertArtifact, 
+  isAssertItem 
+} from "../checkers";
 import { expectToBeEqual } from "../expectTo";
 import { 
   assertFixtures, 
   validAssertLength2Item,
   validAssertLength3Item,
   invalidAssertItemLength, 
-  invalidAssertCallbackItem
+  invalidAssertCallbackItem,
+  validOrganizations
 } from "./fixtures";
+
+let assertItem, assertItems;
 
 describe(
     "checkers",
     () => {
       it(
-        "should assert on default truth message",
+        "should assert checker areAssertItems",
         () => {
-            const assertItem = [
-                areAssertItems(assertFixtures),
-                expectToBeEqual,
-                true
-            ];
-            
+            assertItem = [ areAssertItems(assertFixtures), expectToBeEqual, true ];
             assert(assertItem);
         }
       );
       it(
-        "should assert on default truth message",
+        "should batchAssert checker isAssertArtifact",
         () => {
-            const assertItem = [
-                [
-                  isAssertArtifact(assertFixtures), expectToBeEqual, true
-                ],
-                [
-                  isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false
-                ] 
+            assertItems = [
+                [ isAssertArtifact(assertFixtures), expectToBeEqual, true ],
+                [ isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false ] 
             ];
             
-            batchAssert(assertItem);
+            batchAssert(assertItems);
         }
       );
       it(
-        "should assert on default truth message",
+        "should batchAssert checker isAssertItem",
         () => {
-            const assertItem = [
+            assertItems = [
                 [ isAssertItem(validAssertLength2Item), expectToBeEqual, true ],
                 [ isAssertItem(validAssertLength3Item), expectToBeEqual, true ],
                 [ isAssertItem(invalidAssertItemLength), expectToBeEqual, false ],
                 [ isAssertItem(invalidAssertCallbackItem), expectToBeEqual, false ],
             ];
             
-            batchAssert(assertItem);
+            batchAssert(assertItems);
+        }
+      );
+      it(
+        "should assert ",
+        () => {
+            assertItem = [ areOrganizations(validOrganizations), expectToBeEqual, true ];
+            
+            assert(assertItem);
+        }
+      );
+      it(
+        "should return true/false on valid/invalid assert items",
+        () => {
+            assertItem = [ areOrganizations(validOrganizations), expectToBeEqual, true ];
+            
+            assert(assertItem);
         }
       );
     }

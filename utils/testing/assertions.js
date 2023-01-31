@@ -1,6 +1,6 @@
 import _, { isArray } from "lodash";
 import { assertionError } from "./errors";
-import { isCondition } from "../sys/sys";
+import { isCondition } from "./utils";
 import { isAssertItem } from "./checkers";
 import { buildScene } from "./build";
 
@@ -61,11 +61,21 @@ export const batchAtest = (fixtures, acts) => {
   );
 };
 
-export const rehearse = (auditions) =>
-  auditions.forEach((scene) => it(scene.description, scene.callback));
+
+export const rehearse = (acts) =>
+  acts.forEach(
+    (act) => it(act.description, act.callback)
+  );
+
 
 export const validate = (rehearsals) => {
   rehearsals.forEach(
     (rehearsal) => describe(rehearsal.name, rehearsal.callback)
+  );
+};
+
+export const cast = (plays) => {
+  plays.forEach(
+    (play) => describe(play.description, play.callback)
   );
 };

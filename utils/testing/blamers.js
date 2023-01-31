@@ -1,4 +1,4 @@
-import { isCondition } from "../sys/sys";
+import { isCondition } from "./utils";
 import { defaultArrayTruthMessage } from "./defaults";
 import { arrayTruthError } from "./errors";
 
