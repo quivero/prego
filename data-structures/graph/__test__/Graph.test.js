@@ -19,9 +19,7 @@ import {
   expectToBeUndefined,
 } from "#utils/testing/expectTo.js";
 
-import {
-  batchAssert,
-} from "#utils/testing/assertions.js";
+import { batchAssert } from "#utils/testing/assertions.js";
 
 import { throwError, warn } from "#utils/sys/sys.js";
 
@@ -543,13 +541,13 @@ describe("Graph", () => {
     const graphB = graph.getVertexByKey(B.getKey());
 
     trivia = [
-      [graph.getAllVertices().length, expectToBeDefined, 2 ],
-      [graph.getAllVertices()[0], expectToBeEqual, A ],
-      [graph.getAllVertices()[1], expectToBeEqual, B ],
-      [graph.toString(), expectToBe, "A_B" ],
+      [graph.getAllVertices().length, expectToBeDefined, 2],
+      [graph.getAllVertices()[0], expectToBeEqual, A],
+      [graph.getAllVertices()[1], expectToBeEqual, B],
+      [graph.toString(), expectToBe, "A_B"],
       [graphA, expectToBeDefined],
       [graphB, expectToBeDefined],
-      [graph.getVertexByKey("unknown"), expectToBeUndefined ],
+      [graph.getVertexByKey("unknown"), expectToBeUndefined],
       [graphA.getNeighbors().length, expectToBe, 1],
       [graphA.getNeighbors()[0], expectToBeEqual, B],
       [graphA.getNeighbors()[0], expectToBeEqual, graphB],
@@ -574,10 +572,10 @@ describe("Graph", () => {
       [graph.toString(), expectToBe, "A_B"],
       [graphA, expectToBeDefined],
       [graphB, expectToBeDefined],
-      [graphA.getNeighbors().length, expectToBe, 1       ],
-      [graphA.getNeighbors()[0], expectToBeEqual, B      ],
-      [graphA.getNeighbors()[0], expectToBeEqual, graphB ],
-      [graphB.getNeighbors().length, expectToBe, 0       ],
+      [graphA.getNeighbors().length, expectToBe, 1],
+      [graphA.getNeighbors()[0], expectToBeEqual, B],
+      [graphA.getNeighbors()[0], expectToBeEqual, graphB],
+      [graphB.getNeighbors().length, expectToBe, 0],
     ];
 
     batchAssert(trivia);
@@ -594,7 +592,7 @@ describe("Graph", () => {
 
     trivia = [
       [graph.hasVertex(A.getKey()), expectToBe, true],
-      [graph.hasEdge(AB.getKey()),  expectToBe, true],
+      [graph.hasEdge(AB.getKey()), expectToBe, true],
     ];
 
     batchAssert(trivia);
@@ -643,7 +641,7 @@ describe("Graph", () => {
     // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
       [A, B],
-      [B, C], 
+      [B, C],
       [C, D],
       [C, E],
       [E, B],
@@ -749,7 +747,7 @@ describe("Graph", () => {
     graph.addEdges([AB, BC, CD]);
 
     trivia = [
-      [graph.isEulerian(),      expectToStrictEqual, false],
+      [graph.isEulerian(), expectToStrictEqual, false],
       [graph.isEulerianCycle(), expectToStrictEqual, false],
     ];
 
@@ -909,17 +907,19 @@ describe("Graph", () => {
 
     trivia = [
       [
-        graph.getInOutDegreeList(0), expectToBeEqual,
+        graph.getInOutDegreeList(0),
+        expectToBeEqual,
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
       ],
       [
-        graph.getInOutDegreeList(1), expectToBeEqual,
+        graph.getInOutDegreeList(1),
+        expectToBeEqual,
         { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },
       ],
-      [graph.volume(_.range(n_vertices), 0), expectToBeEqual, 6       ],
-      [graph.volume(_.range(n_vertices), 1), expectToBeEqual, 6       ],
-      [graph.getForwardDegrees(),            expectToBeEqual, ones(6) ],
-      [graph.getReverseDegrees(),            expectToBeEqual, ones(6) ],
+      [graph.volume(_.range(n_vertices), 0), expectToBeEqual, 6],
+      [graph.volume(_.range(n_vertices), 1), expectToBeEqual, 6],
+      [graph.getForwardDegrees(), expectToBeEqual, ones(6)],
+      [graph.getReverseDegrees(), expectToBeEqual, ones(6)],
     ];
 
     batchAssert(trivia);
@@ -1616,10 +1616,14 @@ describe("Graph", () => {
         { 0: { to: [], from: [1] }, 1: { to: [0], from: [] } },
       ],
       [
-        islands_graphs[0].getAllVerticesKeys(), expectToStrictEqual, ["D", "E", "F"], 
+        islands_graphs[0].getAllVerticesKeys(),
+        expectToStrictEqual,
+        ["D", "E", "F"],
       ],
       [
-        islands_graphs[1].getAllVerticesKeys(), expectToStrictEqual, ["A", "B", "C"],
+        islands_graphs[1].getAllVerticesKeys(),
+        expectToStrictEqual,
+        ["A", "B", "C"],
       ],
     ];
 
@@ -1676,8 +1680,8 @@ describe("Graph", () => {
     trivia = [
       [graphAC, expectToBeUndefined],
       [graphCA, expectToBeUndefined],
-      [graphAB, expectToBeEqual, AB ],
-      [graphEdgeBA, expectToBeEqual, AB ],
+      [graphAB, expectToBeEqual, AB],
+      [graphEdgeBA, expectToBeEqual, AB],
       [graphAB.weight, expectToBe, 10],
     ];
 

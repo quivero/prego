@@ -2,10 +2,9 @@
 // Check https://jestjs.io/docs/expect
 // Anyone interested to extend this behavior must refer to URL content above with parsimony
 
-// Matchers
-//
-// TODO:
-//
+/*-------------------------------------------------*\
+ | Asymmetric matchers                             |
+\*-------------------------------------------------*/
 // [ x ] .toHaveBeenCalled()
 // [ x ] .toHaveReturned()
 // [ x ] .toBeDefined()
@@ -100,33 +99,50 @@ export const expectToHaveProperty = (object_, keyPath, ...value) =>
   expect(object_).toHaveProperty(keyPath, ...value);
 export const expectToBeCloseTo = (value, number, ...numDigits) =>
   expect(value).toBeCloseTo(number, ...numDigits);
-export const expectToMatchInlineSnapshot = (result, inlineSnapshot, ...propertyMatchers) =>
-  expect(result).toMatchInlineSnapshot(inlineSnapshot, ...propertyMatchers);
+export const expectToMatchInlineSnapshot = (
+  result,
+  inlineSnapshot,
+  ...propertyMatchers
+) => expect(result).toMatchInlineSnapshot(inlineSnapshot, ...propertyMatchers);
 export const expectToHaveBeenCalledWith = (result, ...args) =>
   expect(result).toHaveBeenCalledWith(...args);
 export const expectToHaveBeenLastCalledWith = (result, ...args) =>
   expect(result).toHaveBeenLastCalledWith(...args);
 export const expectToHaveBeenNthCalledWith = (functionHandler, expectation) => {
-  expect(functionHandler).toHaveBeenNthCalledWith(expectation.callIndex, ...expectation.args);
-}
+  expect(functionHandler).toHaveBeenNthCalledWith(
+    expectation.callIndex,
+    ...expectation.args
+  );
+};
 
-// Asymmetric matchers
+/*-------------------------------------------------*\
+ | Asymmetric matchers                             |
+\*-------------------------------------------------*/
 export const anythingAsyMatch = () => expect.anything();
 export const anyAsyMatch = (constructor) => expect.any(constructor);
 export const arrayContainingAsyMatch = (array) => expect.arrayContaining(array);
-export const notArrayContainingAsyMatch = (array) => expect.not.arrayContaining(array);
-export const closeToAsyMatch = (number, ...numDigits) => expect.closeTo(number, ...numDigits);
-export const objectContainingAsyMatch = (object) => expect.objectContaining(object);
-export const notObjectContainingAsyMatch = (object) => expect.not.objectContaining(object);
-export const stringContainingAsyMatch = (string) => expect.stringContaining(string);
-export const notStringContainingAsyMatch = (string) => expect.not.stringContaining(string);
-export const stringMatchingAsyMatch = (string_regexp) => expect.stringMatching(string_regexp);
-export const notStringMatchingAsyMatch = (string_regexp) => expect.not.stringMatching(string_regexp);
+export const notArrayContainingAsyMatch = (array) =>
+  expect.not.arrayContaining(array);
+export const closeToAsyMatch = (number, ...numDigits) =>
+  expect.closeTo(number, ...numDigits);
+export const objectContainingAsyMatch = (object) =>
+  expect.objectContaining(object);
+export const notObjectContainingAsyMatch = (object) =>
+  expect.not.objectContaining(object);
+export const stringContainingAsyMatch = (string) =>
+  expect.stringContaining(string);
+export const notStringContainingAsyMatch = (string) =>
+  expect.not.stringContaining(string);
+export const stringMatchingAsyMatch = (string_regexp) =>
+  expect.stringMatching(string_regexp);
+export const notStringMatchingAsyMatch = (string_regexp) =>
+  expect.not.stringMatching(string_regexp);
 
-// Assertion matchers
-export const hasAssertions = () => expect.hasAssertions()
+/*-------------------------------------------------*\
+ | Assertion matchers                              |
+\*-------------------------------------------------*/
+export const hasAssertions = () => expect.hasAssertions();
 export const expectAssertions = (number) => {
   hasAssertions();
   expect.assertions(number);
 };
-

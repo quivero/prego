@@ -1,25 +1,23 @@
 import _ from "lodash";
 import { zip } from "lodash";
 import {
-  assert, batchAssert, atest, batchAtest, rehearse
+  assert,
+  batchAssert,
+  atest,
+  batchAtest,
+  rehearse,
 } from "../assertions";
 import {
   buildScene,
   buildOrganization,
   buildAct,
   buildRehearsal,
-  buildPlay
-} from "../build"
+  buildPlay,
+} from "../build";
 
-import {
-  emptyCallback,
-  identityCallback
-} from "../defaults";
+import { emptyCallback, identityCallback } from "../defaults";
 
-import {
-  expectToBeDefined,
-  expectToBe
-} from "../expectTo"
+import { expectToBeDefined, expectToBe } from "../expectTo";
 
 /*-------------------------
  | assert design
@@ -66,26 +64,28 @@ teardown = emptyCallback;
 organization = buildOrganization(setup, prepare, teardown);
 validAtestAct = buildAct(perform, organization);
 
-export const validOrganization1 = {"setup": () => {}};
-export const validOrganization2 = {"prepare": (x) => x};
-export const validOrganization3 = {"teardown": () => {}};
-export const validOrganization4 = { "setup": () => {}, "prepare": (x) => x };
-export const validOrganization5 = { "setup": () => {}, "teardown": () => {} };
-export const validOrganization6 = { 
-  "setup": () => {}, 
-  "prepare": (x) => x,
-  "teardown": () => {} 
+export const validOrganization1 = { setup: () => {} };
+export const validOrganization2 = { prepare: (x) => x };
+export const validOrganization3 = { teardown: () => {} };
+export const validOrganization4 = { setup: () => {}, prepare: (x) => x };
+export const validOrganization5 = { setup: () => {}, teardown: () => {} };
+export const validOrganization6 = {
+  setup: () => {},
+  prepare: (x) => x,
+  teardown: () => {},
 };
 
-export const validOrganizations = [ 
-  validOrganization1, validOrganization2, validOrganization3,
-  validOrganization4, validOrganization5, validOrganization6
+export const validOrganizations = [
+  validOrganization1,
+  validOrganization2,
+  validOrganization3,
+  validOrganization4,
+  validOrganization5,
+  validOrganization6,
 ];
 
-export const invalidOrganization = {"setup_": () => {}};
-export const invalidOrganizations = [
-  validOrganization1, invalidOrganization
-];
+export const invalidOrganization = { setup_: () => {} };
+export const invalidOrganizations = [validOrganization1, invalidOrganization];
 
 /*-------------------------
  | assert design
@@ -158,38 +158,45 @@ let additionRehearsals;
 
 // Fixtures
 oneToOneAdditionFixture = { a: 1, b: 2 };
-oneToManyAdditionFixture = [ oneToOneAdditionFixture, { a: 2, b: 3 } ];
+oneToManyAdditionFixture = [oneToOneAdditionFixture, { a: 2, b: 3 }];
 manyToOneAdditionFixture = [
-  [oneToOneAdditionFixture], [oneToOneAdditionFixture],
+  [oneToOneAdditionFixture],
+  [oneToOneAdditionFixture],
 ];
 manyToManyAdditionFixture = [
-  oneToManyAdditionFixture, oneToManyAdditionFixture,
+  oneToManyAdditionFixture,
+  oneToManyAdditionFixture,
 ];
 
 // Expectations
 oneToOneAdditionExpectation = 3;
-oneToManyAdditionExpectation = [ oneToOneAdditionExpectation, 5 ];
+oneToManyAdditionExpectation = [oneToOneAdditionExpectation, 5];
 oneToManyAdditionExpectation = [
-  [oneToOneAdditionExpectation], [oneToOneAdditionExpectation],
+  [oneToOneAdditionExpectation],
+  [oneToOneAdditionExpectation],
 ];
 manyToManyAdditionExpectation = [
-  oneToManyAdditionExpectation, oneToManyAdditionExpectation,
+  oneToManyAdditionExpectation,
+  oneToManyAdditionExpectation,
 ];
 
 // Assertion maps
 oneToOneAdditionAssertionMap = expectToBe;
 oneToManyAdditionAssertionMap = [expectToBe, expectToBe];
 manyToOneAdditionAssertionMap = [
-  [oneToOneAdditionAssertionMap], [oneToOneAdditionAssertionMap],
+  [oneToOneAdditionAssertionMap],
+  [oneToOneAdditionAssertionMap],
 ];
 manyToManyAdditionAssertionMap = [
-  oneToManyAdditionAssertionMap, oneToManyAdditionAssertionMap,
+  oneToManyAdditionAssertionMap,
+  oneToManyAdditionAssertionMap,
 ];
 
 // Perform callbacks
 oneToOneAdditionPerform = (augmented_fixture_) => [
   add(augmented_fixture_.a, augmented_fixture_.b),
-  oneToOneAdditionAssertionMap, oneToOneAdditionExpectation,
+  oneToOneAdditionAssertionMap,
+  oneToOneAdditionExpectation,
 ];
 
 oneToManyAdditionPerform = (augmented_fixture_) =>
@@ -199,12 +206,11 @@ oneToManyAdditionPerform = (augmented_fixture_) =>
     oneToManyAdditionExpectation
   );
 
-manyToOneAdditionPerform = [
-  oneToOneAdditionPerform, oneToOneAdditionPerform
-];
+manyToOneAdditionPerform = [oneToOneAdditionPerform, oneToOneAdditionPerform];
 
 manyToManyAdditionPerform = [
-  oneToManyAdditionPerform, oneToManyAdditionPerform,
+  oneToManyAdditionPerform,
+  oneToManyAdditionPerform,
 ];
 
 // Ideas:
@@ -218,24 +224,16 @@ prepare = identityCallback;
 teardown = emptyCallback;
 
 additionRehearsals = [
-  buildRehearsal(
-    "must sum numbers using assert",
-    () => assert(addItem)
+  buildRehearsal("must sum numbers using assert", () => assert(addItem)),
+  buildRehearsal("must sum numbers using batchAssert", () =>
+    batchAssert(addItems)
   ),
-  buildRehearsal(
-    "must sum numbers using batchAssert",
-    () => batchAssert(addItems)
+  buildRehearsal("must sum numbers using atest", () =>
+    atest(oneToOneAdditionFixture, oneToOneAdditionScene)
   ),
-  buildRehearsal(
-    "must sum numbers using atest",
-    () => atest(oneToOneAdditionFixture, oneToOneAdditionScene)
-  ),
-  buildRehearsal(
-    "must sum numbers using batchAtest",
-    () => batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
+  buildRehearsal("must sum numbers using batchAtest", () =>
+    batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
   ),
 ];
 
-additionPlays = [
-  buildPlay("add", additionRehearsals)
-];
+additionPlays = [buildPlay("add", additionRehearsals)];

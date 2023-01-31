@@ -1,11 +1,12 @@
 import {
-  assert, batchAssert, atest, batchAtest,
+  assert,
+  batchAssert,
+  atest,
+  batchAtest,
   // validate
 } from "../assertions";
 
-import {
-  hasAssertions, expectAssertions
-} from "../expectTo"
+import { hasAssertions, expectAssertions } from "../expectTo";
 
 import {
   assertFixtures,
@@ -19,73 +20,41 @@ import {
   additionScenes,
 } from "./fixtures";
 
-describe(
-  "assert",
-  () => {
-    it(
-      "should assert on result-callback pattern",
-      () => {
-        hasAssertions()
-        expectAssertions(1);
-        assert(validAssertLength2Item);
-      }
-    );
+describe("assert", () => {
+  it("should assert on result-callback pattern", () => {
+    hasAssertions();
+    expectAssertions(1);
+    assert(validAssertLength2Item);
+  });
 
-    it(
-      "should assert on result-expected-callback pattern",
-      () => {
-        hasAssertions();
-        expectAssertions(1);
+  it("should assert on result-expected-callback pattern", () => {
+    hasAssertions();
+    expectAssertions(1);
 
-        assert(validAssertLength3Item);
-      }
-    );
+    assert(validAssertLength3Item);
+  });
 
-    it(
-      "should throw error on item with length different than 2 or 3",
-      () => expect(() => assert(invalidAssertItemLength)).toThrow(Error));
+  it("should throw error on item with length different than 2 or 3", () =>
+    expect(() => assert(invalidAssertItemLength)).toThrow(Error));
 
-    it(
-      "should throw error on invalid callback function",
-      () => expect(() => assert(invalidAssertCallbackItem)).toThrow(Error));
-  }
-);
+  it("should throw error on invalid callback function", () =>
+    expect(() => assert(invalidAssertCallbackItem)).toThrow(Error));
+});
 
-describe(
-  "batchAssert",
-  () => {
-    it(
-      "should assert asserts in batch",
-      () => {
-        hasAssertions();
-        expectAssertions(assertFixtures.length);
+describe("batchAssert", () => {
+  it("should assert asserts in batch", () => {
+    hasAssertions();
+    expectAssertions(assertFixtures.length);
 
-        batchAssert(assertFixtures);
-      }
-    );
-  }
-);
+    batchAssert(assertFixtures);
+  });
+});
 
-describe(
-  "atest",
-  () => {
-    it(
-      "should assert atest",
-      () => atest(validAtestFixture, validAtestAct));
-  }
-);
+describe("atest", () => {
+  it("should assert atest", () => atest(validAtestFixture, validAtestAct));
+});
 
-describe(
-  "batchAtest",
-  () => {
-    it(
-      "should assert batchAtest",
-      () => batchAtest(additionFixtures, additionScenes));
-  }
-);
-
-/*
- *  Audition test design
- */
-
-// validate(additionAuditions);
+describe("batchAtest", () => {
+  it("should assert batchAtest", () =>
+    batchAtest(additionFixtures, additionScenes));
+});

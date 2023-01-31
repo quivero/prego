@@ -22,15 +22,16 @@ const schemas = `${asserSchemaComb_1}${asserSchemaComb_2}\n`;
 
 export const assertItemCriteria = assertDescription + schemas;
 
-// Bunware
-const orgDescription = "An organization has the following characteristics \n\n"
+// Organization
+const orgDescription = "An organization has the following characteristics \n\n";
 
 const orgCriterium1 = "Type object;";
-const orgCriterium2 = "Keys strings [\"setup\", \"prepare\", \"teardown\"];";
-const orgCriterium3 = "Value types [\"function\", \"function\", \"function\"];";
+const orgCriterium2 = 'Keys strings ["setup", "prepare", "teardown"];';
+const orgCriterium3 = 'Value types ["function", "function", "function"];';
 const orgCriterium4 = "Value argument length [0, 1, 0];";
 const orgCriterium5 = "Has return value [false, true, false];";
-const orgCriterium6 = "\"prepare\" return value types assertItem or Array(assertItem);";
+const orgCriterium6 =
+  '"prepare" return value types assertItem or Array(assertItem);';
 
 const organizationProp1 = `1. ${orgCriterium1}`;
 const organizationProp2 = `2. ${orgCriterium2}`;
@@ -41,7 +42,7 @@ const organizationProp6 = `6. ${orgCriterium6}`;
 
 const orgPropComb1 = ` ${organizationProp1}\n ${organizationProp2}\n`;
 const orgPropComb2 = ` ${organizationProp3}\n ${organizationProp4}\n`;
-const orgPropComb3 = ` ${organizationProp5}\n ${organizationProp6}\n`
+const orgPropComb3 = ` ${organizationProp5}\n ${organizationProp6}\n`;
 
 const orgProps = `${orgPropComb1}${orgPropComb2}${orgPropComb3} \n\n `;
 

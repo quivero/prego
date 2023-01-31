@@ -19,18 +19,20 @@ export const possibleOrganizationKeys = Object.keys(defaultOrganization);
 
 export const isOrganization = (candidate) => {
   const candidateKeys = Object.keys(candidate);
-  const organizationCandidateKeysUnion = union(possibleOrganizationKeys, candidateKeys);
+  const organizationCandidateKeysUnion = union(
+    possibleOrganizationKeys,
+    candidateKeys
+  );
 
   const isObject_ = isObject(candidate);
   const objectKeysLowerEqualThan3 = candidateKeys.length <= 3;
   const areOrganizationKeys = organizationCandidateKeysUnion.length === 3;
 
   return isObject_ && objectKeysLowerEqualThan3 && areOrganizationKeys;
-}
+};
 
-export const areOrganizations = (candidates) => areTrue(
-  candidates.map( (candidate) => isOrganization(candidate) )
-);
+export const areOrganizations = (candidates) =>
+  areTrue(candidates.map((candidate) => isOrganization(candidate)));
 
 /*-------------------------------------------------*\
  | Assert items                                    |
@@ -70,20 +72,15 @@ export const isAssertItem = (item) => {
   } else return false;
 };
 
-
-export const areAssertItems = (candidates) => areTrue(
-  candidates.map(
-    (candidate) => isAssertItem(candidate)
-  )
-);
-
+export const areAssertItems = (candidates) =>
+  areTrue(candidates.map((candidate) => isAssertItem(candidate)));
 
 /*-------------------------------------------------*\
  | Assertifacts = Assert artifacts                 |
 \*-------------------------------------------------*/
 
 export const isAssertArtifact = (candidate) => {
-  return isArray(candidate) ? areAssertItems(candidate) : isAssertItem(candidate);
+  return isArray(candidate)
+    ? areAssertItems(candidate)
+    : isAssertItem(candidate);
 };
-
-

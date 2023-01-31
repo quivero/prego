@@ -4,7 +4,7 @@ import { organizationCriteria, assertItemCriteria } from "./criteriaStrings";
 import { defaultArrayTruthMessage } from "./defaults";
 
 export const buildError = (errorClass, errorMessage) => {
-  return  {
+  return {
     message: errorMessage,
     type: errorClass,
   };
@@ -25,9 +25,12 @@ export const assertionError = (fakeItem) => {
 
 export const organizationTypeError = (fakeOrganization) => {
   const fakeOrganizationType = typeof fakeOrganization;
-  const fakeOrganizationKeys = fakeOrganizationType === "object" ? Object.keys(fakeOrganization) : "[]";
-  const fakeOrganizationValuesTypes = fakeOrganizationType === "object" ?
-    Object.values(fakeOrganization).map((value) => typeof value) : "[]";
+  const fakeOrganizationKeys =
+    fakeOrganizationType === "object" ? Object.keys(fakeOrganization) : "[]";
+  const fakeOrganizationValuesTypes =
+    fakeOrganizationType === "object"
+      ? Object.values(fakeOrganization).map((value) => typeof value)
+      : "[]";
 
   let invalidOrganizationObjectMsg = "";
 
@@ -37,17 +40,19 @@ export const organizationTypeError = (fakeOrganization) => {
   invalidOrganizationObjectMsg = organizationCriteria + givenOrganizationMsg;
 
   return buildError(TypeError, invalidOrganizationObjectMsg);
-
 };
 
 const arrayTruthHeader = (falseElements) => {
-  const condition = `non-fulfilling elements on indexes [${falseElements}]`
-  
-  return `The provided array have condition ${condition}. `;
-}
+  const condition = `non-fulfilling elements on indexes [${falseElements}]`;
 
-export const arrayTruthError = (falseElements, truthMessage=defaultArrayTruthMessage) => {
+  return `The provided array have condition ${condition}. `;
+};
+
+export const arrayTruthError = (
+  falseElements,
+  truthMessage = defaultArrayTruthMessage
+) => {
   const TMessage = arrayTruthHeader(falseElements) + truthMessage;
 
   return buildError(TypeError, TMessage);
-}
+};

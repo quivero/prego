@@ -3,9 +3,10 @@ export const identityCallback = (fixture_) => fixture_;
 
 // Default organization
 export const defaultOrganization = {
-    "setup": emptyCallback,
-    "prepare": identityCallback,
-    "teardown": emptyCallback
-  }
+  setup: emptyCallback,
+  prepare: identityCallback,
+  teardown: emptyCallback,
+};
 
-export const defaultArrayTruthMessage = "The requirement warning message is not provided.";
+export const defaultArrayTruthMessage =
+  "The requirement warning message is not provided.";

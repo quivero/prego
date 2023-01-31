@@ -9,7 +9,7 @@ describe("throwError/warn", () => {
   it("should throw error", () => {
     const throwErrorFn = () => {
       return throwError("Fire!");
-    }
+    };
 
     expect(throwErrorFn).toThrowError();
   });
@@ -21,24 +21,21 @@ describe("throwError/warn", () => {
   });
 });
 
-describe(
-  "throwError/warn",
-  () => {
-    it("should return data types", () => {
-      trivia = [
-        [typeOf("string"), "string"],
-        [typeOf(42), "number"],
-        [typeOf({}), "object"],
-        [typeOf(() => {}), "function"],
-        [typeOf(null), "null"],
-      ];
+describe("throwError/warn", () => {
+  it("should return data types", () => {
+    trivia = [
+      [typeOf("string"), "string"],
+      [typeOf(42), "number"],
+      [typeOf({}), "object"],
+      [typeOf(() => {}), "function"],
+      [typeOf(null), "null"],
+    ];
 
-      for (const item of trivia) {
-        result = item[0];
-        expected = item[1];
+    for (const item of trivia) {
+      result = item[0];
+      expected = item[1];
 
-        expect(result).toBe(expected);
-      }
-    });
-  }
-);
+      expect(result).toBe(expected);
+    }
+  });
+});

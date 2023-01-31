@@ -29,14 +29,15 @@ export const assert = (item) => {
   const isValidAssertItemCondition = isAssertItem(item);
 
   isCondition(
-    isValidAssertItemCondition, validAssertItemCallback, item,
-    assertionError_.message, assertionError_.type
+    isValidAssertItemCondition,
+    validAssertItemCallback,
+    item,
+    assertionError_.message,
+    assertionError_.type
   );
 };
 
-export const batchAssert = (items) => items.forEach(
-  (item) => assert(item)
-);
+export const batchAssert = (items) => items.forEach((item) => assert(item));
 
 const verify = (scenes) => batchAssert(scenes);
 
@@ -46,8 +47,8 @@ export const atest = (fixtures, scenario) => {
   const setFixtures = scenario.prepare(fixtures);
   let performanceItems = scenario.perform(setFixtures);
 
-  performanceItems = performanceItems.map(
-    (performanceItem) => buildScene(performanceItem)
+  performanceItems = performanceItems.map((performanceItem) =>
+    buildScene(performanceItem)
   );
 
   verify(performanceItems);
@@ -56,26 +57,20 @@ export const atest = (fixtures, scenario) => {
 };
 
 export const batchAtest = (fixtures, acts) => {
-  _.zip(fixtures, acts).forEach(
-    (fixture_act) => atest(fixture_act[0], fixture_act[1])
+  _.zip(fixtures, acts).forEach((fixture_act) =>
+    atest(fixture_act[0], fixture_act[1])
   );
 };
 
-
 export const rehearse = (acts) =>
-  acts.forEach(
-    (act) => it(act.description, act.callback)
-  );
+  acts.forEach((act) => it(act.description, act.callback));
 
-
-export const validate = (rehearsals) => {
-  rehearsals.forEach(
-    (rehearsal) => describe(rehearsal.name, rehearsal.callback)
+export const practice = (rehearsals) => {
+  rehearsals.forEach((rehearsal) =>
+    describe(rehearsal.name, rehearsal.callback)
   );
 };
 
 export const cast = (plays) => {
-  plays.forEach(
-    (play) => describe(play.description, play.callback)
-  );
+  plays.forEach((play) => describe(play.description, play.callback));
 };
