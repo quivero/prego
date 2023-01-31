@@ -38,8 +38,6 @@ describe("whos", () => {
   it("should return indexes on callback whosWhat with argument [true, false, true], isFalse", () => {
     expectAssertions(1);
 
-    expectAssertions(1);
-
     assertItem = [
       whosWhat([true, false, true], isFalse),
       expectToStrictEqual,
