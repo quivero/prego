@@ -16,16 +16,16 @@ describe(
         const falseIndexesString = `[${falseIndexes}]`;
 
         const truthError = arrayTruthError(falseIndexes, truthMessage);
-        
+
         expectToMatch(truthError.message, truthMessage);
         expectToMatch(truthError.message, falseIndexesString);
       });
-      it("should match defaultArrayTruthMessage on truthError message without truthMessage", 
+      it("should match defaultArrayTruthMessage on truthError message without truthMessage",
       () => {
         const falseIndexes = [0, 1];
         const falseIndexesString = `[${falseIndexes}]`;
         const truthError = arrayTruthError(falseIndexes);
-        
+
         expectToMatch(truthError.message, defaultArrayTruthMessage);
         expectToMatch(truthError.message, falseIndexesString);
       });

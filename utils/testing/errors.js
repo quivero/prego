@@ -42,7 +42,7 @@ export const organizationTypeError = (fakeOrganization) => {
 
 const arrayTruthHeader = (falseElements) => {
   const condition = `non-fulfilling elements on indexes [${falseElements}]`
-  
+
   return `The provided array have condition ${condition}. `;
 }
 

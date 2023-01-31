@@ -34,4 +34,3 @@ export const whosTrue = (array) => whosWhat(array, isTrue);
 export const whosFalse = (array) => whosWhat(array, isFalse);
 
 export const areArrayElements = (array, truthCallback) => areTrue(array.map(truthCallback));
-

@@ -71,13 +71,13 @@ export const validOrganization2 = {"prepare": (x) => x};
 export const validOrganization3 = {"teardown": () => {}};
 export const validOrganization4 = { "setup": () => {}, "prepare": (x) => x };
 export const validOrganization5 = { "setup": () => {}, "teardown": () => {} };
-export const validOrganization6 = { 
-  "setup": () => {}, 
+export const validOrganization6 = {
+  "setup": () => {},
   "prepare": (x) => x,
-  "teardown": () => {} 
+  "teardown": () => {}
 };
 
-export const validOrganizations = [ 
+export const validOrganizations = [
   validOrganization1, validOrganization2, validOrganization3,
   validOrganization4, validOrganization5, validOrganization6
 ];

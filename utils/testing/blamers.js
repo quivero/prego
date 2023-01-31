@@ -9,7 +9,7 @@ export const blameArrayElements = (
     const truthArray = array.map(truthCallback);
     const falseElements = whosFalse(truthArray);
     const truthError = arrayTruthError(falseElements, truthMessage);
-    
+
     const truthCondition = areArrayElements(array, truthCallback);
     return isCondition(
       truthCondition, (x) => x, truthCondition, truthError.message, truthError.type

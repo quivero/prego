@@ -19,10 +19,10 @@ describe(
         () => {
           const assertItem2 = assertFixtures[0];
           const assertItem3 = assertFixtures[1];
-  
+
           const scene2 = buildScene(assertItem2);
           const scene3 = buildScene(assertItem3);
-  
+
           batchAssert([scene2, scene3]);
         }
       );
@@ -31,10 +31,10 @@ describe(
         () => {
           const assertItem2 = assertFixtures[0];
           const assertItem3 = assertFixtures[1];
-  
+
           const scene2 = buildScene(assertItem2);
           const scene3 = buildScene(assertItem3);
-  
+
           batchAssert([scene2, scene3]);
         }
       );

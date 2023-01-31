@@ -1,16 +1,16 @@
 import { assert, batchAssert } from "../assertions";
-import { 
-  areAssertItems, 
-  areOrganizations, 
-  isAssertArtifact, 
-  isAssertItem 
+import {
+  areAssertItems,
+  areOrganizations,
+  isAssertArtifact,
+  isAssertItem
 } from "../checkers";
 import { expectToBeEqual } from "../expectTo";
-import { 
-  assertFixtures, 
+import {
+  assertFixtures,
   validAssertLength2Item,
   validAssertLength3Item,
-  invalidAssertItemLength, 
+  invalidAssertItemLength,
   invalidAssertCallbackItem,
   validOrganizations
 } from "./fixtures";
@@ -32,9 +32,9 @@ describe(
         () => {
             assertItems = [
                 [ isAssertArtifact(assertFixtures), expectToBeEqual, true ],
-                [ isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false ] 
+                [ isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false ]
             ];
-            
+
             batchAssert(assertItems);
         }
       );
@@ -47,7 +47,7 @@ describe(
                 [ isAssertItem(invalidAssertItemLength), expectToBeEqual, false ],
                 [ isAssertItem(invalidAssertCallbackItem), expectToBeEqual, false ],
             ];
-            
+
             batchAssert(assertItems);
         }
       );
@@ -55,7 +55,7 @@ describe(
         "should assert ",
         () => {
             assertItem = [ areOrganizations(validOrganizations), expectToBeEqual, true ];
-            
+
             assert(assertItem);
         }
       );
@@ -63,7 +63,7 @@ describe(
         "should return true/false on valid/invalid assert items",
         () => {
             assertItem = [ areOrganizations(validOrganizations), expectToBeEqual, true ];
-            
+
             assert(assertItem);
         }
       );

@@ -13,7 +13,7 @@ describe(
         () => {
           const message = "The requirement warning message is not provided.";
           const assertItem = [defaultArrayTruthMessage, expectToBe, message];
-          
+
           assert(assertItem);
         }
       );
@@ -26,7 +26,7 @@ describe(
             [ defaultOrganization.prepare(42), expectToBe, 42],
             [ defaultOrganization.teardown(42), expectToBeUndefined],
           ];
-          
+
           batchAssert(assertItems);
         }
       );

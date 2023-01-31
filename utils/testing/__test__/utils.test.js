@@ -1,13 +1,13 @@
 import { assert } from '../assertions';
 import { isTrue, isFalse, areTrue } from '../checkers';
 import { expectAssertions, expectToBe, expectToStrictEqual } from '../expectTo';
-import { 
-  whosWhat, 
-  whosTrue, 
-  whosFalse, 
-  areArrayElements, 
-  allIndexes, 
-  isCondition 
+import {
+  whosWhat,
+  whosTrue,
+  whosFalse,
+  areArrayElements,
+  allIndexes,
+  isCondition
 } from '../utils'
 
 let assertItem;
@@ -99,7 +99,7 @@ describe(
       "should return false on callback areTrue with argument [true, false]",
       () => {
         expectAssertions(1);
-        
+
         assertItem = [areTrue([true, false]), expectToBe, false];
         assert(assertItem);
       }
@@ -132,7 +132,7 @@ describe(
         "should return false on callback areArrayElements with argument [true, true], isTrue",
         () => {
           expectAssertions(1);
-          
+
           assertItem = [ areArrayElements([true, false], isTrue), expectToBe, false ];
           assert(assertItem);
         }

@@ -85,5 +85,3 @@ export const areAssertItems = (candidates) => areTrue(
 export const isAssertArtifact = (candidate) => {
   return isArray(candidate) ? areAssertItems(candidate) : isAssertItem(candidate);
 };
-
-

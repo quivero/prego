@@ -129,4 +129,3 @@ export const expectAssertions = (number) => {
   hasAssertions();
   expect.assertions(number);
 };
-

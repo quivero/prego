@@ -643,7 +643,7 @@ describe("Graph", () => {
     // Edges
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
       [A, B],
-      [B, C], 
+      [B, C],
       [C, D],
       [C, E],
       [E, B],
@@ -1616,7 +1616,7 @@ describe("Graph", () => {
         { 0: { to: [], from: [1] }, 1: { to: [0], from: [] } },
       ],
       [
-        islands_graphs[0].getAllVerticesKeys(), expectToStrictEqual, ["D", "E", "F"], 
+        islands_graphs[0].getAllVerticesKeys(), expectToStrictEqual, ["D", "E", "F"],
       ],
       [
         islands_graphs[1].getAllVerticesKeys(), expectToStrictEqual, ["A", "B", "C"],
