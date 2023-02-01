@@ -1,7 +1,7 @@
 import { defaultArrayTruthMessage } from "../defaults";
-import { 
-  arrayTruthError, 
-  organizationTypeError 
+import {
+  arrayTruthError,
+  organizationTypeError
 } from "../errors";
 import { expectToMatch } from "../expectTo";
 
