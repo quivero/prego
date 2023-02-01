@@ -189,9 +189,9 @@ describe(
       () => {
         const func_1 = (x) => x;
         const func_2 = () => 42;
-        
+
         const funcs = [func_1, func_2];
-  
+
         expectToEqual(funcs.includes(func_1), true);
       }
     );
