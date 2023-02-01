@@ -1,20 +1,6 @@
 import { agentMorganReporter, log_message } from "../logging/logger.js";
 import _ from "lodash";
 
-export const isCondition = (
-  condition,
-  conditionCallback,
-  args,
-  error_msg,
-  errorClass = Error
-) => {
-  if (condition) {
-    return conditionCallback(args);
-  } else {
-    throw errorClass(error_msg);
-  }
-};
-
 /**
  * @abstract throw an error with prescribed unable task message
  *
