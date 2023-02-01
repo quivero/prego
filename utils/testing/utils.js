@@ -54,3 +54,4 @@ export const enumerate = (array) => {
 
   return enumeratedStringArray;
 }
+

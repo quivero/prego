@@ -3,7 +3,7 @@
 // Anyone interested to extend this behavior must refer to URL content above with parsimony
 
 /*-------------------------------------------------*\
- | Asymmetric matchers                             |
+ | Matchers                                        |
 \*-------------------------------------------------*/
 // [ x ] .toHaveBeenCalled()
 // [ x ] .toHaveReturned()
@@ -112,6 +112,45 @@ export const expectToHaveBeenNthCalledWith = (functionHandler, expectation) => {
     ...expectation.args
   );
 };
+
+export const availableExpectToMaps = [
+  expectToBeDefined, 
+  expectToBeUndefined, 
+  expectToHaveBeenCalled, 
+  expectToHaveReturned, 
+  expectToBeFalsy, 
+  expectToBeNull, 
+  expectToBeTruthy, 
+  expectToBeNaN,
+  expectToBe, 
+  expectToBeEqual, 
+  expectToStrictEqual, 
+  expectToHaveBeenCalledTimes, 
+  expectToHaveReturnedTimes, 
+  expectToHaveReturnedWith, 
+  expectToHaveLastReturnedWith, 
+  expectToHaveLength, 
+  expectToContain, 
+  expectToContainEqual, 
+  expectToEqual, 
+  expectToBeGreaterThan, 
+  expectToBeGreaterThanOrEqual, 
+  expectToBeLessThan, 
+  expectToBeLessThanOrEqual, 
+  expectToBeInstanceOf, 
+  expectToMatch, 
+  expectToMatchObject, 
+  expectToThrow, 
+  expectToThrowErrorMatchingSnapshot, 
+  expectToMatchSnapshot, 
+  expectToHaveProperty, 
+  expectToBeCloseTo, 
+  expectToMatchInlineSnapshot, 
+  expectToHaveBeenCalledWith, 
+  expectToHaveBeenLastCalledWith, 
+  expectToHaveBeenNthCalledWith
+];
+
 
 /*-------------------------------------------------*\
  | Asymmetric matchers                             |

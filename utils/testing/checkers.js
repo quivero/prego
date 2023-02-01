@@ -1,6 +1,7 @@
 import _, { isArray, union, intersection, isObject, uniq, isFunction } from "lodash";
 
 import { defaultOrganization } from "./defaults";
+import { availableExpectToMaps } from "./expectTo";
 
 /*-------------------------*\
  | General                 |
@@ -32,23 +33,38 @@ export const isAssertItem = (item) => {
   let keysCardinalityCondition;
   let necessaryKeysCondition;
   let functionTypeCondition;
+  let expectedExpectToMap;
 
   if (isArray(item)) {
-    const item_length = item.length;
-    keysCardinalityCondition = item_length === 2 || item_length === 3;
+    const itemLength = item.length;
+    keysCardinalityCondition = itemLength === 2 || itemLength === 3;
     functionTypeCondition = typeof item[1] === "function";
+    expectedExpectToMap = availableExpectToMaps.includes(item[1]);
 
-    return keysCardinalityCondition && functionTypeCondition;
+    const criteria = [
+      keysCardinalityCondition, 
+      functionTypeCondition, 
+      expectedExpectToMap  
+    ];
+
+    return batchAnd(criteria);
+    
   } else if (isObject(item)) {
-    const object_keys = Object.keys(item);
+    const objectKeys = Object.keys(item);
 
-    keysCardinalityCondition = object_keys.length === 2 || object_keys.length === 3;
+    keysCardinalityCondition = objectKeys.length === 2 || objectKeys.length === 3;
     necessaryKeysCondition =
-      intersection(object_keys, item2LengthKeys).length === 2 ||
-      intersection(object_keys, item3LengthKeys).length === 3;
+      intersection(objectKeys, item2LengthKeys).length === 2 ||
+      intersection(objectKeys, item3LengthKeys).length === 3;
     functionTypeCondition = typeof item.expectToMap === "function";
+    expectedExpectToMap = availableExpectToMaps.includes(item.expectToMap);
 
-    const criteria = [ keysCardinalityCondition, necessaryKeysCondition, functionTypeCondition ];
+    const criteria = [ 
+      keysCardinalityCondition, 
+      necessaryKeysCondition, 
+      functionTypeCondition,
+      expectedExpectToMap
+    ];
 
     return batchAnd(criteria);
   } else return false;
