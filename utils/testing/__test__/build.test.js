@@ -2,7 +2,7 @@ import { assert, batchAssert } from "../assertions";
 import { buildScene } from "../build";
 import { areAssertItems } from "../checkers";
 import { expectToBeEqual } from "../expectTo";
-import { assertFixtures, additionRehearsals } from "./fixtures";
+import { assertFixtures } from "./fixtures";
 
 describe("checkers", () => {
   it("must assert on default truth message", () => {

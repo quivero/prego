@@ -1,8 +1,6 @@
 import {
   assert,
-  batchAssert,
-  atest,
-  batchAtest
+  batchAssert
 } from "../assertions";
 
 import { hasAssertions, expectAssertions } from "../expectTo";
@@ -13,10 +11,6 @@ import {
   validAssertLength3Item,
   invalidAssertItemLength,
   invalidAssertCallbackItem,
-  validAtestFixture,
-  validAtestAct,
-  additionFixtures,
-  additionScenes,
 } from "./fixtures";
 
 describe("assert", () => {

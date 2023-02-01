@@ -1,18 +1,8 @@
 import _ from "lodash";
 import { zip } from "lodash";
+import { assert, batchAssert, atest } from "../assertions";
 import {
-  assert,
-  batchAssert,
-  atest,
-  batchAtest,
-  rehearse,
-} from "../assertions";
-import {
-  buildScene,
-  buildOrganization,
-  buildAct,
-  buildRehearsal,
-  buildPlay,
+  buildScene, buildOrganization, buildAct, buildRehearsal, buildPlay,
 } from "../build";
 
 import { emptyCallback, identityCallback } from "../defaults";
@@ -64,28 +54,19 @@ teardown = emptyCallback;
 organization = buildOrganization(setup, prepare, teardown);
 validAtestAct = buildAct(perform, organization);
 
-export const validOrganization1 = { setup: () => {} };
-export const validOrganization2 = { prepare: (x) => x };
-export const validOrganization3 = { teardown: () => {} };
-export const validOrganization4 = { setup: () => {}, prepare: (x) => x };
-export const validOrganization5 = { setup: () => {}, teardown: () => {} };
-export const validOrganization6 = {
-  setup: () => {},
-  prepare: (x) => x,
-  teardown: () => {},
-};
-
 export const validOrganizations = [
-  validOrganization1,
-  validOrganization2,
-  validOrganization3,
-  validOrganization4,
-  validOrganization5,
-  validOrganization6,
+  {},
+  { setup: () => {} }, 
+  { prepare: (x) => x }, 
+  { teardown: () => {} }, 
+  { setup: () => {}, prepare: (x) => x }, 
+  { setup: () => {}, teardown: () => {} }, 
+  { prepare: () => {}, teardown: () => {} }, 
+  { setup: () => {}, prepare: (x) => x, teardown: () => {} }
 ];
 
 export const invalidOrganization = { setup_: () => {} };
-export const invalidOrganizations = [validOrganization1, invalidOrganization];
+export const invalidOrganizations = [...validOrganizations, invalidOrganization];
 
 /*-------------------------
  | assert design
@@ -193,11 +174,9 @@ additionRehearsals = [
   buildRehearsal(
     "must sum numbers using atest",
     () => atest(oneToOneAdditionFixture, oneToOneAdditionScene)
-  ),
-  buildRehearsal(
-    "must sum numbers using batchAtest",
-    () => batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
-  ),
+  )
 ];
 
-additionPlays = [buildPlay("add", additionRehearsals)];
+additionPlays = [
+  buildPlay("add", additionRehearsals)
+];
