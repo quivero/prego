@@ -42,13 +42,13 @@ export const isAssertItem = (item) => {
     expectedExpectToMap = availableExpectToMaps.includes(item[1]);
 
     const criteria = [
-      keysCardinalityCondition, 
-      functionTypeCondition, 
-      expectedExpectToMap  
+      keysCardinalityCondition,
+      functionTypeCondition,
+      expectedExpectToMap
     ];
 
     return batchAnd(criteria);
-    
+
   } else if (isObject(item)) {
     const objectKeys = Object.keys(item);
 
@@ -59,9 +59,9 @@ export const isAssertItem = (item) => {
     functionTypeCondition = typeof item.expectToMap === "function";
     expectedExpectToMap = availableExpectToMaps.includes(item.expectToMap);
 
-    const criteria = [ 
-      keysCardinalityCondition, 
-      necessaryKeysCondition, 
+    const criteria = [
+      keysCardinalityCondition,
+      necessaryKeysCondition,
       functionTypeCondition,
       expectedExpectToMap
     ];
