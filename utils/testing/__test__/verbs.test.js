@@ -3,14 +3,14 @@ import { additionFixtures, additionScenes, validAtestAct, validAtestFixture } fr
 
 describe(
     "atest",
-    () => it("should assert atest", () => {
+    () => it("must assert atest", () => {
         atest(validAtestFixture, validAtestAct);
     })
 );
 
 describe(
     "batchAtest",
-    () => it("should assert batchAtest",  () => {
+    () => it("must assert batchAtest",  () => {
         batchAtest(additionFixtures, additionScenes);
     })
 );

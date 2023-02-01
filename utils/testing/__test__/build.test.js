@@ -5,11 +5,11 @@ import { expectToBeEqual } from "../expectTo";
 import { assertFixtures, additionRehearsals } from "./fixtures";
 
 describe("checkers", () => {
-  it("should assert on default truth message", () => {
+  it("must assert on default truth message", () => {
     const assertItem = [areAssertItems(assertFixtures), expectToBeEqual, true];
     assert(assertItem);
   });
-  it("should assert scenes a.k.a. assertItem", () => {
+  it("must assert scenes a.k.a. assertItem", () => {
     const assertItem2 = assertFixtures[0];
     const assertItem3 = assertFixtures[1];
 
@@ -18,7 +18,7 @@ describe("checkers", () => {
 
     batchAssert([scene2, scene3]);
   });
-  it("should batchAssert on ", () => {
+  it("must batchAssert on ", () => {
     const assertItem2 = assertFixtures[0];
     const assertItem3 = assertFixtures[1];
 

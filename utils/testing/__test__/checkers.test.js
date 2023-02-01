@@ -20,11 +20,11 @@ import {
 let assertItem, assertItems;
 
 describe("checkers", () => {
-  it("should assert checker areAssertItems", () => {
+  it("must assert checker areAssertItems", () => {
     assertItem = [ areAssertItems(assertFixtures), expectToBeEqual, true ];
     assert(assertItem);
   });
-  it("should batchAssert checker isAssertArtifact", () => {
+  it("must batchAssert checker isAssertArtifact", () => {
     assertItems = [
       [ isAssertArtifact(assertFixtures), expectToBeEqual, true ],
       [ isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false ],
@@ -32,7 +32,7 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("should batchAssert checker isAssertItem", () => {
+  it("must batchAssert checker isAssertItem", () => {
     assertItems = [
       [ isAssertItem(validAssertLength2Item), expectToBeEqual, true ],
       [ isAssertItem(validAssertLength3Item), expectToBeEqual, true ],
@@ -42,17 +42,17 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("should assert ", () => {
+  it("must assert ", () => {
     assertItem = [areOrganizations(validOrganizations), expectToBeEqual, true];
 
     assert(assertItem);
   });
-  it("should return true/false on valid/invalid assert items", () => {
+  it("must return true/false on valid/invalid assert items", () => {
     assertItem = [areOrganizations(validOrganizations), expectToBeEqual, true];
 
     assert(assertItem);
   });
-  it("should return true for valid assert item", () => {
+  it("must return true for valid assert item", () => {
     assertItems = [
       [ isAssertArtifact(validAssertLength2Item), expectToBe, true ],
       [ isAssertArtifact(validAssertLength3Item), expectToBe, true ],
@@ -65,7 +65,7 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("should return true for valid assert item", () => {
+  it("must return true for valid assert item", () => {
     assertItems = [
       [ areAssertItems(assertFixtures), expectToBe, true ],
       [ areScenes(assertFixtures), expectToBe, false ]

@@ -4,13 +4,13 @@ import { defaultOrganization, defaultArrayTruthMessage } from "../defaults";
 import { expectToBe, expectToBeUndefined } from "../expectTo";
 
 describe("utils", () => {
-  it("should assert on default truth message", () => {
+  it("must assert on default truth message", () => {
     const message = "The required criteria are not provided.";
     const assertItem = [defaultArrayTruthMessage, expectToBe, message];
 
     assert(assertItem);
   });
-  it("should assert on default truth message", () => {
+  it("must assert on default truth message", () => {
     const assertItems = [
       [isOrganization(defaultOrganization), expectToBe, true],
       [defaultOrganization.setup(), expectToBeUndefined],

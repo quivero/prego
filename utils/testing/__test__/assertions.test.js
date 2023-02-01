@@ -20,28 +20,28 @@ import {
 } from "./fixtures";
 
 describe("assert", () => {
-  it("should assert on result-callback pattern", () => {
+  it("must assert on result-callback pattern", () => {
     hasAssertions();
     expectAssertions(1);
     assert(validAssertLength2Item);
   });
 
-  it("should assert on result-expected-callback pattern", () => {
+  it("must assert on result-expected-callback pattern", () => {
     hasAssertions();
     expectAssertions(1);
 
     assert(validAssertLength3Item);
   });
 
-  it("should throw error on item with length different than 2 or 3", () =>
+  it("must throw error on item with length different than 2 or 3", () =>
     expect(() => assert(invalidAssertItemLength)).toThrow(Error));
 
-  it("should throw error on invalid callback function", () =>
+  it("must throw error on invalid callback function", () =>
     expect(() => assert(invalidAssertCallbackItem)).toThrow(Error));
 });
 
 describe("batchAssert", () => {
-  it("should assert asserts in batch", () => {
+  it("must assert asserts in batch", () => {
     hasAssertions();
     expectAssertions(assertFixtures.length);
 
