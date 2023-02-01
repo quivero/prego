@@ -127,27 +127,27 @@ describe("expectTo", () => {
       // Source: https://stackoverflow.com
       // Route: /questions/45692456/whats-the-difference-between-tomatchobject-and-objectcontaining
 
-      candidate = { position: { x: 0, y: 0 } }; 
-      
+      candidate = { position: { x: 0, y: 0 } };
+
       // objectContaining, with nested object, containing full props/values
       expectation = objectContainingAsyMatch(
         { position: { x: anyAsyMatch(Number), y: anyAsyMatch(Number) }}
       );
-      
+
       expectToEqual(candidate, expectation);
 
       // objectContaining, with nested object, containing partial props/values
       expectToEqual(
-        candidate, 
+        candidate,
         notObjectContainingAsyMatch({ position: { x: expect.any(Number) } })
       );
 
-      // objectContaining, with nested object, also declared with objectContaining, 
+      // objectContaining, with nested object, also declared with objectContaining,
       // containing partial props/values
       expectation = objectContainingAsyMatch(
         { position: objectContainingAsyMatch({ x: anyAsyMatch(Number) }) }
       );
-      
+
       expectToEqual(candidate, expectation);
     }
   );
@@ -190,7 +190,7 @@ describe("expectTo", () => {
   it("assert candidate toBeEqual expectation", () => expectToStrictEqual(42, 42));
   it("assert candidate expectToHaveProperty expectation", () => {
     const object = {"a": 1, "b": 2};
-    
+
     expectToHaveProperty(object, "a");
     expectToHaveProperty(object, "b");
   });
@@ -199,75 +199,75 @@ describe("expectTo", () => {
     const functionCaller = (functionCall, arg) => {
       functionCall(arg);
     }
-    
+
     const string = "ackbar";
     const f = jest.fn();
 
     functionCaller(f, string);
-    
+
     expectToHaveBeenCalledWith(f, string);
-  }); 
+  });
   it('assert last call with on argument', () => {
     const functionCaller = (functionCall, arg_1, arg_2) => {
       functionCall(arg_1);
       functionCall(arg_2);
     }
-    
+
     const string_1 = "ackbar";
     const string_2 = "Boba Fett";
 
     const f = jest.fn();
 
     functionCaller(f, string_1, string_2);
-    
+
     expectToHaveBeenLastCalledWith(f, string_2);
   });
   it(
-    'assert Nth call with argument', 
+    'assert Nth call with argument',
     () => {
       const functionCaller = (functionCall, arg_1, arg_2) => {
         functionCall(arg_1);
         functionCall(arg_2);
       }
-      
+
       const string_1 = "ackbar";
       const string_2 = "Boba Fett";
 
       const expectation_1 = {"callIndex": 1, "args": [string_1]};
       const expectation_2 = {"callIndex": 2, "args": [string_2]};
-  
+
       const f = jest.fn();
-  
+
       functionCaller(f, string_1, string_2);
-      
+
       expectToHaveBeenNthCalledWith(f, expectation_1);
       expectToHaveBeenNthCalledWith(f, expectation_2);
     }
   );
   it(
-    'assert Nth call with argument', 
+    'assert Nth call with argument',
     () => {
       const functionCaller = (functionCall, arg_1, arg_2) => {
         functionCall(arg_1);
         functionCall(arg_2);
       }
-      
+
       const string_1 = "ackbar";
       const string_2 = "Boba Fett";
 
       const expectation_1 = {"callIndex": 1, "args": [string_1]};
       const expectation_2 = {"callIndex": 2, "args": [string_2]};
-  
+
       const f = jest.fn();
-  
+
       functionCaller(f, string_1, string_2);
-      
+
       expectToHaveBeenNthCalledWith(f, expectation_1);
       expectToHaveBeenNthCalledWith(f, expectation_2);
     }
   );
   it(
-    'assert asymmetric matcher', 
+    'assert asymmetric matcher',
     () => {
       candidate = {
         title: '0.1 + 0.2',
@@ -283,44 +283,44 @@ describe("expectTo", () => {
     }
   );
   it(
-    'assert asymmetric matcher arrayContainingAsyMatch', 
+    'assert asymmetric matcher arrayContainingAsyMatch',
     () => {
       candidate = ['Alice', 'Bob', 'Charlie'];
-      
+
       for(const name of candidate) {
         expectToEqual(candidate, arrayContainingAsyMatch([name]));
       }
     }
   );
   it(
-    'assert asymmetric matcher notArrayContainingAsyMatch', 
+    'assert asymmetric matcher notArrayContainingAsyMatch',
     () => {
       candidate = ['Alice', 'Bob', 'Charlie'];
       expectation = notArrayContainingAsyMatch(['Denise']);
-      
+
       expectToEqual(candidate, expectation);
     }
   );
   it(
-    'assert asymmetric matcher stringContainingAsyMatch', 
+    'assert asymmetric matcher stringContainingAsyMatch',
     () => {
       candidate = 'Hello world!';
       expectation = stringContainingAsyMatch("world");
-      
+
       expectToEqual(candidate, expectation);
     }
   );
   it(
-    'assert asymmetric matcher stringContainingAsyMatch', 
+    'assert asymmetric matcher stringContainingAsyMatch',
     () => {
       candidate = 'Hello world!';
       expectation = notStringContainingAsyMatch("Mars");
-      
+
       expectToEqual(candidate, expectation);
     }
   );
   it(
-    'assert asymmetric matcher notObjectContainingAsyMatch', 
+    'assert asymmetric matcher notObjectContainingAsyMatch',
     () => {
       candidate = {bar: 'baz'};
       expectation = {foo: anyAsyMatch(String)};
@@ -329,20 +329,20 @@ describe("expectTo", () => {
     }
   );
   it(
-    'assert asymmetric matcher stringMatchingAsyMatch', 
+    'assert asymmetric matcher stringMatchingAsyMatch',
     () => {
       candidate = 'Hello world!';
       expectation = stringMatchingAsyMatch('world');
-      
+
       expectToEqual(candidate, expectation);
     }
   );
   it(
-    'assert asymmetric matcher notStringMatchingAsyMatch', 
+    'assert asymmetric matcher notStringMatchingAsyMatch',
     () => {
       candidate = 'Hello world!';
       expectation = notStringMatchingAsyMatch ('Mars');
-      
+
       expectToEqual(candidate, expectation);
     }
   );

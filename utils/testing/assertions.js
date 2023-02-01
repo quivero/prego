@@ -34,4 +34,3 @@ export const assert = (item) => {
 };
 
 export const batchAssert = (items) => items.forEach((item) => assert(item));
-

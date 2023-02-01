@@ -41,14 +41,14 @@ export const isAssertItem = (item) => {
     return keysCardinalityCondition && functionTypeCondition;
   } else if (isObject(item)) {
     const object_keys = Object.keys(item);
-    
+
     keysCardinalityCondition = object_keys.length === 2 || object_keys.length === 3;
     necessaryKeysCondition =
       intersection(object_keys, item2LengthKeys).length === 2 ||
       intersection(object_keys, item3LengthKeys).length === 3;
     functionTypeCondition = typeof item.expectToMap === "function";
 
-    const criteria = [ keysCardinalityCondition, necessaryKeysCondition, functionTypeCondition ]; 
+    const criteria = [ keysCardinalityCondition, necessaryKeysCondition, functionTypeCondition ];
 
     return batchAnd(criteria);
   } else return false;
@@ -92,7 +92,7 @@ export const isOrganization = (candidate) => {
   const objectKeysLowerEqualThan3 = candidateKeys.length <= 3;
   const areOrganizationKeys = organizationCandidateKeysUnion.length === 3;
 
-  const criteria = [ isObject_, objectKeysLowerEqualThan3, areOrganizationKeys ]; 
+  const criteria = [ isObject_, objectKeysLowerEqualThan3, areOrganizationKeys ];
 
   return batchAnd(criteria);
 };
@@ -117,9 +117,9 @@ export const isAct = (candidate) => {
   const objectKeysIntersecGreaterEqualThan1 = actCandidateKeysIntersec.length >= 1;
 
   const criteria = [
-    isObject_, 
-    objectKeysUnionLowerEqualThan4, 
-    objectKeysIntersecGreaterEqualThan1, 
+    isObject_,
+    objectKeysUnionLowerEqualThan4,
+    objectKeysIntersecGreaterEqualThan1,
     actCandidateValuesAreFunctions
   ];
 

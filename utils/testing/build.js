@@ -19,7 +19,7 @@ const buildSceneCallback = (item) => {
 
     switch (itemCardinality) {
       case 2:
-        return { 
+        return {
           result: result,
           expectToMap: expectToMap,
         };
@@ -41,7 +41,7 @@ export const buildScene = (item) => {
   const isValidAssertItemCondition = isAssertItem(item);
 
   return isCondition(
-    isValidAssertItemCondition, 
+    isValidAssertItemCondition,
     buildSceneCallback,
     item,
     assertionError_.message,
@@ -102,7 +102,7 @@ export const buildAct = (script, organization = defaultOrganization) => {
   const actPerformCriterium = `First argument \"perform\" must be ${actDescription}`;
 
   return isCondition(
-    isFunction(script), actCallback, actArgs, 
+    isFunction(script), actCallback, actArgs,
     actPerformCriterium, TypeError
   );
 };
