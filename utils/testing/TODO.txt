@@ -35,13 +35,13 @@ Callbacks:
   [  ]  perform := (act) => {...} // Improve atest
   [  ]  buildScenesFromAssertArtifact: (preparedFixtures) => buildScenes(scriptCallback(preparedFixtures))
   [  ]  buildRehearsal: function( ( fixture:object, acts:Array(Act) ) -> preparedFixtures:object ):
-    Algorithm:    
+    Algorithm:
       1. Practice act;
       2. Retrieve prepared fixtures from previous act;
       3. Update provided fixture with given prepared fixtures;
-      4. Repeat 1.  
+      4. Repeat 1.
   [  ]  rehearse: ( description:string, acts:Array(Act) ):
-    Questions:  
+    Questions:
       1. Must a rehearsal have an organization?
       2. If the answer for previous question is yes, how can we integrate "setup-teardown" (check URL https://jestjs.io/docs/setup-teardown)
   [  ]  playCallback: function(  ): () => rehearse(rehearsals)
@@ -50,4 +50,3 @@ Callbacks:
 Utils:
 
   isArtifact := function( (candidate, isArtifactCallback) -> Boolean ),
-
