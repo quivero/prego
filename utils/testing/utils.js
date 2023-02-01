@@ -42,7 +42,7 @@ export const areArrayElements = (array, truthCallback) =>
   areTrue(array.map(truthCallback));
 
 export const enumerate = (array) => {
-  let enumeratedStringArray = ""; 
+  let enumeratedStringArray = "";
   let line;
 
   array.forEach(
@@ -54,4 +54,3 @@ export const enumerate = (array) => {
 
   return enumeratedStringArray;
 }
-
