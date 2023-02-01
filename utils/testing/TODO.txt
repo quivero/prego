@@ -1,0 +1,48 @@
+TODO?: Follow these sketch-guidelines to proceed:
+
+verb:noun(s)
+
+    build: Artifact(s)    
+    (batch)assert: scene(s)
+    practice:act(s)
+    rehearse:rehearsal(s)
+    cast:play(s)
+
+Objects:
+ 
+    fixture := object, 
+    assertionArtifact: object( 
+      (result: object, expectToMap: expectTo) || 
+      (result: object, expectToMap: : expectTo, expectation: object) 
+    ) | Array( (result, expectToMap) || (result, expectToMap, expectation) )
+    organization := object( setup: function, prepare: function, teardown: function ),
+    scene := object( 
+      (result:object, expectToMap:expectTo) || 
+      (result:object, expectToMap:expectTo, expectation:object) 
+    ) | Array( 
+      (result:object, expectToMap:expectTo) || 
+      (result:object, expectToMap:expectTo, expectation:object) 
+    )
+    act := scriptCallback + [ organization (defaultOrganization) ]
+    resource: ( text: String, callback: function );
+    rehearsal := { "fixture": fixture, "acts": acts }
+    play := { "name": string, "rehearsals": rehearsals }
+  )
+ 
+Callbacks:
+  
+  scriptCallback := function( preparedFixture:object -> assertionArtifact ),
+  perform := (act) => 
+  buildPerformanceSketchesResource: (preparedFixtures) => buildScenes(scriptCallback(preparedFixtures))
+  buildRehearsal: function( ( fixture:object, acts:Array(Act) ) -> preparedFixtures:object ):  (act) => {
+      const preparedFixtures = perform(act);
+      
+      preparedFixtures = update(fixture, preparedFixtures);
+  };
+  rehearse: ( description:string, acts:Array(Act) ): rehearsalResourceCallback
+  playCallback: function(  ): () => rehearse(rehearsals)
+  play: (name, playCallback)
+
+Utils: 
+
+  isArtifact := function( (candidate, isArtifactCallback) -> Boolean ),

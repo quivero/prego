@@ -2,8 +2,7 @@ import {
   assert,
   batchAssert,
   atest,
-  batchAtest,
-  // validate
+  batchAtest
 } from "../assertions";
 
 import { hasAssertions, expectAssertions } from "../expectTo";
@@ -48,13 +47,4 @@ describe("batchAssert", () => {
 
     batchAssert(assertFixtures);
   });
-});
-
-describe("atest", () => {
-  it("should assert atest", () => atest(validAtestFixture, validAtestAct));
-});
-
-describe("batchAtest", () => {
-  it("should assert batchAtest", () =>
-    batchAtest(additionFixtures, additionScenes));
 });

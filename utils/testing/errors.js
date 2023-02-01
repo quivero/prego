@@ -43,16 +43,15 @@ export const organizationTypeError = (fakeOrganization) => {
 };
 
 const arrayTruthHeader = (falseElements) => {
-  const condition = `non-fulfilling elements on indexes [${falseElements}]`;
+  const condition = `non-fulfilling elements on keys [${falseElements}]`;
 
   return `The provided array have condition ${condition}. `;
 };
 
 export const arrayTruthError = (
-  falseElements,
-  truthMessage = defaultArrayTruthMessage
+  falseElements, criteriaMessage = defaultArrayTruthMessage
 ) => {
-  const TMessage = arrayTruthHeader(falseElements) + truthMessage;
+  const TMessage = arrayTruthHeader(falseElements) + criteriaMessage;
 
   return buildError(TypeError, TMessage);
 };

@@ -9,39 +9,39 @@ import {
 import { organizationTypeError, assertionError } from "./errors";
 import { rehearse, validate } from "./assertions";
 
+const buildSceneCallback = (item) => {
+  let result, expectation, expectToMap, itemCardinality;
+
+  if (isArray(item)) {
+    itemCardinality = item.length;
+    result = item[0];
+    expectToMap = item[1];
+
+    switch (itemCardinality) {
+      case 2:
+        return { 
+          result: result,
+          expectToMap: expectToMap,
+        };
+
+      case 3:
+        expectation = isArray(item) ? item[2] : item.expectation;
+
+        return {
+          result: result,
+          expectToMap: expectToMap,
+          expectation: expectation,
+        };
+    }
+  } else return item;
+};
+
 export const buildScene = (item) => {
   const assertionError_ = assertionError(item);
   const isValidAssertItemCondition = isAssertItem(item);
 
-  const buildSceneCallback = (item_) => {
-    let result, expectation, assertMap, itemCardinality;
-
-    if (isArray(item_)) {
-      itemCardinality = item_.length;
-      result = item_[0];
-      assertMap = item_[1];
-
-      switch (itemCardinality) {
-        case 2:
-          return {
-            result: result,
-            assertionMap: assertMap,
-          };
-
-        case 3:
-          expectation = isArray(item_) ? item_[2] : item_.expectation;
-
-          return {
-            result: result,
-            assertionMap: assertMap,
-            expectation: expectation,
-          };
-      }
-    } else return item_;
-  };
-
   return isCondition(
-    isValidAssertItemCondition,
+    isValidAssertItemCondition, 
     buildSceneCallback,
     item,
     assertionError_.message,
@@ -102,24 +102,21 @@ export const buildAct = (script, organization = defaultOrganization) => {
   const actPerformCriterium = `First argument \"perform\" must be ${actDescription}`;
 
   return isCondition(
-    isFunction(script),
-    actCallback,
-    actArgs,
-    actPerformCriterium,
-    TypeError
+    isFunction(script), actCallback, actArgs, 
+    actPerformCriterium, TypeError
   );
 };
 
-export const buildRehearsal = (name, acts) => {
+export const buildRehearsal = (description, acts) => {
   return {
-    name: name,
+    description: description,
     callback: () => rehearse(acts),
   };
 };
 
-export const buildPlay = (description, rehearsals) => {
+export const buildPlay = (name, rehearsals) => {
   return {
-    description: description,
+    name: name,
     callback: () => validate(rehearsals),
   };
 };

@@ -95,8 +95,8 @@ const addCallback = (fixture) => add(fixture.a, fixture.b);
 
 let addItem, addItems;
 
-addItem = [add(1, 2), expectToBe, 3];
-addItems = [addItem, [add(2, 3), expectToBe, 5]];
+addItem = [ add(1, 2), expectToBe, 3 ];
+addItems = [addItem, [ add(2, 3), expectToBe, 5 ]];
 
 export let additionFixtures;
 export let additionScenes;
@@ -129,63 +129,31 @@ let oneToOneAdditionScene,
 
 let additionRehearsals;
 
-// TODO?: Follow these sketch-guidelines to proceed:
-// 1. (
-//      fixtures: object,
-//      script: function,
-//      organization: object(
-//        setup: function,
-//        prepare: function,
-//        teardown: function
-//      ),
-//      scene: object | Array (assertionMap, ?expectation)
-//    ) --> task --> scenes --> rehearsal
-//     a. resource: (
-//         fixtures: object,
-//         script: function,
-//         organization: (setup, prepare, teardown)
-//     );
-//     b. taskCallback: (resource) => buildScene(
-//          resource.script.perform(resource.fixture),
-//          resource.assertionMap,
-//          resource.expectation
-//     }
-//     c. task: (taskCallback, assertionMap, ?expectation)
-//     d. rehearsalCallback: () => batchAtest(scenes);
-//     e. rehearsal: (description, rehearsalCallback)
-//     f. playCallback: () => rehearse(rehearsals)
-//     g. play: (name, playCallback)
-
 // Fixtures
 oneToOneAdditionFixture = { a: 1, b: 2 };
-oneToManyAdditionFixture = [oneToOneAdditionFixture, { a: 2, b: 3 }];
+oneToManyAdditionFixture = [ oneToOneAdditionFixture, { a: 2, b: 3 } ];
 manyToOneAdditionFixture = [
-  [oneToOneAdditionFixture],
-  [oneToOneAdditionFixture],
+  [oneToOneAdditionFixture], [oneToOneAdditionFixture],
 ];
 manyToManyAdditionFixture = [
-  oneToManyAdditionFixture,
-  oneToManyAdditionFixture,
+  oneToManyAdditionFixture, oneToManyAdditionFixture,
 ];
 
 // Expectations
 oneToOneAdditionExpectation = 3;
-oneToManyAdditionExpectation = [oneToOneAdditionExpectation, 5];
+oneToManyAdditionExpectation = [ oneToOneAdditionExpectation, 5 ];
 oneToManyAdditionExpectation = [
-  [oneToOneAdditionExpectation],
-  [oneToOneAdditionExpectation],
+  [oneToOneAdditionExpectation], [oneToOneAdditionExpectation], 
 ];
 manyToManyAdditionExpectation = [
-  oneToManyAdditionExpectation,
-  oneToManyAdditionExpectation,
+  oneToManyAdditionExpectation, oneToManyAdditionExpectation,
 ];
 
 // Assertion maps
 oneToOneAdditionAssertionMap = expectToBe;
-oneToManyAdditionAssertionMap = [expectToBe, expectToBe];
+oneToManyAdditionAssertionMap = [ expectToBe, expectToBe ];
 manyToOneAdditionAssertionMap = [
-  [oneToOneAdditionAssertionMap],
-  [oneToOneAdditionAssertionMap],
+  [ oneToOneAdditionAssertionMap ], [ oneToOneAdditionAssertionMap ],
 ];
 manyToManyAdditionAssertionMap = [
   oneToManyAdditionAssertionMap,
@@ -195,28 +163,18 @@ manyToManyAdditionAssertionMap = [
 // Perform callbacks
 oneToOneAdditionPerform = (augmented_fixture_) => [
   add(augmented_fixture_.a, augmented_fixture_.b),
-  oneToOneAdditionAssertionMap,
-  oneToOneAdditionExpectation,
+  oneToOneAdditionAssertionMap, oneToOneAdditionExpectation,
 ];
 
 oneToManyAdditionPerform = (augmented_fixture_) =>
   zip(
     augmented_fixture_.map(addCallback),
-    oneToManyAdditionAssertionMap,
-    oneToManyAdditionExpectation
+    oneToManyAdditionAssertionMap, oneToManyAdditionExpectation
   );
 
-manyToOneAdditionPerform = [oneToOneAdditionPerform, oneToOneAdditionPerform];
+manyToOneAdditionPerform = [ oneToOneAdditionPerform, oneToOneAdditionPerform ];
 
-manyToManyAdditionPerform = [
-  oneToManyAdditionPerform,
-  oneToManyAdditionPerform,
-];
-
-// Ideas:
-// 1. [ x ] Wrap (setup, prepare, teardown) to new-defined concept "organization"
-// 2. [ x ] Set (setup, prepare, teardown) default to (emptyCallback, identityCallback, emptyCallback)
-// 3. [ x ] Break map "perform" on task into to new-defined concepts "acts" and "performance"
+manyToManyAdditionPerform = [ oneToManyAdditionPerform, oneToManyAdditionPerform, ];
 
 // Scripts
 setup = emptyCallback;
@@ -224,15 +182,21 @@ prepare = identityCallback;
 teardown = emptyCallback;
 
 additionRehearsals = [
-  buildRehearsal("must sum numbers using assert", () => assert(addItem)),
-  buildRehearsal("must sum numbers using batchAssert", () =>
-    batchAssert(addItems)
+  buildRehearsal(
+    "must sum numbers using assert", 
+    () => assert(addItem)
   ),
-  buildRehearsal("must sum numbers using atest", () =>
-    atest(oneToOneAdditionFixture, oneToOneAdditionScene)
+  buildRehearsal(
+    "must sum numbers using batchAssert", 
+    () => batchAssert(addItems)
   ),
-  buildRehearsal("must sum numbers using batchAtest", () =>
-    batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
+  buildRehearsal(
+    "must sum numbers using atest", 
+    () => atest(oneToOneAdditionFixture, oneToOneAdditionScene)
+  ),
+  buildRehearsal(
+    "must sum numbers using batchAtest", 
+    () => batchAtest(oneToManyAdditionFixture, oneToManyAdditionScene)
   ),
 ];
 

@@ -8,6 +8,7 @@ import {
   areArrayElements,
   allIndexes,
   isCondition,
+  fulfill,
 } from "../utils";
 
 let assertItem;
@@ -155,5 +156,27 @@ describe("isCondition", () => {
     );
 
     expect(result).toBe(args);
+  });
+  it("should return argument on true condition", () => {
+    const condition = 42 === 42; // true
+    const args = 7;
+    const errorMsg = "It does not fulfill!";
+    const errorClass = Error;
+
+    const result = fulfill(args, condition, errorMsg, errorClass);
+
+    expect(result).toBe(args);
+  });
+  it("should throw Error on false condition", () => {
+    const condition = 42 !== 42; // false
+    const args = 7;
+    const errorMsg = "It does not fulfill!";
+    const errorClass = TypeError;
+
+    const fulfillWithErrorClassFn = () => fulfill(args, condition, errorMsg, errorClass);
+    const fulfillWithoutErrorClassFn = () => fulfill(args, condition, errorMsg);
+
+    expect(fulfillWithErrorClassFn).toThrowError(TypeError);
+    expect(fulfillWithoutErrorClassFn).toThrowError(Error);
   });
 });

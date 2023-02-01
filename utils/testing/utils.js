@@ -16,6 +16,10 @@ export const isCondition = (
   }
 };
 
+export const fulfill = (arg, condition, error_msg, errorClass = Error) => isCondition(
+  condition, (x) => x, arg, error_msg, errorClass
+);
+
 export const allIndexes = (arr, val) =>
   arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), []);
 

@@ -5,7 +5,7 @@ import { expectToBe, expectToBeUndefined } from "../expectTo";
 
 describe("utils", () => {
   it("should assert on default truth message", () => {
-    const message = "The requirement warning message is not provided.";
+    const message = "The required criteria are not provided.";
     const assertItem = [defaultArrayTruthMessage, expectToBe, message];
 
     assert(assertItem);

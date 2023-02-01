@@ -1,5 +1,5 @@
 import { assert, batchAssert } from "../assertions";
-import { buildPlay, buildScene } from "../build";
+import { buildScene } from "../build";
 import { areAssertItems } from "../checkers";
 import { expectToBeEqual } from "../expectTo";
 import { assertFixtures, additionRehearsals } from "./fixtures";

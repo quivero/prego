@@ -9,4 +9,4 @@ export const defaultOrganization = {
 };
 
 export const defaultArrayTruthMessage =
-  "The requirement warning message is not provided.";
+  "The required criteria are not provided.";
