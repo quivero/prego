@@ -56,12 +56,12 @@ validAtestAct = buildAct(perform, organization);
 
 export const validOrganizations = [
   {},
-  { setup: () => {} }, 
-  { prepare: (x) => x }, 
-  { teardown: () => {} }, 
-  { setup: () => {}, prepare: (x) => x }, 
-  { setup: () => {}, teardown: () => {} }, 
-  { prepare: () => {}, teardown: () => {} }, 
+  { setup: () => {} },
+  { prepare: (x) => x },
+  { teardown: () => {} },
+  { setup: () => {}, prepare: (x) => x },
+  { setup: () => {}, teardown: () => {} },
+  { prepare: () => {}, teardown: () => {} },
   { setup: () => {}, prepare: (x) => x, teardown: () => {} }
 ];
 

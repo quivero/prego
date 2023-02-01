@@ -1,6 +1,6 @@
 import { assert, batchAssert } from "../assertions";
 import { buildScene } from "../build";
-import { 
+import {
   areAssertItems, areOrganizations, areScenes, isAssertArtifact, isAssertItem,
 } from "../checkers";
 import { expectToBe, expectToBeEqual } from "../expectTo";
