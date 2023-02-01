@@ -40,3 +40,17 @@ export const whosFalse = (array) => whosWhat(array, isFalse);
 
 export const areArrayElements = (array, truthCallback) =>
   areTrue(array.map(truthCallback));
+
+export const enumerate = (array) => {
+  let enumeratedStringArray = ""; 
+  let line;
+
+  array.forEach(
+    (el, index) => {
+      line = `${index}. ${String(el)}\n`
+      enumeratedStringArray += line;
+    }
+  );
+
+  return enumeratedStringArray;
+}
