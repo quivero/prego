@@ -11,6 +11,7 @@ import {
   invalidAssertItemLength,
   invalidAssertCallbackItem,
   validOrganizations,
+  invalidOrganizations,
 } from "./fixtures";
 
 let assertItem, assertItems;
@@ -38,17 +39,15 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("must assert ", () => {
+  it("must return true on valid organization array", () => {
     assertItem = [areOrganizations(validOrganizations), expectToBeEqual, true];
-
     assert(assertItem);
   });
-  it("must return true/false on valid/invalid assert items", () => {
-    assertItem = [areOrganizations(validOrganizations), expectToBeEqual, true];
-
+  it("must return false on invalid assert items", () => {
+    assertItem = [areOrganizations(invalidOrganizations), expectToBeEqual, false];
     assert(assertItem);
   });
-  it("must return true for valid assert item", () => {
+  it("must return true for valid assert artifact", () => {
     assertItems = [
       [ isAssertArtifact(validAssertLength2Item), expectToBe, true ],
       [ isAssertArtifact(validAssertLength3Item), expectToBe, true ],

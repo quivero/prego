@@ -6,33 +6,39 @@ import { buildScene } from "./build";
 const check = (scenes) => batchAssert(scenes);
 
 export const atest = (fixtures, act) => {
-    act.setup();
+  act.setup();
 
-    const setFixtures = act.prepare(fixtures);
-    let performanceItems = act.perform(setFixtures);
+  const setFixtures = act.prepare(fixtures);
+  const performanceItems = act.perform(setFixtures);
+  const scenes = performanceItems.map(buildScene);
 
-    performanceItems = performanceItems.map(
-        (performanceItem) => buildScene(performanceItem)
-    );
+  check(scenes);
 
-    check(performanceItems);
-
-    act.teardown();
-
-    return setFixtures;
+  act.teardown();
+  
+  return setFixtures;
 };
 
-export const batchAtest = (fixtures, acts) => {
-  _.zip(fixtures, acts).forEach((fixture_act) =>
-    atest(fixture_act[0], fixture_act[1])
-  );
+export const practice = (fixtures, acts) => {
+  let thisFixtures = {...fixtures};
+  
+  const actCallnack = (act) => {
+    const preparedFixtures = atest(thisFixtures, act);
+    thisFixtures = {...preparedFixtures, thisFixtures};
+  };
+  
+  acts.forEach(actCallnack);
 };
 
+export const rehearse = (rehearsals) => {
+  const rehearseCallnack = (rehearsal) => it(rehearsal.description, rehearsal.callback);
+  
+  rehearsals.forEach(rehearseCallnack);
+}
 
-export const rehearse = (acts) => acts.forEach((act) => it(act.description, act.callback));
 
-export const practice = (rehearsals) => {
-    rehearsals.forEach((rehearsal) => it(rehearsal.description, rehearsal.callback));
+export const cast = (plays) => {
+  const playCallback = (play) => describe(play.name, play.callback);
+  
+  plays.forEach(playCallback)
 };
-
-export const cast = (plays) => plays.forEach((play) => describe(play.name, play.callback));
