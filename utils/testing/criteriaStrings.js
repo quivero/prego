@@ -35,8 +35,8 @@ const orgCriterium5 = "Has return value [false, true, false];";
 const orgCriterium6 =
   '"prepare" return value types assertItem or Array(assertItem);';
 
-const organizationCriteriaArray = [ 
-  orgCriterium1, orgCriterium2, orgCriterium3, orgCriterium4, orgCriterium5, orgCriterium6 
+const organizationCriteriaArray = [
+  orgCriterium1, orgCriterium2, orgCriterium3, orgCriterium4, orgCriterium5, orgCriterium6
 ];
 
 const orgProps = `${enumerate(organizationCriteriaArray)}\n `;
