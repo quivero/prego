@@ -17,6 +17,8 @@ export const NotImplementedError = (message = "") => {
 
 NotImplementedError.prototype = Error.prototype;
 
+export const interfaceError = () => NotImplementedError("This is an interface.");
+
 export const assertionError = (fakeItem) => {
   const itemValuesTypes = Object.values(fakeItem).map((value) => typeof value);
   const itemKeys = Object.keys(fakeItem);
