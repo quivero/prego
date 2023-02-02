@@ -10,49 +10,56 @@ verb:noun(s)
 
 Objects:
 
-  [  ]  fixture := object,
-  [  ]  assertionArtifact: object(
+  [   ]  fixture:object,
+  [   ]  assertionArtifact: object(
          (result: object, expectToMap: expectTo) ||
          (result: object, expectToMap: : expectTo, expectation: object)
        ) | Array( (result, expectToMap) || (result, expectToMap, expectation) )
-  [  ]  organization := object( setup: function, prepare: function, teardown: function ),
-  [  ]  scene := object(
+  [   ]  organization := object( setup: function, prepare: function, teardown: function ),
+  [   ]  scene := object(
          (result:object, expectToMap:expectTo) ||
          (result:object, expectToMap:expectTo, expectation:object)
        ) | Array(
          (result:object, expectToMap:expectTo) ||
          (result:object, expectToMap:expectTo, expectation:object)
        )
-  [  ]  act := scriptCallback + [ organization (defaultOrganization) ]
-  [  ]  resource: ( text: String, callback: function );
-  [  ]  rehearsal := { "fixture": fixture, "acts": acts }
-  [  ]  play := { "name": string, "rehearsals": rehearsals }
-  [  ]  audition := { "name": string, "plays": plays }
+  [   ]  act := scriptCallback + [ organization (defaultOrganization) ]
+  [   ]  resource: ( text: String, callback: function );
+  [   ]  rehearsal := { "fixture": fixture, "acts": acts }
+  [   ]  play := { "name": string, "rehearsals": rehearsals }
+  [   ]  audition := { "name": string, "plays": plays }
 
 Callbacks:
 
-  [  ]  scriptCallback := function( preparedFixture:object -> assertionArtifact ),
-  [  ]  perform := (act) => {...} // Improve atest
-  [  ]  buildScenesFromAssertArtifact: (preparedFixtures) => buildScenes(scriptCallback(preparedFixtures))
-  [  ]  buildRehearsal: function( ( fixture:object, acts:Array(Act) ) -> preparedFixtures:object ):
+  [   ]  scriptCallback := function( preparedFixture:object -> assertionArtifact ),
+  [   ]  perform := (act) => {...} // Improve atest
+  [   ]  buildScenesFromAssertArtifact: (preparedFixtures) => buildScenes(scriptCallback(preparedFixtures))
+  [   ]  buildRehearsal: function( ( fixture:object, acts:Array(Act) ) -> preparedFixtures:object ):
+    
     Algorithm:
       1. Practice act;
       2. Retrieve prepared fixtures from previous act;
       3. Update provided fixture with given prepared fixtures;
       4. Repeat 1.
-  [  ]  rehearse: ( description:string, acts:Array(Act) ):
+
+  [   ]  rehearse: ( description:string, acts:Array(Act) ):
+    
     Questions:
       1. Must a rehearsal have an organization?
       2. If the answer for previous question is yes, how can we integrate "setup-teardown" (check URL https://jestjs.io/docs/setup-teardown)
-  [  ]  playCallback( (Rehearsal | Array(Rehearsal)) -> void   ) => rehearse(rehearsals)
-  [  ]  buildPlay( ( name:string, rehearsals:Function ) -> void ) =>
+  
+  [   ]  playCallback( (Rehearsal | Array(Rehearsal)) -> void   ) => rehearse(rehearsals)
+  [   ]  buildPlay( ( name:string, rehearsals:Function ) -> void ) =>
 
 Utils:
 
-  [  ]  isArtifact( (candidate, isArtifactCallback) -> Boolean ) => return isArray(candidate) ? are(candidate, isArtifactCallback) : isArtifactCallback(candidate);
-  [  ]  delimitify( (strings:Array(string), delimiter:string) -> string ) => strings.join(delimiter)
-  [  ]  slugify( (strings:Array(string)) -> string ) => strings.join('_')
-  [  ]  hyphenify( (strings:Array(string)) -> string ) => strings.join('-')
+  [   ] const isArtifact = ( (candidate, artifactCallback(any -> Boolean)) -> Boolean ) => return isArray(candidate) ? are(candidate, artifactCallback) : artifactCallback(candidate);
+  [   ] const applyArtifact = (artifact, callback) => isArray(artifact) ? artifact.map(callback) : callback(artifact);
+  [   ] const delimitify( (strings:Array(string), delimiter:string) -> string ) => strings.join(delimiter)
+  [   ] const slugify = ( (strings:Array(string)) -> string ) => strings.join('_')
+  [   ] const hyphenify = ( (strings:Array(string)) -> string ) => strings.join('-')
+  [   ] const andify = ( (strings:Array(string)) -> string ) => strings.join('&')
+  [   ] const orify = ( (strings:Array(string)) -> string ) => strings.join('|')
 
 Miscelaneous: Decision-making
 
@@ -127,9 +134,11 @@ Miscelaneous: Decision-making
       }
 
       toPremise() {
-        const slugifiedPremisesKeys = slugify(getPremiseKeys(this.value));
+        const premisesKeysValuesString = andify(
+          getPremisesKeyValue(this.value).map(([key, value]) => `(${key}:${value})`)
+        );
 
-        return new Premise(`${this.key}-${slugifiedPremisesKeys}`, this.description, this.conclude());
+        return new Premise(`${this.key}-${premisesKeysValuesString}`, this.description, this.conclude());
       }
 
       _toArgument() {
@@ -140,7 +149,7 @@ Miscelaneous: Decision-making
               argument[value.key] = value.conclude()
               return argument;
             }, {}
-          ) : { this.value.key: this.value.value }
+          ) : this.value.argue();
       }
 
       toString() {
@@ -156,9 +165,11 @@ Miscelaneous: Decision-making
       }
 
       toPremise() {
-        const slugifiedPremisesKeys = slugify(getPremiseKeys(this.value));
+        const premisesKeysValuesString = orify(
+          getPremisesKeyValue(this.value).map(([key, value]) => `(${key}:${value})`)
+        );
 
-        return new Premise(`${this.key}-${slugifiedPremisesKeys}`, this.description, this.conclude());
+        return new Premise(`${this.key}-${premisesKeysValuesString}`, this.description, this.conclude());
       }
 
       _toArgument() {
@@ -169,22 +180,25 @@ Miscelaneous: Decision-making
               argument[value.key] = value.conclude()
               return argument;
             }, {}
-          ) : { this.value.key: this.value.value }
+          ) : this.value.argue()
       }
 
       toString() {
         return this.toPremise().toString();
       }
-    }
-
-
+  }
 
   Utils:
 
     [   ] isReasoningArtifact(candidate:any) => isArtifact(candidate, (candidate) => element instanceOf Reasoning);
 
     [   ] applyConclusion(premises:( Premise | Array(Premise) ), booleanReduceMap:function, defaultValue) => {
-      isArray(premises) ? premises.map((el) => el.conclude()).reduce(booleanReduceMap, defaultValue) : premises.conclude()
+      return applyArtifact(premises, (premise) => premise.conclude()).reduce(booleanReduceMap, defaultValue)
     }
 
-    [  ]  getPremiseKeys(premises:( Premise | Array(premises) ) -> ( string | Array(string) )):
+    [   ]  const getPremiseKeys = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
+      return applyArtifact(premises, (premise) => premise.key)
+    }
+    [   ]  const getPremiseKeyValue = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
+      return applyArtifact(premises, (premise) => [premise.key, premise.value])
+    }
