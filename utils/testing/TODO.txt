@@ -45,7 +45,7 @@ Callbacks:
       1. Must a rehearsal have an organization?
       2. If the answer for previous question is yes, how can we integrate "setup-teardown" (check URL https://jestjs.io/docs/setup-teardown)
   [  ]  playCallback( (Rehearsal | Array(Rehearsal)) -> void   ) => rehearse(rehearsals)
-  [  ]  buildPlay( ( name:string, rehearsals:Function ) -> void ) => 
+  [  ]  buildPlay( ( name:string, rehearsals:Function ) -> void ) =>
 
 Utils:
 
@@ -57,26 +57,26 @@ Utils:
 Miscelaneous: Decision-making
 
   Objects:
-    
+
     [ x ] export const NotImplementedError = (message = "") => {
         this.name = "NotImplementedError";
         this.message = message;
     }
     NotImplementedError.prototype = Error.prototype;
-    
+
     [   ] const interfaceError = () => NotImplementedError("This is an interface.");
 
     [   ] class Reasoning  {
-      
+
       _booleanReduceMap = undefined;
       _defaultValue = null;
-      
+
       constructor(key:string, description:string, value:any) {
-        this.key = key; 
-        this.description = description; 
+        this.key = key;
+        this.description = description;
         this.value = value;
       }
-      
+
       conclude() {
         return applyConclusion(this.value, this._booleanReduceMap, this._defaultValue);
       }
@@ -106,7 +106,7 @@ Miscelaneous: Decision-making
         }
 
         _toArgument() {
-          return { this.key: this.value } 
+          return { this.key: this.value }
         }
 
         conclude() {
@@ -128,26 +128,26 @@ Miscelaneous: Decision-making
 
       toPremise() {
         const slugifiedPremisesKeys = slugify(getPremiseKeys(this.value));
-        
+
         return new Premise(`${this.key}-${slugifiedPremisesKeys}`, this.description, this.conclude());
       }
 
       _toArgument() {
-        return isArray(this.value) ? 
+        return isArray(this.value) ?
           objectReduce(
             this.value,
             (argument, key, value) => {
               argument[value.key] = value.conclude()
-              return argument; 
+              return argument;
             }, {}
-          ) : { this.value.key: this.value.value } 
+          ) : { this.value.key: this.value.value }
       }
 
       toString() {
         return this.toPremise().toString();
       }
     }
-      
+
     [   ] class Injunction extends Reasoning {
       constructor( key:string, description:string, value:(Premise | Array(Premise)) ) {
         super(key, description, value);
@@ -157,27 +157,27 @@ Miscelaneous: Decision-making
 
       toPremise() {
         const slugifiedPremisesKeys = slugify(getPremiseKeys(this.value));
-        
+
         return new Premise(`${this.key}-${slugifiedPremisesKeys}`, this.description, this.conclude());
       }
 
       _toArgument() {
-        return isArray(this.value) ? 
+        return isArray(this.value) ?
           objectReduce(
             this.value,
             (argument, key, value) => {
               argument[value.key] = value.conclude()
-              return argument; 
+              return argument;
             }, {}
-          ) : { this.value.key: this.value.value } 
+          ) : { this.value.key: this.value.value }
       }
 
       toString() {
         return this.toPremise().toString();
       }
-    } 
-    
-      
+    }
+
+
 
   Utils:
 
@@ -186,6 +186,5 @@ Miscelaneous: Decision-making
     [   ] applyConclusion(premises:( Premise | Array(Premise) ), booleanReduceMap:function, defaultValue) => {
       isArray(premises) ? premises.map((el) => el.conclude()).reduce(booleanReduceMap, defaultValue) : premises.conclude()
     }
-    
-    [  ]  getPremiseKeys(premises:( Premise | Array(premises) ) -> ( string | Array(string) )): 
 
+    [  ]  getPremiseKeys(premises:( Premise | Array(premises) ) -> ( string | Array(string) )):
