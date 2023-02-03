@@ -10,15 +10,6 @@ export const buildError = (errorClass, errorMessage) => {
   };
 };
 
-export const NotImplementedError = (message = "") => {
-  this.name = "NotImplementedError";
-  this.message = message;
-}
-
-NotImplementedError.prototype = Error.prototype;
-
-export const interfaceError = () => NotImplementedError("This is an interface.");
-
 export const assertionError = (fakeItem) => {
   const itemValuesTypes = Object.values(fakeItem).map((value) => typeof value);
   const itemKeys = Object.keys(fakeItem);

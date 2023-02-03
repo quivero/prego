@@ -28,12 +28,12 @@ export const assertItemCriteria = assertDescription + schemas;
 const orgDescription = "An organization has the following characteristics \n\n";
 
 const orgCriterium1 = "Type object;";
-const orgCriterium2 = 'Keys strings ["setup", "prepare", "teardown"];';
-const orgCriterium3 = 'Value types ["function", "function", "function"];';
-const orgCriterium4 = "Value argument length [0, 1, 0];";
-const orgCriterium5 = "Has return value [false, true, false];";
+const orgCriterium2 = 'Keys strings: ["setup", "prepare", "teardown"];';
+const orgCriterium3 = 'Value types: ["function", "function", "function"];';
+const orgCriterium4 = "Value argument: length [void, [any], void];";
+const orgCriterium5 = "Has return value: [false, true, false];";
 const orgCriterium6 =
-  '"prepare" return value types assertItem or Array(assertItem);';
+  '"prepare" return value types: assertItem or Array(assertItem);';
 
 const organizationCriteriaArray = [
   orgCriterium1, orgCriterium2, orgCriterium3, orgCriterium4, orgCriterium5, orgCriterium6

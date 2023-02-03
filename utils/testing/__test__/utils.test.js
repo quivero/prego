@@ -1,6 +1,6 @@
+import { stringify } from "ts-jest";
 import { assert } from "../assertions";
-import { isTrue, isFalse, areTrue } from "../checkers";
-import { expectAssertions, expectToBe, expectToEqual, expectToStrictEqual } from "../expectTo";
+import { expectAssertions, expectToBe, expectToEqual, expectToStrictEqual, expectToThrow } from "../expectTo";
 import {
   whosWhat,
   whosTrue,
@@ -9,9 +9,22 @@ import {
   allIndexes,
   isCondition,
   fulfill,
+  delimitify,
+  slugify,
+  orify,
+  andify,
+  isTrue, 
+  isFalse, 
+  areTrue,
+  batchAnd,
+  batchOr,
+  isArtifact,
+  stringifier,
+  applyArtifact,
+    
 } from "../utils";
 
-let assertItem;
+let assertItem, result, expectation;
 
 describe("whos", () => {
   it("must return indexes on callback whosTrue with argument [true, false, true]", () => {
@@ -29,21 +42,14 @@ describe("whos", () => {
   it("must return indexes on callback whosWhat with argument [true, false, true], isTrue", () => {
     expectAssertions(1);
 
-    assertItem = [
-      whosWhat([true, false, true], isTrue),
-      expectToStrictEqual,
-      [0, 2],
+    assertItem = [ whosWhat([true, false, true], isTrue), expectToStrictEqual, [0, 2],
     ];
     assert(assertItem);
   });
   it("must return indexes on callback whosWhat with argument [true, false, true], isFalse", () => {
     expectAssertions(1);
 
-    assertItem = [
-      whosWhat([true, false, true], isFalse),
-      expectToStrictEqual,
-      [1],
-    ];
+    assertItem = [ whosWhat([true, false, true], isFalse),  expectToStrictEqual, [1], ];
     assert(assertItem);
   });
 });
@@ -125,7 +131,7 @@ describe("isCondition", () => {
     const isConditionFn = () =>
       isCondition(condition, conditionCallback, args, error_msg, errorClass);
 
-    expect(isConditionFn).toThrowError(TypeError);
+    expectToThrow(isConditionFn, TypeError);
   });
 
   it("must throw Error on missing errorClass", () => {
@@ -137,9 +143,9 @@ describe("isCondition", () => {
     const isConditionFn = () =>
       isCondition(condition, conditionCallback, args, error_msg);
 
-    expect(isConditionFn).toThrowError(Error);
+    expectToThrow(isConditionFn, Error);
   });
-
+  
   it("must return on true condition", () => {
     const condition = 42 === 42; // true
     const conditionCallback = (arg) => arg;
@@ -176,10 +182,66 @@ describe("isCondition", () => {
     const fulfillWithErrorClassFn = () => fulfill(args, condition, errorMsg, errorClass);
     const fulfillWithoutErrorClassFn = () => fulfill(args, condition, errorMsg);
 
-    expect(fulfillWithErrorClassFn).toThrowError(TypeError);
-    expect(fulfillWithoutErrorClassFn).toThrowError(Error);
+    expectToThrow(fulfillWithErrorClassFn, TypeError);
+    expectToThrow(fulfillWithoutErrorClassFn, Error);
   });
 });
+
+const numberList = [1,2,3];
+
+describe(
+  "delimitify",
+  () => {
+    it(
+      "must return string delimited by hyphen -",
+      () => {
+        const result = delimitify(numberList, '+');
+        
+        expect(result).toBe('1+2+3')
+      }
+    );
+    it(
+      "must return string delimited by underscore _", 
+      () => {
+        const result = slugify(numberList);
+        
+        expect(result).toBe('1_2_3')
+      }
+    );
+    it(
+      "must return string delimited by pipe |", 
+      () => {
+        const result = orify(numberList);
+        
+        expectToBe(result, '1|2|3')
+      }
+    );
+    it(
+      "must return string delimited by and &", 
+      () => {
+        const result = andify(numberList);
+        
+        expectToBe(result, '1&2&3');
+      }
+    );
+    it(
+      'should return equal stringified element',
+      () => {
+        result = stringifier(1);
+        
+        expectToEqual(result, '1');
+      }
+    );
+    it(
+      'should return equal stringified array elements',
+      () => {
+        result = stringifier(numberList);
+        
+        expectToEqual(result, ['1', '2', '3']);
+      }
+    );
+  }
+);
 
 describe(
   "Miscelaneous",
@@ -193,6 +255,65 @@ describe(
         const funcs = [func_1, func_2];
 
         expectToEqual(funcs.includes(func_1), true);
+      }
+    );
+    it(
+      'assert batch operators \"and\" and \"or\"',
+      () => {
+        result = batchAnd([true, true]);
+        expectToEqual(result, true);
+
+        result = batchAnd([true, false]);
+        expectToEqual(result, false);
+
+        result = batchOr([false, false]);
+        expectToEqual(result, false);
+
+        result = batchOr([true, false]);
+        expectToEqual(result, true);
+      }
+    );
+    it(
+      'should return true for list of artifacts',
+      () => {
+        result = isArtifact( numberList, (x) => typeof x === 'number' );
+        
+        expectToEqual(result, true);
+      }
+    );
+    it(
+      'should return false for non-fulfilling condition',
+      () => {
+        result = isArtifact( '42', (x) => typeof x === 'number' );
+        
+        expectToEqual(result, false);
+        
+        result = isArtifact( ['42', 42], (x) => typeof x === 'number' );
+        
+        expectToEqual(result, false);
+      }
+    );
+    it(
+      'should return transformed artifact on consistent artifact',
+      () => {
+        result = applyArtifact([1,2,3,4], (x) => typeof x === 'number', (x) => 2*x);
+        expectation = [2,4,6,8];
+        
+        expectToEqual(result, expectation);
+        
+        result = applyArtifact(1, (x) => typeof x === 'number', (x) => 2*x);
+        expectation = 2;
+        
+        expectToEqual(result, expectation);
+      }
+    );
+    it(
+      'should return throw on inconsistent artifact',
+      () => {
+        result = () => applyArtifact([1,2,3,'4'], (x) => typeof x === 'number', (x) => 2*x);
+        expectation = TypeError;
+        
+        expectToThrow(result, expectation);
       }
     );
   }

@@ -2,27 +2,11 @@ import _, { isArray, union, intersection, isObject, uniq, isFunction } from "lod
 
 import { defaultOrganization } from "./defaults";
 import { availableExpectToMaps } from "./expectTo";
+import { isArtifact, batchAnd, are, } from "./utils";
 
-/*-------------------------*\
- | General                 |
-\*-------------------------*/
-
-export const and = (acc, el) => acc && el;
-export const or = (acc, el) => acc || el;
-
-export const batchAnd = (booleanList) => booleanList.reduce(and, true);
-export const batchOr = (booleanList) => booleanList.reduce(or, false);
-
-export const are = (candidates, truthCallback) => areTrue(
-  candidates.map((candidate) => truthCallback(candidate))
-);
-export const isTrue = (element) => element === true;
-export const isFalse = (element) => element === false;
-export const areTrue = (array) => array.every(isTrue);
-
-/*-------------------------------------------------*\
- | Assert items                                    |
-\*-------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------*\
+ | Assert items                                                                                                |
+\*-------------------------------------------------------------------------------------------------------------*/
 
 // Default item key strings
 let item2LengthKeys, item3LengthKeys;
@@ -72,30 +56,19 @@ export const isAssertItem = (item) => {
 
 export const areAssertItems = (candidates) => are(candidates, isAssertItem)
 
+export const isAssertArtifact = (candidate) => isArtifact( candidate, isAssertItem );
 
-/*-------------------------------------------------*\
- | Scene                                           |
-\*-------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------*\
+ | Scene                                                                                                       |
+\*-------------------------------------------------------------------------------------------------------------*/
 
 export const isScene = (candidate) => isAssertItem(candidate) && !isArray(candidate);
 
 export const areScenes = (candidates) => are(candidates, isScene);
 
-
-/*-------------------------------------------------*\
- | Assertifacts = Assert artifacts                 |
-\*-------------------------------------------------*/
-
-export const isAssertArtifact = (candidate) => {
-  return isArray(candidate) ? (
-    areAssertItems(candidate) ? true : isAssertItem(candidate)
-  ) : isAssertItem(candidate);
-};
-
-
-/*-------------------------*\
- | Organization            |
-\*-------------------------*/
+/*-------------------------------------------------------------------------------------------------------------*\
+ | Organization                                                                                                |
+\*-------------------------------------------------------------------------------------------------------------*/
 
 // Possible organization key strings
 export const possibleOrganizationKeys = Object.keys(defaultOrganization);
@@ -115,9 +88,9 @@ export const isOrganization = (candidate) => {
 
 export const areOrganizations = (candidates) => are(candidates, isOrganization);
 
-/*-------------------------------------------------*\
- | Act                                             |
-\*-------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------*\
+ | Act                                                                                                         |
+\*-------------------------------------------------------------------------------------------------------------*/
 
 // Default item key strings
 const actKeys = [...possibleOrganizationKeys, "script"];
