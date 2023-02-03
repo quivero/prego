@@ -37,10 +37,10 @@
     "docker:watch": "./utils/sscripts/docker-deploy.sh $npm_config_tag",
     "update": "bash ./utils/sscripts/update.sh",
     "start": "nodemon --trace-warnings --experimental-modules ./src/index.js",
-    "test:clear_cache": "jest  --clearCache",
-    "test": "npm run test:clear_cache && jest",
-    "test:watch": "jest --watchAll",
-    "test:ci": "jest --collect-coverage --coverage --ci",
+    "test:clearCache": "jest --clearCache",
+    "test": "npm run test:clearCache && jest --config",
+    "test:watch": "jest --config --watchAll",
+    "test:ci": "jest --config --collect-coverage --coverage --ci",
     "release": "np --any-branch",
     "nibble": "npx eslint-nibble .",
     "fixable-nibble": "npx eslint-nibble --fixable-only .",
@@ -84,6 +84,8 @@
     "nodemon": "^2.0.20",
     "np": "^3.0.4",
     "npm-check-engine": "1.0.0",
+    "ts-jest": "^29.0.5",
+    "typescript": "^3.9.10",
     "webpack": "5.75.0"
   },
   "engines": {
