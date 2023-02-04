@@ -53,13 +53,18 @@ Callbacks:
 
 Utils:
 
+  [   ] const isArtifact = ( (candidate, artifactCallback(any -> Boolean)) -> Boolean ) => isArray(candidate) ? (
+          candidate.length === 0 ? are(candidate, artifactCallback) : false
+    ) : artifactCallback(candidate);
+  [   ] const applyArtifact = (artifact, callback) => isArray(artifact) ? artifact.map(callback) : callback(artifact);
   [   ] const castArtifactToObject = (
-    artifact:( any | Array(any) ), keyCallback:function(any -> string), valueCallback:function(any -> any)
-  ) isArray(artifact) ? objectReduce(
-    artifact, 
+    artifact:( any | Array(any) ),
+    keyCallback:function(any -> string),
+    valueCallback:function(any -> any)
+  ) isArray(artifact) ? objectReduce(artifact,
     (artifactObject, index, object) => {
       artifactObject[keyCallback(object)] = valueCallback(object)
-      
+
       return artifactObject;
     }, {} )
   
