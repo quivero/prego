@@ -20,7 +20,7 @@ describe(
       }
     );
     it(
-      "must check interfaceError", 
+      "must check interfaceError",
       () => {
         let message, error;
         message = "This is an interface";
