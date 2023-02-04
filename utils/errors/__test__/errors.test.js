@@ -1,6 +1,4 @@
-import {
-    NotImplementedError
-  } from "../errors";
+import { NotImplementedError } from "../errors";
 
 describe(
   "Errors", 
