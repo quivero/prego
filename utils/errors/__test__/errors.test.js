@@ -1,10 +1,10 @@
 import { InterfaceError, NotImplementedError } from "../errors";
 
 describe(
-  "Errors", 
+  "Errors",
   () => {
     it(
-      "must match defaultArrayTruthMessage on truthError message without truthMessage", 
+      "must match defaultArrayTruthMessage on truthError message without truthMessage",
       () => {
         let message, error;
         message = "Fire!";
@@ -15,7 +15,7 @@ describe(
 
         message = "";
         error = new NotImplementedError();
-        
+
         expect(error.name).toMatch("NotImplementedError");
       }
     );

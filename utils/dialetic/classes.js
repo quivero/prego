@@ -77,7 +77,7 @@ export class Conjunction extends Reasoning {
     const talkMap = (premise) => premise.verbalize();
     const arguments_ = andify(applyArtifact(this.value, isPremise,  talkMap));
     const conjunctionAsPremiseKey = `${this.key}-${arguments_}`;
-    
+
     return new Premise(conjunctionAsPremiseKey, this.description, this.conclude());
   }
 
@@ -101,7 +101,7 @@ export class Injunction extends Reasoning {
     const talkMap = (premise) => premise.verbalize();
     const arguments_ = orify(applyArtifact(this.value, isPremise,  talkMap));
     const injunctionAsPremiseKey = `${this.key}-${arguments_}`;
-    
+
     return new Premise(injunctionAsPremiseKey, this.description, this.conclude());
   }
 

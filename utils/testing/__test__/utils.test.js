@@ -13,15 +13,15 @@ import {
   slugify,
   orify,
   andify,
-  isTrue, 
-  isFalse, 
+  isTrue,
+  isFalse,
   areTrue,
   batchAnd,
   batchOr,
   isArtifact,
   stringifier,
   applyArtifact,
-    
+
 } from "../utils";
 
 let assertItem, result, expectation;
@@ -145,7 +145,7 @@ describe("isCondition", () => {
 
     expectToThrow(isConditionFn, Error);
   });
-  
+
   it("must return on true condition", () => {
     const condition = 42 === 42; // true
     const conditionCallback = (arg) => arg;
@@ -196,31 +196,31 @@ describe(
       "must return string delimited by hyphen -",
       () => {
         const result = delimitify(numberList, '+');
-        
+
         expect(result).toBe('1+2+3')
       }
     );
     it(
-      "must return string delimited by underscore _", 
+      "must return string delimited by underscore _",
       () => {
         const result = slugify(numberList);
-        
+
         expect(result).toBe('1_2_3')
       }
     );
     it(
-      "must return string delimited by pipe |", 
+      "must return string delimited by pipe |",
       () => {
         const result = orify(numberList);
-        
+
         expectToBe(result, '1|2|3')
       }
     );
     it(
-      "must return string delimited by and &", 
+      "must return string delimited by and &",
       () => {
         const result = andify(numberList);
-        
+
         expectToBe(result, '1&2&3');
       }
     );
@@ -228,7 +228,7 @@ describe(
       'should return equal stringified element',
       () => {
         result = stringifier(1);
-        
+
         expectToEqual(result, '1');
       }
     );
@@ -236,7 +236,7 @@ describe(
       'should return equal stringified array elements',
       () => {
         result = stringifier(numberList);
-        
+
         expectToEqual(result, ['1', '2', '3']);
       }
     );
@@ -277,7 +277,7 @@ describe(
       'should return true for list of artifacts',
       () => {
         result = isArtifact( numberList, (x) => typeof x === 'number' );
-        
+
         expectToEqual(result, true);
       }
     );
@@ -285,11 +285,11 @@ describe(
       'should return false for non-fulfilling condition',
       () => {
         result = isArtifact( '42', (x) => typeof x === 'number' );
-        
+
         expectToEqual(result, false);
-        
+
         result = isArtifact( ['42', 42], (x) => typeof x === 'number' );
-        
+
         expectToEqual(result, false);
       }
     );
@@ -298,12 +298,12 @@ describe(
       () => {
         result = applyArtifact([1,2,3,4], (x) => typeof x === 'number', (x) => 2*x);
         expectation = [2,4,6,8];
-        
+
         expectToEqual(result, expectation);
-        
+
         result = applyArtifact(1, (x) => typeof x === 'number', (x) => 2*x);
         expectation = 2;
-        
+
         expectToEqual(result, expectation);
       }
     );
@@ -312,7 +312,7 @@ describe(
       () => {
         result = () => applyArtifact([1,2,3,'4'], (x) => typeof x === 'number', (x) => 2*x);
         expectation = TypeError;
-        
+
         expectToThrow(result, expectation);
       }
     );
