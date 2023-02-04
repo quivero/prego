@@ -1,25 +1,124 @@
-import { Conjunction, Injunction, Premise } from "../classes";
+import { Conjunction, Injunction, Premise, Reasoning } from "../classes";
 
-export const truePremise = Premise( 'true-premise-1', 'This is a true premise', true );
-export const falsePremise = Premise( 'false-premise-1', 'This is a false premise', false );
+// Reasons
+export const reason = new Reasoning( 'reason', 'This is a reason', true );
 
-const premises11 = [ truePremise, truePremise ];
-const premises10 = [ truePremise, falsePremise ]
-const premises01 = [ falsePremise, truePremise ];
-const premises00 = [ falsePremise, falsePremise ];
+// Premises
+export const truePremise = new Premise( 'true_premise', 'This is a true premise', true );
+export const falsePremise = new Premise( 'false_premise', 'This is a false premise', false );
 
-export const injunction11 = new Injunction( 'injunction-1', 'This is a [true, true] injunction', premises11);
-export const injunction10 = new Injunction( 'injunction-2', 'This is a [true, false] injunction', premises10);
-export const injunction01 = new Injunction( 'injunction-3', 'This is a [false, true] injunction', premises01);
-export const injunction00 = new Injunction( 'injunction-4', 'This is a [false, false] injunction', premises00);
+export const expectedTruePremiseArgument = { "true_premise": true };
+export const expectedFalsePremiseArgument = { "false_premise": false};
+export const expectedTruePremiseConclusion = true;
+export const expectedFalsePremiseConclusion = false;
 
-export const conjunction11 = new Conjunction( 'conjunction-1', 'This is a [true, true] conjunction', premises11 );
-export const conjunction10 = new Conjunction( 'conjunction-2', 'This is a [true, false] conjunction', premises10 );
-export const conjunction01 = new Conjunction( 'conjunction-3', 'This is a [false, true] conjunction', premises01 );
-export const conjunction00 = new Conjunction( 'conjunction-4', 'This is a [false, false] conjunction', premises00 );
+export const premises = [ truePremise, falsePremise ];
 
-export const injunctions = [ injunction11, injunction10, injunction01, injunction00 ];
-export const expectInjunctionsConclusions = [true, true, true, false];
+export const expectedPremisesEntries = [ 
+  [ "true_premise", true ],  
+  [ "false_premise", false ] 
+];
 
-export const conjunction = [ conjunction11, conjunction10, conjunction01, conjunction00 ];
-export const expectConjunctionsConclusions = [true, false, false, false];
+export const expectedPremisesKeys = [ "true_premise", "false_premise" ]
+export const expectedPremisesArguments = [ 
+    {"true_premise": true}, 
+    {"false_premise": false} 
+];
+export const expectedPremisesConclusions = [ true, false ];
+export const expectedPremisesVerbalizations = [ 
+    "(true_premise:true)", 
+    "(false_premise:false)" 
+];
+
+// Premise artifacts
+export const premiseArtifacts = [
+  [ truePremise, truePremise ],
+  [ truePremise, falsePremise ],
+  [ falsePremise, truePremise ],
+  [ falsePremise, falsePremise ]
+];
+
+// Injunctions and conjunctions
+export const injunctions = [];
+export const conjunctions = [];
+
+let injunction, conjunction;
+let injprops, conjprops;
+
+const descriptionCallback = (name, premise) => `This is a [${premise}] ${name}`;
+
+for (const i in premiseArtifacts) {
+    injprops = {
+      "key": `injunction_${i}`, 
+      "description": descriptionCallback('injunction', premiseArtifacts[i]), 
+      "value": premiseArtifacts[i]
+    }
+
+    conjprops = {
+      "key": `conjunction_${i}`, 
+      "description": descriptionCallback('conjunction', premiseArtifacts[i]),
+      "value": premiseArtifacts[i]
+    }
+    
+    injunction = new Injunction(injprops.key, injprops.description, injprops.value);
+    conjunction = new Conjunction(conjprops.key, conjprops.description, conjprops.value);
+    
+    injunctions.push(injunction);
+    conjunctions.push(conjunction);
+}
+
+// Arguments
+export const expectedInjConjArguments = [ 
+  { "true_premise": true, "true_premise": true },
+  { "true_premise": true, "false_premise": false} , 
+  { "false_premise": false, "true_premise": true },
+  { "false_premise": false, "false_premise": false },
+];
+
+// Injunctions
+
+export const expectedInjunctionsConclusions = [ true, true, true, false ];
+export const expectedInjunctionsVerbalizations = [ 
+  "(injunction_0=(true_premise:true)|(true_premise:true):true)", 
+  "(injunction_1=(true_premise:true)|(false_premise:false):true)", 
+  "(injunction_2=(false_premise:false)|(true_premise:true):true)",
+  "(injunction_3=(false_premise:false)|(false_premise:false):false)", 
+];
+
+// Conjunctions
+
+export const expectedConjunctionsConclusions = [ true, false, false, false ];
+export const expectedConjunctionsVerbalizations = [ 
+  "(conjunction_0=(true_premise:true)&(true_premise:true):true)", 
+  "(conjunction_1=(true_premise:true)&(false_premise:false):false)", 
+  "(conjunction_2=(false_premise:false)&(true_premise:true):false)",
+  "(conjunction_3=(false_premise:false)&(false_premise:false):false)",
+ ];
+
+// Single premise conjunctions
+export let singlePremiseConjunction, singlePremiseInjunction;
+
+injprops = {
+  "key": `singlePremiseInjunction`, 
+  "description": descriptionCallback('injunction', truePremise), 
+  "value": truePremise
+}
+
+singlePremiseInjunction = new Injunction(
+    injprops.key, injprops.description, injprops.value
+);
+
+export const expectedSinglePremiseInjunctionConclusion = true;
+
+// Single premise injunctions
+conjprops = {
+  "key": `singlePremiseConjunction`, 
+  "description": descriptionCallback('conjunction', truePremise),
+  "value": falsePremise
+}
+
+singlePremiseConjunction = new Conjunction(
+    conjprops.key, conjprops.description, conjprops.value
+);
+
+export const expectedSinglePremiseConjunctionConclusion = false;
