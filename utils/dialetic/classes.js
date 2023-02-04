@@ -7,7 +7,7 @@ import { applyReasoningArtifact, getPremisesEntries, isDefined, isPremiseArtifac
 export class Reasoning  {
 
   _booleanReduceMap = undefined;
-  
+
   constructor(key, description, value) {
     this.key = key;
     this.description = description;
@@ -27,11 +27,11 @@ export class Reasoning  {
   toConclusion() {
     throw new InterfaceError();
   }
-  
+
   // Children MUST override this method
   toThought( ) {
     return {
-      "arguments": this.toArgument(), 
+      "arguments": this.toArgument(),
       "conclusion": this.toConclusion()
     };
   }
@@ -63,7 +63,7 @@ export class Premise extends Reasoning {
     constructor( key, description, value ) {
       super(key, description, value);
     }
-    
+
     toArgument( ) {
       return Object.fromEntries([[this.key, this.value]]);
     }
@@ -106,7 +106,7 @@ export class Conjunction extends Reasoning {
     const concludeMap = (premise) => premise.conclude();
     const conclusion = applyReasoningArtifact( this.value, concludeMap );
     const IsBooleanCondition = isBoolean(conclusion);
-    
+
     return IsBooleanCondition ? conclusion : this._booleanReduceMap(conclusion);
   }
 
@@ -137,7 +137,7 @@ export class Injunction extends Reasoning {
     const concludeMap = (premise) => premise.conclude();
     const conclusion = applyReasoningArtifact( this.value, concludeMap );
     const IsBooleanCondition = isBoolean(conclusion);
-    
+
     return IsBooleanCondition ? conclusion : this._booleanReduceMap(conclusion);
   }
 

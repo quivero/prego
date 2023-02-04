@@ -2,7 +2,7 @@ import { applyArtifact } from "../testing/utils"
 import { isReasoning, isPremise } from "./checkers";
 
 
-export const applyReasoningArtifact = (candidate, reasoningCallback) => applyArtifact( 
+export const applyReasoningArtifact = (candidate, reasoningCallback) => applyArtifact(
   candidate, isReasoning, reasoningCallback
 );
 

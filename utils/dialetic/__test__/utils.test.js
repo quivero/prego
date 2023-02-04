@@ -1,13 +1,13 @@
 import { isReasoningArtifact } from "../checkers";
-import { 
+import {
   applyReasoningArtifact,
   getPremiseKeys,
   getPremisesEntries
 } from "../utils";
-import { 
-  expectedPremisesEntries, 
-  expectedPremisesKeys, 
-  premises, 
+import {
+  expectedPremisesEntries,
+  expectedPremisesKeys,
+  premises,
   expectedPremisesConclusions
 } from "./fixtures";
 
@@ -17,44 +17,44 @@ let result, expectation;
 
 describe("dialetic-utils", () => {
   it(
-    "must assert reasoning artifact", 
+    "must assert reasoning artifact",
     () => {
       expect(isReasoningArtifact(premises)).toEqual(true);
     }
   );
   it(
-    "must assert getPremisesEntries", 
+    "must assert getPremisesEntries",
     () => {
-      result = getPremisesEntries( premises ); 
+      result = getPremisesEntries( premises );
       expectation = expectedPremisesEntries;
-      
+
       expect(result).toEqual(expectation);
     }
   );
   it(
-    "must assert getPremisesKeys", 
+    "must assert getPremisesKeys",
     () => {
       result = getPremiseKeys( premises );
       expectation = expectedPremisesKeys;
-      
+
       expect(result).toEqual(expectation);
     }
   );
   it(
-    "must assert applyReasoningArtifact", 
+    "must assert applyReasoningArtifact",
     () => {
       result = applyReasoningArtifact(premises, concludeCallback);
       expectation = expectedPremisesConclusions;
-      
+
       expect(result).toEqual(expectation);
     }
   );
   it(
-    "must throw on non-fulfillinf condition for applyReasoningArtifact", 
+    "must throw on non-fulfillinf condition for applyReasoningArtifact",
     () => {
       result = () => applyReasoningArtifact(['ackbar', 42], concludeCallback);
       expectation = TypeError;
-      
+
       expect(result).toThrow(expectation);
     }
   );
