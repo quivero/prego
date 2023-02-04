@@ -67,10 +67,10 @@ Utils:
 
       return artifactObject;
     }, {} )
-  
-  [ x ] const isArtifactArray = ( (candidate, artifactCallback(any -> Boolean)) -> Boolean ) => ( candidate, isArtifactCallback ) => isArray(candidate) ? 
+
+  [ x ] const isArtifactArray = ( (candidate, artifactCallback(any -> Boolean)) -> Boolean ) => ( candidate, isArtifactCallback ) => isArray(candidate) ?
     are(candidate, isArtifactCallback) : false;
-  [ x ] const isArtifact = ( candidate, isArtifactCallback ) => isArtifactCallback(candidate) ? true : isArtifactArray(candidate, isArtifactCallback); 
+  [ x ] const isArtifact = ( candidate, isArtifactCallback ) => isArtifactCallback(candidate) ? true : isArtifactArray(candidate, isArtifactCallback);
   [ x ] const applyToArtifact = (artifact, callback) => isArray(artifact) ? artifact.map(callback) : callback(artifact);
   [ x ] const delimitify( (strings:Array(string), delimiter:string) -> string ) => strings.join(delimiter)
   [ x ] const slugify = ( (strings:Array(string)) -> string ) => strings.join('_')
@@ -216,7 +216,7 @@ Miscelaneous: Decision-making
     [   ] const getPremiseKeys = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
       return applyArtifact(premises, (premise) => premise.key)
     }
-    
+
     [ x ]  const getPremisesKeyValue = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
       return applyArtifact(premises, (premise) => [premise.key, premise.value])
     }
