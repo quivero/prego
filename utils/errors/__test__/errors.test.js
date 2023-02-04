@@ -1,4 +1,4 @@
-import { NotImplementedError } from "../errors";
+import { InterfaceError, NotImplementedError } from "../errors";
 
 describe(
   "Errors", 
@@ -17,6 +17,17 @@ describe(
         error = new NotImplementedError();
         
         expect(error.name).toMatch("NotImplementedError");
+      }
+    );
+    it(
+      "must check interfaceError", 
+      () => {
+        let message, error;
+        message = "This is an interface";
+        error = new InterfaceError();
+
+        expect(error.message).toMatch(message);
+        expect(error.name).toMatch("InterfaceError");
       }
     );
   }

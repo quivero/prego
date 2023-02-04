@@ -1,4 +1,4 @@
-import { interfaceError } from "../errors/errors";
+import { InterfaceError } from "../errors/errors";
 import { applyArtifact } from "../testing/utils";
 import { isPremise } from "./checkers";
 import { toConclusion } from "./transformers";
@@ -16,7 +16,7 @@ class Reasoning  {
 
   // Children MUST override this method
   toArgument( ) {
-    throw interfaceError();
+    throw new InterfaceError();
   }
 
   argue( ) {
@@ -29,12 +29,12 @@ class Reasoning  {
 
   // Children MUST override this method
   verbalize( ) {
-    throw interfaceError();
+    throw new InterfaceError();
   }
 
   // Children MUST override this method
   toPremise( ) {
-    throw interfaceError();
+    throw new InterfaceError();
   }
 
   toString( ) {

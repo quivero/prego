@@ -5,5 +5,10 @@ export class NotImplementedError extends Error {
     }
   }
   
-  export const interfaceError = () => NotImplementedError("This is an interface.");
+export class InterfaceError extends NotImplementedError {
+  constructor() {
+    super("This is an interface.");
+    this.name = "InterfaceError";
+  }
+}
   
