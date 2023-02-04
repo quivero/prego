@@ -55,7 +55,8 @@ Utils:
 
   [   ] const castArtifactToObject = (
     artifact:( any | Array(any) ), keyCallback:function(any -> string), valueCallback:function(any -> any)
-  ) isArray(artifact) ? objectReduce(artifact, 
+  ) isArray(artifact) ? objectReduce(
+    artifact, 
     (artifactObject, index, object) => {
       artifactObject[keyCallback(object)] = valueCallback(object)
       
@@ -207,9 +208,10 @@ Miscelaneous: Decision-making
       return applyArtifact(premises, (premise) => premise.conclude()).reduce(booleanReduceMap, defaultValue)
     }
 
-    [   ]  const getPremiseKeys = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
+    [   ] const getPremiseKeys = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
       return applyArtifact(premises, (premise) => premise.key)
     }
-    [   ]  const getPremiseKeyValue = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
+    
+    [ x ]  const getPremisesKeyValue = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
       return applyArtifact(premises, (premise) => [premise.key, premise.value])
     }
