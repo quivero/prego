@@ -1,13 +1,13 @@
 import { are, isArtifact, isArtifactCollection } from "../../artifacts/artifacts";
 
-import { 
-  isConjunction, 
-  isConjunctionArtifact, 
-  isDefined, 
-  isInjunction, 
-  isInjunctionArtifact, 
-  isPremise, 
-  isPremiseArtifact, 
+import {
+  isConjunction,
+  isConjunctionArtifact,
+  isDefined,
+  isInjunction,
+  isInjunctionArtifact,
+  isPremise,
+  isPremiseArtifact,
   isReasoningArtifact
 } from "../checkers";
 import { conjunctions, injunctions, premiseArtifacts, premises } from "./fixtures";

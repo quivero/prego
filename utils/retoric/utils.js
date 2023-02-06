@@ -13,7 +13,7 @@ export const batchAnd = (booleanList) => booleanList.reduce(and, true);
 export const batchOr = (booleanList) => booleanList.reduce(or, false);
 
 
-export const applyReasoningArtifact = (candidate, reasoningCallback) => applyArtifact( 
+export const applyReasoningArtifact = (candidate, reasoningCallback) => applyArtifact(
   candidate, isReasoning, reasoningCallback
 );
 

@@ -26,7 +26,7 @@ const validAssertItemCallback = (item) => {
 export const assert = (item) => {
   const assertionError_ = assertionError(item);
   const isValidAssertItemCondition = isAssertItem(item);
-  
+
   isCondition(
     isValidAssertItemCondition, validAssertItemCallback, item,
     assertionError_.message, assertionError_.type
