@@ -1,4 +1,6 @@
-import { fulfill, isCondition } from "../artifacts";
+import { fulfill, isCondition, isIterable } from "../artifacts";
+
+let result, expectation;
 
 describe("isCondition", () => {
 
@@ -24,7 +26,7 @@ describe("isCondition", () => {
       const isConditionFn = () =>
         isCondition(condition, conditionCallback, args, error_msg);
 
-        expect(isConditionFn).toThrow(Error);
+      expect(isConditionFn).toThrow(Error);
     });
 
     it("must return on true condition", () => {

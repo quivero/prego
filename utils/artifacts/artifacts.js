@@ -20,9 +20,6 @@ export const fulfill = (arg, condition, error_msg, errorClass = Error) =>
  | Artifact                                                                                                    |
 \*-------------------------------------------------------------------------------------------------------------*/
 
-export const isIterable = (candidate) =>
-  typeof candidate?.[Symbol.iterator] === "function";
-
 export const isCondition = (
   condition,
   conditionCallback,
