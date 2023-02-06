@@ -14,20 +14,20 @@ export const expectedFalsePremiseConclusion = false;
 
 export const premises = [ truePremise, falsePremise ];
 
-export const expectedPremisesEntries = [ 
-  [ "true_premise", true ],  
-  [ "false_premise", false ] 
+export const expectedPremisesEntries = [
+  [ "true_premise", true ],
+  [ "false_premise", false ]
 ];
 
 export const expectedPremisesKeys = [ "true_premise", "false_premise" ]
-export const expectedPremisesArguments = [ 
-    {"true_premise": true}, 
-    {"false_premise": false} 
+export const expectedPremisesArguments = [
+    {"true_premise": true},
+    {"false_premise": false}
 ];
 export const expectedPremisesConclusions = [ true, false ];
-export const expectedPremisesVerbalizations = [ 
-    "(true_premise:true)", 
-    "(false_premise:false)" 
+export const expectedPremisesVerbalizations = [
+    "(true_premise:true)",
+    "(false_premise:false)"
 ];
 
 // Premise artifacts
@@ -49,28 +49,28 @@ const descriptionCallback = (name, premise) => `This is a [${premise}] ${name}`;
 
 for (const i in premiseArtifacts) {
     injprops = {
-      "key": `injunction_${i}`, 
-      "description": descriptionCallback('injunction', premiseArtifacts[i]), 
+      "key": `injunction_${i}`,
+      "description": descriptionCallback('injunction', premiseArtifacts[i]),
       "value": premiseArtifacts[i]
     }
 
     conjprops = {
-      "key": `conjunction_${i}`, 
+      "key": `conjunction_${i}`,
       "description": descriptionCallback('conjunction', premiseArtifacts[i]),
       "value": premiseArtifacts[i]
     }
-    
+
     injunction = new Injunction(injprops.key, injprops.description, injprops.value);
     conjunction = new Conjunction(conjprops.key, conjprops.description, conjprops.value);
-    
+
     injunctions.push(injunction);
     conjunctions.push(conjunction);
 }
 
 // Arguments
-export const expectedInjConjArguments = [ 
+export const expectedInjConjArguments = [
   { "true_premise": true, "true_premise": true },
-  { "true_premise": true, "false_premise": false} , 
+  { "true_premise": true, "false_premise": false} ,
   { "false_premise": false, "true_premise": true },
   { "false_premise": false, "false_premise": false },
 ];
@@ -78,19 +78,19 @@ export const expectedInjConjArguments = [
 // Injunctions
 
 export const expectedInjunctionsConclusions = [ true, true, true, false ];
-export const expectedInjunctionsVerbalizations = [ 
-  "(injunction_0=(true_premise:true)|(true_premise:true):true)", 
-  "(injunction_1=(true_premise:true)|(false_premise:false):true)", 
+export const expectedInjunctionsVerbalizations = [
+  "(injunction_0=(true_premise:true)|(true_premise:true):true)",
+  "(injunction_1=(true_premise:true)|(false_premise:false):true)",
   "(injunction_2=(false_premise:false)|(true_premise:true):true)",
-  "(injunction_3=(false_premise:false)|(false_premise:false):false)", 
+  "(injunction_3=(false_premise:false)|(false_premise:false):false)",
 ];
 
 // Conjunctions
 
 export const expectedConjunctionsConclusions = [ true, false, false, false ];
-export const expectedConjunctionsVerbalizations = [ 
-  "(conjunction_0=(true_premise:true)&(true_premise:true):true)", 
-  "(conjunction_1=(true_premise:true)&(false_premise:false):false)", 
+export const expectedConjunctionsVerbalizations = [
+  "(conjunction_0=(true_premise:true)&(true_premise:true):true)",
+  "(conjunction_1=(true_premise:true)&(false_premise:false):false)",
   "(conjunction_2=(false_premise:false)&(true_premise:true):false)",
   "(conjunction_3=(false_premise:false)&(false_premise:false):false)",
  ];
@@ -99,8 +99,8 @@ export const expectedConjunctionsVerbalizations = [
 export let singlePremiseConjunction, singlePremiseInjunction;
 
 injprops = {
-  "key": `singlePremiseInjunction`, 
-  "description": descriptionCallback('injunction', truePremise), 
+  "key": `singlePremiseInjunction`,
+  "description": descriptionCallback('injunction', truePremise),
   "value": truePremise
 }
 
@@ -112,7 +112,7 @@ export const expectedSinglePremiseInjunctionConclusion = true;
 
 // Single premise injunctions
 conjprops = {
-  "key": `singlePremiseConjunction`, 
+  "key": `singlePremiseConjunction`,
   "description": descriptionCallback('conjunction', truePremise),
   "value": falsePremise
 }

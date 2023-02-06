@@ -1,12 +1,12 @@
 import { InterfaceError } from "../../errors/errors";
 import { applyReasoningArtifact } from "../utils";
-import { 
+import {
   expectInjunctionsConclusions,
-  expectPremiseArguments, 
-  expectPremiseConclusions, 
-  expectPremiseVerbalizations,  
-  injunctions, 
-  premises, 
+  expectPremiseArguments,
+  expectPremiseConclusions,
+  expectPremiseVerbalizations,
+  injunctions,
+  premises,
   truePremise,
   falsePremise,
   expectedTruePremiseArgument,
@@ -36,15 +36,15 @@ const concludeCallback = (premise) => premise.conclude();
 
 describe("dialetic-classes", () => {
   it("must throw on (toPremise, toArgument, toConclusion, toThought) on Reasoning object", () => {
-    let throwErrorOnToPremise, 
+    let throwErrorOnToPremise,
     throwErrorOnToArgument,
     throwErrorOnToConclusion,
     throwErrorOnToThought,
     throwErrorOnVerbalize;
-    
+
     throwErrorOnToPremise = () => reason.toPremise();
     expect(throwErrorOnToPremise).toThrow(InterfaceError);
-    
+
     throwErrorOnToArgument = () => reason.toArgument();
     expect(throwErrorOnToArgument).toThrow(InterfaceError);
 
@@ -65,7 +65,7 @@ describe("dialetic-classes", () => {
 
     throwErrorOnVerbalize = () => reason.verbalize();
     expect(throwErrorOnVerbalize).toThrow(InterfaceError);
-    
+
   });
   it("must assert premises arguments", () => {
     expect(truePremise.argue()).toEqual(expectedTruePremiseArgument);
