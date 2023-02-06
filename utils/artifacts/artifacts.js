@@ -56,10 +56,7 @@ export const applyArtifact = (candidate, isArtifactCallback, applyCallback) => {
       : applyCallback(candidate);
 
   return isCondition(
-    isArtifact(candidate, isArtifactCallback),
-    artifactApplyCallback,
-    candidate,
-    "Provided candidate does not fulfill artifact is-callback",
-    TypeError
-  );
-};
+    isArtifact( candidate, isArtifactCallback ), artifactApplyCallback, candidate,
+    "Provided candidate does not fulfill artifact is-callback", TypeError
+  )
+}

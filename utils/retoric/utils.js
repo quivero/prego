@@ -15,6 +15,7 @@ export const batchOr = (booleanList) => booleanList.reduce(or, false);
 export const applyReasoningArtifact = (candidate, reasoningCallback) =>
   applyArtifact(candidate, isReasoning, reasoningCallback);
 
+
 const premiseKeyValueCallback = (premise) => [premise.key, premise.value];
 export const getPremisesEntries = (premises) => {
   return applyArtifact(premises, isPremise, premiseKeyValueCallback);
