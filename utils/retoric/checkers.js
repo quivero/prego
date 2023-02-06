@@ -1,13 +1,13 @@
 import { isUndefined } from "lodash";
-import { isArtifact } from "../testing/utils";
+import { isArtifact } from "../artifacts/artifacts";
 import { Conjunction, Injunction, Premise, Reasoning } from "./classes";
+
+export const isDefined = ( candidate ) => !isUndefined(candidate);
 
 export const isReasoning = (candidate) => candidate instanceof Reasoning;
 export const isPremise = (candidate) => candidate instanceof Premise;
 export const isConjunction = (candidate) => candidate instanceof Conjunction;
 export const isInjunction = (candidate) => candidate instanceof Injunction;
-
-export const isDefined = ( candidate ) => !isUndefined(candidate);
 
 export const isReasoningArtifact = (candidate) => isArtifact( candidate, isReasoning );
 export const isPremiseArtifact = (candidate) => isArtifact( candidate, isPremise );

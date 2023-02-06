@@ -1,6 +1,5 @@
 import { isArray, isFunction } from "lodash";
 
-import { isCondition } from "./utils";
 import {
   isAssertItem,
   isOrganization,
@@ -8,6 +7,7 @@ import {
 } from "./checkers";
 import { organizationTypeError, assertionError } from "./errors";
 import { rehearse, validate } from "./assertions";
+import { isCondition } from "../artifacts/artifacts";
 
 const buildSceneCallback = (item) => {
   let result, expectation, expectToMap, itemCardinality;

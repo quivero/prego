@@ -1,8 +1,9 @@
 import _, { isArray, union, intersection, isObject, uniq, isFunction } from "lodash";
+import { are, isArtifact } from "../artifacts/artifacts";
+import { batchAnd } from "../retoric/utils";
 
 import { defaultOrganization } from "./defaults";
 import { availableExpectToMaps } from "./expectTo";
-import { isArtifact, batchAnd, are, } from "./utils";
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Assert items                                                                                                |

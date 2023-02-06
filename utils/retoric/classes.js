@@ -1,8 +1,8 @@
 import { isBoolean } from "lodash";
 
 import { InterfaceError } from "../errors/errors";
-import { andify, batchAnd, batchOr, orify } from "../testing/utils";
-import { applyReasoningArtifact, getPremisesEntries, isDefined, isPremiseArtifact } from "./utils";
+import { andify, orify } from "../testing/utils";
+import { applyReasoningArtifact, batchAnd, batchOr, getPremisesEntries } from "./utils";
 
 export class Reasoning  {
 

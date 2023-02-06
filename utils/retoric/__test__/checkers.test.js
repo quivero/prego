@@ -1,4 +1,5 @@
-import { are, isArtifact, isArtifactCollection } from "../../testing/utils";
+import { are, isArtifact, isArtifactCollection } from "../../artifacts/artifacts";
+
 import { 
   isConjunction, 
   isConjunctionArtifact, 

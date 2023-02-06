@@ -1,4 +1,4 @@
-import { stringify } from "ts-jest";
+import { applyArtifact, areTrue, isArtifact, isFalse, isTrue } from "../../artifacts/artifacts";
 import { assert } from "../assertions";
 import { expectAssertions, expectToBe, expectToEqual, expectToStrictEqual, expectToThrow } from "../expectTo";
 import {
@@ -7,22 +7,13 @@ import {
   whosFalse,
   areArrayElements,
   allIndexes,
-  isCondition,
-  fulfill,
   delimitify,
   slugify,
   orify,
   andify,
-  isTrue,
-  isFalse,
-  areTrue,
-  batchAnd,
-  batchOr,
-  isArtifact,
   stringifier,
-  applyArtifact,
-
 } from "../utils";
+
 
 let assertItem, result, expectation;
 
@@ -120,72 +111,6 @@ describe("utils", () => {
   });
 });
 
-describe("isCondition", () => {
-  it("must throw TypeError on false condition", () => {
-    const condition = 42 === "42"; // false
-    const conditionCallback = (arg) => {};
-    const args = {};
-    const error_msg = "Wrong!";
-    const errorClass = TypeError;
-
-    const isConditionFn = () =>
-      isCondition(condition, conditionCallback, args, error_msg, errorClass);
-
-    expectToThrow(isConditionFn, TypeError);
-  });
-
-  it("must throw Error on missing errorClass", () => {
-    const condition = 42 === "42"; // false
-    const conditionCallback = (arg) => arg;
-    const args = 7;
-    const error_msg = "Wrong!";
-
-    const isConditionFn = () =>
-      isCondition(condition, conditionCallback, args, error_msg);
-
-    expectToThrow(isConditionFn, Error);
-  });
-
-  it("must return on true condition", () => {
-    const condition = 42 === 42; // true
-    const conditionCallback = (arg) => arg;
-    const args = 7;
-    const error_msg = "Wrong!";
-    const errorClass = Error;
-
-    const result = isCondition(
-      condition,
-      conditionCallback,
-      args,
-      error_msg,
-      errorClass
-    );
-
-    expect(result).toBe(args);
-  });
-  it("must return argument on true condition", () => {
-    const condition = 42 === 42; // true
-    const args = 7;
-    const errorMsg = "It does not fulfill!";
-    const errorClass = Error;
-
-    const result = fulfill(args, condition, errorMsg, errorClass);
-
-    expect(result).toBe(args);
-  });
-  it("must throw Error on false condition", () => {
-    const condition = 42 !== 42; // false
-    const args = 7;
-    const errorMsg = "It does not fulfill!";
-    const errorClass = TypeError;
-
-    const fulfillWithErrorClassFn = () => fulfill(args, condition, errorMsg, errorClass);
-    const fulfillWithoutErrorClassFn = () => fulfill(args, condition, errorMsg);
-
-    expectToThrow(fulfillWithErrorClassFn, TypeError);
-    expectToThrow(fulfillWithoutErrorClassFn, Error);
-  });
-});
 
 const numberList = [1,2,3];
 
@@ -255,22 +180,6 @@ describe(
         const funcs = [func_1, func_2];
 
         expectToEqual(funcs.includes(func_1), true);
-      }
-    );
-    it(
-      'assert batch operators \"and\" and \"or\"',
-      () => {
-        result = batchAnd([true, true]);
-        expectToEqual(result, true);
-
-        result = batchAnd([true, false]);
-        expectToEqual(result, false);
-
-        result = batchOr([false, false]);
-        expectToEqual(result, false);
-
-        result = batchOr([true, false]);
-        expectToEqual(result, true);
       }
     );
     it(

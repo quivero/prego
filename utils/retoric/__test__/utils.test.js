@@ -1,6 +1,8 @@
 import { isReasoningArtifact } from "../checkers";
 import { 
   applyReasoningArtifact,
+  batchAnd,
+  batchOr,
   getPremiseKeys,
   getPremisesEntries
 } from "../utils";
@@ -56,6 +58,22 @@ describe("dialetic-utils", () => {
       expectation = TypeError;
       
       expect(result).toThrow(expectation);
+    }
+  );
+  it(
+    'assert batch operators \"and\" and \"or\"',
+    () => {
+      result = batchAnd([true, true]);
+      expect(result).toEqual(true);
+
+      result = batchAnd([true, false]);
+      expect(result).toEqual(false);
+
+      result = batchOr([false, false]);
+      expect(result).toEqual(false);
+
+      result = batchOr([true, false]);
+      expect(result).toEqual(true);
     }
   );
 });

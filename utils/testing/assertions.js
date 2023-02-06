@@ -1,7 +1,7 @@
 import _, { isArray } from "lodash";
 import { assertionError } from "./errors";
-import { isCondition } from "./utils";
 import { isAssertItem } from "./checkers";
+import { isCondition } from "../artifacts/artifacts";
 
 const validAssertItemCallback = (item) => {
   let result, expectation, expectToMap, itemCardinality;
@@ -26,7 +26,7 @@ const validAssertItemCallback = (item) => {
 export const assert = (item) => {
   const assertionError_ = assertionError(item);
   const isValidAssertItemCondition = isAssertItem(item);
-
+  
   isCondition(
     isValidAssertItemCondition, validAssertItemCallback, item,
     assertionError_.message, assertionError_.type
