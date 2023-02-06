@@ -1,4 +1,3 @@
-
 import {
   are,
   isArtifact,
@@ -13,7 +12,7 @@ import {
   isInjunctionArtifact,
   isPremise,
   isPremiseArtifact,
-  isReasoningArtifact
+  isReasoningArtifact,
 } from "../checkers";
 import {
   conjunctions,
