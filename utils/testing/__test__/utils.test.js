@@ -1,6 +1,18 @@
-import { applyArtifact, areTrue, isArtifact, isFalse, isTrue } from "../../artifacts/artifacts";
+import {
+  applyArtifact,
+  areTrue,
+  isArtifact,
+  isFalse,
+  isTrue,
+} from "../../artifacts/artifacts";
 import { assert } from "../assertions";
-import { expectAssertions, expectToBe, expectToEqual, expectToStrictEqual, expectToThrow } from "../expectTo";
+import {
+  expectAssertions,
+  expectToBe,
+  expectToEqual,
+  expectToStrictEqual,
+  expectToThrow,
+} from "../expectTo";
 import {
   whosWhat,
   whosTrue,
@@ -13,7 +25,6 @@ import {
   andify,
   stringifier,
 } from "../utils";
-
 
 let assertItem, result, expectation;
 
@@ -33,14 +44,21 @@ describe("whos", () => {
   it("must return indexes on callback whosWhat with argument [true, false, true], isTrue", () => {
     expectAssertions(1);
 
-    assertItem = [ whosWhat([true, false, true], isTrue), expectToStrictEqual, [0, 2],
+    assertItem = [
+      whosWhat([true, false, true], isTrue),
+      expectToStrictEqual,
+      [0, 2],
     ];
     assert(assertItem);
   });
   it("must return indexes on callback whosWhat with argument [true, false, true], isFalse", () => {
     expectAssertions(1);
 
-    assertItem = [ whosWhat([true, false, true], isFalse),  expectToStrictEqual, [1], ];
+    assertItem = [
+      whosWhat([true, false, true], isFalse),
+      expectToStrictEqual,
+      [1],
+    ];
     assert(assertItem);
   });
 });
@@ -111,119 +129,92 @@ describe("utils", () => {
   });
 });
 
+const numberList = [1, 2, 3];
 
-const numberList = [1,2,3];
+describe("delimitify", () => {
+  it("must return string delimited by hyphen -", () => {
+    const result = delimitify(numberList, "+");
 
-describe(
-  "delimitify",
-  () => {
-    it(
-      "must return string delimited by hyphen -",
-      () => {
-        const result = delimitify(numberList, '+');
+    expect(result).toBe("1+2+3");
+  });
+  it("must return string delimited by underscore _", () => {
+    const result = slugify(numberList);
 
-        expect(result).toBe('1+2+3')
-      }
+    expect(result).toBe("1_2_3");
+  });
+  it("must return string delimited by pipe |", () => {
+    const result = orify(numberList);
+
+    expectToBe(result, "1|2|3");
+  });
+  it("must return string delimited by and &", () => {
+    const result = andify(numberList);
+
+    expectToBe(result, "1&2&3");
+  });
+  it("should return equal stringified element", () => {
+    result = stringifier(1);
+
+    expectToEqual(result, "1");
+  });
+  it("should return equal stringified array elements", () => {
+    result = stringifier(numberList);
+
+    expectToEqual(result, ["1", "2", "3"]);
+  });
+});
+
+describe("Miscelaneous", () => {
+  it("assert function handler array includes function", () => {
+    const func_1 = (x) => x;
+    const func_2 = () => 42;
+
+    const funcs = [func_1, func_2];
+
+    expectToEqual(funcs.includes(func_1), true);
+  });
+  it("should return true for list of artifacts", () => {
+    result = isArtifact(numberList, (x) => typeof x === "number");
+
+    expectToEqual(result, true);
+  });
+  it("should return false for non-fulfilling condition", () => {
+    result = isArtifact("42", (x) => typeof x === "number");
+
+    expectToEqual(result, false);
+
+    result = isArtifact(["42", 42], (x) => typeof x === "number");
+
+    expectToEqual(result, false);
+  });
+  it("should return transformed artifact on consistent artifact", () => {
+    result = applyArtifact(
+      [1, 2, 3, 4],
+      (x) => typeof x === "number",
+      (x) => 2 * x
     );
-    it(
-      "must return string delimited by underscore _",
-      () => {
-        const result = slugify(numberList);
+    expectation = [2, 4, 6, 8];
 
-        expect(result).toBe('1_2_3')
-      }
+    expectToEqual(result, expectation);
+
+    result = applyArtifact(
+      1,
+      (x) => typeof x === "number",
+      (x) => 2 * x
     );
-    it(
-      "must return string delimited by pipe |",
-      () => {
-        const result = orify(numberList);
+    expectation = 2;
 
-        expectToBe(result, '1|2|3')
-      }
-    );
-    it(
-      "must return string delimited by and &",
-      () => {
-        const result = andify(numberList);
+    expectToEqual(result, expectation);
+  });
+  it("should return throw on inconsistent artifact", () => {
+    result = () =>
+      applyArtifact(
+        [1, 2, 3, "4"],
+        (x) => typeof x === "number",
+        (x) => 2 * x
+      );
+    expectation = TypeError;
 
-        expectToBe(result, '1&2&3');
-      }
-    );
-    it(
-      'should return equal stringified element',
-      () => {
-        result = stringifier(1);
-
-        expectToEqual(result, '1');
-      }
-    );
-    it(
-      'should return equal stringified array elements',
-      () => {
-        result = stringifier(numberList);
-
-        expectToEqual(result, ['1', '2', '3']);
-      }
-    );
-  }
-);
-
-describe(
-  "Miscelaneous",
-  () => {
-    it(
-      'assert function handler array includes function',
-      () => {
-        const func_1 = (x) => x;
-        const func_2 = () => 42;
-
-        const funcs = [func_1, func_2];
-
-        expectToEqual(funcs.includes(func_1), true);
-      }
-    );
-    it(
-      'should return true for list of artifacts',
-      () => {
-        result = isArtifact( numberList, (x) => typeof x === 'number' );
-
-        expectToEqual(result, true);
-      }
-    );
-    it(
-      'should return false for non-fulfilling condition',
-      () => {
-        result = isArtifact( '42', (x) => typeof x === 'number' );
-
-        expectToEqual(result, false);
-
-        result = isArtifact( ['42', 42], (x) => typeof x === 'number' );
-
-        expectToEqual(result, false);
-      }
-    );
-    it(
-      'should return transformed artifact on consistent artifact',
-      () => {
-        result = applyArtifact([1,2,3,4], (x) => typeof x === 'number', (x) => 2*x);
-        expectation = [2,4,6,8];
-
-        expectToEqual(result, expectation);
-
-        result = applyArtifact(1, (x) => typeof x === 'number', (x) => 2*x);
-        expectation = 2;
-
-        expectToEqual(result, expectation);
-      }
-    );
-    it(
-      'should return throw on inconsistent artifact',
-      () => {
-        result = () => applyArtifact([1,2,3,'4'], (x) => typeof x === 'number', (x) => 2*x);
-        expectation = TypeError;
-
-        expectToThrow(result, expectation);
-      }
-    );
-  }
-);
+    expectToThrow(result, expectation);
+  });
+});

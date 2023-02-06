@@ -6,7 +6,7 @@ import { assertFixtures } from "./fixtures";
 
 describe("checkers", () => {
   it("must assert on default truth message", () => {
-    const assertItem = [ areAssertItems(assertFixtures), expectToBeEqual, true ];
+    const assertItem = [areAssertItems(assertFixtures), expectToBeEqual, true];
     assert(assertItem);
   });
   it("must assert scenes a.k.a. assertItem", () => {
@@ -25,6 +25,6 @@ describe("checkers", () => {
     const scene2 = buildScene(assertItem2);
     const scene3 = buildScene(assertItem3);
 
-    batchAssert([ scene2, scene3 ]);
+    batchAssert([scene2, scene3]);
   });
 });

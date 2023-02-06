@@ -1,7 +1,6 @@
 import { isArray, uniq } from "lodash";
 import { areTrue, isFalse, isTrue } from "../artifacts/artifacts";
 
-
 /*-------------------------------------------------------------------------------------------------------------*\
  | Array helpers                                                                                               |
 \*-------------------------------------------------------------------------------------------------------------*/
@@ -10,10 +9,7 @@ import { areTrue, isFalse, isTrue } from "../artifacts/artifacts";
 //  1. Provide is-callback to iterate along array (suggestion: filter for keys);
 //  2. Verify if arr-variable isArray.
 export const allIndexes = (array, val) =>
-  array.reduce(
-    (acc, el, i) => (el === val ? [...acc, i] : acc),
-    []
-  );
+  array.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), []);
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Blamer helpers                                                                                              |
@@ -43,25 +39,25 @@ export const enumerate = (array) => {
   let enumeratedStringArray = "";
   let line;
 
-  array.forEach(
-    (el, index) => {
-      line = `${index}. ${String(el)}\n`
-      enumeratedStringArray += line;
-    }
-  );
+  array.forEach((el, index) => {
+    line = `${index}. ${String(el)}\n`;
+    enumeratedStringArray += line;
+  });
 
   return enumeratedStringArray;
-}
+};
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | String manipulators                                                                                         |
 \*-------------------------------------------------------------------------------------------------------------*/
 
 const stringifyMap = (element) => String(element);
-export const stringifier = (artifact) => isArray(artifact) ? artifact.map(stringifyMap) : String(artifact);
+export const stringifier = (artifact) =>
+  isArray(artifact) ? artifact.map(stringifyMap) : String(artifact);
 
-export const delimitify = ( strings, delimiter ) => stringifier(strings).join(delimiter);
-export const slugify = ( strings ) => stringifier(strings).join('_');
-export const hyphenify = ( strings ) => stringifier(strings).join('-');
-export const andify = ( strings ) => stringifier(strings).join('&');
-export const orify = ( strings ) => stringifier(strings).join('|');
+export const delimitify = (strings, delimiter) =>
+  stringifier(strings).join(delimiter);
+export const slugify = (strings) => stringifier(strings).join("_");
+export const hyphenify = (strings) => stringifier(strings).join("-");
+export const andify = (strings) => stringifier(strings).join("&");
+export const orify = (strings) => stringifier(strings).join("|");

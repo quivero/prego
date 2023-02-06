@@ -100,7 +100,9 @@ export const expectToHaveProperty = (object_, keyPath, ...value) =>
 export const expectToBeCloseTo = (value, number, ...numDigits) =>
   expect(value).toBeCloseTo(number, ...numDigits);
 export const expectToMatchInlineSnapshot = (
-  result, inlineSnapshot, ...propertyMatchers
+  result,
+  inlineSnapshot,
+  ...propertyMatchers
 ) => expect(result).toMatchInlineSnapshot(inlineSnapshot, ...propertyMatchers);
 export const expectToHaveBeenCalledWith = (result, ...args) =>
   expect(result).toHaveBeenCalledWith(...args);
@@ -148,9 +150,8 @@ export const availableExpectToMaps = [
   expectToMatchInlineSnapshot,
   expectToHaveBeenCalledWith,
   expectToHaveBeenLastCalledWith,
-  expectToHaveBeenNthCalledWith
+  expectToHaveBeenNthCalledWith,
 ];
-
 
 /*-------------------------------------------------*\
  | Asymmetric matchers                             |

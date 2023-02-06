@@ -102,8 +102,11 @@ export const buildAct = (script, organization = defaultOrganization) => {
   const actPerformCriterium = `First argument \"perform\" must be ${actDescription}`;
 
   return isCondition(
-    isFunction(script), actCallback, actArgs,
-    actPerformCriterium, TypeError
+    isFunction(script),
+    actCallback,
+    actArgs,
+    actPerformCriterium,
+    TypeError
   );
 };
 

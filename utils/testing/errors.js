@@ -49,7 +49,8 @@ const arrayTruthHeader = (falseElements) => {
 };
 
 export const arrayTruthError = (
-  falseElements, criteriaMessage = defaultArrayTruthMessage
+  falseElements,
+  criteriaMessage = defaultArrayTruthMessage
 ) => {
   const TMessage = arrayTruthHeader(falseElements) + criteriaMessage;
 

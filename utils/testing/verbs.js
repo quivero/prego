@@ -20,25 +20,25 @@ export const atest = (fixtures, act) => {
 };
 
 export const practice = (fixtures, acts) => {
-  let thisFixtures = {...fixtures};
+  let thisFixtures = { ...fixtures };
 
   const actCallnack = (act) => {
     const preparedFixtures = atest(thisFixtures, act);
-    thisFixtures = {...preparedFixtures, thisFixtures};
+    thisFixtures = { ...preparedFixtures, thisFixtures };
   };
 
   acts.forEach(actCallnack);
 };
 
 export const rehearse = (rehearsals) => {
-  const rehearseCallnack = (rehearsal) => it(rehearsal.description, rehearsal.callback);
+  const rehearseCallnack = (rehearsal) =>
+    it(rehearsal.description, rehearsal.callback);
 
   rehearsals.forEach(rehearseCallnack);
-}
-
+};
 
 export const cast = (plays) => {
   const playCallback = (play) => describe(play.name, play.callback);
 
-  plays.forEach(playCallback)
+  plays.forEach(playCallback);
 };

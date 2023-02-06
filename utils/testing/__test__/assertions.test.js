@@ -1,7 +1,4 @@
-import {
-  assert,
-  batchAssert
-} from "../assertions";
+import { assert, batchAssert } from "../assertions";
 
 import { hasAssertions, expectAssertions } from "../expectTo";
 

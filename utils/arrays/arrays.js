@@ -430,10 +430,11 @@ export function* eulerGenerator(sets) {
    */
   // There are no sets
   if (
-    sets.constructor !== {}.constructor && sets.constructor !== [].constructor
+    sets.constructor !== {}.constructor &&
+    sets.constructor !== [].constructor
   ) {
     throw new TypeError(
-      "Ill-conditioned input. It must be either a json-like or array of arrays object!",
+      "Ill-conditioned input. It must be either a json-like or array of arrays object!"
     );
   }
 
@@ -451,7 +452,7 @@ export function* eulerGenerator(sets) {
         result[key] = unique(sets[key]);
         return result;
       },
-      {},
+      {}
     );
   }
 
@@ -486,7 +487,7 @@ export function* eulerGenerator(sets) {
           result[compl_set_key] = sets[compl_set_key];
           return result;
         },
-        {},
+        {}
       );
 
       for (const comb_elements of eulerGenerator(compl_sets)) {

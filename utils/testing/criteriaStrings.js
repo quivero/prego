@@ -15,7 +15,10 @@ let assertKeyValue2 = '"expectToMap": function';
 const assertValidArgument_4 = `{${assertKeyValue1}, ${assertKeyValue2}}`;
 
 export const assertCriteriaArray = [
-  assertValidArgument_1, assertValidArgument_2, assertValidArgument_3, assertValidArgument_4
+  assertValidArgument_1,
+  assertValidArgument_2,
+  assertValidArgument_3,
+  assertValidArgument_4,
 ];
 
 const schemas = `${enumerate(assertCriteriaArray)}\n`;
@@ -36,7 +39,12 @@ const orgCriterium6 =
   '"prepare" return value types: assertItem or Array(assertItem);';
 
 const organizationCriteriaArray = [
-  orgCriterium1, orgCriterium2, orgCriterium3, orgCriterium4, orgCriterium5, orgCriterium6
+  orgCriterium1,
+  orgCriterium2,
+  orgCriterium3,
+  orgCriterium4,
+  orgCriterium5,
+  orgCriterium6,
 ];
 
 const orgProps = `${enumerate(organizationCriteriaArray)}\n `;

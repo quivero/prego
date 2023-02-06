@@ -1,4 +1,11 @@
-import _, { isArray, union, intersection, isObject, uniq, isFunction } from "lodash";
+import _, {
+  isArray,
+  union,
+  intersection,
+  isObject,
+  uniq,
+  isFunction,
+} from "lodash";
 import { are, isArtifact } from "../artifacts/artifacts";
 import { batchAnd } from "../retoric/utils";
 
@@ -29,15 +36,15 @@ export const isAssertItem = (item) => {
     const criteria = [
       keysCardinalityCondition,
       functionTypeCondition,
-      expectedExpectToMap
+      expectedExpectToMap,
     ];
 
     return batchAnd(criteria);
-
   } else if (isObject(item)) {
     const objectKeys = Object.keys(item);
 
-    keysCardinalityCondition = objectKeys.length === 2 || objectKeys.length === 3;
+    keysCardinalityCondition =
+      objectKeys.length === 2 || objectKeys.length === 3;
     necessaryKeysCondition =
       intersection(objectKeys, item2LengthKeys).length === 2 ||
       intersection(objectKeys, item3LengthKeys).length === 3;
@@ -48,22 +55,24 @@ export const isAssertItem = (item) => {
       keysCardinalityCondition,
       necessaryKeysCondition,
       functionTypeCondition,
-      expectedExpectToMap
+      expectedExpectToMap,
     ];
 
     return batchAnd(criteria);
   } else return false;
 };
 
-export const areAssertItems = (candidates) => are(candidates, isAssertItem)
+export const areAssertItems = (candidates) => are(candidates, isAssertItem);
 
-export const isAssertArtifact = (candidate) => isArtifact( candidate, isAssertItem );
+export const isAssertArtifact = (candidate) =>
+  isArtifact(candidate, isAssertItem);
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Scene                                                                                                       |
 \*-------------------------------------------------------------------------------------------------------------*/
 
-export const isScene = (candidate) => isAssertItem(candidate) && !isArray(candidate);
+export const isScene = (candidate) =>
+  isAssertItem(candidate) && !isArray(candidate);
 
 export const areScenes = (candidates) => are(candidates, isScene);
 
@@ -76,13 +85,15 @@ export const possibleOrganizationKeys = Object.keys(defaultOrganization);
 
 export const isOrganization = (candidate) => {
   const candidateKeys = Object.keys(candidate);
-  const organizationCandidateKeysUnion = uniq(union(possibleOrganizationKeys, candidateKeys));
+  const organizationCandidateKeysUnion = uniq(
+    union(possibleOrganizationKeys, candidateKeys)
+  );
 
   const isObject_ = isObject(candidate);
   const objectKeysLowerEqualThan3 = candidateKeys.length <= 3;
   const areOrganizationKeys = organizationCandidateKeysUnion.length === 3;
 
-  const criteria = [ isObject_, objectKeysLowerEqualThan3, areOrganizationKeys ];
+  const criteria = [isObject_, objectKeysLowerEqualThan3, areOrganizationKeys];
 
   return batchAnd(criteria);
 };
@@ -100,17 +111,21 @@ export const isAct = (candidate) => {
   const candidateKeys = Object.keys(candidate);
   const actCandidateKeysUnion = uniq(union(actKeys, candidateKeys));
   const actCandidateKeysIntersec = intersection(actKeys, candidateKeys);
-  const actCandidateValuesAreFunctions = are(Object.values(candidate), isFunction);
+  const actCandidateValuesAreFunctions = are(
+    Object.values(candidate),
+    isFunction
+  );
 
   const isObject_ = isObject(candidate);
   const objectKeysUnionLowerEqualThan4 = actCandidateKeysUnion.length <= 4;
-  const objectKeysIntersecGreaterEqualThan1 = actCandidateKeysIntersec.length >= 1;
+  const objectKeysIntersecGreaterEqualThan1 =
+    actCandidateKeysIntersec.length >= 1;
 
   const criteria = [
     isObject_,
     objectKeysUnionLowerEqualThan4,
     objectKeysIntersecGreaterEqualThan1,
-    actCandidateValuesAreFunctions
+    actCandidateValuesAreFunctions,
   ];
 
   return batchAnd(criteria);

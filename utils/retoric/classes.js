@@ -2,10 +2,14 @@ import { isBoolean } from "lodash";
 
 import { InterfaceError } from "../errors/errors";
 import { andify, orify } from "../testing/utils";
-import { applyReasoningArtifact, batchAnd, batchOr, getPremisesEntries } from "./utils";
+import {
+  applyReasoningArtifact,
+  batchAnd,
+  batchOr,
+  getPremisesEntries,
+} from "./utils";
 
-export class Reasoning  {
-
+export class Reasoning {
   _booleanReduceMap = undefined;
 
   constructor(key, description, value) {
@@ -15,12 +19,12 @@ export class Reasoning  {
   }
 
   // Children MUST override this method
-  toPremise( ) {
+  toPremise() {
     throw new InterfaceError();
   }
 
   // Children MUST override this method
-  toArgument( ) {
+  toArgument() {
     throw new InterfaceError();
   }
 
@@ -29,119 +33,123 @@ export class Reasoning  {
   }
 
   // Children MUST override this method
-  toThought( ) {
+  toThought() {
     return {
-      "arguments": this.toArgument(),
-      "conclusion": this.toConclusion()
+      arguments: this.toArgument(),
+      conclusion: this.toConclusion(),
     };
   }
 
-  toString( ) {
+  toString() {
     return this.verbalize();
   }
 
-  argue( ) {
+  argue() {
     return this.toArgument();
   }
 
-  conclude( ) {
+  conclude() {
     return this.toConclusion();
   }
 
-  think( ) {
-    return this.toThought( );
+  think() {
+    return this.toThought();
   }
 
   // Children MUST override this method
-  verbalize( ) {
+  verbalize() {
     throw new InterfaceError();
   }
 }
 
 export class Premise extends Reasoning {
+  constructor(key, description, value) {
+    super(key, description, value);
+  }
 
-    constructor( key, description, value ) {
-      super(key, description, value);
-    }
+  toArgument() {
+    return Object.fromEntries([[this.key, this.value]]);
+  }
 
-    toArgument( ) {
-      return Object.fromEntries([[this.key, this.value]]);
-    }
+  toConclusion() {
+    return this.value;
+  }
 
-    toConclusion() {
-      return this.value;
-    }
+  toPremise() {
+    return this;
+  }
 
-    toPremise( ) {
-      return this;
-    }
-
-    verbalize( ) {
-      return `(${this.key}:${this.value})`;
-    }
+  verbalize() {
+    return `(${this.key}:${this.value})`;
+  }
 }
 
 export class Conjunction extends Reasoning {
-
-  constructor( key, description, value ) {
+  constructor(key, description, value) {
     super(key, description, value);
     this._booleanReduceMap = batchAnd;
   }
 
-  toPremise( ) {
+  toPremise() {
     const talkMap = (premise) => premise.verbalize();
     const arguments_ = andify(applyReasoningArtifact(this.value, talkMap));
     const conjunctionAsPremiseKey = `${this.key}=${arguments_}`;
 
-    return new Premise(conjunctionAsPremiseKey, this.description, this.conclude());
-  }
-
-  toArgument( ) {
-    return Object.fromEntries(
-      getPremisesEntries( this.value )
+    return new Premise(
+      conjunctionAsPremiseKey,
+      this.description,
+      this.conclude()
     );
   }
 
-  toConclusion( ) {
+  toArgument() {
+    return Object.fromEntries(getPremisesEntries(this.value));
+  }
+
+  toConclusion() {
     const concludeMap = (premise) => premise.conclude();
-    const conclusion = applyReasoningArtifact( this.value, concludeMap );
+    const conclusion = applyReasoningArtifact(this.value, concludeMap);
     const IsBooleanCondition = isBoolean(conclusion);
 
     return IsBooleanCondition ? conclusion : this._booleanReduceMap(conclusion);
   }
 
-  verbalize( ) {
+  verbalize() {
     return this.toPremise().toString();
   }
 }
 
 export class Injunction extends Reasoning {
-  constructor( key, description, value ) {
+  constructor(key, description, value) {
     super(key, description, value);
     this._booleanReduceMap = batchOr;
   }
 
-  toPremise( ) {
+  toPremise() {
     const talkMap = (premise) => premise.verbalize();
     const arguments_ = orify(applyReasoningArtifact(this.value, talkMap));
     const injunctionAsPremiseKey = `${this.key}=${arguments_}`;
 
-    return new Premise(injunctionAsPremiseKey, this.description, this.conclude());
+    return new Premise(
+      injunctionAsPremiseKey,
+      this.description,
+      this.conclude()
+    );
   }
 
-  toArgument( ) {
-    return Object.fromEntries(getPremisesEntries( this.value ));
+  toArgument() {
+    return Object.fromEntries(getPremisesEntries(this.value));
   }
 
-  toConclusion( ) {
+  toConclusion() {
     const concludeMap = (premise) => premise.conclude();
-    const conclusion = applyReasoningArtifact( this.value, concludeMap );
+    const conclusion = applyReasoningArtifact(this.value, concludeMap);
     const IsBooleanCondition = isBoolean(conclusion);
 
     return IsBooleanCondition ? conclusion : this._booleanReduceMap(conclusion);
   }
 
-  verbalize( ) {
+  verbalize() {
     return this.toPremise().toString();
   }
 }
