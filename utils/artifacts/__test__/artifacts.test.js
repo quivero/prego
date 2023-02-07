@@ -1,11 +1,11 @@
 import { isString } from "lodash";
-import { 
-  fulfill, 
-  hasValidArtifactItem, 
-  hasValidArtifacts, 
-  isArtifactArray, 
-  isArtifactItem, 
-  isCondition 
+import {
+  fulfill,
+  hasValidArtifactItem,
+  hasValidArtifacts,
+  isArtifactArray,
+  isArtifactItem,
+  isCondition
 } from "../artifacts";
 
 let result, expectation;
@@ -51,7 +51,7 @@ describe("isCondition", () => {
       errorClass
     );
     expectation = args;
-    
+
     expect(result).toBe(expectation);
   });
   it("must return argument on true condition", () => {
@@ -83,7 +83,7 @@ describe("isCondition", () => {
 describe("Artifact", () => {
   it("must assert artifact item", () => {
     const args = ["1", "2", "3", "4"];
-    
+
     result = isArtifactItem(args, isString)
     expectation = false;
 
@@ -97,7 +97,7 @@ describe("Artifact", () => {
 
   it("must assert artifact array", () => {
     const args = ["1", "2", "3", "4"];
-    
+
     result = isArtifactArray(args, isString)
     expectation = true;
 
@@ -111,14 +111,14 @@ describe("Artifact", () => {
 
   it("must check for existence of valid items", () => {
     let args = [1, 2, 3, "4"];
-    
+
     result = hasValidArtifactItem(args, isString);
     expectation = true;
 
     expect(result).toBe(expectation);
-    
+
     args = [1, 2, 3, 4];
-    
+
     result = hasValidArtifactItem(args, isString);
     expectation = false;
 
@@ -127,28 +127,28 @@ describe("Artifact", () => {
 
   it("must check for existence of valid items", () => {
     let args = [1, 2, 3, "4"];
-    
+
     result = hasValidArtifacts(args, isString);
     expectation = true;
 
     expect(result).toBe(expectation);
-    
+
     args = [1, 2, 3, 4];
-    
+
     result = hasValidArtifacts(args, isString);
     expectation = false;
 
     expect(result).toBe(expectation);
 
     args = "4";
-    
+
     result = hasValidArtifacts(args, isString);
     expectation = true;
 
     expect(result).toBe(expectation);
-    
+
     args = 1;
-    
+
     result = hasValidArtifacts(args, isString);
     expectation = false;
 

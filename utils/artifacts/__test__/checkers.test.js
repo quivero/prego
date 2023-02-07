@@ -5,9 +5,8 @@ let result, expectation;
 describe("isExtensionOf", () => {
   it("must assert TypeError as Error extension", () => {
     result = isExtensionOf(TypeError, Error);
-    expectation = true;    
-    
+    expectation = true;
+
     expect(result).toBe(expectation);
   });
 });
-
