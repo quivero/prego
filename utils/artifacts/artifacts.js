@@ -82,9 +82,5 @@ export const catalogArtifactItems = (candidate, isArtifactCallback) => {
   (
     isArtifactItem(candidate, isArtifactCallback) ? 
     [ true ] : candidate.map(catalogArtifactItem)
-  ) : (
-    isArray(candidate) ?
-    candidate.map(catalogArtifactItem) :
-    [ false ]
-  );
+  ) : false;
 }

@@ -167,14 +167,14 @@ describe("Artifact", () => {
     candidate = [1, 2, 3, 4];
     
     result = catalogArtifactItems(candidate, isString)
-    expectation = [false, false, false, false];
+    expectation = false;
 
     expect(result).toStrictEqual(expectation);
 
     candidate = 42;
     
     result = catalogArtifactItems(candidate, isString)
-    expectation = [ false ];
+    expectation = false;
 
     expect(result).toStrictEqual(expectation);
 
