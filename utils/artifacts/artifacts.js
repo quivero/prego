@@ -37,13 +37,27 @@ export const isCondition = (
 export const isArtifactArray = (candidate, isArtifactCallback) =>
   isArray(candidate) ? are(candidate, isArtifactCallback) : false;
 
+export const hasValidArtifactItem = (candidate, isArtifactCallback) =>
+  isArray(candidate) ?  
+  candidate.map(isArtifactCallback).includes(true) : 
+  false;
+
+export const isArtifactItem = (candidate, isArtifactCallback) =>
+  isArtifactCallback(candidate);
+
 export const isArtifact = (candidate, isArtifactCallback) =>
-  isArtifactCallback(candidate)
-    ? true
-    : isArtifactArray(candidate, isArtifactCallback);
+  isArtifactCallback(candidate) ? 
+  true : 
+  isArtifactArray(candidate, isArtifactCallback);
+
+export const hasValidArtifacts = (candidate, isArtifactCallback) =>
+  isArtifactItem(candidate, isArtifactCallback) || 
+  hasValidArtifactItem(candidate, isArtifactCallback);
 
 export const isArtifactCollection = (candidate, isArtifactCallback) => {
-  return isArtifact(candidate, (x) => isArtifact(x, isArtifactCallback));
+  const isArtifactCallback_ = (x) => isArtifact(x, isArtifactCallback);
+  
+  return isArtifact(candidate, isArtifactCallback_);
 };
 
 export const applyArtifact = (candidate, isArtifactCallback, applyCallback) => {
