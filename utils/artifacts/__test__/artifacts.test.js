@@ -1,5 +1,6 @@
 import { isString } from "lodash";
 import { 
+  catalogArtifactItems,
   fulfill, 
   hasValidArtifactItem, 
   hasValidArtifacts, 
@@ -14,12 +15,12 @@ describe("isCondition", () => {
   it("must throw TypeError on false condition", () => {
     const condition = 42 === "42"; // false
     const conditionCallback = (arg) => {};
-    const args = {};
+    const candidate = {};
     const error_msg = "Wrong!";
     const errorClass = TypeError;
 
     const isConditionFn = () =>
-      isCondition(condition, conditionCallback, args, error_msg, errorClass);
+      isCondition(condition, conditionCallback, candidate, error_msg, errorClass);
 
     expect(isConditionFn).toThrow(TypeError);
   });
@@ -27,11 +28,11 @@ describe("isCondition", () => {
   it("must throw Error on missing errorClass", () => {
     const condition = 42 === "42"; // false
     const conditionCallback = (arg) => arg;
-    const args = 7;
+    const candidate = 7;
     const error_msg = "Wrong!";
 
     const isConditionFn = () =>
-      isCondition(condition, conditionCallback, args, error_msg);
+      isCondition(condition, conditionCallback, candidate, error_msg);
 
     expect(isConditionFn).toThrow(Error);
   });
@@ -39,41 +40,41 @@ describe("isCondition", () => {
   it("must return on true condition", () => {
     const condition = 42 === 42; // true
     const conditionCallback = (arg) => arg;
-    const args = 7;
+    const candidate = 7;
     const error_msg = "Wrong!";
     const errorClass = Error;
 
     result = isCondition(
       condition,
       conditionCallback,
-      args,
+      candidate,
       error_msg,
       errorClass
     );
-    expectation = args;
+    expectation = candidate;
     
     expect(result).toBe(expectation);
   });
   it("must return argument on true condition", () => {
     const condition = 42 === 42; // true
-    const args = 7;
+    const candidate = 7;
     const errorMsg = "It does not fulfill!";
     const errorClass = Error;
 
-    result = fulfill(args, condition, errorMsg, errorClass);
-    expectation = args;
+    result = fulfill(candidate, condition, errorMsg, errorClass);
+    expectation = candidate;
 
     expect(result).toBe(expectation);
   });
   it("must throw Error on false condition", () => {
     const condition = 42 !== 42; // false
-    const args = 7;
+    const candidate = 7;
     const errorMsg = "It does not fulfill!";
     const errorClass = TypeError;
 
     const fulfillWithErrorClassFn = () =>
-      fulfill(args, condition, errorMsg, errorClass);
-    const fulfillWithoutErrorClassFn = () => fulfill(args, condition, errorMsg);
+      fulfill(candidate, condition, errorMsg, errorClass);
+    const fulfillWithoutErrorClassFn = () => fulfill(candidate, condition, errorMsg);
 
     expect(fulfillWithErrorClassFn).toThrow(TypeError);
     expect(fulfillWithoutErrorClassFn).toThrow(Error);
@@ -82,9 +83,9 @@ describe("isCondition", () => {
 
 describe("Artifact", () => {
   it("must assert artifact item", () => {
-    const args = ["1", "2", "3", "4"];
+    const candidate = ["1", "2", "3", "4"];
     
-    result = isArtifactItem(args, isString)
+    result = isArtifactItem(candidate, isString)
     expectation = false;
 
     expect(result).toBe(expectation);
@@ -96,9 +97,9 @@ describe("Artifact", () => {
   });
 
   it("must assert artifact array", () => {
-    const args = ["1", "2", "3", "4"];
+    const candidate = ["1", "2", "3", "4"];
     
-    result = isArtifactArray(args, isString)
+    result = isArtifactArray(candidate, isString)
     expectation = true;
 
     expect(result).toBe(expectation);
@@ -110,48 +111,58 @@ describe("Artifact", () => {
   });
 
   it("must check for existence of valid items", () => {
-    let args = [1, 2, 3, "4"];
+    let candidate = [1, 2, 3, "4"];
     
-    result = hasValidArtifactItem(args, isString);
+    result = hasValidArtifactItem(candidate, isString);
     expectation = true;
 
     expect(result).toBe(expectation);
     
-    args = [1, 2, 3, 4];
+    candidate = [1, 2, 3, 4];
     
-    result = hasValidArtifactItem(args, isString);
+    result = hasValidArtifactItem(candidate, isString);
     expectation = false;
 
     expect(result).toBe(expectation);
   });
 
   it("must check for existence of valid items", () => {
-    let args = [1, 2, 3, "4"];
+    let candidate = [1, 2, 3, "4"];
     
-    result = hasValidArtifacts(args, isString);
+    result = hasValidArtifacts(candidate, isString);
     expectation = true;
 
     expect(result).toBe(expectation);
     
-    args = [1, 2, 3, 4];
+    candidate = [1, 2, 3, 4];
     
-    result = hasValidArtifacts(args, isString);
+    result = hasValidArtifacts(candidate, isString);
     expectation = false;
 
     expect(result).toBe(expectation);
 
-    args = "4";
+    candidate = "4";
     
-    result = hasValidArtifacts(args, isString);
+    result = hasValidArtifacts(candidate, isString);
     expectation = true;
 
     expect(result).toBe(expectation);
     
-    args = 1;
+    candidate = 1;
     
-    result = hasValidArtifacts(args, isString);
+    result = hasValidArtifacts(candidate, isString);
     expectation = false;
 
     expect(result).toBe(expectation);
   });
+
+  it("must check for existence of valid items", () => {
+    let candidate = [1, 2, 3, "4"];
+    
+    result = catalogArtifactItems(candidate, isString)
+    expectation = [false, false, false, true];
+
+    expect(result).toStrictEqual(expectation);
+  });
 });
+

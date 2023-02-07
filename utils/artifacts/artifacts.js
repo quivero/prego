@@ -42,8 +42,7 @@ export const hasValidArtifactItem = (candidate, isArtifactCallback) =>
   candidate.map(isArtifactCallback).includes(true) : 
   false;
 
-export const isArtifactItem = (candidate, isArtifactCallback) =>
-  isArtifactCallback(candidate);
+export const isArtifactItem = (candidate, isArtifactCallback) => isArtifactCallback(candidate);
 
 export const isArtifact = (candidate, isArtifactCallback) =>
   isArtifactCallback(candidate) ? 
@@ -62,9 +61,9 @@ export const isArtifactCollection = (candidate, isArtifactCallback) => {
 
 export const applyArtifact = (candidate, isArtifactCallback, applyCallback) => {
   const artifactApplyCallback = (candidate) =>
-    isArtifactArray(candidate, isArtifactCallback)
-      ? candidate.map(applyCallback)
-      : applyCallback(candidate);
+    isArtifactArray(candidate, isArtifactCallback) ? 
+    candidate.map(applyCallback) : 
+    applyCallback(candidate);
 
   return isCondition(
     isArtifact(candidate, isArtifactCallback),
@@ -73,4 +72,15 @@ export const applyArtifact = (candidate, isArtifactCallback, applyCallback) => {
     "Provided candidate does not fulfill artifact is-callback",
     TypeError
   );
-};
+}
+
+export const catalogArtifactItems = (candidate, isArtifactCallback) => {
+  
+  const catalogArtifactItem = (candidate) => isArtifactItem(candidate, isArtifactCallback)
+
+  return hasValidArtifacts(candidate, isArtifactCallback)  ? 
+  (
+    isArtifactItem(candidate, isArtifactCallback) ? 
+    [ true ] : candidate.map(catalogArtifactItem)
+  ) : false;
+}
