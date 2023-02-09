@@ -8,6 +8,7 @@ export const are = (arrayCandidate, truthCallback) =>
 export const isTrue = (element) => element === true;
 export const isFalse = (element) => element === false;
 export const areTrue = (array) => array.every(isTrue);
+export const areFalse = (array) => array.every(isFalse);
 export const hasTrue = (element) => isArray(element) ? element.includes(true) : isTrue(element);
 
 export const isCondition = (
