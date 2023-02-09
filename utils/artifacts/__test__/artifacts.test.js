@@ -1,4 +1,5 @@
 import { isString } from "lodash";
+
 import { 
   catalogArtifactItems,
   hasArtifactItem, 
@@ -15,6 +16,7 @@ describe("Artifact", () => {
     candidate = ["1", "2", "3", "4"];
     
     result = isArtifactItem(candidate, isString)
+
     expectation = false;
 
     expect(result).toBe(expectation);
@@ -66,6 +68,16 @@ describe("Artifact", () => {
     candidate = [1, 2, 3, 4];
     
     result = hasArtifacts(candidate, isString);
+    let args = [1, 2, 3, "4"];
+
+    result = hasArtifacts(args, isString);
+    expectation = true;
+
+    expect(result).toBe(expectation);
+
+    args = [1, 2, 3, 4];
+
+    result = hasArtifacts(args, isString);
     expectation = false;
 
     expect(result).toBe(expectation);
@@ -159,4 +171,3 @@ describe("Artifact", () => {
     expectation = true;
   });
 });
-

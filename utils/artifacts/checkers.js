@@ -29,4 +29,3 @@ export const fulfill = (arg, condition, error_msg, errorClass = Error) =>
 
 export const isExtensionOf = (childClass, parentClassCandidate) => 
     Object.getPrototypeOf(childClass.prototype) === parentClassCandidate.prototype;
-
