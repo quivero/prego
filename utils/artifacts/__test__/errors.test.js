@@ -66,6 +66,15 @@ describe("error", () => {
         expectation = "artifact";
 
         expect(result).toMatch(expectation);
-      });
+    });
+    it("must throw TypeError on ErrorClass", () => {
+      class NotErrorClass {};
+      
+      const errorClassThrow = () => buildError(NotErrorClass, "Ceci n'est pas une pipe.");
+      expect(errorClassThrow).toThrow(TypeError);
+
+      const errorMessageThrow = () => buildError(Error, Error);
+      expect(errorMessageThrow).toThrow(TypeError);
+    });
   });
 

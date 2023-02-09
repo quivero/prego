@@ -1,6 +1,5 @@
 import { isString } from "lodash";
-import { fulfill } from "./artifacts";
-import { isExtensionOf } from "./checkers";
+import { fulfill, isExtensionOf } from "./checkers";
 
 export const buildError = (errorClass, errorMessage) => {
   return {
@@ -16,7 +15,7 @@ export const buildError = (errorClass, errorMessage) => {
 };
 
 export const artifactErrorMessage = (ItemCriteria = "") => {
-  const artifactCriterium = "either an item or array of items with true-return callback";
+  const artifactCriterium = "either an item or array of items with boolean-return callback";
   const artifactDescription = `An artifact is ${artifactCriterium}. \n`;
   
   return artifactDescription + ItemCriteria;

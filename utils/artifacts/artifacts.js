@@ -1,10 +1,12 @@
 import { isArray } from "lodash";
-import { batchAnd } from "../retoric/utils";
+import { are, fulfill, hasTrue } from "./checkers";
+
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Truth operators                                                                                             |
 \*-------------------------------------------------------------------------------------------------------------*/
 
+/*
 // TODO: Check if map-output result is boolean array
 export const are = (arrayCandidate, truthCallback) =>
   batchAnd(arrayCandidate.map(truthCallback));
@@ -12,13 +14,7 @@ export const are = (arrayCandidate, truthCallback) =>
 export const isTrue = (element) => element === true;
 export const isFalse = (element) => element === false;
 export const areTrue = (array) => array.every(isTrue);
-
-export const fulfill = (arg, condition, error_msg, errorClass = Error) =>
-  isCondition(condition, (x) => x, arg, error_msg, errorClass);
-
-/*-------------------------------------------------------------------------------------------------------------*\
- | Artifact                                                                                                    |
-\*-------------------------------------------------------------------------------------------------------------*/
+export const hasTrue = (element) => isArray(element) ? element.includes(true) : isTrue(element);
 
 export const isCondition = (
   condition,
@@ -34,10 +30,19 @@ export const isCondition = (
   }
 };
 
+export const fulfill = (arg, condition, error_msg, errorClass = Error) =>
+  isCondition(condition, (x) => x, arg, error_msg, errorClass);
+
+*/
+
+/*-------------------------------------------------------------------------------------------------------------*\
+ | Artifact                                                                                                    |
+\*-------------------------------------------------------------------------------------------------------------*/
+
 export const isArtifactArray = (candidate, isArtifactCallback) =>
   isArray(candidate) ? are(candidate, isArtifactCallback) : false;
 
-export const hasValidArtifactItem = (candidate, isArtifactCallback) =>
+export const hasArtifactItem = (candidate, isArtifactCallback) =>
   isArray(candidate) ?  
   candidate.map(isArtifactCallback).includes(true) : 
   false;
@@ -45,18 +50,14 @@ export const hasValidArtifactItem = (candidate, isArtifactCallback) =>
 export const isArtifactItem = (candidate, isArtifactCallback) => isArtifactCallback(candidate);
 
 export const isArtifact = (candidate, isArtifactCallback) =>
-  isArtifactCallback(candidate) ? 
-  true : 
-  isArtifactArray(candidate, isArtifactCallback);
+  isArtifactCallback(candidate) ? true : isArtifactArray(candidate, isArtifactCallback);
 
-export const hasValidArtifacts = (candidate, isArtifactCallback) =>
+export const hasArtifacts = (candidate, isArtifactCallback) =>
   isArtifactItem(candidate, isArtifactCallback) || 
-  hasValidArtifactItem(candidate, isArtifactCallback);
+  hasArtifactItem(candidate, isArtifactCallback);
 
 export const isArtifactCollection = (candidate, isArtifactCallback) => {
-  const isArtifactCallback_ = (x) => isArtifact(x, isArtifactCallback);
-  
-  return isArtifact(candidate, isArtifactCallback_);
+  return isArtifact(candidate, (x) => isArtifact(x, isArtifactCallback));
 };
 
 export const applyArtifact = (candidate, isArtifactCallback, applyCallback) => {
@@ -65,22 +66,32 @@ export const applyArtifact = (candidate, isArtifactCallback, applyCallback) => {
     candidate.map(applyCallback) : 
     applyCallback(candidate);
 
-  return isCondition(
-    isArtifact(candidate, isArtifactCallback),
-    artifactApplyCallback,
-    candidate,
-    "Provided candidate does not fulfill artifact is-callback",
-    TypeError
+  return artifactApplyCallback(
+    fulfill(
+      candidate, isArtifact(candidate, isArtifactCallback), 
+      "Provided candidate does not fulfill artifact is-callback", TypeError
+    )
   );
 }
 
 export const catalogArtifactItems = (candidate, isArtifactCallback) => {
-  
   const catalogArtifactItem = (candidate) => isArtifactItem(candidate, isArtifactCallback)
 
-  return hasValidArtifacts(candidate, isArtifactCallback)  ? 
+  return hasArtifacts(candidate, isArtifactCallback)  ? 
   (
     isArtifactItem(candidate, isArtifactCallback) ? 
     [ true ] : candidate.map(catalogArtifactItem)
   ) : false;
 }
+
+export const hasArtifactItemInCollection = (candidate, isArtifactCallback) => {
+  return isArtifact(candidate, isArtifactCallback)  ? 
+  true : (
+    isArray(candidate) ? 
+    isArtifact(
+      catalogArtifactItems(candidate, isArtifactCallback), 
+      hasTrue
+    ) : 
+    false
+  );
+};
