@@ -8,19 +8,16 @@ import { are, fulfill } from "./checkers";
 export const isArtifactArray = (candidate, isArtifactCallback) =>
   isArray(candidate) ? are(candidate, isArtifactCallback) : false;
 
-export const hasArtifactItem = (candidate, isArtifactCallback) =>
-  isArray(candidate) ?  
-  candidate.map(isArtifactCallback).includes(true) : 
-  false;
-
 export const isArtifactItem = (candidate, isArtifactCallback) => isArtifactCallback(candidate);
 
 export const isArtifact = (candidate, isArtifactCallback) =>
-  isArtifactCallback(candidate) ? true : isArtifactArray(candidate, isArtifactCallback);
+  isArtifactItem(candidate, isArtifactCallback) ? true : isArtifactArray(candidate, isArtifactCallback);
+
+export const hasArtifactItem = (candidate, isArtifactCallback) =>
+  isArray(candidate) ?  candidate.map(isArtifactCallback).includes(true) : false;
 
 export const hasArtifacts = (candidate, isArtifactCallback) =>
-  isArtifactItem(candidate, isArtifactCallback) || 
-  hasArtifactItem(candidate, isArtifactCallback);
+  isArtifactItem(candidate, isArtifactCallback) || hasArtifactItem(candidate, isArtifactCallback);
 
 export const isArtifactCollection = (candidate, isArtifactCallback) => {
   return isArtifact(candidate, (x) => isArtifact(x, isArtifactCallback));

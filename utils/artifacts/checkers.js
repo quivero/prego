@@ -1,9 +1,23 @@
-import { isArray } from "lodash";
-import { batchAnd } from "../retoric/utils";
+import { isArray, isBoolean } from "lodash";
 
+const and = (acc, el) => acc && el;
+export const batchAnd = (list) => {
+  const error_message = 'Batch and expects a list of boolean values i.e. true/false.';
 
-export const are = (arrayCandidate, truthCallback) =>
-  batchAnd(arrayCandidate.map(truthCallback));
+  if(isArray(list)) {
+    if(list.every(isBoolean)) {
+      return list.reduce(and, true);
+    } else {
+      throw TypeError(error_message);
+    }
+  } else {
+    throw TypeError(error_message);
+  }
+}
+
+export const are = (candidate, truthCallback) => batchAnd(
+    candidate.map(truthCallback)
+);
 
 export const isTrue = (element) => element === true;
 export const isFalse = (element) => element === false;
@@ -11,7 +25,7 @@ export const areTrue = (array) => array.every(isTrue);
 export const areFalse = (array) => array.every(isFalse);
 export const hasTrue = (element) => isArray(element) ? element.includes(true) : isTrue(element);
 
-export const isCondition = (
+export let isCondition = (
   condition,
   conditionCallback,
   args,

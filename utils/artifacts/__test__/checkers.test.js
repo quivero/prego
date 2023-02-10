@@ -1,6 +1,18 @@
-import { fulfill, hasTrue, isCondition, isExtensionOf } from "../checkers";
+import { isNumber } from "lodash";
+import { 
+  are, 
+  areFalse, 
+  areTrue, 
+  batchAnd, 
+  fulfill, 
+  hasTrue, 
+  isCondition, 
+  isExtensionOf, 
+  isFalse, 
+  isTrue 
+} from "../checkers";
 
-let result, expectation;
+let result, expectation, candidate;
 
 describe("isCondition", () => {
   it("must throw TypeError on false condition", () => {
@@ -57,6 +69,14 @@ describe("isCondition", () => {
 
     expect(result).toBe(expectation);
   });
+  it("must return ", () => {
+    candidate = [1, 2, 3, 4];
+    
+    result = are(candidate, isNumber);
+    expectation = true;
+
+    expect(result).toBe(expectation);
+  });
   it("must throw Error on false condition", () => {
     const condition = 42 !== 42; // false
     const candidate = 7;
@@ -73,6 +93,32 @@ describe("isCondition", () => {
 });
 
 describe("boolean maps", () => {
+  it("must assert batchAnd", () => {
+    result = () => batchAnd(['42', '7']);
+    expectation = TypeError;
+    
+    expect(result).toThrow(expectation);
+    
+    result = () => batchAnd(false);
+    expectation = TypeError;
+    
+    expect(result).toThrow(expectation);
+
+    result = () => batchAnd(true);
+    expectation = TypeError;
+    
+    expect(result).toThrow(expectation);
+    
+    result = batchAnd([true, false]);
+    expectation = false;
+    
+    expect(result).toBe(expectation);
+
+    result = batchAnd([true, true]);
+    expectation = true;
+    
+    expect(result).toBe(expectation);
+  });
   it("must assert true-element on array", () => {
     result = hasTrue(true);
     expectation = true;
@@ -90,6 +136,65 @@ describe("boolean maps", () => {
     expect(result).toBe(expectation);
 
     result = hasTrue([false, false]);
+    expectation = false;
+    
+    expect(result).toBe(expectation);
+  });
+  it("must assert true-element", () => {
+    result = isTrue(false);
+    expectation = false;
+    
+    expect(result).toBe(expectation);
+
+    result = isTrue(true);
+    expectation = true;
+    
+    expect(result).toBe(expectation);
+  });
+  it("must assert true-element", () => {
+    result = isFalse(false);
+    expectation = true;
+    
+    expect(result).toBe(expectation);
+
+    result = isFalse(true);
+    expectation = false;
+    
+    expect(result).toBe(expectation);
+  });
+  it("must assert true-element on array", () => {
+    result = () => areTrue(false);
+    expectation = TypeError;
+    
+    expect(result).toThrow(expectation);
+
+    result = () => areTrue(true);
+    expectation = TypeError;
+    
+    expect(result).toThrow(expectation);
+    
+    result = areTrue([true, true]);
+    expectation = true;
+    
+    expect(result).toBe(expectation);
+
+    result = areTrue([false, true]);
+    expectation = false;
+    
+    expect(result).toBe(expectation);
+  });
+  it("must assert false-element on array", () => {
+    result = () => areFalse(false);
+    expectation = TypeError;
+    
+    expect(result).toThrow(expectation);
+    
+    result = areFalse([false, false]);
+    expectation = true;
+    
+    expect(result).toBe(expectation);
+
+    result = areFalse([false, true]);
     expectation = false;
     
     expect(result).toBe(expectation);
