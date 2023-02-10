@@ -55,7 +55,7 @@ describe("isCondition", () => {
       errorClass
     );
     expectation = candidate;
-    
+
     expect(result).toBe(expectation);
   });
   it("must return argument on true condition", () => {
@@ -122,22 +122,22 @@ describe("boolean maps", () => {
   it("must assert true-element on array", () => {
     result = hasTrue(true);
     expectation = true;
-    
+
     expect(result).toBe(expectation);
 
     result = hasTrue(false);
     expectation = false;
-    
+
     expect(result).toBe(expectation);
 
     result = hasTrue([true, false]);
     expectation = true;
-    
+
     expect(result).toBe(expectation);
 
     result = hasTrue([false, false]);
     expectation = false;
-    
+
     expect(result).toBe(expectation);
   });
   it("must assert true-element", () => {

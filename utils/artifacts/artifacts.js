@@ -25,13 +25,13 @@ export const isArtifactCollection = (candidate, isArtifactCallback) => {
 
 export const applyArtifact = (candidate, isArtifactCallback, applyCallback) => {
   const artifactApplyCallback = (candidate) =>
-    isArtifactArray(candidate, isArtifactCallback) ? 
-    candidate.map(applyCallback) : 
+    isArtifactArray(candidate, isArtifactCallback) ?
+    candidate.map(applyCallback) :
     applyCallback(candidate);
 
   return artifactApplyCallback(
     fulfill(
-      candidate, isArtifact(candidate, isArtifactCallback), 
+      candidate, isArtifact(candidate, isArtifactCallback),
       "Provided candidate does not fulfill artifact is-callback", TypeError
     )
   );

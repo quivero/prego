@@ -42,5 +42,5 @@ export let isCondition = (
 export const fulfill = (arg, condition, error_msg, errorClass = Error) =>
   isCondition(condition, (x) => x, arg, error_msg, errorClass);
 
-export const isExtensionOf = (childClass, parentClassCandidate) => 
+export const isExtensionOf = (childClass, parentClassCandidate) =>
     Object.getPrototypeOf(childClass.prototype) === parentClassCandidate.prototype;
