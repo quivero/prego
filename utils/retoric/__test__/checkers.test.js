@@ -1,8 +1,8 @@
 import {
-  are,
   isArtifact,
   isArtifactCollection,
 } from "../../artifacts/artifacts";
+import { are } from "../../artifacts/checkers";
 
 import {
   isConjunction,
