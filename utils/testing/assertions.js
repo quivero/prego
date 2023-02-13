@@ -25,7 +25,7 @@ const validAssertItemCallback = (item) => {
 
 export const assertGuard = (item) => {
   const error = assertionError(item);
-  
+
   isCondition(
       isAssertItem(item),
       validAssertItemCallback,
@@ -37,7 +37,7 @@ export const assertGuard = (item) => {
 
 export const batchAssertGuard = (items) => {
   const error = assertionError(item);
-  
+
   isCondition(
       isAssertArtifact(item),
       (items) => items.forEach((item) => assert(item)),
@@ -50,6 +50,6 @@ export const batchAssertGuard = (items) => {
 export const assert = (item) => assertGuard(item);;
 
 export const batchAssert = (items) => {
-  
+
   items.forEach((item) => assert(item))
 };

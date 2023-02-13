@@ -116,10 +116,10 @@ export const buildRehearsal = (description, acts) => {
   };
 
   return isCondition(
-    isRehearsalInput, 
-    rehearsalCallback, 
-    rehearsalArgs, 
-    actCriterium, 
+    isRehearsalInput,
+    rehearsalCallback,
+    rehearsalArgs,
+    actCriterium,
     TypeError
   );
 };
