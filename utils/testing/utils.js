@@ -1,5 +1,5 @@
 import { isArray, uniq } from "lodash";
-import { areTrue, isFalse, isTrue } from "../artifacts/artifacts";
+import { areTrue, isFalse, isTrue } from "../artifacts/checkers";
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Array helpers                                                                                               |

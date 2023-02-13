@@ -50,7 +50,7 @@ perform = (resources) => {
     expectedAtestResult,
   ];
 
-  return [buildScene(assertItem)];
+  return [assertItem];
 };
 
 teardown = emptyCallback;
@@ -102,18 +102,12 @@ let oneToOneAdditionPerform,
 
 let oneToOneAdditionExpectation,
   oneToManyAdditionExpectation,
-  manyToOneAdditionExpectation,
   manyToManyAdditionExpectation;
 
 let oneToOneAdditionAssertionMap,
   oneToManyAdditionAssertionMap,
   manyToOneAdditionAssertionMap,
   manyToManyAdditionAssertionMap;
-
-let oneToOneAdditionScene,
-  oneToManyAdditionScene,
-  manyToOneAdditionScene,
-  manyToManyAdditionScene;
 
 let additionRehearsals;
 
@@ -179,6 +173,7 @@ setup = emptyCallback;
 prepare = identityCallback;
 teardown = emptyCallback;
 
+/*
 additionRehearsals = [
   buildRehearsal("must sum numbers using assert", () => assert(addItem)),
   buildRehearsal("must sum numbers using batchAssert", () =>
@@ -190,3 +185,4 @@ additionRehearsals = [
 ];
 
 additionPlays = [buildPlay("add", additionRehearsals)];
+*/

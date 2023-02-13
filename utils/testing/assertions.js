@@ -1,7 +1,7 @@
 import _, { isArray } from "lodash";
 import { assertionError } from "./errors";
-import { isAssertItem } from "./checkers";
-import { isCondition } from "../artifacts/artifacts";
+import { isAssertArtifact, isAssertItem } from "./checkers";
+import { isCondition } from "../artifacts/checkers";
 
 const validAssertItemCallback = (item) => {
   let result, expectation, expectToMap, itemCardinality;
@@ -23,17 +23,33 @@ const validAssertItemCallback = (item) => {
   }
 };
 
-export const assert = (item) => {
-  const assertionError_ = assertionError(item);
-  const isValidAssertItemCondition = isAssertItem(item);
-
+export const assertGuard = (item) => {
+  const error = assertionError(item);
+  
   isCondition(
-    isValidAssertItemCondition,
-    validAssertItemCallback,
-    item,
-    assertionError_.message,
-    assertionError_.type
+      isAssertItem(item),
+      validAssertItemCallback,
+      item,
+      error.message,
+      error.type
   );
-};
+}
 
-export const batchAssert = (items) => items.forEach((item) => assert(item));
+export const batchAssertGuard = (items) => {
+  const error = assertionError(item);
+  
+  isCondition(
+      isAssertArtifact(item),
+      (items) => items.forEach((item) => assert(item)),
+      items,
+      error.message,
+      error.type
+  );
+}
+
+export const assert = (item) => assertGuard(item);;
+
+export const batchAssert = (items) => {
+  
+  items.forEach((item) => assert(item))
+};

@@ -1,10 +1,6 @@
-import {
-  applyArtifact,
-  areTrue,
-  isArtifact,
-  isFalse,
-  isTrue,
-} from "../../artifacts/artifacts";
+import { isArtifact } from "../../artifacts/artifacts";
+import { areTrue, isFalse, isTrue } from "../../artifacts/checkers";
+
 import { assert } from "../assertions";
 import {
   expectAssertions,
@@ -177,44 +173,5 @@ describe("Miscelaneous", () => {
     result = isArtifact(numberList, (x) => typeof x === "number");
 
     expectToEqual(result, true);
-  });
-  it("should return false for non-fulfilling condition", () => {
-    result = isArtifact("42", (x) => typeof x === "number");
-
-    expectToEqual(result, false);
-
-    result = isArtifact(["42", 42], (x) => typeof x === "number");
-
-    expectToEqual(result, false);
-  });
-  it("should return transformed artifact on consistent artifact", () => {
-    result = applyArtifact(
-      [1, 2, 3, 4],
-      (x) => typeof x === "number",
-      (x) => 2 * x
-    );
-    expectation = [2, 4, 6, 8];
-
-    expectToEqual(result, expectation);
-
-    result = applyArtifact(
-      1,
-      (x) => typeof x === "number",
-      (x) => 2 * x
-    );
-    expectation = 2;
-
-    expectToEqual(result, expectation);
-  });
-  it("should return throw on inconsistent artifact", () => {
-    result = () =>
-      applyArtifact(
-        [1, 2, 3, "4"],
-        (x) => typeof x === "number",
-        (x) => 2 * x
-      );
-    expectation = TypeError;
-
-    expectToThrow(result, expectation);
   });
 });

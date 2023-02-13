@@ -1,12 +1,20 @@
-import _, { isArray } from "lodash";
+import _, { isArray, isString } from "lodash";
+import { fulfill, isExtensionOf } from "../artifacts/checkers";
+import { isAssertArtifact } from "./checkers";
 
-import { organizationCriteria, assertItemCriteria } from "./criteriaStrings";
+import { organizationCriteria, assertItemCriteria, assertArtifactCriteria } from "./criteriaStrings";
 import { defaultArrayTruthMessage } from "./defaults";
 
 export const buildError = (errorClass, errorMessage) => {
   return {
-    message: errorMessage,
-    type: errorClass,
+    message: fulfill(
+      errorMessage, isString(errorMessage), 
+      "Error message must be a string!", TypeError
+    ),
+    type: fulfill(
+      errorClass, isExtensionOf(errorClass, Error), 
+      "Error type must extend Error class!", TypeError
+    ),
   };
 };
 
@@ -21,6 +29,19 @@ export const assertionError = (fakeItem) => {
   const invalidAssertItemMsg = assertItemCriteria + givenItemTypesMsg;
 
   return buildError(TypeError, invalidAssertItemMsg);
+};
+
+export const assertionArtifactError = (items) => {
+  const itemAreArtifacts = items.map((item) => isAssertArtifact(item));
+  
+  const designationMsg = `We designate assertion items with 1 and non-(assertion items) with 0: `;
+  const areItems = `[${itemAreArtifacts}]`
+  
+  const checkEachMessage = designationMsg + areItems + "\n";
+
+  const invalidAssertionArtifactMsg = designationMsg + checkEachMessage + assertArtifactCriteria;
+
+  return buildError(TypeError, invalidAssertionArtifactMsg);
 };
 
 export const organizationTypeError = (fakeOrganization) => {

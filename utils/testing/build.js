@@ -1,13 +1,9 @@
-import { isArray, isFunction } from "lodash";
-
-import {
-  isAssertItem,
-  isOrganization,
-  possibleOrganizationKeys,
-} from "./checkers";
+import { isArray, isFunction, isString } from "lodash";
+import { isActArtifact, isAssertItem, isOrganization, possibleOrganizationKeys } from "./checkers";
 import { organizationTypeError, assertionError } from "./errors";
 import { rehearse, validate } from "./assertions";
-import { isCondition } from "../artifacts/artifacts";
+import { actCriterium } from "./criteriaStrings";
+import { isCondition } from "../artifacts/checkers";
 
 const buildSceneCallback = (item) => {
   let result, expectation, expectToMap, itemCardinality;
@@ -57,20 +53,21 @@ export const buildOrganization = (setup, prepare, teardown) => {
   };
 };
 
+const fillOrganizationCallback = (organization) => {
+  let defaultValue;
+
+  possibleOrganizationKeys.forEach(
+    (organizationKey) => {
+      organization[organizationKey] = organization[organizationKey] ?? defaultValue;
+    }
+  );
+
+  return organization;
+};
+
 export const fillOrganization = (candidate) => {
   const isOrganizationCondition = isOrganization(candidate);
   const OrganizationError = organizationTypeError(candidate);
-
-  const fillOrganizationCallback = (organization) => {
-    let defaultValue;
-
-    possibleOrganizationKeys.forEach((organizationKey) => {
-      organization[organizationKey] =
-        organization[organizationKey] ?? defaultValue;
-    });
-
-    return organization;
-  };
 
   return isCondition(
     isOrganizationCondition,
@@ -82,6 +79,8 @@ export const fillOrganization = (candidate) => {
 };
 
 const actCallback = (actArgs) => {
+  actArgs.organization = fillOrganization(actArgs.organization);
+
   return {
     setup: actArgs.organization.setup,
     prepare: actArgs.organization.prepare,
@@ -91,30 +90,38 @@ const actCallback = (actArgs) => {
 };
 
 export const buildAct = (script, organization = defaultOrganization) => {
-  organization = fillOrganization(organization);
+  const isActInput = isFunction(script) && isOrganization(organization);
 
   let actArgs = {
     organization: organization,
     performance: script,
   };
 
-  const actDescription = "a function with 1 input and output argument";
-  const actPerformCriterium = `First argument \"perform\" must be ${actDescription}`;
-
-  return isCondition(
-    isFunction(script),
-    actCallback,
-    actArgs,
-    actPerformCriterium,
-    TypeError
-  );
+  return isCondition(isActInput, actCallback, actArgs, actCriterium, TypeError);
 };
 
-export const buildRehearsal = (description, acts) => {
+const rehearsalCallback = () => {
   return {
     description: description,
     callback: () => rehearse(acts),
   };
+}
+
+export const buildRehearsal = (description, acts) => {
+  const isRehearsalInput = isString(description) && isActArtifact(acts);
+
+  let rehearsalArgs = {
+    organization: description,
+    acts: acts,
+  };
+
+  return isCondition(
+    isRehearsalInput, 
+    rehearsalCallback, 
+    rehearsalArgs, 
+    actCriterium, 
+    TypeError
+  );
 };
 
 export const buildPlay = (name, rehearsals) => {

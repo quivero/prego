@@ -21,29 +21,29 @@ let assertItem, assertItems;
 
 describe("checkers", () => {
   it("must assert checker areAssertItems", () => {
-    assertItem = [areAssertItems(assertFixtures), expectToBeEqual, true];
+    assertItem = [ areAssertItems(assertFixtures), expectToBeEqual, true ];
     assert(assertItem);
   });
   it("must batchAssert checker isAssertArtifact", () => {
     assertItems = [
-      [isAssertArtifact(assertFixtures), expectToBeEqual, true],
-      [isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false],
+      [ isAssertArtifact(assertFixtures), expectToBeEqual, true ],
+      [ isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false ],
     ];
 
     batchAssert(assertItems);
   });
   it("must batchAssert checker isAssertItem", () => {
     assertItems = [
-      [isAssertItem(validAssertLength2Item), expectToBeEqual, true],
-      [isAssertItem(validAssertLength3Item), expectToBeEqual, true],
-      [isAssertItem(invalidAssertItemLength), expectToBeEqual, false],
-      [isAssertItem(invalidAssertCallbackItem), expectToBeEqual, false],
+      [ isAssertItem(validAssertLength2Item), expectToBeEqual, true ],
+      [ isAssertItem(validAssertLength3Item), expectToBeEqual, true ],
+      [ isAssertItem(invalidAssertItemLength), expectToBeEqual, false ],
+      [ isAssertItem(invalidAssertCallbackItem), expectToBeEqual, false ],
     ];
 
     batchAssert(assertItems);
   });
   it("must return true on valid organization array", () => {
-    assertItem = [areOrganizations(validOrganizations), expectToBeEqual, true];
+    assertItem = [ areOrganizations(validOrganizations), expectToBeEqual, true ];
     assert(assertItem);
   });
   it("must return false on invalid assert items", () => {
@@ -56,16 +56,16 @@ describe("checkers", () => {
   });
   it("must return true for valid assert artifact", () => {
     assertItems = [
-      [isAssertArtifact(validAssertLength2Item), expectToBe, true],
-      [isAssertArtifact(validAssertLength3Item), expectToBe, true],
+      [ isAssertArtifact(validAssertLength2Item), expectToBe, true ],
+      [ isAssertArtifact(validAssertLength3Item), expectToBe, true ],
     ];
 
     batchAssert(assertItems);
   });
   it("must return true for valid assert item", () => {
     assertItems = [
-      [areAssertItems(assertFixtures), expectToBe, true],
-      [areScenes(assertFixtures), expectToBe, false],
+      [ areAssertItems(assertFixtures), expectToBe, true ],
+      [ areScenes(assertFixtures), expectToBe, false ],
     ];
 
     batchAssert(assertItems);

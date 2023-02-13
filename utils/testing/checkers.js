@@ -6,7 +6,8 @@ import _, {
   uniq,
   isFunction,
 } from "lodash";
-import { are, isArtifact } from "../artifacts/artifacts";
+import { isArtifact } from "../artifacts/artifacts";
+import { are } from "../artifacts/checkers";
 import { batchAnd } from "../retoric/utils";
 
 import { defaultOrganization } from "./defaults";
@@ -67,6 +68,7 @@ export const areAssertItems = (candidates) => are(candidates, isAssertItem);
 export const isAssertArtifact = (candidate) =>
   isArtifact(candidate, isAssertItem);
 
+
 /*-------------------------------------------------------------------------------------------------------------*\
  | Scene                                                                                                       |
 \*-------------------------------------------------------------------------------------------------------------*/
@@ -100,12 +102,14 @@ export const isOrganization = (candidate) => {
 
 export const areOrganizations = (candidates) => are(candidates, isOrganization);
 
+export const isOrganizationArtifact = (candidate) => isArtifact(candidate, isOrganization);
+
 /*-------------------------------------------------------------------------------------------------------------*\
  | Act                                                                                                         |
 \*-------------------------------------------------------------------------------------------------------------*/
 
 // Default item key strings
-const actKeys = [...possibleOrganizationKeys, "script"];
+const actKeys = [...possibleOrganizationKeys, "perform"];
 
 export const isAct = (candidate) => {
   const candidateKeys = Object.keys(candidate);
@@ -132,3 +136,5 @@ export const isAct = (candidate) => {
 };
 
 export const areActs = (candidates) => are(candidates, isAct);
+
+export const isActArtifact = (candidate) => isArtifact(candidate, isAct);
