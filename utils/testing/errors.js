@@ -8,11 +8,11 @@ import { defaultArrayTruthMessage } from "./defaults";
 export const buildError = (errorClass, errorMessage) => {
   return {
     message: fulfill(
-      errorMessage, isString(errorMessage), 
+      errorMessage, isString(errorMessage),
       "Error message must be a string!", TypeError
     ),
     type: fulfill(
-      errorClass, isExtensionOf(errorClass, Error), 
+      errorClass, isExtensionOf(errorClass, Error),
       "Error type must extend Error class!", TypeError
     ),
   };
@@ -33,10 +33,10 @@ export const assertionError = (fakeItem) => {
 
 export const assertionArtifactError = (items) => {
   const itemAreArtifacts = items.map((item) => isAssertArtifact(item));
-  
+
   const designationMsg = `We designate assertion items with 1 and non-(assertion items) with 0: `;
   const areItems = `[${itemAreArtifacts}]`
-  
+
   const checkEachMessage = designationMsg + areItems + "\n";
 
   const invalidAssertionArtifactMsg = designationMsg + checkEachMessage + assertArtifactCriteria;

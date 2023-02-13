@@ -67,16 +67,16 @@ export const organizationCriteria = orgDescription + orgProps;
 const actDescription = "An act composes of: ";
 
 const actCompositionItems = [
-  "An organization;", 
+  "An organization;",
   "A script callback with organization-prepared fixtures return as a scene a.k.a. an assert item as a raw object."
 ]
 
 const actComposition = `${enumerate(actCompositionItems)}`;
 
-export const actCriterium = actDescription + "\n\n" + 
-    actComposition + "\n" + 
-    assertItemCriteria + "\n" + 
-    organizationCriteria; 
+export const actCriterium = actDescription + "\n\n" +
+    actComposition + "\n" +
+    assertItemCriteria + "\n" +
+    organizationCriteria;
 
 /*--------------------------------------------------------------------------------*\
  | Rehearsal                                                                       |
@@ -84,7 +84,6 @@ export const actCriterium = actDescription + "\n\n" +
 
 const reherasalDescription = "A rehearsal constitutes of organization and a script with return as a Scene a.k.a. an assert item.";
 
-export const reherasalCriterium = reherasalDescription + "\n\n" + 
-    assertItemCriteria + "\n\n" + 
-    organizationCriteria; 
-
+export const reherasalCriterium = reherasalDescription + "\n\n" +
+    assertItemCriteria + "\n\n" +
+    organizationCriteria;
