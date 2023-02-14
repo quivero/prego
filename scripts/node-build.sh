@@ -9,10 +9,10 @@ NVM_VERSION='18.12.1'
 # Verifies if command runs as sudo
 sh_c=$( get_if_root )
 
-os_install_repo="$(echo '$( os_info )' | awk '{ print $3 }' FS=':')"
+os_install_repo="$(echo "$( os_info )" | awk "{ print $3 }" FS=':')"
 
 # Install curl if not already present
-$sh_c '$os_install_repo install curl -y'
+$sh_c "$os_install_repo install curl -y"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
 
 # Retrieve necessary repositories
