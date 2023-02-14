@@ -22,7 +22,7 @@ command_exists() {
 # examples:
 #   >> command_exists echo # 0 (success)
 listPIDsAttachedToPort () {
-  echo "$(lsof -i ":$1" | awk "{ print $2 }" | awk 'NR>1')"  | uniq -u
+  echo "$(lsof -i ":$1" | awk '{ print $2 }' | awk 'NR>1')"  | uniq -u
 }
 
 # Compares two CalVer (YY.MM) version strings.
@@ -36,17 +36,17 @@ listPIDsAttachedToPort () {
 calver_compare() (
   set +x
 
-  yy_a="$(echo '$1' | cut -d'.' -f1)"
-  yy_b="$(echo '$2' | cut -d'.' -f1)"
-  if [ '$yy_a' -lt '$yy_b' ]; then
+  yy_a="$(echo "$1" | cut -d'.' -f1)"
+  yy_b="$(echo "$2" | cut -d'.' -f1)"
+  if [ "$yy_a" -lt "$yy_b" ]; then
     return 1
   fi
-  if [ '$yy_a' -gt '$yy_b' ]; then
+  if [ "$yy_a" -gt "$yy_b" ]; then
     return 0
   fi
-  mm_a='$(echo '$1' | cut -d'.' -f2)'
-  mm_b='$(echo '$2' | cut -d'.' -f2)'
-  if [ '${mm_a#0}' -lt '${mm_b#0}' ]; then
+  mm_a="$(echo "$1" | cut -d'.' -f2)"
+  mm_b="$(echo "$2" | cut -d'.' -f2)"
+  if [ "${mm_a#0}" -lt "${mm_b#0}" ]; then
     return 1
   fi
 
@@ -82,15 +82,15 @@ get_distribution() {
 
   # Every system that we officially support has /etc/os-release
   if [ -r /etc/os-release ]; then
-    lsb_dist="$(. /etc/os-release && echo '$ID')"
+    lsb_dist="$(. /etc/os-release && echo "$ID")"
   fi
   # Returning an empty string here should be alright since the
   # case statements don't act unless you provide an actual value
 
   # perform some very rudimentary platform detection
-  lsb_dist="$(echo '$lsb_dist' | tr '[:upper:]' '[:lower:]')"
+  lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
 
-  echo '$lsb_dist'
+  echo "$lsb_dist"
 }
 
 # Gets Debian version
@@ -99,8 +99,8 @@ get_distribution() {
 #   >> get_debian_version
 #   bullseye
 get_debian_version() {
-  dist_version='$(sed 's/\/.*//' /etc/debian_version | sed 's/\..*//')'
-  case '$dist_version' in
+  dist_version="$(sed 's/\/.*//' /etc/debian_version | sed 's/\..*//')"
+  case "$dist_version" in
     11)
       echo 'bullseye'
     ;;
@@ -383,7 +383,7 @@ get_if_root() {
 		fi
   fi
 
-  echo '$sh_c'
+  echo "$sh_c"
 }
 
 # Get filtered list of files
