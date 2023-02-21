@@ -1,4 +1,4 @@
-import _, { isArray, isString } from "lodash";
+import { isArray, isString } from "lodash";
 import { fulfill, isExtensionOf } from "../artifacts/checkers";
 import { isAssertArtifact } from "./checkers";
 

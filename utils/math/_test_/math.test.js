@@ -86,13 +86,13 @@ describe("math", () => {
     expect(isSpherical([0, 2 * Math.PI + 0.001])).toBe(false);
   });
 
-  it("should return dot product between vectors", () => {
+  it("should verify spherical arguments", () => {
     let phis_1 = _.range(-3, 3, (2 * Math.PI) / 8);
     let phis_2 = _.range(0, 6, (2 * Math.PI) / 8);
 
     for (let coord_1 of phis_1) {
       for (let coord_2 of phis_2) {
-        expect(isSpherical([phis_1[0], phis_2[0]])).toBe(true);
+        expect(isSpherical([coord_1, coord_2])).toBe(true);
       }
     }
   });

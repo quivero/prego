@@ -230,7 +230,7 @@ do_docker_install() {
         enable_channel_flag='--set-enabled'
         disable_channel_flag='--set-disabled'
         pre_reqs='dnf-plugins-core'
-        pkg_suffix='fc$dist_version'
+        pkg_suffix="fc$dist_version"
       else
         pkg_manager='yum'
         config_manager='yum-config-manager'

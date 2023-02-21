@@ -1,12 +1,8 @@
 import _ from "lodash";
 import { zip } from "lodash";
-import { assert, batchAssert, atest } from "../assertions";
 import {
-  buildScene,
   buildOrganization,
-  buildAct,
-  buildRehearsal,
-  buildPlay,
+  buildAct
 } from "../build";
 
 import { emptyCallback, identityCallback } from "../defaults";

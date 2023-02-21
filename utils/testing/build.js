@@ -46,11 +46,13 @@ export const buildScene = (item) => {
 };
 
 export const buildOrganization = (setup, prepare, teardown) => {
-  return {
+  const organization = {
     setup: setup,
     prepare: prepare,
     teardown: teardown,
   };
+
+  return organization;
 };
 
 const fillOrganizationCallback = (organization) => {

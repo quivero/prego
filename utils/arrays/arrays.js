@@ -4,8 +4,6 @@ import "lodash.combinations";
 import { objectReduce } from "../objects/objects.js";
 import { throwError } from "../sys/sys.js";
 
-const SET_DELIMITER = ",";
-
 /**
  * @abstract returns an array of ones with length n
  *
@@ -207,11 +205,8 @@ export const sequentialArrayBlobs = (arr) => {
   // Sort number array in ascending order
   arr = sort(arr, 1);
 
-  if (arr.length === 1) {
-    return { 0: arr };
-  }
   for (const index of _.range(arr.length)) {
-    if (index > 0) {
+    
       if (arr[index] - arr[index - 1] > 1) {
         blobs[counter] = arr.slice(head_index, index);
         head_index = index;
@@ -221,7 +216,7 @@ export const sequentialArrayBlobs = (arr) => {
       if (index === arr.length - 1) {
         blobs[counter] = arr.slice(head_index, index + 1);
       }
-    }
+    
   }
 
   return blobs;
@@ -499,7 +494,7 @@ export function* eulerGenerator(sets) {
           // 1. Exclusive elements of group except current analysis set
           yield [comb_str, comb_excl];
 
-          comb_str.split(",").forEach((ckey) => {
+          comb_str.split(SETKEY_DELIMITER).forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_excl);
           });
 
@@ -509,11 +504,13 @@ export function* eulerGenerator(sets) {
         comb_intersec = _.intersection(celements, sets[set_key]);
         if (comb_intersec.length !== 0) {
           // 2. Intersection of analysis element and exclusive group
-          comb_intersec_key = [set_key].concat(comb_str.split(",")).join(",");
+          comb_intersec_key = [set_key].concat(
+            comb_str.split(SETKEY_DELIMITER)
+          ).join(SETKEY_DELIMITER);
 
           yield [comb_intersec_key, comb_intersec];
 
-          comb_str.split(",").forEach((ckey) => {
+          comb_str.split(SETKEY_DELIMITER).forEach((ckey) => {
             sets[ckey] = _.difference(sets[ckey], comb_intersec);
           });
 
