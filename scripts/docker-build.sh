@@ -33,7 +33,6 @@ if [ -z "$REPO_FILE" ]; then
   REPO_FILE="$DEFAULT_REPO_FILE"
 fi
 
-mirror=''
 DRY_RUN=${DRY_RUN:-}
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -84,7 +83,7 @@ echo_docker_as_nonroot() {
   echo 'users access, refer to https://docs.docker.com/go/daemon-access/'
   echo
   echo 'WARNING: Access to the remote API on a privileged Docker daemon is equivalent'
-  echo '         to root access on the host. Refer to the 'Docker daemon attack surface''
+  echo "         to root access on the host. Refer to the 'Docker daemon attack surface'"
   echo '         documentation for details: https://docs.docker.com/go/attack-surface/'
   echo
   echo '================================================================================'
@@ -163,7 +162,7 @@ do_docker_install() {
 
           if [ -z "$pkg_version" ]; then
             echo
-            echo "ERROR: \'$VERSION\' not found amongst apt-cache madison results"
+            printf "ERROR: \'$VERSION\' not found amongst apt-cache madison results"
             echo
             exit 1
           fi
@@ -241,6 +240,20 @@ do_docker_install() {
         pkg_suffix='el'
       fi
       repo_file_url="$DOWNLOAD_URL/linux/$lsb_dist/$REPO_FILE"
+
+      (
+				if ! is_dry_run; then
+					set -x
+				fi
+				$sh_c "$pkg_manager install -y -q $pre_reqs"
+				$sh_c "$config_manager --add-repo $repo_file_url"
+
+				if [ "$CHANNEL" != "stable" ]; then
+					$sh_c "$config_manager $disable_channel_flag docker-ce-*"
+					$sh_c "$config_manager $enable_channel_flag docker-ce-$CHANNEL"
+				fi
+				$sh_c "$pkg_manager makecache"
+			)
 
       pkg_version=''
       if [ -n "$VERSION" ]; then

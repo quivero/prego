@@ -168,8 +168,8 @@ check_forked_dist() {
  # 1 (fail)
 dist_deprecation_notice() {
 
-  distro='$1'
-  distro_version='$2'
+  distro="$1"
+  distro_version="$2"
 
   echo
   printf '\033[91;1mDEPRECATION WARNING\033[0m\n'

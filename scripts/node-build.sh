@@ -3,7 +3,6 @@
 BASEDIR=$(dirname "$0")
 source "${BASEDIR}/linux-utils.sh"
 
-NODE_VERSION='16'
 NVM_VERSION='18.12.1'
 
 # Verifies if command runs as sudo
