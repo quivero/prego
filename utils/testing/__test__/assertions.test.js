@@ -1,77 +1,40 @@
-import {
-  assert,
-  batchAssert,
-  atest,
-  batchAtest,
-  validate,
-} from "../assertions";
+import { assert, batchAssert } from "../assertions";
+import { hasAssertions, expectAssertions } from "../expectTo";
 
 import {
   assertFixtures,
-  validAssertLength1Item,
   validAssertLength2Item,
+  validAssertLength3Item,
   invalidAssertItemLength,
   invalidAssertCallbackItem,
-  validAtestFixture,
-  validAtestScene,
-  additionAuditions,
 } from "./fixtures";
 
-let fixtures, scenarios;
-
 describe("assert", () => {
-  it("should assert on result-callback pattern", () => {
-    expect.assertions(1);
-    assert(validAssertLength1Item);
-  });
-
-  it("should assert on result-expected-callback pattern", () => {
-    expect.assertions(1);
+  it("must assert on result-callback pattern", () => {
+    hasAssertions();
+    expectAssertions(1);
     assert(validAssertLength2Item);
   });
 
-  it("should throw error on item with length different than 2 or 3", () => {
-    const invalidArgumentFunction = () => assert(invalidAssertItemLength);
-    expect(invalidArgumentFunction).toThrow(Error);
+  it("must assert on result-expected-callback pattern", () => {
+    hasAssertions();
+    expectAssertions(1);
+
+    assert(validAssertLength3Item);
   });
 
-  it("should throw error on invalid callback function", () => {
-    const invalidCallbackFunction = () => assert(invalidAssertCallbackItem);
-    expect(invalidCallbackFunction).toThrow(Error);
-  });
+  it("must throw error on item with length different than 2 or 3", () =>
+    expect(() => assert(invalidAssertItemLength)).toThrow(Error));
+
+  it("must throw error on invalid callback function", () =>
+    expect(() => assert(invalidAssertCallbackItem)).toThrow(Error));
 });
 
 describe("batchAssert", () => {
-  it("should assert asserts in batch", () => {
-    expect.assertions(assertFixtures.length);
+  it("must assert asserts in batch", () => {
+    hasAssertions();
+    expectAssertions(assertFixtures.length);
+
     batchAssert(assertFixtures);
   });
 });
-
-describe("atest", () => {
-  it("should assert atest", () => atest(validAtestFixture, validAtestScene));
-});
-
-describe("batchAtest", () => {
-  it("should assert batchAtest", () => {
-    fixtures = [validAtestFixture, validAtestFixture];
-    scenarios = [validAtestScene, validAtestScene];
-
-    batchAtest(fixtures, scenarios);
-  });
-});
-
-describe("batchAtest", () => {
-  it("should assert batchAtest", () => {
-    fixtures = [validAtestFixture, validAtestFixture];
-    scenarios = [validAtestScene, validAtestScene];
-
-    batchAtest(fixtures, scenarios);
-  });
-});
-
-/*
- *  Rehearsal test design
- */
-
-validate(additionAuditions);

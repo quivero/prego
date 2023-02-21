@@ -1,15 +1,15 @@
-import { throwError, typeOf, warn } from "../sys.js";
+import { throwError, typeOf, warn, isCondition } from "../sys.js";
 import { log_message } from "#utils/logging/logger.js";
 
 jest.mock("#utils/logging/logger.js");
 
 let expected, result, trivia;
 
-describe("sys", () => {
+describe("throwError/warn", () => {
   it("should throw error", () => {
-    function throwErrorFn() {
+    const throwErrorFn = () => {
       return throwError("Fire!");
-    }
+    };
 
     expect(throwErrorFn).toThrowError();
   });
@@ -19,7 +19,9 @@ describe("sys", () => {
 
     expect(log_message).toHaveBeenCalled();
   });
+});
 
+describe("throwError/warn", () => {
   it("should return data types", () => {
     trivia = [
       [typeOf("string"), "string"],

@@ -1,0 +1,222 @@
+TODO?: The check-boxes below represent features necessary to achieve:
+
+verb:noun(s)
+
+    build: Artifact(s)
+    (batch)assert: scene(s)
+    practice:act(s)
+    rehearse:rehearsal(s)
+    cast:play(s)
+
+Objects:
+
+  [   ]  fixture:object,
+  [   ]  assertionArtifact: object(
+         (result: object, expectToMap: expectTo) ||
+         (result: object, expectToMap: : expectTo, expectation: object)
+       ) | Array( (result, expectToMap) || (result, expectToMap, expectation) )
+  [   ]  organization := object( setup: function, prepare: function, teardown: function ),
+  [   ]  scene := object(
+         (result:object, expectToMap:expectTo) ||
+         (result:object, expectToMap:expectTo, expectation:object)
+       ) | Array(
+         (result:object, expectToMap:expectTo) ||
+         (result:object, expectToMap:expectTo, expectation:object)
+       )
+  [   ]  act := scriptCallback + [ organization (defaultOrganization) ]
+  [   ]  resource: ( text: String, callback: function );
+  [   ]  rehearsal := { "fixture": fixture, "acts": acts }
+  [   ]  play := { "name": string, "rehearsals": rehearsals }
+  [   ]  audition := { "name": string, "plays": plays }
+
+Callbacks:
+
+  [   ]  scriptCallback := function( preparedFixture:object -> assertionArtifact ),
+  [   ]  perform := (act) => {...} // Improve atest
+  [   ]  buildScenesFromAssertArtifact: (preparedFixtures) => buildScenes(scriptCallback(preparedFixtures))
+  [   ]  buildRehearsal: function( ( fixture:object, acts:Array(Act) ) -> preparedFixtures:object ):
+
+    Algorithm:
+      1. Practice act;
+      2. Retrieve prepared fixtures from previous act;
+      3. Update provided fixture with given prepared fixtures;
+      4. Repeat 1.
+
+  [   ]  rehearse: ( description:string, acts:Array(Act) ):
+
+    Questions:
+      1. Must a rehearsal have an organization?
+      2. If the answer for previous question is yes, how can we integrate "setup-teardown" (check URL https://jestjs.io/docs/setup-teardown)
+
+  [   ]  playCallback( (Rehearsal | Array(Rehearsal)) -> void   ) => rehearse(rehearsals)
+  [   ]  buildPlay( ( name:string, rehearsals:Function ) -> void ) =>
+
+Utils:
+
+  [   ] const isArtifact = ( (candidate, artifactCallback(any -> Boolean)) -> Boolean ) => isArray(candidate) ? (
+          candidate.length === 0 ? are(candidate, artifactCallback) : false
+    ) : artifactCallback(candidate);
+  [   ] const applyArtifact = (artifact, callback) => isArray(artifact) ? artifact.map(callback) : callback(artifact);
+  [   ] const castArtifactToObject = (
+    artifact:( any | Array(any) ),
+    keyCallback:function(any -> string),
+    valueCallback:function(any -> any)
+  ) isArray(artifact) ? objectReduce(artifact,
+    (artifactObject, index, object) => {
+      artifactObject[keyCallback(object)] = valueCallback(object)
+
+      return artifactObject;
+    }, {} )
+
+  [ x ] const isArtifactArray = ( (candidate, artifactCallback(any -> Boolean)) -> Boolean ) => ( candidate, isArtifactCallback ) => isArray(candidate) ?
+    are(candidate, isArtifactCallback) : false;
+  [ x ] const isArtifact = ( candidate, isArtifactCallback ) => isArtifactCallback(candidate) ? true : isArtifactArray(candidate, isArtifactCallback);
+  [ x ] const applyToArtifact = (artifact, callback) => isArray(artifact) ? artifact.map(callback) : callback(artifact);
+  [ x ] const delimitify( (strings:Array(string), delimiter:string) -> string ) => strings.join(delimiter)
+  [ x ] const slugify = ( (strings:Array(string)) -> string ) => strings.join('_')
+  [ x ] const hyphenify = ( (strings:Array(string)) -> string ) => strings.join('-')
+  [ x ] const andify = ( (strings:Array(string)) -> string ) => strings.join('&')
+  [ x ] const orify = ( (strings:Array(string)) -> string ) => strings.join('|')
+
+Miscelaneous: Decision-making
+
+  Objects:
+
+    [ x ] export const NotImplementedError = (message = "") => {
+        this.name = "NotImplementedError";
+        this.message = message;
+    }
+    NotImplementedError.prototype = Error.prototype;
+
+    [ x ] const interfaceError = () => NotImplementedError("This is an interface.");
+
+    [   ] class Reasoning  {
+
+      _booleanReduceMap = undefined;
+      _defaultValue = null;
+
+      constructor(key:string, description:string, value:any) {
+        this.key = key;
+        this.description = description;
+        this.value = value;
+      }
+
+      conclude() {
+        return applyConclusion(this.value, this._booleanReduceMap, this._defaultValue);
+      }
+
+      _toArgument() {
+        throw interfaceError();
+      }
+
+      argue() {
+        return this._toArgument();
+      }
+
+      toPremise() {
+        throw interfaceError();
+      }
+
+      toString() {
+        return `${this.key}:${this.description}:${this.value}`;
+      }
+    }
+
+    [   ] class Premise extends Reasoning {
+      super(key, description, value);
+
+        constructor( key:string, description:string, value:Boolean ) {
+          super(key, description, value);
+        }
+
+        _toArgument() {
+          return { this.key: this.value }
+        }
+
+        conclude() {
+          return this.value;
+        }
+
+        toPremise(  ) {
+          return this;
+        }
+      }
+
+    [   ] class Conjunction extends Reasoning {
+
+      constructor( key:string, description:string, value:(Premise | Array(Premise)) ) {
+        super(key, description, value);
+        this._booleanReduceMap = batchAnd;
+        this._defaultValue = true;
+      }
+
+      toPremise() {
+        const premisesKeysValuesString = andify(
+          getPremisesKeyValue(this.value).map(([key, value]) => `(${key}:${value})`)
+        );
+
+        return new Premise(`${this.key}-${premisesKeysValuesString}`, this.description, this.conclude());
+      }
+
+      _toArgument() {
+        return isArray(this.value) ?
+          objectReduce(
+            this.value,
+            (argument, key, value) => {
+              argument[value.key] = value.conclude()
+              return argument;
+            }, {}
+          ) : this.value.argue();
+      }
+
+      toString() {
+        return this.toPremise().toString();
+      }
+    }
+
+    [   ] class Injunction extends Reasoning {
+      constructor( key:string, description:string, value:(Premise | Array(Premise)) ) {
+        super(key, description, value);
+        this._booleanReduceMap = batchOr;
+        this._defaultValue = false;
+      }
+
+      toPremise() {
+        const premisesKeysValuesString = orify(
+          getPremisesKeyValue(this.value).map(([key, value]) => `(${key}:${value})`)
+        );
+
+        return new Premise(`${this.key}-${premisesKeysValuesString}`, this.description, this.conclude());
+      }
+
+      _toArgument() {
+        return isArray(this.value) ?
+          objectReduce(
+            this.value,
+            (argument, key, value) => {
+              argument[value.key] = value.conclude()
+              return argument;
+            }, {}
+          ) : this.value.argue()
+      }
+
+      toString() {
+        return this.toPremise().toString();
+      }
+  }
+
+  Utils:
+
+    [   ] isReasoningArtifact(candidate:any) => isArtifact(candidate, (candidate) => element instanceOf Reasoning);
+
+    [   ] applyConclusion(premises:( Premise | Array(Premise) ), booleanReduceMap:function, defaultValue) => {
+      return applyArtifact(premises, (premise) => premise.conclude()).reduce(booleanReduceMap, defaultValue)
+    }
+
+    [   ] const getPremiseKeys = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
+      return applyArtifact(premises, (premise) => premise.key)
+    }
+
+    [ x ]  const getPremisesKeyValue = (premises:( Premise | Array(premises) ) -> ( string | Array(string) )) => {
+      return applyArtifact(premises, (premise) => [premise.key, premise.value])
+    }

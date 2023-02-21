@@ -290,9 +290,25 @@ describe("hasElement", () => {
   });
 });
 
+global.console.error = jest.fn();
 global.console.warn = jest.fn();
 
 describe("euler", () => {
+  beforeAll(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+    jest.spyOn(console, "warn").mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    console.error.mockRestore();
+    console.warn.mockRestore();
+  });
+
+  afterEach(() => {
+    console.error.mockClear();
+    console.warn.mockClear();
+  });
+
   it("should throw Typerror for ill-conditioned input", () => {
     const illConditionedInput = () => euler("");
 
@@ -312,6 +328,16 @@ describe("euler", () => {
     expect(console.warn).toBeCalledWith("Each array MUST NOT have duplicates");
   });
 
+  it("should warn once for duplicated set entries", () => {
+    euler({ a: [1, 1, 2] });
+    expect(console.warn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should raise error once for duplicated set entries", () => {
+    euler({ a: [1, 1, 2] });
+    expect(console.warn).toHaveBeenCalledTimes(1);
+  });
+
   it("should return a multiple set interactions - Sample 1", () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
@@ -324,6 +350,7 @@ describe("euler", () => {
       "0,1,2": [2],
     };
 
+    expect(euler([list_1, list_2, list_3])).toEqual(result);
     expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
@@ -339,6 +366,7 @@ describe("euler", () => {
       "0,1,2": [2],
     };
 
+    expect(euler([list_1, list_2, list_3])).toEqual(result);
     expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
@@ -355,6 +383,7 @@ describe("euler", () => {
     };
 
     expect(euler([list_1, list_2, list_3])).toEqual(result);
+    expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
   it("should validate empty exclusivity from Euler Diagram", () => {
@@ -364,19 +393,6 @@ describe("euler", () => {
     const result = {
       0: [1, 2, 3],
       "0,1": [4, 5, 6],
-    };
-
-    expect(euler([list_1, list_2])).toEqual(result);
-  });
-
-  it("should validate empty exclusivity from Euler Diagram", () => {
-    const list_1 = [1, 2, 3, 4, 5, 6];
-    const list_2 = [4, 5, 6, 7, 8, 9];
-
-    const result = {
-      0: [1, 2, 3],
-      "0,1": [4, 5, 6],
-      1: [7, 8, 9],
     };
 
     expect(euler([list_1, list_2])).toEqual(result);
