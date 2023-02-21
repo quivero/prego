@@ -37,4 +37,3 @@ echo NodeJS version: $(node -v)
 echo '=================================================================='
 
 # Add node binaries to OS path
-

@@ -137,7 +137,7 @@ do_docker_install() {
         if ! is_dry_run; then
           set -x
         fi
-        
+
         $sh_c 'apt-get update -qq >/dev/null'
 				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq $pre_reqs >/dev/null"
 				$sh_c 'mkdir -p /etc/apt/keyrings && chmod -R 0755 /etc/apt/keyrings'
@@ -156,7 +156,7 @@ do_docker_install() {
 					pkg_pattern="$(echo "$VERSION" | sed "s/-ce-/~ce~.*/g" | sed "s/-/.*/g")"
 					search_command="apt-cache madison 'docker-ce' | grep '$pkg_pattern' | head -1 | awk '{\$1=\$1};1' | cut -d' ' -f 3"
 					pkg_version="$($sh_c "$search_command")"
-					
+
           echo "INFO: Searching repository for VERSION '$VERSION'"
 					echo "INFO: $search_command"
 
@@ -173,7 +173,7 @@ do_docker_install() {
                 head -1 | \
                 awk '{\$1=\$1};1' | \
                  cut -d' ' -f 3"
-							
+
               echo "INFO: $search_command"
 							cli_pkg_version="=$($sh_c "$search_command")"
 
@@ -206,7 +206,7 @@ do_docker_install() {
         fi
 
         $sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends $pkgs >/dev/null"
-        
+
         if version_gte '20.10'; then
           # Install docker-ce-rootless-extras without '--no-install-recommends', so as to install slirp4netns when available
           $sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq docker-ce-rootless-extras${pkg_version%=} >/dev/null"
@@ -263,7 +263,7 @@ do_docker_install() {
           pkg_pattern="$(echo "$VERSION" | sed "s/-ce-/\\\\.ce.*/g" | sed "s/-/.*/g").*$pkg_suffix"
 					search_command="$pkg_manager list --showduplicates 'docker-ce' | grep '$pkg_pattern' | tail -1 | awk '{print \$2}'"
 					pkg_version="$($sh_c "$search_command")"
-					
+
           echo "INFO: Searching repository for VERSION '$VERSION'"
 					echo "INFO: $search_command"
 
@@ -273,7 +273,7 @@ do_docker_install() {
 						echo
 						exit 1
 					fi
-					
+
           if version_gte "18.09"; then
 						# older versions don't support a cli package
 						search_command="$pkg_manager list --showduplicates 'docker-ce-cli' | grep '$pkg_pattern' | tail -1 | awk '{print \$2}'"
@@ -312,7 +312,7 @@ do_docker_install() {
 				if ! is_dry_run; then
 					set -x
 				fi
-        
+
 				$sh_c "$pkg_manager install -y -q $pkgs"
       )
 
