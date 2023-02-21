@@ -71,10 +71,9 @@ export const processBlueprint = (
 ) => {
   const blueprint = readBlueprintFromFile(bps_root_path, blueprint_name);
 
-  if (Object.keys(blueprint).length !== 0) {
-    return blueprintFn(blueprint);
-  }
-  return {};
+  if (Object.keys(blueprint).length == 0) {
+    return {};
+  } else return blueprintFn(blueprint);
 };
 
 /**
@@ -958,12 +957,9 @@ export const castBlueprintPathsToDiagram = (blueprint) => {
 
     for (const route of paths_obj.from_to[from_to_key].routes) {
       try {
-        diagrams[counter] = castBlueprintToDiagram(
-          blueprint,
-          route.node_path.trace
-        );
-
+        diagrams[counter] = castBlueprintToDiagram(blueprint, route.node_path.trace);
         counter += 1;
+
       } catch (error) {
         console.log(`Route ${route.node_path.trace} is invalid.`);
         console.log(`Error message: ${error.message}`);

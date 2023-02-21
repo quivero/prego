@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 import { batchAssert } from "./assertions";
 import { buildScene } from "./build";
 

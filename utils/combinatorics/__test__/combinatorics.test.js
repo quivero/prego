@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { partitions, cardvecCombinations } from "../partition.js";
 
 let expected, result;

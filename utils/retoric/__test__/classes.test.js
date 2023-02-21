@@ -1,10 +1,6 @@
 import { InterfaceError } from "../../errors/errors";
 import { applyReasoningArtifact } from "../utils";
 import {
-  expectInjunctionsConclusions,
-  expectPremiseArguments,
-  expectPremiseConclusions,
-  expectPremiseVerbalizations,
   injunctions,
   premises,
   truePremise,
@@ -17,7 +13,6 @@ import {
   expectedInjunctionsConclusions,
   expectedInjConjArguments,
   reason,
-  otherReason,
   expectedTruePremiseConclusion,
   expectedFalsePremiseConclusion,
   expectedConjunctionsConclusions,

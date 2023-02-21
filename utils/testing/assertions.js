@@ -1,4 +1,4 @@
-import _, { isArray } from "lodash";
+import { isArray } from "lodash";
 import { assertionError } from "./errors";
 import { isAssertArtifact, isAssertItem } from "./checkers";
 import { isCondition } from "../artifacts/checkers";

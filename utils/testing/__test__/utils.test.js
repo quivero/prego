@@ -7,7 +7,6 @@ import {
   expectToBe,
   expectToEqual,
   expectToStrictEqual,
-  expectToThrow,
 } from "../expectTo";
 import {
   whosWhat,

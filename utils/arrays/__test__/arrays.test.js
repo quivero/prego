@@ -2,7 +2,6 @@ import _ from "lodash";
 import {
   ones,
   unique,
-  zip,
   getAllIndexes,
   countDict,
   randMinMax,

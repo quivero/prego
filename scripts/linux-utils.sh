@@ -168,12 +168,12 @@ check_forked_dist() {
  # 1 (fail)
 dist_deprecation_notice() {
 
-  distro='$1'
-  distro_version='$2'
+  distro="$1"
+  distro_version="$2"
 
   echo
   printf '\033[91;1mDEPRECATION WARNING\033[0m\n'
-  printf '    This Linux distribution (\033[1m%s %s\033[0m) reached end-of-life and is no longer supported by this script.\n' '$distro' '$distro_version'
+  printf "    This Linux distribution (\033[1m%s $distro $distro_version %s\033[0m) reached end-of-life and is no longer supported by this script.\n"
   echo   '    No updates or security fixes will be released for this distribution, and users are recommended'
   echo   '    to upgrade to a currently maintained version of $distro.'
   echo
@@ -195,7 +195,7 @@ get_dist_version() {
         dist_version="$(lsb_release --codename | cut -f2)"
       fi
       if [ -z "$dist_version" ] && [ -r /etc/lsb-release ]; then
-        dist_version="$(. /etc/lsb-release && echo '$DISTRIB_CODENAME')"
+        dist_version="$(. /etc/lsb-release && echo \"$DISTRIB_CODENAME\")"
       fi
     ;;
 
@@ -219,7 +219,7 @@ get_dist_version() {
     ;;
   esac
 
-  echo $dist_version
+  echo "$dist_version"
 }
 
 # Check if it is a macOS
@@ -227,7 +227,7 @@ get_dist_version() {
 # examples:
 #   >> is_darwin # 1 (fail)
 is_darwin() {
-  case '$(uname -s)' in
+  case "$(uname -s)" in
   *darwin* ) true ;;
   *Darwin* ) true ;;
   * ) false;;
@@ -240,7 +240,7 @@ is_darwin() {
 #   >> is_wsl # 1 (fail)
 is_wsl() {
 
-  case '$(uname -r)' in
+  case "$(uname -r)" in
     *microsoft* ) true ;; # WSL 2
     *Microsoft* ) true ;; # WSL 1
     * ) false;;

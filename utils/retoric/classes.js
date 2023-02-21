@@ -34,10 +34,12 @@ export class Reasoning {
 
   // Children MUST override this method
   toThought() {
-    return {
+    const thought = {
       arguments: this.toArgument(),
       conclusion: this.toConclusion(),
     };
+    
+    return thought;
   }
 
   toString() {

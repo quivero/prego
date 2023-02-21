@@ -2,7 +2,7 @@ import { isString } from "lodash";
 import { fulfill, isExtensionOf } from "./checkers";
 
 export const buildError = (errorClass, errorMessage) => {
-  return {
+  const artifactError = {
     message: fulfill(
       errorMessage, isString(errorMessage),
       "Error message must be a string!", TypeError
@@ -11,7 +11,9 @@ export const buildError = (errorClass, errorMessage) => {
       errorClass, isExtensionOf(errorClass, Error),
       "Error type must extend Error class!", TypeError
     ),
-  };
+  }
+  
+  return artifactError;
 };
 
 export const artifactErrorMessage = (ItemCriteria = "") => {
