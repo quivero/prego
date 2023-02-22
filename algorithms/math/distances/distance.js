@@ -1,10 +1,10 @@
 import _ from "lodash";
 
-import { objectHasKey } from "../objects/objects.js";
-import { hav } from "../numbers/numbers.js";
-import { vecArg, sphericalToCartesian, isSpherical } from "../math/math.js";
-import { throwError } from "../sys/sys.js";
-import { log } from "../logging/logger.js";
+import { hav, vecArg, sphericalToCartesian, isSpherical } from "#math/numbers/numbers.js";
+import { objectHasKey } from "#algorithms/objects/objects.js";
+
+import { throwError } from "#algorithms/sys/sys.js";
+import { log } from "#algorithms/logging/logger.js";
 
 /**
  * @abstract n-norm of a number

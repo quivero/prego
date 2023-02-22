@@ -3,9 +3,9 @@ import { createVertices, createEdges } from "../utils/graph.js";
 import GraphVertex from "../GraphVertex";
 import GraphEdge from "../GraphEdge";
 
-import { throwError } from "#utils/sys/sys.js";
+import { throwError } from "#algorithms/sys/sys.js";
 
-jest.mock("#utils/sys/sys.js");
+jest.mock("#algorithms/sys/sys.js");
 
 let result, expected;
 

@@ -2,11 +2,11 @@ import { zip } from "lodash";
 
 import MeshVertex from "../MeshVertex.js";
 
-import { generateToken } from "#utils/string/string.js";
+import { generateToken } from "#algorithms/string/string.js";
 
-import { throwError } from "#utils/sys/sys.js";
+import { throwError } from "#algorithms/sys/sys.js";
 
-import { nRandMinsMaxs, zeros } from "#utils/arrays/arrays.js";
+import { nRandMinsMaxs, zeros } from "#algorithms/arrays/arrays.js";
 
 export const TOKEN_LENGTH = 5;
 
@@ -14,18 +14,9 @@ export const TOKEN_LENGTH = 5;
  * @param {string} labels
  * @param {*[]} coordinates
  */
-export const createMVertices = (labels, coordinates) => {
-  let label, coordinate;
-
-  return zip(labels, coordinates).map(
-    (label_coordinate) => {
-      label = label_coordinate[0];
-      coordinate = label_coordinate[1];
-
-      return new MeshVertex(label, coordinate);
-    }
-  );
-}
+export const createMVertices = (labels, coordinates) => zip(labels, coordinates).map(
+  ([label, coordinate]) => new MeshVertex(label, coordinate)
+)
 
 /**
  * @abstract

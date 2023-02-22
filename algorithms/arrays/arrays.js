@@ -1,7 +1,7 @@
 import _ from "lodash";
 import "lodash.combinations";
 
-import { objectReduce } from "../objects/objects.js";
+import { objectFilter, objectReduce } from "../objects/objects.js";
 import { throwError } from "../sys/sys.js";
 
 /**
@@ -458,18 +458,19 @@ export function* eulerGenerator(sets) {
 
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
-  const sets_keys_fun = (sets_) =>
+  const nonEmptySetsKeys = (sets_) =>
     Object.keys(sets_).filter((key) => sets_[key].length !== 0);
+  
+  const bracketStr = JSON.stringify([]);
+  const nonEmptySets = (sets_) => objectFilter(sets_, (key, value) => !Object.is(String(value), bracketStr));
 
   let compl_sets_keys = [];
-  let comb_str = "";
-  let celements = [];
   let comb_intersec_key = "";
   let comb_intersec = [];
   let comb_excl = [];
   let compl_sets = {};
 
-  let sets_keys = sets_keys_fun(sets);
+  let sets_keys = nonEmptySetsKeys(sets);
 
   // Traverse the combination lattice
   for (const set_key of sets_keys) {
@@ -487,10 +488,7 @@ export function* eulerGenerator(sets) {
         {}
       );
 
-      for (const comb_elements of eulerGenerator(compl_sets)) {
-        comb_str = comb_elements[0];
-        celements = comb_elements[1];
-
+      for (const [ comb_str, celements ] of eulerGenerator(compl_sets)) {
         comb_excl = _.difference(celements, sets[set_key]);
         if (comb_excl.length !== 0) {
           // 1. Exclusive elements of group except current analysis set
@@ -519,11 +517,13 @@ export function* eulerGenerator(sets) {
           sets[set_key] = _.difference(sets[set_key], comb_intersec);
         }
 
-        sets_keys = sets_keys_fun(sets);
+        sets_keys = nonEmptySetsKeys(sets);
       }
 
+      sets = nonEmptySets(sets);
+
       // 3. Set-key exclusive elements
-      if (sets[set_key].length !== 0) {
+      if (Object.keys(sets).includes(set_key)) {
         yield [String(set_key), sets[set_key]];
         sets[set_key] = [];
       }

@@ -15,8 +15,8 @@ import {
   getAllIndexes,
   hasElement,
   sort,
-} from "#utils/arrays/arrays.js";
-import { throwError, warn } from "#utils/sys/sys.js";
+} from "#algorithms/arrays/arrays.js";
+import { throwError, warn } from "#algorithms/sys/sys.js";
 import { createEdgesFromVerticesValues } from "#gutils/graph.js";
 
 import {
@@ -25,7 +25,7 @@ import {
   objectFilter,
   objectKeyFind,
   objectReduce,
-} from "#utils/objects/objects.js";
+} from "#algorithms/objects/objects.js";
 
 import GraphVertex from "./GraphVertex.js";
 import GraphEdge from "./GraphEdge.js";

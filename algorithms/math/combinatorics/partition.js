@@ -2,8 +2,8 @@
 import "lodash.combinations";
 import _ from "lodash";
 
-import { decimalPart } from "../math/math.js";
-import { throwError } from "../sys/sys.js";
+import { decimalPart } from "../numbers/numbers.js";
+import { throwError } from "../../sys/sys.js";
 
 /*
  * @abstract returns unique partitions of an integer with

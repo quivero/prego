@@ -1,6 +1,6 @@
 import { countDict } from "../arrays/arrays.js";
 
-import { decimalPart } from "../math/math.js";
+import { decimalPart } from "../math/numbers.js";
 import { throwError } from "../sys/sys.js";
 
 /**

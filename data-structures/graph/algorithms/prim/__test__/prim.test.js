@@ -4,7 +4,7 @@ import Graph from "#dstructures/graph/Graph";
 import prim from "../prim";
 import { createVertices, resetVertices } from "#gutils/graph";
 
-jest.mock("#utils/sys/sys");
+jest.mock("#algorithms/sys/sys");
 
 let A, B, C, D, E, F, G;
 

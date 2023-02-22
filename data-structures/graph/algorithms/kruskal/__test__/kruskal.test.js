@@ -4,7 +4,7 @@ import Graph from "#dstructures/graph/Graph";
 
 import kruskal from "../kruskal";
 
-jest.mock("#utils/sys/sys");
+jest.mock("#algorithms/sys/sys");
 
 describe("kruskal", () => {
   it("should fire an error for directed graph", () => {

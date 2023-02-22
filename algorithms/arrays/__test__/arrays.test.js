@@ -24,9 +24,9 @@ import {
   zeros,
 } from "../arrays";
 
-import { throwError } from "#utils/sys/sys.js";
+import { throwError } from "#algorithms/sys/sys.js";
 
-jest.mock("#utils/sys/sys");
+jest.mock("#algorithms/sys/sys");
 
 let candidate, expected;
 

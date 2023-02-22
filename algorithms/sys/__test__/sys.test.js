@@ -1,7 +1,7 @@
 import { throwError, typeOf, warn, isCondition } from "../sys.js";
-import { log_message } from "#utils/logging/logger.js";
+import { log_message } from "#algorithms/logging/logger.js";
 
-jest.mock("#utils/logging/logger.js");
+jest.mock("#algorithms/logging/logger.js");
 
 let expected, result, trivia;
 

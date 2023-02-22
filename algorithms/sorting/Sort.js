@@ -1,5 +1,5 @@
-import Comparator from "#utils/comparator/Comparator";
-import throwError from "#utils/sys/sys";
+import Comparator from "#algorithms/comparator/Comparator";
+import throwError from "#algorithms/sys/sys";
 
 /**
  * @typedef {Object} SorterCallbacks

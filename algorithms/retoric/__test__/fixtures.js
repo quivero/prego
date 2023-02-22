@@ -1,3 +1,4 @@
+import { zip } from "lodash";
 import { Conjunction, Injunction, Premise, Reasoning } from "../classes";
 
 // Reasons
@@ -68,16 +69,8 @@ for (const i in premiseArtifacts) {
     value: premiseArtifacts[i],
   };
 
-  injunction = new Injunction(
-    injprops.key,
-    injprops.description,
-    injprops.value
-  );
-  conjunction = new Conjunction(
-    conjprops.key,
-    conjprops.description,
-    conjprops.value
-  );
+  injunction = new Injunction(injprops.key, injprops.description, injprops.value);
+  conjunction = new Conjunction(conjprops.key, conjprops.description, conjprops.value);
 
   injunctions.push(injunction);
   conjunctions.push(conjunction);
@@ -92,7 +85,6 @@ export const expectedInjConjArguments = [
 ];
 
 // Injunctions
-
 export const expectedInjunctionsConclusions = [true, true, true, false];
 export const expectedInjunctionsVerbalizations = [
   "(injunction_0=(true_premise:true)|(true_premise:true):true)",
@@ -100,9 +92,14 @@ export const expectedInjunctionsVerbalizations = [
   "(injunction_2=(false_premise:false)|(true_premise:true):true)",
   "(injunction_3=(false_premise:false)|(false_premise:false):false)",
 ];
+// 
+export const expectedInjunctionThoughts = zip(expectedInjConjArguments, expectedInjunctionsConclusions).map(
+  ([argument, conclusion]) => {
+    return { arguments: argument, conclusion: conclusion, }
+  }
+); 
 
 // Conjunctions
-
 export const expectedConjunctionsConclusions = [true, false, false, false];
 export const expectedConjunctionsVerbalizations = [
   "(conjunction_0=(true_premise:true)&(true_premise:true):true)",
@@ -110,6 +107,12 @@ export const expectedConjunctionsVerbalizations = [
   "(conjunction_2=(false_premise:false)&(true_premise:true):false)",
   "(conjunction_3=(false_premise:false)&(false_premise:false):false)",
 ];
+
+export const expectedConjunctionThoughts = zip(expectedInjConjArguments, expectedConjunctionsConclusions).map(
+  ([argument, conclusion]) => {
+    return { arguments: argument, conclusion: conclusion, }
+  }
+); 
 
 // Single premise conjunctions
 export let singlePremiseConjunction, singlePremiseInjunction;
@@ -120,11 +123,7 @@ injprops = {
   value: truePremise,
 };
 
-singlePremiseInjunction = new Injunction(
-  injprops.key,
-  injprops.description,
-  injprops.value
-);
+singlePremiseInjunction = new Injunction(injprops.key, injprops.description, injprops.value);
 
 export const expectedSinglePremiseInjunctionConclusion = true;
 
@@ -135,10 +134,6 @@ conjprops = {
   value: falsePremise,
 };
 
-singlePremiseConjunction = new Conjunction(
-  conjprops.key,
-  conjprops.description,
-  conjprops.value
-);
+singlePremiseConjunction = new Conjunction(conjprops.key, conjprops.description, conjprops.value);
 
 export const expectedSinglePremiseConjunctionConclusion = false;
