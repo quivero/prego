@@ -460,7 +460,7 @@ export function* eulerGenerator(sets) {
 
   const nonEmptySetsKeys = (sets_) =>
     Object.keys(sets_).filter((key) => sets_[key].length !== 0);
-  
+
   const bracketStr = JSON.stringify([]);
   const nonEmptySets = (sets_) => objectFilter(sets_, (key, value) => !Object.is(String(value), bracketStr));
 

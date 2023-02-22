@@ -92,12 +92,12 @@ export const expectedInjunctionsVerbalizations = [
   "(injunction_2=(false_premise:false)|(true_premise:true):true)",
   "(injunction_3=(false_premise:false)|(false_premise:false):false)",
 ];
-// 
+//
 export const expectedInjunctionThoughts = zip(expectedInjConjArguments, expectedInjunctionsConclusions).map(
   ([argument, conclusion]) => {
     return { arguments: argument, conclusion: conclusion, }
   }
-); 
+);
 
 // Conjunctions
 export const expectedConjunctionsConclusions = [true, false, false, false];
@@ -112,7 +112,7 @@ export const expectedConjunctionThoughts = zip(expectedInjConjArguments, expecte
   ([argument, conclusion]) => {
     return { arguments: argument, conclusion: conclusion, }
   }
-); 
+);
 
 // Single premise conjunctions
 export let singlePremiseConjunction, singlePremiseInjunction;

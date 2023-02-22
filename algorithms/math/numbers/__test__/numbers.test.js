@@ -30,7 +30,7 @@ describe("numbers", () => {
     [ primeFactors(1000), { 2: 3, 5: 3, } ],
     [ primeFactors(10000), { 2: 4, 5: 4, } ],
   ])(
-    "should return number decimal part", 
+    "should return number decimal part",
     (result, expectation) => expect(result).toEqual(expectation)
   );
 
