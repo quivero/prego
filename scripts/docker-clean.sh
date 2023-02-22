@@ -18,7 +18,7 @@ elif docker ps -a | grep "$1"; then
     echo "Container image $IMAGE_NAME with ID $container_id exists!"
     echo 'We will stop and remove from active images.'
 
-    stopAndRemoveContainer '$container_id'
+    stopAndRemoveContainer "$container_id"
   else
     echo "We found more than one container with name $IMAGE_NAME."
     echo $(docker ps -a | grep "$1")

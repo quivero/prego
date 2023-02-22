@@ -71,7 +71,7 @@ export const processBlueprint = (
 ) => {
   const blueprint = readBlueprintFromFile(bps_root_path, blueprint_name);
 
-  if (Object.keys(blueprint).length == 0) {
+  if (Object.keys(blueprint).length === 0) {
     return {};
   } else return blueprintFn(blueprint);
 };

@@ -21,7 +21,7 @@ import {
   stringifier,
 } from "../utils";
 
-let assertItem, result, expectation;
+let assertItem, result;
 
 describe("whos", () => {
   it("must return indexes on callback whosTrue with argument [true, false, true]", () => {
