@@ -36,20 +36,16 @@ export const assertGuard = (item) => {
 }
 
 export const batchAssertGuard = (items) => {
-  const error = assertionError(item);
+  const error = assertionError(items);
 
   isCondition(
-      isAssertArtifact(item),
-      (items) => items.forEach((item) => assert(item)),
-      items,
-      error.message,
-      error.type
+      isAssertArtifact(items), batchAssertCallback,
+      items, error.message, error.type
   );
 }
 
 export const assert = (item) => assertGuard(item);;
 
 export const batchAssert = (items) => {
-
   items.forEach((item) => assert(item))
 };
