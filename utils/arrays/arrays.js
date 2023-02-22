@@ -67,7 +67,7 @@ export const nRandMinsMaxs = (min_max_vec) => {
 
   for (let i = 0; i < n; i += 1) {
     if (min_max_vec[i].length !== 2) {
-      message = "Entry " + String(i) + 
+      message = "Entry " + String(i) +
         " must have 2 entries. We found " + String(min_max_vec[i].length) + "!";
 
       throwError(message);

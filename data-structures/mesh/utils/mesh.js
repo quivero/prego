@@ -15,13 +15,13 @@ export const TOKEN_LENGTH = 5;
  * @param {*[]} coordinates
  */
 export const createMVertices = (labels, coordinates) => {
-  let label, coordinate;   
-  
+  let label, coordinate;
+
   return zip(labels, coordinates).map(
     (label_coordinate) => {
       label = label_coordinate[0];
       coordinate = label_coordinate[1];
-      
+
       return new MeshVertex(label, coordinate);
     }
   );
