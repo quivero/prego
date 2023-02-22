@@ -208,7 +208,7 @@ export const sequentialArrayBlobs = (arr) => {
   arr = sort(arr, 1);
 
   for (const index of _.range(arr.length)) {
-    
+
       if (arr[index] - arr[index - 1] > 1) {
         blobs[counter] = arr.slice(head_index, index);
         head_index = index;
@@ -218,7 +218,7 @@ export const sequentialArrayBlobs = (arr) => {
       if (index === arr.length - 1) {
         blobs[counter] = arr.slice(head_index, index + 1);
       }
-    
+
   }
 
   return blobs;

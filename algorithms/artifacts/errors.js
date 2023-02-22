@@ -12,7 +12,7 @@ export const buildError = (errorClass, errorMessage) => {
       "Error type must extend Error class!", TypeError
     ),
   }
-  
+
   return artifactError;
 };
 

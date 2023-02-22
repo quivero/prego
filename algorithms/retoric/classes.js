@@ -38,7 +38,7 @@ export class Reasoning {
       arguments: this.toArgument(),
       conclusion: this.toConclusion(),
     };
-    
+
     return thought;
   }
 
