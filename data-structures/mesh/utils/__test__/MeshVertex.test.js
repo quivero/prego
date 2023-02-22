@@ -58,7 +58,7 @@ describe("MeshVertex", () => {
 
   it("should create mesh vertex", () => {
     const MVertices = createMVertices(["A"], [[1, 2]]);
-
+    
     expect(MVertices[0].label).toBe("A");
     expect(MVertices[0].coordinates).toStrictEqual([1, 2]);
   });
