@@ -13,6 +13,13 @@ import { throwError } from "../sys/sys.js";
 export const ones = (n) => Array(n).fill(1);
 
 /**
+ * @abstract returns an array of zeros with length n
+ *
+ * @param {Integer} n
+ * @return {Array} zeros
+ */
+export const zeros = (n) => Array(n).fill(0);
+/**
  * @abstract returns list with unique elements
  *
  * @param {Object} object
@@ -56,30 +63,25 @@ export const nRandMinMax = (n, min_val, max_val) => {
 export const nRandMinsMaxs = (min_max_vec) => {
   let n_array = [];
   let n = min_max_vec.length;
+  let message = '';
 
   for (let i = 0; i < n; i += 1) {
     if (min_max_vec[i].length !== 2) {
-      throwError(
-        "Entry " +
-          String(i) +
-          " have 2 entries. We found " +
-          String(min_max_vec[i].length) +
-          "!"
-      );
-      return;
+      message = "Entry " + String(i) + 
+        " must have 2 entries. We found " + String(min_max_vec[i].length) + "!";
+
+      throwError(message);
     }
 
     let min_val = min_max_vec[i][0];
     let max_val = min_max_vec[i][1];
 
     if (typeof min_val !== "number" && typeof max_val !== "number") {
-      throwError("Min and max values must be numbers!");
-      return;
+      throwError("Minimum and maximum values must be numbers!");
     }
 
     if (min_val > max_val) {
-      throwError("error", "Min value must be lower than Max value!");
-      return;
+      throwError("Min value must be lower than Max value!");
     }
 
     n_array.push(randMinMax(min_val, max_val));

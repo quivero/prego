@@ -21,6 +21,7 @@ import {
   fullPolytopeHyperindexes,
   upperTriangularHyperindexes,
   sequentialArrayBlobs,
+  zeros,
 } from "../arrays";
 
 import { throwError } from "#utils/sys/sys.js";
@@ -37,6 +38,10 @@ afterEach(() => {
 describe("Array", () => {
   it("should get an array of ones", () => {
     expect(ones(5)).toStrictEqual([1, 1, 1, 1, 1]);
+  });
+
+  it("should get an array of zeros", () => {
+    expect(zeros(2)).toStrictEqual([0, 0]);
   });
 
   it("should return unique array elements", () => {
