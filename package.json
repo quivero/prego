@@ -2,12 +2,14 @@
   "name": "prego",
   "type": "module",
   "imports": {
-    "#utils/*": "./utils/*.js",
-    "#utils/*.js": "./utils/*.js",
     "#gutils/*": "./data-structures/graph/utils/*.js",
     "#gutils/*.js": "./data-structures/graph/utils/*.js",
+    "#sys/*": "./algorithms/sys/*.js",
+    "#sys/*.js": "./algorithms/sys/*.js",
     "#algorithms/*": "./algorithms/*.js",
     "#algorithms/*.js": "./algorithms/*.js",
+    "#math/*": "./algorithms/math/*.js",
+    "#math/*.js": "./algorithms/math/*.js",
     "#dstructures/*": "./data-structures/*.js",
     "#dstructures/*.js": "./data-structures/*.js",
     "#galgorithms/*": "./data-structures/graph/algorithms/*.js",
@@ -46,6 +48,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "arqeo": "^0.2.5",
     "clean": "^4.0.2",
     "esm": "^3.2.25",
     "express": "^4.18.2",

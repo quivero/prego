@@ -23,7 +23,7 @@ export default {
   coveragePathIgnorePatterns: [
     "<rootDir>/node_modules/",
     "<rootDir>/utils/testing/__test__/fixtures.js",
-    "<rootDir>/utils/logging",
+    "<rootDir>/algorithms/logging",
   ],
 
   // This option sets the URL for the jsdom environment.
