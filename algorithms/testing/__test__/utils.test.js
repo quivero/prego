@@ -6,8 +6,8 @@ import {
   expectToStrictEqual,
 } from "../expectTo";
 import {
-  areTrue, 
-  isFalse, 
+  areTrue,
+  isFalse,
   isTrue,
   whosWhat,
   whosTrue,

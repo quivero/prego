@@ -27,7 +27,7 @@ export const practice = (fixtures, acts) => {
     const preparedFixtures = atest(thisFixtures, act);
     thisFixtures = { ...preparedFixtures, thisFixtures };
   };
-  
+
   apply(acts, isAct, actCallnack);
 };
 

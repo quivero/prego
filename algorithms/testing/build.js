@@ -36,7 +36,7 @@ const buildSceneCallback = (item) => {
 
 export const buildScene = (item) => {
   const assertionError_ = assertionError(item);
-  
+
   return isCondition(
     is(item, isAssertItem),
     buildSceneCallback,
@@ -58,8 +58,8 @@ export const buildOrganization = (setup, prepare, teardown) => {
 
 const fillOrganizationCallback = (organization) => {
   return buildOrganization(
-    organization["setup"] ?? emptyCallback, 
-    organization["prepare"] ?? identityCallback, 
+    organization["setup"] ?? emptyCallback,
+    organization["prepare"] ?? identityCallback,
     organization["teardown"] ?? emptyCallback
   );
 };

@@ -70,7 +70,7 @@ describe("checkers", () => {
       [ areAssertItems(assertFixtures), expectToBe, true ],
       [ areScenes(assertFixtures), expectToBe, false ],
     ];
-    
+
     batchAssert(assertItems);
   });
   it("must return true for valid assert item", () => {
@@ -80,7 +80,7 @@ describe("checkers", () => {
       [ isAct('42'), expectToBe, false ],
       [ isActArtifact(['42', '42']), expectToBe, false ],
     ];
-    
+
     batchAssert(assertItems);
   });
 });

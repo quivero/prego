@@ -114,22 +114,22 @@ const actObjectCallback = (candidate) => {
       Object.values(candidate),
       isFunction
     );
-    
+
     const objectKeysUnionLowerEqualThan4 = actCandidateKeysUnion.length <= 4;
     const objectKeysIntersecGreaterEqualThan1 =
       actCandidateKeysIntersec.length >= 1;
-    
+
     const criteria = [
       objectKeysUnionLowerEqualThan4,
       objectKeysIntersecGreaterEqualThan1,
       actCandidateValuesAreFunctions,
     ];
-  
+
     return batchAnd(criteria);
 }
 
 export const isAct = (candidate) => {
-  return isObject(candidate) ? actObjectCallback(candidate) : false; 
+  return isObject(candidate) ? actObjectCallback(candidate) : false;
 };
 
 /*-------------------------------------------------------------------------------------------------------------*\
@@ -141,14 +141,14 @@ const rehearsalKeys = ["description", "callback"];
 
 const rehearsalObjectCallback = (candidate) => {
   const candidateKeys = Object.keys(candidate);
-  
+
   const rehearsalDescriptionIsString = isString(candidate['description']);
   const rehearsalCallbackIsFunction = isFunction(candidate['callback']);
   const intersecKeysEqual2 = intersection(candidateKeys, rehearsalKeys).length === 2;
 
   const objectKeysLengthEqual2 = candidateKeys.length <= 2;
     actCandidateKeysIntersec.length >= 1;
-  
+
   const criteria = [
     rehearsalDescriptionIsString,
     rehearsalCallbackIsFunction,
@@ -160,7 +160,7 @@ const rehearsalObjectCallback = (candidate) => {
 }
 
 export const isRehearsal = (candidate) => {
-  return isObject(candidate) ? rehearsalObjectCallback(candidate) : false; 
+  return isObject(candidate) ? rehearsalObjectCallback(candidate) : false;
 };
 
 export const areActs = (candidates) => are(candidates, isAct);

@@ -31,7 +31,7 @@ export const nNormDistance = (coordinate_1, coordinate_2, n) => {
     raise("The exponent n must be a number greater or equal to 1!");
     return;
   }
-  
+
   const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
     ([coord_1, coord_2]) => Math.abs(coord_1 - coord_2)
   );
@@ -66,10 +66,10 @@ export const sphereCentralAngle = (coordinate_1, coordinate_2) => {
 export const centralAngle = (vector_1, vector_2, R) => {
   const vector_1_sph = sphericalToCartesian(vector_1, R);
   const vector_2_sph = sphericalToCartesian(vector_2, R);
-  
+
   return vecArg(vector_1_sph, vector_2_sph, 2)
 }
-  
+
 /**
  * @abstract returns the distance of two points on a sphere
  *
@@ -109,7 +109,7 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
   switch (method) {
     case "n_norm":
       let exponent;
-      
+
       if (!objectHasKey(methodConfig, "exponent")) {
         warn(notification_message.replace("_placeholder_", "radius"));
         exponent = 2;

@@ -13,7 +13,7 @@ describe("throwError/warn", () => {
 
     expect(throwErrorFn).toThrowError();
   });
-  
+
   it("should throw error", () => {
     const raiseFn = () => raise("Fire!");
     expect(raiseFn).toThrowError(Error);
