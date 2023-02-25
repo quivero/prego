@@ -24,7 +24,7 @@ import {
   zeros,
 } from "../arrays";
 
-import { throwError } from "#algorithms/sys/sys.js";
+import { raise } from "#algorithms/sys/sys.js";
 
 jest.mock("#algorithms/sys/sys");
 
@@ -86,22 +86,22 @@ describe("Array", () => {
     expect(num[1]).toBeLessThanOrEqual(2);
   });
 
-  it("should call throwError for one entry in min_max", () => {
+  it("should call raise for one entry in min_max", () => {
     nRandMinsMaxs([[1]]);
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
-  it("should call throwError for non-numerical entries", () => {
+  it("should call raise for non-numerical entries", () => {
     nRandMinsMaxs([["0", "42"]]);
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
-  it("should call throwError for min_max in decrescent order", () => {
+  it("should call raise for min_max in decrescent order", () => {
     nRandMinsMaxs([[1, 0]]);
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should get all indexes of given value within array", () => {
@@ -126,19 +126,19 @@ describe("Array", () => {
     expect(cyclicSort("ABCD", 2)).toStrictEqual("CDAB");
   });
 
-  it("should call throwError for array length greater than given index", () => {
+  it("should call raise for array length greater than given index", () => {
     cyclicSort([1, 2, 3], 4);
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
-  it("should call throwError for inexistent input arguments ", () => {
+  it("should call raise for inexistent input arguments ", () => {
     sort([3, 1, 2], 2);
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
-  it("should call throwError for invalid blob scenario ", () => {
+  it("should call raise for invalid blob scenario ", () => {
     const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const m = 3;
     const n = 5;
@@ -147,7 +147,7 @@ describe("Array", () => {
 
     set_gen.next();
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should return 1 set on given objects", () => {
@@ -176,11 +176,11 @@ describe("Array", () => {
     expect(candidate).toStrictEqual(expected);
   });
 
-  it("should call throwError for invalid input arguments ", () => {
+  it("should call raise for invalid input arguments ", () => {
     const hyperIndexes_gen = hyperIndexes(1, -1, () => "test");
     hyperIndexes_gen.next();
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should return an descending ordered array", () => {
@@ -271,25 +271,13 @@ describe("hasElement", () => {
 
   it("should return true for array on array of elements", () => {
     expect(
-      hasElement(
-        [
-          [1, 2],
-          [1, 2, 3],
-        ],
-        [1, 2]
-      )
+      hasElement([ [1, 2], [1, 2, 3] ], [1, 2])
     ).toStrictEqual(true);
   });
 
-  it("should return true for array on array of elements", () => {
+  it("should return false for non-existent array on array of elements", () => {
     expect(
-      hasElement(
-        [
-          [1, 2],
-          [1, 2, 3],
-        ],
-        [1]
-      )
+      hasElement([ [1, 2], [1, 2, 3] ], [1])
     ).toStrictEqual(false);
   });
 });
@@ -358,7 +346,7 @@ describe("euler", () => {
     expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
-  it("should return a multiple set interactions - Sample 1", () => {
+  it("should return a multiple set interactions - Sample 2", () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
@@ -374,7 +362,7 @@ describe("euler", () => {
     expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
-  it("should return a multiple set interactions - Sample 2", () => {
+  it("should return a multiple set interactions - Sample 3", () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];

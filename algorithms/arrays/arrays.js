@@ -2,7 +2,7 @@ import _ from "lodash";
 import "lodash.combinations";
 
 import { objectFilter, objectReduce } from "../objects/objects.js";
-import { throwError } from "../sys/sys.js";
+import { raise } from "#sys/sys.js";
 
 /**
  * @abstract returns an array of ones with length n
@@ -70,18 +70,18 @@ export const nRandMinsMaxs = (min_max_vec) => {
       message = "Entry " + String(i) +
         " must have 2 entries. We found " + String(min_max_vec[i].length) + "!";
 
-      throwError(message);
+      raise(message);
     }
 
     let min_val = min_max_vec[i][0];
     let max_val = min_max_vec[i][1];
 
     if (typeof min_val !== "number" && typeof max_val !== "number") {
-      throwError("Minimum and maximum values must be numbers!");
+      raise("Minimum and maximum values must be numbers!");
     }
 
     if (min_val > max_val) {
-      throwError("Min value must be lower than Max value!");
+      raise("Min value must be lower than Max value!");
     }
 
     n_array.push(randMinMax(min_val, max_val));
@@ -139,7 +139,7 @@ export const cyclicSort = (array, index) => {
     const subject = `Provided index ${index}`;
     const condition = `greater than array length ${array.length}`;
 
-    throwError(`${category} : ${subject} ${condition}`);
+    raise(`${category} : ${subject} ${condition}`);
   }
 
   const head = array.slice(index);
@@ -187,7 +187,7 @@ export const sort = (arr, sort_type = 0) => {
   } else if (sort_type === 1) {
     // Do nothing
   } else {
-    throwError("Sorting types are 0 and 1 for descending and ascending order.");
+    raise("Sorting types are 0 and 1 for descending and ascending order.");
   }
 
   return arr;
@@ -297,9 +297,7 @@ export function* mSetsOfnTuples(array, m, n) {
   let arr_diff;
 
   if (m > Math.floor(array.length / n)) {
-    const err_message =
-      "Size of array must be greater or equal to the product of n by m";
-    throwError(err_message);
+    raise("Size of array must be greater or equal to the product of n by m");
   } else {
     let curr_comb = [];
     for (const head_comb of _.combinations(array, n)) {
@@ -378,7 +376,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
  */
 export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
-    throwError("Dimension and length must be positive natural numbers!");
+    raise("Dimension and length must be positive natural numbers!");
   }
 
   for (const indexes of formationFn(length, dim, dim)) {

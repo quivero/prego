@@ -7,12 +7,11 @@ import {
   travelTime,
 } from "../distance.js";
 
-import { throwError } from "#algorithms/sys/sys.js";
+import { raise } from "#algorithms/sys/sys.js";
 
 jest.mock("#algorithms/sys/sys");
 
-let result;
-let expected;
+let result, expected;
 
 describe("distance", () => {
   it.each([
@@ -43,7 +42,7 @@ describe("distance", () => {
 
     nNormDistance(coord_1, coord_2, -1);
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should return distance between two coordinates on a sphere", () => {
@@ -106,7 +105,7 @@ describe("distance", () => {
 
     distance(coord_1, coord_2, "sphere", { radius: 1 });
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should throw exception for empty configuration dict", () => {
@@ -115,7 +114,7 @@ describe("distance", () => {
 
     distance(coord_1, coord_2, "", {});
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should throw exception for missing exponent", () => {
@@ -124,7 +123,7 @@ describe("distance", () => {
 
     distance(coord_1, coord_2, undefined, {});
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should throw exception for missing radius", () => {
@@ -133,7 +132,7 @@ describe("distance", () => {
 
     distance(coord_1, coord_2, "sphere", {});
 
-    expect(throwError).toHaveBeenCalled();
+    expect(raise).toHaveBeenCalled();
   });
 
   it("should return distance between coordinates according to method sphere", () => {

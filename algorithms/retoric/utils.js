@@ -1,4 +1,4 @@
-import { applyArtifact } from "../artifacts/artifacts";
+import { apply } from "arqeo";
 import { isReasoning, isPremise } from "./checkers";
 
 /*-------------------------------------------------------------------------------------------------------------*\
@@ -13,14 +13,13 @@ export const batchAnd = (booleanList) => booleanList.reduce(and, true);
 export const batchOr = (booleanList) => booleanList.reduce(or, false);
 
 export const applyReasoningArtifact = (candidate, reasoningCallback) =>
-  applyArtifact(candidate, isReasoning, reasoningCallback);
+  apply(candidate, isReasoning, reasoningCallback);
 
 const premiseKeyValueCallback = (premise) => [premise.key, premise.value];
-export const getPremisesEntries = (premises) => {
-  return applyArtifact(premises, isPremise, premiseKeyValueCallback);
-};
+
+export const getPremisesEntries = (premises) => 
+  apply(premises, isPremise, premiseKeyValueCallback);
+
 
 const premiseKeyCallback = (premise) => premise.key;
-export const getPremiseKeys = (premises) => {
-  return applyArtifact(premises, isPremise, premiseKeyCallback);
-};
+export const getPremiseKeys = (premises) => apply(premises, isPremise, premiseKeyCallback);

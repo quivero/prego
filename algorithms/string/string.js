@@ -1,5 +1,5 @@
 /**
- * Generate token with length
+ * Generate other_token with length
  *
  * @param int length
  *

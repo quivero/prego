@@ -3,8 +3,7 @@ import _ from "lodash";
 import { hav, vecArg, sphericalToCartesian, isSpherical } from "#math/numbers/numbers.js";
 import { objectHasKey } from "#algorithms/objects/objects.js";
 
-import { throwError } from "#algorithms/sys/sys.js";
-import { log } from "#algorithms/logging/logger.js";
+import { raise, warn } from "#algorithms/sys/sys.js";
 
 /**
  * @abstract n-norm of a number
@@ -13,8 +12,11 @@ import { log } from "#algorithms/logging/logger.js";
  * @param {Number} n
  * @return {Number}
  */
-export const nNorm = (arr, n) =>
-  arr.reduce((dist, elem) => dist + Math.abs(elem) ** n, 0) ** (1 / n);
+export const nNorm = (arr, n) => {
+  const redSum = arr.reduce((dist, elem) => dist + Math.abs(elem) ** n, 0)
+
+  return redSum ** (1 / n);
+}
 
 /**
  * @abstract returns the n-norm of a vector
@@ -26,19 +28,15 @@ export const nNorm = (arr, n) =>
  */
 export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   if (n < 1) {
-    throwError("The exponent n must be a number greater or equal to 1!");
+    raise("The exponent n must be a number greater or equal to 1!");
     return;
   }
-
-  const coord_diffs = _.zip(coordinate_1, coordinate_2).map((coord_tuple) =>
-    Math.abs(coord_tuple[1] - coord_tuple[0])
+  
+  const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
+    ([coord_1, coord_2]) => Math.abs(coord_1 - coord_2)
   );
 
-  if (n === Infinity) {
-    return Math.max(...coord_diffs);
-  }
-
-  return nNorm(coord_diffs, n);
+  return n === Infinity ? Math.max(...coord_diffs) : nNorm(coord_diffs, n);
 };
 
 /**
@@ -65,6 +63,13 @@ export const sphereCentralAngle = (coordinate_1, coordinate_2) => {
   return 2 * Math.asin(Math.sqrt(hav_theta));
 };
 
+export const centralAngle = (vector_1, vector_2, R) => {
+  const vector_1_sph = sphericalToCartesian(vector_1, R);
+  const vector_2_sph = sphericalToCartesian(vector_2, R);
+  
+  return vecArg(vector_1_sph, vector_2_sph, 2)
+}
+  
 /**
  * @abstract returns the distance of two points on a sphere
  *
@@ -85,14 +90,7 @@ export const greatCircleDistance = (coordinate_1, coordinate_2, R) =>
  * @return {Number}
  */
 export const nSphereDistance = (coordinate_1, coordinate_2, R) => {
-  return (
-    R *
-    vecArg(
-      sphericalToCartesian(coordinate_1, R),
-      sphericalToCartesian(coordinate_2, R),
-      2
-    )
-  );
+  return R * centralAngle(coordinate_1, coordinate_2, R);
 };
 
 /**
@@ -111,9 +109,9 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
   switch (method) {
     case "n_norm":
       let exponent;
-
+      
       if (!objectHasKey(methodConfig, "exponent")) {
-        log("warn", notification_message.replace("_placeholder_", "radius"));
+        warn(notification_message.replace("_placeholder_", "radius"));
         exponent = 2;
       } else {
         exponent = methodConfig.exponent;
@@ -122,17 +120,17 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
       return nNormDistance(coordinate_1, coordinate_2, exponent);
 
     case "sphere":
-      const are_coords_spherical =
+      const are_spherical =
         !isSpherical(coordinate_1) || !isSpherical(coordinate_2);
 
       return !objectHasKey(methodConfig, "radius")
-        ? throwError(notification_message.replace("_placeholder_", "radius"))
-        : are_coords_spherical
-        ? throwError("Provided coordinates are not spherical!")
+        ? raise(notification_message.replace("_placeholder_", "radius"))
+        : are_spherical
+        ? raise("Provided coordinates are not spherical!")
         : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
 
     default:
-      throwError("There are only available methods: ['n_norm', 'sphere']");
+      raise("There are only available methods: ['n_norm', 'sphere']");
       return 1;
   }
 };
@@ -152,8 +150,4 @@ export const travelTime = (
   coordinate_2,
   method,
   methodConfig
-) => {
-  return (
-    distance(coordinate_1, coordinate_2, method, methodConfig) / average_speed
-  );
-};
+) => distance(coordinate_1, coordinate_2, method, methodConfig) / average_speed;

@@ -3,6 +3,8 @@ import {
   areAssertItems,
   areOrganizations,
   areScenes,
+  isAct,
+  isActArtifact,
   isAssertArtifact,
   isAssertItem,
 } from "../checkers";
@@ -15,6 +17,7 @@ import {
   invalidAssertCallbackItem,
   validOrganizations,
   invalidOrganizations,
+  additionAct,
 } from "./fixtures";
 
 let assertItem, assertItems;
@@ -67,7 +70,17 @@ describe("checkers", () => {
       [ areAssertItems(assertFixtures), expectToBe, true ],
       [ areScenes(assertFixtures), expectToBe, false ],
     ];
-
+    
+    batchAssert(assertItems);
+  });
+  it("must return true for valid assert item", () => {
+    assertItems = [
+      [ isAct(additionAct), expectToBe, true ],
+      [ isActArtifact([additionAct, additionAct]), expectToBe, true ],
+      [ isAct('42'), expectToBe, false ],
+      [ isActArtifact(['42', '42']), expectToBe, false ],
+    ];
+    
     batchAssert(assertItems);
   });
 });

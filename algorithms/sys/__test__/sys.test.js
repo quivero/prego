@@ -1,5 +1,5 @@
-import { throwError, typeOf, warn, isCondition } from "../sys.js";
-import { log_message } from "#algorithms/logging/logger.js";
+import { throwError, typeOf, warn, raise, report, joke } from "../sys.js";
+import { log_message, log } from "#algorithms/logging/logger.js";
 
 jest.mock("#algorithms/logging/logger.js");
 
@@ -12,6 +12,32 @@ describe("throwError/warn", () => {
     };
 
     expect(throwErrorFn).toThrowError();
+  });
+  
+  it("should throw error", () => {
+    const raiseFn = () => raise("Fire!");
+    expect(raiseFn).toThrowError(Error);
+  });
+
+  it("should throw Error", () => {
+    const raiseFn = () => raise("Wrong is not right!", TypeError);
+    expect(raiseFn).toThrowError(TypeError);
+  });
+
+  it("should raise TypeError", () => {
+    const raiseFn = () => raise("Wrong is not right!", TypeError);
+
+    expect(raiseFn).toThrowError(TypeError);
+  });
+
+  it("should call log on report", () => {
+    report('News!');
+    expect(log).toHaveBeenCalled();
+  });
+
+  it("should call log", () => {
+    joke('News!');
+    expect(log).toHaveBeenCalled();
   });
 
   it("should warn a message", () => {

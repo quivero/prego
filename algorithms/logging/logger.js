@@ -1,7 +1,5 @@
-import * as winston from "winston";
+import { createLogger, format, transports } from "winston";
 import logger from "morgan";
-
-const { createLogger, format, transports } = winston;
 
 const { label } = format;
 
@@ -24,7 +22,7 @@ const { label } = format;
  *
  * @param {String} label_msg
  */
-export const logging = (label_msg = "default") => {
+const logging = (label_msg = "default") => {
   const logger_setup = {
     format: format.combine(
       label({ label: label_msg }),
@@ -44,19 +42,26 @@ export const logging = (label_msg = "default") => {
     rejectionHandlers: [new transports.Console()],
   };
 
-  const logger_ = createLogger(logger_setup);
-
-  return logger_;
+  return createLogger(logger_setup);
 };
 
-export const log_message = (logger, level, message) => {
-  logger.log({
-    level,
-    message,
-  });
-};
+/**
+ * @abstract log message through transport using custom logger
+ *
+ */
+export const log_message = (logger, level, message) => logger.log({ level, message, });
 
-export const agentMorganReporter = logging("morgan");
+/**
+ * @abstract reporter for messages
+ *
+ */
+export const reporter = logging("morgan");
+
+/**
+ * @abstract log message through transport using reporter logger
+ *
+ */
+export const log = (type, msg) => log_message(reporter, type, msg);
 
 /**
  * @abstract Morgan middleware to log app access
@@ -67,14 +72,8 @@ export const morganMiddleware = logger(
   {
     stream: {
       // Configure Morgan to use our custom logger with the http severity
-      write: (message) => agentMorganReporter.log("info", message),
+      write: (message) => reporter.log("info", message),
     },
   }
 );
 
-/**
- * @abstract log message through transport using agentMorganReporter logger
- *
- */
-export const log = (level, message) =>
-  log_message(agentMorganReporter, level, message);

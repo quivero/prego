@@ -1,6 +1,7 @@
 import { isUndefined } from "lodash";
-import { isArtifact } from "../artifacts/artifacts";
 import { Conjunction, Injunction, Premise, Reasoning } from "./classes";
+
+import { is } from "arqeo";
 
 export const isDefined = (candidate) => !isUndefined(candidate);
 
@@ -10,10 +11,10 @@ export const isConjunction = (candidate) => candidate instanceof Conjunction;
 export const isInjunction = (candidate) => candidate instanceof Injunction;
 
 export const isReasoningArtifact = (candidate) =>
-  isArtifact(candidate, isReasoning);
+  is(candidate, isReasoning);
 export const isPremiseArtifact = (candidate) =>
-  isArtifact(candidate, isPremise);
+  is(candidate, isPremise);
 export const isInjunctionArtifact = (candidate) =>
-  isArtifact(candidate, isInjunction);
+  is(candidate, isInjunction);
 export const isConjunctionArtifact = (candidate) =>
-  isArtifact(candidate, isConjunction);
+  is(candidate, isConjunction);

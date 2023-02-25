@@ -1,5 +1,8 @@
 import { batchAssert } from "./assertions";
 import { buildScene } from "./build";
+import { isAct, isAssertArtifact, isRehearsal } from "./checkers";
+
+import { apply } from "arqeo";
 
 const check = (scenes) => batchAssert(scenes);
 
@@ -8,7 +11,7 @@ export const atest = (fixtures, act) => {
 
   const setFixtures = act.prepare(fixtures);
   const performanceItems = act.perform(setFixtures);
-  const scenes = performanceItems.map(buildScene);
+  const scenes = apply(performanceItems, isAssertArtifact, buildScene);
 
   check(scenes);
 
@@ -24,15 +27,15 @@ export const practice = (fixtures, acts) => {
     const preparedFixtures = atest(thisFixtures, act);
     thisFixtures = { ...preparedFixtures, thisFixtures };
   };
-
-  acts.forEach(actCallnack);
+  
+  apply(acts, isAct, actCallnack);
 };
 
 export const rehearse = (rehearsals) => {
   const rehearseCallnack = (rehearsal) =>
     it(rehearsal.description, rehearsal.callback);
 
-  rehearsals.forEach(rehearseCallnack);
+  apply(rehearsals, isRehearsal, rehearseCallnack);
 };
 
 export const cast = (plays) => {

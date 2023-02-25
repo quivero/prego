@@ -105,8 +105,6 @@ let oneToOneAdditionAssertionMap,
   manyToOneAdditionAssertionMap,
   manyToManyAdditionAssertionMap;
 
-let additionRehearsals;
-
 // Fixtures
 oneToOneAdditionFixture = { a: 1, b: 2 };
 oneToManyAdditionFixture = [oneToOneAdditionFixture, { a: 2, b: 3 }];
@@ -168,6 +166,8 @@ manyToManyAdditionPerform = [
 setup = emptyCallback;
 prepare = identityCallback;
 teardown = emptyCallback;
+
+export let additionAct = buildAct(addCallback);
 
 /*
 additionRehearsals = [

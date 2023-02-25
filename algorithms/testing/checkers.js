@@ -1,17 +1,12 @@
 import _, {
-  isArray,
-  union,
-  intersection,
-  isObject,
-  uniq,
-  isFunction,
+  isArray, union, intersection, isObject, uniq, isFunction,
 } from "lodash";
-import { isArtifact } from "../artifacts/artifacts";
-import { are } from "../artifacts/checkers";
-import { batchAnd } from "../retoric/utils";
 
+import { batchAnd, are } from "./utils";
 import { defaultOrganization } from "./defaults";
 import { availableExpectToMaps } from "./expectTo";
+
+import { is } from "arqeo";
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Assert items                                                                                                |
@@ -66,7 +61,7 @@ export const isAssertItem = (item) => {
 export const areAssertItems = (candidates) => are(candidates, isAssertItem);
 
 export const isAssertArtifact = (candidate) =>
-  isArtifact(candidate, isAssertItem);
+  is(candidate, isAssertItem);
 
 
 /*-------------------------------------------------------------------------------------------------------------*\
@@ -102,7 +97,7 @@ export const isOrganization = (candidate) => {
 
 export const areOrganizations = (candidates) => are(candidates, isOrganization);
 
-export const isOrganizationArtifact = (candidate) => isArtifact(candidate, isOrganization);
+export const isOrganizationArtifact = (candidate) => is(candidate, isOrganization);
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Act                                                                                                         |
@@ -111,30 +106,63 @@ export const isOrganizationArtifact = (candidate) => isArtifact(candidate, isOrg
 // Default item key strings
 const actKeys = [...possibleOrganizationKeys, "perform"];
 
-export const isAct = (candidate) => {
+const actObjectCallback = (candidate) => {
   const candidateKeys = Object.keys(candidate);
-  const actCandidateKeysUnion = uniq(union(actKeys, candidateKeys));
-  const actCandidateKeysIntersec = intersection(actKeys, candidateKeys);
-  const actCandidateValuesAreFunctions = are(
-    Object.values(candidate),
-    isFunction
-  );
+    const actCandidateKeysUnion = uniq(union(actKeys, candidateKeys));
+    const actCandidateKeysIntersec = intersection(actKeys, candidateKeys);
+    const actCandidateValuesAreFunctions = are(
+      Object.values(candidate),
+      isFunction
+    );
+    
+    const objectKeysUnionLowerEqualThan4 = actCandidateKeysUnion.length <= 4;
+    const objectKeysIntersecGreaterEqualThan1 =
+      actCandidateKeysIntersec.length >= 1;
+    
+    const criteria = [
+      objectKeysUnionLowerEqualThan4,
+      objectKeysIntersecGreaterEqualThan1,
+      actCandidateValuesAreFunctions,
+    ];
+  
+    return batchAnd(criteria);
+}
 
-  const isObject_ = isObject(candidate);
-  const objectKeysUnionLowerEqualThan4 = actCandidateKeysUnion.length <= 4;
-  const objectKeysIntersecGreaterEqualThan1 =
+export const isAct = (candidate) => {
+  return isObject(candidate) ? actObjectCallback(candidate) : false; 
+};
+
+/*-------------------------------------------------------------------------------------------------------------*\
+ | Rehearsal                                                                                                   |
+\*-------------------------------------------------------------------------------------------------------------*/
+
+// Default item key strings
+const rehearsalKeys = ["description", "callback"];
+
+const rehearsalObjectCallback = (candidate) => {
+  const candidateKeys = Object.keys(candidate);
+  
+  const rehearsalDescriptionIsString = isString(candidate['description']);
+  const rehearsalCallbackIsFunction = isFunction(candidate['callback']);
+  const intersecKeysEqual2 = intersection(candidateKeys, rehearsalKeys).length === 2;
+
+  const objectKeysLengthEqual2 = candidateKeys.length <= 2;
     actCandidateKeysIntersec.length >= 1;
-
+  
   const criteria = [
-    isObject_,
-    objectKeysUnionLowerEqualThan4,
-    objectKeysIntersecGreaterEqualThan1,
-    actCandidateValuesAreFunctions,
+    rehearsalDescriptionIsString,
+    rehearsalCallbackIsFunction,
+    intersecKeysEqual2,
+    objectKeysLengthEqual2,
   ];
 
   return batchAnd(criteria);
+}
+
+export const isRehearsal = (candidate) => {
+  return isObject(candidate) ? rehearsalObjectCallback(candidate) : false; 
 };
 
 export const areActs = (candidates) => are(candidates, isAct);
 
-export const isActArtifact = (candidate) => isArtifact(candidate, isAct);
+export const isActArtifact = (candidate) => is(candidate, isAct);

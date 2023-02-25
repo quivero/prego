@@ -1,8 +1,5 @@
-import {
-  isArtifact,
-  isArtifactCollection,
-} from "../../artifacts/artifacts";
-import { are } from "../../artifacts/checkers";
+import * as aqo from "arqeo";
+import { are } from "../../testing/utils";
 
 import {
   isConjunction,
@@ -25,8 +22,8 @@ let result, expectation;
 
 describe("dialetic-checkers", () => {
   it("must check true for premises", () => {
-    expect(isArtifact(premises, isPremise)).toEqual(true);
-    expect(isArtifactCollection(premiseArtifacts, isPremise)).toEqual(true);
+    expect(aqo.is(premises, isPremise)).toEqual(true);
+    expect(aqo.are(premiseArtifacts, isPremise)).toEqual(true);
   });
   it("must check true for injunctions", () => {
     expect(are(injunctions, isInjunction)).toEqual(true);

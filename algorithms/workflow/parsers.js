@@ -49,9 +49,9 @@ const diagramConfig = require("./diagramConfig");
  */
 export const readBlueprintFromFile = (bps_root_path, blueprint_name) => {
   const fname = `${bps_root_path}/${blueprint_name}`;
-  const tokens = fname.split(".");
+  const other_tokens = fname.split(".");
 
-  return tokens[tokens.length - 1] === "json" ? require(fname) : {};
+  return other_tokens[other_tokens.length - 1] === "json" ? require(fname) : {};
 };
 
 /**

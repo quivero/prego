@@ -1,5 +1,5 @@
 import { isArray, isString } from "lodash";
-import { fulfill, isExtensionOf } from "../artifacts/checkers";
+import { fulfill, isExtensionOf } from "./utils";
 import { isAssertArtifact } from "./checkers";
 
 import { organizationCriteria, assertItemCriteria, assertArtifactCriteria } from "./criteriaStrings";

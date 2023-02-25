@@ -1,9 +1,11 @@
 import { isArray, isFunction, isString } from "lodash";
-import { isActArtifact, isAssertItem, isOrganization, possibleOrganizationKeys } from "./checkers";
+import { isActArtifact, isAssertItem, isOrganization } from "./checkers";
 import { organizationTypeError, assertionError } from "./errors";
 import { rehearse, validate } from "./assertions";
 import { actCriterium } from "./criteriaStrings";
-import { isCondition } from "../artifacts/checkers";
+import { isCondition } from "./utils";
+import { emptyCallback, identityCallback } from "./defaults";
+import { is } from "arqeo";
 
 const buildSceneCallback = (item) => {
   let result, expectation, expectToMap, itemCardinality;
@@ -34,10 +36,9 @@ const buildSceneCallback = (item) => {
 
 export const buildScene = (item) => {
   const assertionError_ = assertionError(item);
-  const isValidAssertItemCondition = isAssertItem(item);
-
+  
   return isCondition(
-    isValidAssertItemCondition,
+    is(item, isAssertItem),
     buildSceneCallback,
     item,
     assertionError_.message,
@@ -56,29 +57,23 @@ export const buildOrganization = (setup, prepare, teardown) => {
 };
 
 const fillOrganizationCallback = (organization) => {
-  let defaultValue;
-
-  possibleOrganizationKeys.forEach(
-    (organizationKey) => {
-      organization[organizationKey] = organization[organizationKey] ?? defaultValue;
-    }
+  return buildOrganization(
+    organization["setup"] ?? emptyCallback, 
+    organization["prepare"] ?? identityCallback, 
+    organization["teardown"] ?? emptyCallback
   );
-
-  return organization;
 };
 
 export const fillOrganization = (candidate) => {
-  const isOrganizationCondition = isOrganization(candidate);
   const OrganizationError = organizationTypeError(candidate);
 
   return isCondition(
-    isOrganizationCondition,
-    fillOrganizationCallback,
-    candidate,
-    OrganizationError.message,
-    OrganizationError.type
+    isOrganization(candidate), fillOrganizationCallback,
+    candidate, OrganizationError.message, OrganizationError.type
   );
 };
+
+const defaultOrganization = fillOrganization({});
 
 const actCallback = (actArgs) => {
   actArgs.organization = fillOrganization(actArgs.organization);

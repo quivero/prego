@@ -1,6 +1,3 @@
-import { isArtifact } from "../../artifacts/artifacts";
-import { areTrue, isFalse, isTrue } from "../../artifacts/checkers";
-
 import { assert } from "../assertions";
 import {
   expectAssertions,
@@ -9,6 +6,9 @@ import {
   expectToStrictEqual,
 } from "../expectTo";
 import {
+  areTrue, 
+  isFalse, 
+  isTrue,
   whosWhat,
   whosTrue,
   whosFalse,
@@ -20,6 +20,8 @@ import {
   andify,
   stringifier,
 } from "../utils";
+
+import { is } from "arqeo";
 
 let assertItem, result;
 
@@ -169,7 +171,7 @@ describe("Miscelaneous", () => {
     expectToEqual(funcs.includes(func_1), true);
   });
   it("should return true for list of artifacts", () => {
-    result = isArtifact(numberList, (x) => typeof x === "number");
+    result = is(numberList, (x) => typeof x === "number");
 
     expectToEqual(result, true);
   });
