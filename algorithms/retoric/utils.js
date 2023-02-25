@@ -17,7 +17,7 @@ export const applyReasoningArtifact = (candidate, reasoningCallback) =>
 
 const premiseKeyValueCallback = (premise) => [premise.key, premise.value];
 
-export const getPremisesEntries = (premises) => 
+export const getPremisesEntries = (premises) =>
   apply(premises, isPremise, premiseKeyValueCallback);
 
 

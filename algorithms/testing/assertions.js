@@ -25,7 +25,7 @@ const validAssertItemCallback = (item) => {
 
 export const assertGuard = (item) => {
   const error = assertionError(item);
-  
+
   return fulfill(item, isAssertItem(item), error.message, error.type);
 }
 

@@ -18,5 +18,5 @@ describe("checkers", () => {
 
     batchAssert([scene2, scene3]);
   });
-  
+
 });

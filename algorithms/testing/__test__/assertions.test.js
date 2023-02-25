@@ -25,7 +25,7 @@ describe("assert", () => {
 
   it("must throw error on item with length different than 2 or 3", () =>
     expect(() => assert(invalidAssertItemLength)).toThrow(Error));
-    
+
   it("must throw error on invalid callback function", () =>
     expect(() => assert(invalidAssertCallbackItem)).toThrow(Error));
 });
@@ -39,7 +39,7 @@ describe("batchAssert", () => {
   });
   it("must throw error on invalid batchAssert", () => {
     const batchThrowError = () => batchAssertGuard(['42', '42']);
-    
+
     expectToThrow(batchThrowError)
   });
 });
