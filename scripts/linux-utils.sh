@@ -175,7 +175,7 @@ dist_deprecation_notice() {
   printf '\033[91;1mDEPRECATION WARNING\033[0m\n'
   printf "    This Linux distribution (\033[1m%s $distro $distro_version %s\033[0m) reached end-of-life and is no longer supported by this script.\n"
   echo   '    No updates or security fixes will be released for this distribution, and users are recommended'
-  echo   '    to upgrade to a currently maintained version of $distro.'
+  echo   "    to upgrade to a currently maintained version of $distro."
   echo
   printf   'Press \033[1mCtrl+C\033[0m now to abort this script, or wait for the installation to continue.'
   echo

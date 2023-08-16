@@ -16,14 +16,14 @@ export default {
   // If the test path matches any of the patterns, it will be skipped.
   testPathIgnorePatterns: [
     "<rootDir>/node_modules/",
-    "<rootDir>/utils/logging/",
+    "<rootDir>/algorithms/logging/",
   ],
 
   // If the file path matches any of the patterns, coverage information will be skipped.
   coveragePathIgnorePatterns: [
     "<rootDir>/node_modules/",
     "<rootDir>/utils/testing/__test__/fixtures.js",
-    "<rootDir>/utils/logging",
+    "<rootDir>/algorithms/logging",
   ],
 
   // This option sets the URL for the jsdom environment.
@@ -45,7 +45,7 @@ export default {
 
   // Handle module aliases (this will be automatically configured for you soon)
   moduleNameMapper: {
-    "^#utils/(.*)$": "<rootDir>/utils/$1",
+    "^#math/(.*)$": "<rootDir>/algorithms/math/$1",
     "^#gutils/(.*)$": "<rootDir>/data-structures/graph/utils/$1",
     "^#algorithms/(.*)$": "<rootDir>/algorithms/$1",
     "^#galgorithms/(.*)$": "<rootDir>/data-structures/graph/algorithms/$1",

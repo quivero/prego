@@ -4,7 +4,7 @@
  */
 export default function isPowerOfTwoBitwise(number) {
   // 1 (2^0) is the smallest power of two.
-  if (number < 1) {
+  if (number <= 0) {
     return false;
   }
 

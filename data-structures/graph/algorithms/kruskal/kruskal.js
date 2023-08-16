@@ -1,7 +1,7 @@
 import Graph from "#dstructures/graph/Graph";
 import QuickSort from "#algorithms/sorting/quick-sort/QuickSort";
 import DisjointSet from "#dstructures/disjoint-set/DisjointSet";
-import throwError from "#utils/sys/sys";
+import throwError from "#algorithms/sys/sys";
 
 /**
  * @param {Graph} graph

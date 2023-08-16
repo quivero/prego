@@ -1,7 +1,7 @@
 import MeshVertex from "../MeshVertex.js";
-import { throwError } from "#utils/sys/sys.js";
+import { throwError } from "#algorithms/sys/sys.js";
 
-jest.mock("#utils/sys/sys.js");
+jest.mock("#algorithms/sys/sys.js");
 
 let result, expected;
 

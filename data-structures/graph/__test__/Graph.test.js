@@ -9,7 +9,7 @@ import {
   resetVertices,
 } from "#gutils/graph.js";
 
-import { ones, isCyclicEqual } from "#utils/arrays/arrays";
+import { ones, isCyclicEqual } from "#algorithms/arrays/arrays";
 
 import {
   expectToBe,
@@ -17,13 +17,13 @@ import {
   expectToStrictEqual,
   expectToBeDefined,
   expectToBeUndefined,
-} from "#utils/testing/expectTo.js";
+} from "#algorithms/testing/expectTo.js";
 
-import { batchAssert } from "#utils/testing/assertions.js";
+import { batchAssert } from "#algorithms/testing/assertions.js";
 
-import { throwError, warn } from "#utils/sys/sys.js";
+import { throwError, warn } from "#algorithms/sys/sys.js";
 
-jest.mock("#utils/sys/sys.js");
+jest.mock("#algorithms/sys/sys.js");
 
 let preamble, expected, result;
 let graph, graph_;

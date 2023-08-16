@@ -1,5 +1,5 @@
 import LinkedList from "../linked-list/LinkedList.js";
-import { throwError } from "#utils/sys/sys.js";
+import { throwError } from "#algorithms/sys/sys.js";
 
 export default class GraphVertex {
   /**
