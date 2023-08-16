@@ -76,12 +76,12 @@ export const nRandMinsMaxs = (min_max_vec) => {
     let min_val = min_max_vec[i][0];
     let max_val = min_max_vec[i][1];
 
-    if (typeof min_val !== "number" && typeof max_val !== "number") {
-      raise("Minimum and maximum values must be numbers!");
+    if (typeof min_val !== 'number' && typeof max_val !== 'number') {
+      raise('Minimum and maximum values must be numbers!');
     }
 
     if (min_val > max_val) {
-      raise("Min value must be lower than Max value!");
+      raise('Min value must be lower than Max value!');
     }
 
     n_array.push(randMinMax(min_val, max_val));
@@ -135,7 +135,7 @@ export const countDict = (arr) => {
  */
 export const cyclicSort = (array, index) => {
   if (array.length < index) {
-    const category = "Error";
+    const category = 'Error';
     const subject = `Provided index ${index}`;
     const condition = `greater than array length ${array.length}`;
 
@@ -187,7 +187,7 @@ export const sort = (arr, sort_type = 0) => {
   } else if (sort_type === 1) {
     // Do nothing
   } else {
-    raise("Sorting types are 0 and 1 for descending and ascending order.");
+    raise('Sorting types are 0 and 1 for descending and ascending order.');
   }
 
   return arr;
@@ -297,7 +297,7 @@ export function* mSetsOfnTuples(array, m, n) {
   let arr_diff;
 
   if (m > Math.floor(array.length / n)) {
-    raise("Size of array must be greater or equal to the product of n by m");
+    raise('Size of array must be greater or equal to the product of n by m');
   } else {
     let curr_comb = [];
     for (const head_comb of _.combinations(array, n)) {
@@ -376,7 +376,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
  */
 export function* hyperIndexes(length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
-    raise("Dimension and length must be positive natural numbers!");
+    raise('Dimension and length must be positive natural numbers!');
   }
 
   for (const indexes of formationFn(length, dim, dim)) {
@@ -404,7 +404,7 @@ export function* upperTriangularHyperindexes(length, dim) {
   yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
 }
 
-const SETKEY_DELIMITER = ",";
+const SETKEY_DELIMITER = ',';
 
 export function* eulerGenerator(sets) {
   /**
@@ -429,7 +429,7 @@ export function* eulerGenerator(sets) {
     sets.constructor !== [].constructor
   ) {
     throw new TypeError(
-      "Ill-conditioned input. It must be either a json-like or array of arrays object!"
+      'Ill-conditioned input. It must be either a json-like or array of arrays object!'
     );
   }
 
@@ -440,7 +440,7 @@ export function* eulerGenerator(sets) {
   }
 
   if (!is_unique_set_arr) {
-    console.warn("Each array MUST NOT have duplicates");
+    console.warn('Each array MUST NOT have duplicates');
     sets = objectReduce(
       sets,
       (result, __, key) => {
@@ -452,7 +452,7 @@ export function* eulerGenerator(sets) {
   }
 
   if (Object.values(sets).length === 0)
-    throw new TypeError("There must at least ONE set!");
+    throw new TypeError('There must at least ONE set!');
 
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
@@ -463,7 +463,7 @@ export function* eulerGenerator(sets) {
   const nonEmptySets = (sets_) => objectFilter(sets_, (key, value) => !Object.is(String(value), bracketStr));
 
   let compl_sets_keys = [];
-  let comb_intersec_key = "";
+  let comb_intersec_key = '';
   let comb_intersec = [];
   let comb_excl = [];
   let compl_sets = {};

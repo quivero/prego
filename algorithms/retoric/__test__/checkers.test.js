@@ -1,5 +1,5 @@
-import * as aqo from "arqeo";
-import { are } from "../../testing/utils";
+import * as aqo from 'arqeo';
+import { are } from '../../testing/utils';
 
 import {
   isConjunction,
@@ -10,28 +10,28 @@ import {
   isPremise,
   isPremiseArtifact,
   isReasoningArtifact,
-} from "../checkers";
+} from '../checkers';
 import {
   conjunctions,
   injunctions,
   premiseArtifacts,
   premises,
-} from "./fixtures";
+} from './fixtures';
 
 let result, expectation;
 
-describe("dialetic-checkers", () => {
-  it("must check true for premises", () => {
+describe('dialetic-checkers', () => {
+  it('must check true for premises', () => {
     expect(aqo.is(premises, isPremise)).toEqual(true);
     expect(aqo.are(premiseArtifacts, isPremise)).toEqual(true);
   });
-  it("must check true for injunctions", () => {
+  it('must check true for injunctions', () => {
     expect(are(injunctions, isInjunction)).toEqual(true);
   });
-  it("must check true for conjunctions", () => {
+  it('must check true for conjunctions', () => {
     expect(are(conjunctions, isConjunction)).toEqual(true);
   });
-  it("must assert is{Premise|Conjunction|Injunction}Artifact", () => {
+  it('must assert is{Premise|Conjunction|Injunction}Artifact', () => {
     expect(isReasoningArtifact(premises)).toEqual(true);
 
     expect(isPremiseArtifact(premises)).toEqual(true);
@@ -42,7 +42,7 @@ describe("dialetic-checkers", () => {
     expect(isInjunctionArtifact(premises)).toEqual(false);
     expect(isConjunctionArtifact(injunctions)).toEqual(false);
   });
-  it("must assert defined variables", () => {
+  it('must assert defined variables', () => {
     result = isDefined(42);
     expectation = true;
 
