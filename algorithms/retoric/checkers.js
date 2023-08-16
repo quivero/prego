@@ -1,7 +1,7 @@
-import { isUndefined } from "lodash";
-import { Conjunction, Injunction, Premise, Reasoning } from "./classes";
+import { isUndefined } from 'lodash';
+import { Conjunction, Injunction, Premise, Reasoning } from './classes';
 
-import { is } from "arqeo";
+import { is } from 'arqeo';
 
 export const isDefined = (candidate) => !isUndefined(candidate);
 

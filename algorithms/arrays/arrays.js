@@ -1,8 +1,8 @@
-import _ from "lodash";
-import "lodash.combinations";
+import _ from 'lodash';
+import 'lodash.combinations';
 
-import { objectFilter, objectReduce } from "../objects/objects.js";
-import { raise } from "#sys/sys.js";
+import { objectFilter, objectReduce } from '../objects/objects.js';
+import { raise } from '#sys/sys.js';
 
 /**
  * @abstract returns an array of ones with length n
@@ -67,8 +67,8 @@ export const nRandMinsMaxs = (min_max_vec) => {
 
   for (let i = 0; i < n; i += 1) {
     if (min_max_vec[i].length !== 2) {
-      message = "Entry " + String(i) +
-        " must have 2 entries. We found " + String(min_max_vec[i].length) + "!";
+      message = 'Entry ' + String(i) +
+        ' must have 2 entries. We found ' + String(min_max_vec[i].length) + '!';
 
       raise(message);
     }

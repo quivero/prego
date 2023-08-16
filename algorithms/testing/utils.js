@@ -1,4 +1,4 @@
-import { isArray, isBoolean, uniq } from "lodash";
+import { isArray, isBoolean, uniq } from 'lodash';
 
 export const isTrue = (element) => element === true;
 export const isFalse = (element) => element === false;
@@ -7,7 +7,7 @@ export const areTrue = (array) => array.every(isTrue);
 const and = (acc, el) => acc && el;
 export const batchAnd = (list) => {
   const error_message =
-    "Batch and expects a list of boolean values i.e. true/false.";
+    'Batch and expects a list of boolean values i.e. true/false.';
 
   if (isArray(list)) {
     if (list.every(isBoolean)) {
@@ -75,7 +75,7 @@ export const areArrayElements = (array, truthCallback) =>
   areTrue(array.map(truthCallback));
 
 export const enumerate = (array) => {
-  let enumeratedStringArray = "";
+  let enumeratedStringArray = '';
   let line;
 
   array.forEach((el, index) => {
@@ -96,7 +96,7 @@ export const stringifier = (artifact) =>
 
 export const delimitify = (strings, delimiter) =>
   stringifier(strings).join(delimiter);
-export const slugify = (strings) => stringifier(strings).join("_");
-export const hyphenify = (strings) => stringifier(strings).join("-");
-export const andify = (strings) => stringifier(strings).join("&");
-export const orify = (strings) => stringifier(strings).join("|");
+export const slugify = (strings) => stringifier(strings).join('_');
+export const hyphenify = (strings) => stringifier(strings).join('-');
+export const andify = (strings) => stringifier(strings).join('&');
+export const orify = (strings) => stringifier(strings).join('|');

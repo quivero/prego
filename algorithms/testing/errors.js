@@ -1,19 +1,19 @@
-import { isArray, isString } from "lodash";
-import { fulfill, isExtensionOf } from "./utils";
-import { isAssertArtifact } from "./checkers";
+import { isArray, isString } from 'lodash';
+import { fulfill, isExtensionOf } from './utils';
+import { isAssertArtifact } from './checkers';
 
-import { organizationCriteria, assertItemCriteria, assertArtifactCriteria } from "./criteriaStrings";
-import { defaultArrayTruthMessage } from "./defaults";
+import { organizationCriteria, assertItemCriteria, assertArtifactCriteria } from './criteriaStrings';
+import { defaultArrayTruthMessage } from './defaults';
 
 export const buildError = (errorClass, errorMessage) => {
   return {
     message: fulfill(
       errorMessage, isString(errorMessage),
-      "Error message must be a string!", TypeError
+      'Error message must be a string!', TypeError
     ),
     type: fulfill(
       errorClass, isExtensionOf(errorClass, Error),
-      "Error type must extend Error class!", TypeError
+      'Error type must extend Error class!', TypeError
     ),
   };
 };
@@ -21,7 +21,7 @@ export const buildError = (errorClass, errorMessage) => {
 export const assertionError = (fakeItem) => {
   const itemValuesTypes = Object.values(fakeItem).map((value) => typeof value);
   const itemKeys = Object.keys(fakeItem);
-  const itemType = isArray(fakeItem) ? "array" : "object";
+  const itemType = isArray(fakeItem) ? 'array' : 'object';
 
   const givenItemDescription = `keys [${itemKeys}] and value types [${itemValuesTypes}]`;
   const givenItemTypesMsg = `Given item has type ${itemType} with ${givenItemDescription}`;
@@ -37,7 +37,7 @@ export const assertionArtifactError = (items) => {
   const designationMsg = `We designate assertion items with 1 and non-(assertion items) with 0: `;
   const areItems = `[${itemAreArtifacts}]`
 
-  const checkEachMessage = designationMsg + areItems + "\n";
+  const checkEachMessage = designationMsg + areItems + '\n';
 
   const invalidAssertionArtifactMsg = designationMsg + checkEachMessage + assertArtifactCriteria;
 
@@ -47,13 +47,13 @@ export const assertionArtifactError = (items) => {
 export const organizationTypeError = (fakeOrganization) => {
   const fakeOrganizationType = typeof fakeOrganization;
   const fakeOrganizationKeys =
-    fakeOrganizationType === "object" ? Object.keys(fakeOrganization) : "[]";
+    fakeOrganizationType === 'object' ? Object.keys(fakeOrganization) : '[]';
   const fakeOrganizationValuesTypes =
-    fakeOrganizationType === "object"
+    fakeOrganizationType === 'object'
       ? Object.values(fakeOrganization).map((value) => typeof value)
-      : "[]";
+      : '[]';
 
-  let invalidOrganizationObjectMsg = "";
+  let invalidOrganizationObjectMsg = '';
 
   const fakeOrganizationDescription = `keys [${fakeOrganizationKeys}] and value types [${fakeOrganizationValuesTypes}]`;
   const givenOrganizationMsg = `Given Organization has type ${fakeOrganizationType} with ${fakeOrganizationDescription}`;

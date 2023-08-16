@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 import {
   ones,
   unique,
@@ -22,11 +22,11 @@ import {
   upperTriangularHyperindexes,
   sequentialArrayBlobs,
   zeros,
-} from "../arrays";
+} from '../arrays';
 
-import { raise } from "#algorithms/sys/sys.js";
+import { raise } from '#algorithms/sys/sys.js';
 
-jest.mock("#algorithms/sys/sys");
+jest.mock('#algorithms/sys/sys');
 
 let candidate, expected;
 
@@ -35,35 +35,35 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-describe("Array", () => {
-  it("should get an array of ones", () => {
+describe('Array', () => {
+  it('should get an array of ones', () => {
     expect(ones(5)).toStrictEqual([1, 1, 1, 1, 1]);
   });
 
-  it("should get an array of zeros", () => {
+  it('should get an array of zeros', () => {
     expect(zeros(2)).toStrictEqual([0, 0]);
   });
 
-  it("should return unique array elements", () => {
-    const object_ = unique(["a", 1, { a: 1 }, "a"]);
+  it('should return unique array elements', () => {
+    const object_ = unique(['a', 1, { a: 1 }, 'a']);
 
-    expect(object_).toEqual(["a", 1, { a: 1 }]);
+    expect(object_).toEqual(['a', 1, { a: 1 }]);
   });
 
-  it("should return unique array elements", () => {
-    const object_ = unique(["a", 1, { a: 1 }, "a"]);
+  it('should return unique array elements', () => {
+    const object_ = unique(['a', 1, { a: 1 }, 'a']);
 
-    expect(object_).toEqual(["a", 1, { a: 1 }]);
+    expect(object_).toEqual(['a', 1, { a: 1 }]);
   });
 
-  it("should get a random number between 0 and 1", () => {
+  it('should get a random number between 0 and 1', () => {
     const num = randMinMax(0, 1);
 
     expect(num).toBeGreaterThanOrEqual(0);
     expect(num).toBeLessThanOrEqual(1);
   });
 
-  it("should get a [2, 1] random array between 0 and 1", () => {
+  it('should get a [2, 1] random array between 0 and 1', () => {
     const num = nRandMinMax(2, 0, 1);
 
     expect(num[0]).toBeGreaterThanOrEqual(0);
@@ -73,7 +73,7 @@ describe("Array", () => {
     expect(num[1]).toBeLessThanOrEqual(1);
   });
 
-  it("should get a [2, 1] random array with first entry between 0 and 1 and second entry between 1 and 2", () => {
+  it('should get a [2, 1] random array with first entry between 0 and 1 and second entry between 1 and 2', () => {
     const num = nRandMinsMaxs([
       [0, 1],
       [1, 2],
@@ -86,59 +86,59 @@ describe("Array", () => {
     expect(num[1]).toBeLessThanOrEqual(2);
   });
 
-  it("should call raise for one entry in min_max", () => {
+  it('should call raise for one entry in min_max', () => {
     nRandMinsMaxs([[1]]);
 
     expect(raise).toHaveBeenCalled();
   });
 
-  it("should call raise for non-numerical entries", () => {
-    nRandMinsMaxs([["0", "42"]]);
+  it('should call raise for non-numerical entries', () => {
+    nRandMinsMaxs([['0', '42']]);
 
     expect(raise).toHaveBeenCalled();
   });
 
-  it("should call raise for min_max in decrescent order", () => {
+  it('should call raise for min_max in decrescent order', () => {
     nRandMinsMaxs([[1, 0]]);
 
     expect(raise).toHaveBeenCalled();
   });
 
-  it("should get all indexes of given value within array", () => {
+  it('should get all indexes of given value within array', () => {
     expect(getAllIndexes([1, 2, 3, 3], 1)).toStrictEqual([0]);
     expect(getAllIndexes([1, 2, 3, 3], 2)).toStrictEqual([1]);
     expect(getAllIndexes([1, 2, 3, 3], 3)).toStrictEqual([2, 3]);
   });
 
-  it("should return true for control_ array  equal to treatment_", () => {
-    expect(isCyclicEqual("ABCD", "DABC")).toStrictEqual(true);
+  it('should return true for control_ array  equal to treatment_', () => {
+    expect(isCyclicEqual('ABCD', 'DABC')).toStrictEqual(true);
   });
 
-  it("should return true control_ array is not equal to treatment_", () => {
-    expect(isCyclicEqual("ABCD", "ABDC")).toStrictEqual(false);
+  it('should return true control_ array is not equal to treatment_', () => {
+    expect(isCyclicEqual('ABCD', 'ABDC')).toStrictEqual(false);
   });
 
-  it("should return true control_ array has not the same length as treatment_", () => {
-    expect(isCyclicEqual("ABCD", "ABC")).toStrictEqual(false);
+  it('should return true control_ array has not the same length as treatment_', () => {
+    expect(isCyclicEqual('ABCD', 'ABC')).toStrictEqual(false);
   });
 
-  it("should reorder elements from chain in a cyclic form", () => {
-    expect(cyclicSort("ABCD", 2)).toStrictEqual("CDAB");
+  it('should reorder elements from chain in a cyclic form', () => {
+    expect(cyclicSort('ABCD', 2)).toStrictEqual('CDAB');
   });
 
-  it("should call raise for array length greater than given index", () => {
+  it('should call raise for array length greater than given index', () => {
     cyclicSort([1, 2, 3], 4);
 
     expect(raise).toHaveBeenCalled();
   });
 
-  it("should call raise for inexistent input arguments ", () => {
+  it('should call raise for inexistent input arguments ', () => {
     sort([3, 1, 2], 2);
 
     expect(raise).toHaveBeenCalled();
   });
 
-  it("should call raise for invalid blob scenario ", () => {
+  it('should call raise for invalid blob scenario ', () => {
     const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const m = 3;
     const n = 5;
@@ -150,7 +150,7 @@ describe("Array", () => {
     expect(raise).toHaveBeenCalled();
   });
 
-  it("should return 1 set on given objects", () => {
+  it('should return 1 set on given objects', () => {
     const arr = [1, 2, 3];
     const m = 1;
     const n = 3;
@@ -163,7 +163,7 @@ describe("Array", () => {
     expect(arr).toStrictEqual(expected);
   });
 
-  it("should return 1 set on given objects", () => {
+  it('should return 1 set on given objects', () => {
     const arr = [1, 2, 3];
     const m = 2;
     const n = 1;
@@ -176,28 +176,28 @@ describe("Array", () => {
     expect(candidate).toStrictEqual(expected);
   });
 
-  it("should call raise for invalid input arguments ", () => {
-    const hyperIndexes_gen = hyperIndexes(1, -1, () => "test");
+  it('should call raise for invalid input arguments ', () => {
+    const hyperIndexes_gen = hyperIndexes(1, -1, () => 'test');
     hyperIndexes_gen.next();
 
     expect(raise).toHaveBeenCalled();
   });
 
-  it("should return an descending ordered array", () => {
+  it('should return an descending ordered array', () => {
     expect(sort([1, 2, 3, 4, 5])).toEqual([5, 4, 3, 2, 1]);
   });
 
-  it("should return an ascending ordered array", () => {
+  it('should return an ascending ordered array', () => {
     expect(sort([5, 4, 3, 2, 1], 1)).toEqual([1, 2, 3, 4, 5]);
   });
 
-  it("should return remove elements from array", () => {
+  it('should return remove elements from array', () => {
     expect(_.isEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(
       true
     );
   });
 
-  it("should return sequential blobs of numbers in number array", () => {
+  it('should return sequential blobs of numbers in number array', () => {
     expect(sequentialArrayBlobs([1])).toEqual({
       0: [1],
     });
@@ -220,7 +220,7 @@ describe("Array", () => {
     });
   });
 
-  it("should return count dict", () => {
+  it('should return count dict', () => {
     expect(countDict([1, 1, 2, 2, 2, 3, 4, 4])).toEqual({
       1: 2,
       2: 3,
@@ -229,11 +229,11 @@ describe("Array", () => {
     });
   });
 
-  it("should return the unique array elements", () => {
-    expect(getUniques("ABCDA")).toEqual(["A", "B", "C", "D"]);
+  it('should return the unique array elements', () => {
+    expect(getUniques('ABCDA')).toEqual(['A', 'B', 'C', 'D']);
   });
 
-  it("should return full polytope hyper-indexes", () => {
+  it('should return full polytope hyper-indexes', () => {
     expect([...hyperIndexes(2, 2, fullPolytopeIndexesFn)]).toEqual([
       [0, 0],
       [0, 1],
@@ -249,7 +249,7 @@ describe("Array", () => {
     ]);
   });
 
-  it("should return upper triangular polytope hyper-indexes", () => {
+  it('should return upper triangular polytope hyper-indexes', () => {
     expect([...hyperIndexes(2, 2, upperTriangularIndexesFn)]).toEqual([
       [0, 0],
       [0, 1],
@@ -264,18 +264,18 @@ describe("Array", () => {
   });
 });
 
-describe("hasElement", () => {
-  it("should return true for element on array", () => {
+describe('hasElement', () => {
+  it('should return true for element on array', () => {
     expect(hasElement([1, 2, 3], 3)).toStrictEqual(true);
   });
 
-  it("should return true for array on array of elements", () => {
+  it('should return true for array on array of elements', () => {
     expect(
       hasElement([ [1, 2], [1, 2, 3] ], [1, 2])
     ).toStrictEqual(true);
   });
 
-  it("should return false for non-existent array on array of elements", () => {
+  it('should return false for non-existent array on array of elements', () => {
     expect(
       hasElement([ [1, 2], [1, 2, 3] ], [1])
     ).toStrictEqual(false);
@@ -285,10 +285,10 @@ describe("hasElement", () => {
 global.console.error = jest.fn();
 global.console.warn = jest.fn();
 
-describe("euler", () => {
+describe('euler', () => {
   beforeAll(() => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
-    jest.spyOn(console, "warn").mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterAll(() => {
@@ -301,36 +301,36 @@ describe("euler", () => {
     console.warn.mockClear();
   });
 
-  it("should throw Typerror for ill-conditioned input", () => {
-    const illConditionedInput = () => euler("");
+  it('should throw Typerror for ill-conditioned input', () => {
+    const illConditionedInput = () => euler('');
 
     expect(illConditionedInput).toThrow(TypeError);
   });
 
-  it("should throw Typerror for ill-conditioned input", () => {
+  it('should throw Typerror for ill-conditioned input', () => {
     const illConditionedInput = () => euler([]);
 
-    expect(illConditionedInput).toThrow("There must at least ONE set!");
+    expect(illConditionedInput).toThrow('There must at least ONE set!');
   });
 
-  it("should warn once for duplicated set entries", () => {
+  it('should warn once for duplicated set entries', () => {
     euler({ a: [1, 1, 2] });
 
     expect(console.warn).toBeCalledTimes(1);
-    expect(console.warn).toBeCalledWith("Each array MUST NOT have duplicates");
+    expect(console.warn).toBeCalledWith('Each array MUST NOT have duplicates');
   });
 
-  it("should warn once for duplicated set entries", () => {
+  it('should warn once for duplicated set entries', () => {
     euler({ a: [1, 1, 2] });
     expect(console.warn).toHaveBeenCalledTimes(1);
   });
 
-  it("should raise error once for duplicated set entries", () => {
+  it('should raise error once for duplicated set entries', () => {
     euler({ a: [1, 1, 2] });
     expect(console.warn).toHaveBeenCalledTimes(1);
   });
 
-  it("should return a multiple set interactions - Sample 1", () => {
+  it('should return a multiple set interactions - Sample 1', () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
@@ -339,14 +339,14 @@ describe("euler", () => {
       0: [1, 3],
       1: [4, 5],
       2: [6, 7],
-      "0,1,2": [2],
+      '0,1,2': [2],
     };
 
     expect(euler([list_1, list_2, list_3])).toEqual(result);
     expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
-  it("should return a multiple set interactions - Sample 2", () => {
+  it('should return a multiple set interactions - Sample 2', () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
@@ -355,14 +355,14 @@ describe("euler", () => {
       0: [1, 3],
       1: [4, 5],
       2: [6, 7],
-      "0,1,2": [2],
+      '0,1,2': [2],
     };
 
     expect(euler([list_1, list_2, list_3])).toEqual(result);
     expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
-  it("should return a multiple set interactions - Sample 3", () => {
+  it('should return a multiple set interactions - Sample 3', () => {
     const list_1 = [1, 2, 3];
     const list_2 = [2, 4, 5];
     const list_3 = [2, 6, 7];
@@ -371,20 +371,20 @@ describe("euler", () => {
       0: [1, 3],
       1: [4, 5],
       2: [6, 7],
-      "0,1,2": [2],
+      '0,1,2': [2],
     };
 
     expect(euler([list_1, list_2, list_3])).toEqual(result);
     expect(euler([list_1, list_2, list_3])).toEqual(result);
   });
 
-  it("should validate empty exclusivity from Euler Diagram", () => {
+  it('should validate empty exclusivity from Euler Diagram', () => {
     const list_1 = [1, 2, 3, 4, 5, 6];
     const list_2 = [4, 5, 6];
 
     const result = {
       0: [1, 2, 3],
-      "0,1": [4, 5, 6],
+      '0,1': [4, 5, 6],
     };
 
     expect(euler([list_1, list_2])).toEqual(result);

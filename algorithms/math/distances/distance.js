@@ -1,9 +1,9 @@
-import _ from "lodash";
+import _ from 'lodash';
 
-import { hav, vecArg, sphericalToCartesian, isSpherical } from "#math/numbers/numbers.js";
-import { objectHasKey } from "#algorithms/objects/objects.js";
+import { hav, vecArg, sphericalToCartesian, isSpherical } from '#math/numbers/numbers.js';
+import { objectHasKey } from '#algorithms/objects/objects.js';
 
-import { raise, warn } from "#algorithms/sys/sys.js";
+import { raise, warn } from '#algorithms/sys/sys.js';
 
 /**
  * @abstract n-norm of a number
@@ -28,7 +28,7 @@ export const nNorm = (arr, n) => {
  */
 export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   if (n < 1) {
-    raise("The exponent n must be a number greater or equal to 1!");
+    raise('The exponent n must be a number greater or equal to 1!');
     return;
   }
 
@@ -107,11 +107,11 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
     "There must exist property '_placeholder_' on config argument 'methodConfig'!";
 
   switch (method) {
-    case "n_norm":
+    case 'n_norm':
       let exponent;
 
-      if (!objectHasKey(methodConfig, "exponent")) {
-        warn(notification_message.replace("_placeholder_", "radius"));
+      if (!objectHasKey(methodConfig, 'exponent')) {
+        warn(notification_message.replace('_placeholder_', 'radius'));
         exponent = 2;
       } else {
         exponent = methodConfig.exponent;
@@ -119,14 +119,14 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
 
       return nNormDistance(coordinate_1, coordinate_2, exponent);
 
-    case "sphere":
+    case 'sphere':
       const are_spherical =
         !isSpherical(coordinate_1) || !isSpherical(coordinate_2);
 
-      return !objectHasKey(methodConfig, "radius")
-        ? raise(notification_message.replace("_placeholder_", "radius"))
+      return !objectHasKey(methodConfig, 'radius')
+        ? raise(notification_message.replace('_placeholder_', 'radius'))
         : are_spherical
-        ? raise("Provided coordinates are not spherical!")
+        ? raise('Provided coordinates are not spherical!')
         : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
 
     default:

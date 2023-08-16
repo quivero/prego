@@ -1,9 +1,9 @@
 // Javascript program to generate all unique partitions of an integer
-import "lodash.combinations";
-import _ from "lodash";
+import 'lodash.combinations';
+import _ from 'lodash';
 
-import { decimalPart } from "../numbers/numbers.js";
-import { throwError } from "../../sys/sys.js";
+import { decimalPart } from '../numbers/numbers.js';
+import { throwError } from '../../sys/sys.js';
 
 /*
  * @abstract returns unique partitions of an integer with
@@ -14,7 +14,7 @@ import { throwError } from "../../sys/sys.js";
  */
 export const partitions = (n) => {
   if (decimalPart(n) !== 0 || n <= 0) {
-    throwError("Given number must be positive and natural!");
+    throwError('Given number must be positive and natural!');
   }
 
   const all_partitions = [];
@@ -53,7 +53,7 @@ export const cardvecCombinations = (points, card_vec) => {
 
   if (points.length !== card_vec.reduce((a, b) => a + b)) {
     error_msg =
-      "The sum of card_vec elements MUST be equal to points cardinality";
+      'The sum of card_vec elements MUST be equal to points cardinality';
     throwError(error_msg);
   } else if (card_vec.length === 1) {
     return [points];

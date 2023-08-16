@@ -1,8 +1,8 @@
-import { countDict } from "#algorithms/arrays/arrays.js";
+import { countDict } from '#algorithms/arrays/arrays.js';
 
-import { throwError } from "#algorithms/sys/sys.js";
+import { throwError } from '#algorithms/sys/sys.js';
 
-import { nNorm } from "#math/distances/distance.js";
+import { nNorm } from '#math/distances/distance.js';
 
 /**
  * @abstract returns prime factors for non-zero natural numbers
@@ -10,13 +10,13 @@ import { nNorm } from "#math/distances/distance.js";
  * @param {String} task_msg
  */
 export const primeFactors = (n) => {
-  if (typeof n !== "number") {
+  if (typeof n !== 'number') {
     throwError(`It is impossible to factorize \'${n}\'. It MUST be a number!`);
     return;
   }
 
   if (decimalPart(n) !== 0 || n < 1) {
-    throwError("The provided number must not be zero and must be natural.");
+    throwError('The provided number must not be zero and must be natural.');
     return;
   }
 
@@ -47,7 +47,7 @@ export const primeFactors = (n) => {
  * @return {boolean}
  */
 export const isPrime = (number) => {
-  if (typeof number !== "number") {
+  if (typeof number !== 'number') {
     throwError(
       `It is impossible to factorize \'${number}\'. It MUST be a number!`
     );
@@ -116,7 +116,7 @@ export const xor = (a, b) => {
   const condition = ![0, 1].includes(a) || ![0, 1].includes(b);
 
   return condition
-    ? throwError("Variables a and b must be either boolean or numbers 0/1!")
+    ? throwError('Variables a and b must be either boolean or numbers 0/1!')
     : Boolean(a * (1 - b) + b * (1 - a));
 };
 
@@ -129,7 +129,7 @@ export const xor = (a, b) => {
  */
 export const abRandom = (min, max) => {
   if (min >= max) {
-    throwError("The latter number must be greater than the former.");
+    throwError('The latter number must be greater than the former.');
   }
 
   return min + (max - min) * Math.random();

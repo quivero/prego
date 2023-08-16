@@ -1,10 +1,10 @@
-import { isPowerOfTwoBitwiseUseCases } from "./fixtures";
+import { isPowerOfTwoBitwiseUseCases } from './fixtures';
 
 describe(
-  "isPowerOfTwoBitwise",
+  'isPowerOfTwoBitwise',
   () => {
     test.each(isPowerOfTwoBitwiseUseCases)(
-      "should check if the number is made by multiplying twos",
+      'should check if the number is made by multiplying twos',
       (result, expected) => expect(result).toBe(expected)
     );
   }

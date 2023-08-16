@@ -1,6 +1,6 @@
-import { isCondition } from "./utils";
-import { defaultArrayTruthMessage } from "./defaults";
-import { arrayTruthError } from "./errors";
+import { isCondition } from './utils';
+import { defaultArrayTruthMessage } from './defaults';
+import { arrayTruthError } from './errors';
 
 export const blameArrayElements = (
   array,

@@ -1,15 +1,15 @@
-import { assert, batchAssert } from "../assertions";
-import { buildScene } from "../build";
-import { areAssertItems } from "../checkers";
-import { expectToBeEqual } from "../expectTo";
-import { assertFixtures } from "./fixtures";
+import { assert, batchAssert } from '../assertions';
+import { buildScene } from '../build';
+import { areAssertItems } from '../checkers';
+import { expectToBeEqual } from '../expectTo';
+import { assertFixtures } from './fixtures';
 
-describe("checkers", () => {
-  it("must assert on default truth message", () => {
+describe('checkers', () => {
+  it('must assert on default truth message', () => {
     const assertItem = [areAssertItems(assertFixtures), expectToBeEqual, true];
     assert(assertItem);
   });
-  it("must assert scenes a.k.a. assertItem", () => {
+  it('must assert scenes a.k.a. assertItem', () => {
     const assertItem2 = assertFixtures[0];
     const assertItem3 = assertFixtures[1];
 

@@ -1,5 +1,5 @@
-import isPowerOfTwo from "../isPowerOfTwo";
-import isPowerOfTwoBitwise from "../isPowerOfTwoBitwise";
+import isPowerOfTwo from '../isPowerOfTwo';
+import isPowerOfTwoBitwise from '../isPowerOfTwoBitwise';
 
 export const isPowerOfTwoUseCases = [
   [isPowerOfTwo(-1), false],

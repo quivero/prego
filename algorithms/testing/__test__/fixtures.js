@@ -1,20 +1,20 @@
-import _ from "lodash";
-import { zip } from "lodash";
+import _ from 'lodash';
+import { zip } from 'lodash';
 import {
   buildOrganization,
   buildAct
-} from "../build";
+} from '../build';
 
-import { emptyCallback, identityCallback } from "../defaults";
+import { emptyCallback, identityCallback } from '../defaults';
 
-import { expectToBeDefined, expectToBe } from "../expectTo";
+import { expectToBeDefined, expectToBe } from '../expectTo';
 
 /*-------------------------
  | assert design
  *-------------------------*/
 export const assertFixtures = [
   [42, expectToBeDefined],
-  ["42", expectToBe, "42"],
+  ['42', expectToBe, '42'],
 ];
 
 // Valid samples
@@ -22,8 +22,8 @@ export const validAssertLength2Item = assertFixtures[0];
 export const validAssertLength3Item = assertFixtures[1];
 
 // Error-prone samples
-export const invalidAssertItemLength = ["42"];
-export const invalidAssertCallbackItem = ["42", "42"];
+export const invalidAssertItemLength = ['42'];
+export const invalidAssertCallbackItem = ['42', '42'];
 
 /*-------------------------
  | atest design
@@ -31,9 +31,9 @@ export const invalidAssertCallbackItem = ["42", "42"];
 export let validAtestAct;
 let setup, prepare, perform, teardown, organization;
 
-export let validAtestFixture = "42";
+export let validAtestFixture = '42';
 const resultFunction = (fixture_) => fixture_;
-let expectedAtestResult = "42";
+let expectedAtestResult = '42';
 
 setup = emptyCallback;
 
@@ -171,14 +171,14 @@ export let additionAct = buildAct(addCallback);
 
 /*
 additionRehearsals = [
-  buildRehearsal("must sum numbers using assert", () => assert(addItem)),
-  buildRehearsal("must sum numbers using batchAssert", () =>
+  buildRehearsal('must sum numbers using assert', () => assert(addItem)),
+  buildRehearsal('must sum numbers using batchAssert', () =>
     batchAssert(addItems)
   ),
-  buildRehearsal("must sum numbers using atest", () =>
+  buildRehearsal('must sum numbers using atest', () =>
     atest(oneToOneAdditionFixture, oneToOneAdditionScene)
   ),
 ];
 
-additionPlays = [buildPlay("add", additionRehearsals)];
+additionPlays = [buildPlay('add', additionRehearsals)];
 */

@@ -1,13 +1,13 @@
-import { isBoolean } from "lodash";
+import { isBoolean } from 'lodash';
 
-import { InterfaceError } from "../errors/errors";
-import { andify, orify } from "../testing/utils";
+import { InterfaceError } from '../errors/errors';
+import { andify, orify } from '../testing/utils';
 import {
   applyReasoningArtifact,
   batchAnd,
   batchOr,
   getPremisesEntries,
-} from "./utils";
+} from './utils';
 
 export class Reasoning {
   _booleanReduceMap = undefined;

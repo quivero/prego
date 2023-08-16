@@ -1,4 +1,4 @@
-import { assert, batchAssert } from "../assertions";
+import { assert, batchAssert } from '../assertions';
 import {
   areAssertItems,
   areOrganizations,
@@ -7,8 +7,8 @@ import {
   isActArtifact,
   isAssertArtifact,
   isAssertItem,
-} from "../checkers";
-import { expectToBe, expectToBeEqual } from "../expectTo";
+} from '../checkers';
+import { expectToBe, expectToBeEqual } from '../expectTo';
 import {
   assertFixtures,
   validAssertLength2Item,
@@ -18,16 +18,16 @@ import {
   validOrganizations,
   invalidOrganizations,
   additionAct,
-} from "./fixtures";
+} from './fixtures';
 
 let assertItem, assertItems;
 
-describe("checkers", () => {
-  it("must assert checker areAssertItems", () => {
+describe('checkers', () => {
+  it('must assert checker areAssertItems', () => {
     assertItem = [ areAssertItems(assertFixtures), expectToBeEqual, true ];
     assert(assertItem);
   });
-  it("must batchAssert checker isAssertArtifact", () => {
+  it('must batchAssert checker isAssertArtifact', () => {
     assertItems = [
       [ isAssertArtifact(assertFixtures), expectToBeEqual, true ],
       [ isAssertArtifact(invalidAssertItemLength), expectToBeEqual, false ],
@@ -35,7 +35,7 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("must batchAssert checker isAssertItem", () => {
+  it('must batchAssert checker isAssertItem', () => {
     assertItems = [
       [ isAssertItem(validAssertLength2Item), expectToBeEqual, true ],
       [ isAssertItem(validAssertLength3Item), expectToBeEqual, true ],
@@ -45,11 +45,11 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("must return true on valid organization array", () => {
+  it('must return true on valid organization array', () => {
     assertItem = [ areOrganizations(validOrganizations), expectToBeEqual, true ];
     assert(assertItem);
   });
-  it("must return false on invalid assert items", () => {
+  it('must return false on invalid assert items', () => {
     assertItem = [
       areOrganizations(invalidOrganizations),
       expectToBeEqual,
@@ -57,7 +57,7 @@ describe("checkers", () => {
     ];
     assert(assertItem);
   });
-  it("must return true for valid assert artifact", () => {
+  it('must return true for valid assert artifact', () => {
     assertItems = [
       [ isAssertArtifact(validAssertLength2Item), expectToBe, true ],
       [ isAssertArtifact(validAssertLength3Item), expectToBe, true ],
@@ -65,7 +65,7 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("must return true for valid assert item", () => {
+  it('must return true for valid assert item', () => {
     assertItems = [
       [ areAssertItems(assertFixtures), expectToBe, true ],
       [ areScenes(assertFixtures), expectToBe, false ],
@@ -73,7 +73,7 @@ describe("checkers", () => {
 
     batchAssert(assertItems);
   });
-  it("must return true for valid assert item", () => {
+  it('must return true for valid assert item', () => {
     assertItems = [
       [ isAct(additionAct), expectToBe, true ],
       [ isActArtifact([additionAct, additionAct]), expectToBe, true ],

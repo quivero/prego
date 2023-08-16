@@ -1,12 +1,12 @@
 import _, {
   isArray, union, intersection, isObject, uniq, isFunction,
-} from "lodash";
+} from 'lodash';
 
-import { batchAnd, are } from "./utils";
-import { defaultOrganization } from "./defaults";
-import { availableExpectToMaps } from "./expectTo";
+import { batchAnd, are } from './utils';
+import { defaultOrganization } from './defaults';
+import { availableExpectToMaps } from './expectTo';
 
-import { is } from "arqeo";
+import { is } from 'arqeo';
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Assert items                                                                                                |
@@ -14,8 +14,8 @@ import { is } from "arqeo";
 
 // Default item key strings
 let item2LengthKeys, item3LengthKeys;
-item2LengthKeys = ["result", "expectToMap"];
-item3LengthKeys = [...item2LengthKeys, "expectation"];
+item2LengthKeys = ['result', 'expectToMap'];
+item3LengthKeys = [...item2LengthKeys, 'expectation'];
 
 export const isAssertItem = (item) => {
   let keysCardinalityCondition;
@@ -26,7 +26,7 @@ export const isAssertItem = (item) => {
   if (isArray(item)) {
     const itemLength = item.length;
     keysCardinalityCondition = itemLength === 2 || itemLength === 3;
-    functionTypeCondition = typeof item[1] === "function";
+    functionTypeCondition = typeof item[1] === 'function';
     expectedExpectToMap = availableExpectToMaps.includes(item[1]);
 
     const criteria = [
@@ -44,7 +44,7 @@ export const isAssertItem = (item) => {
     necessaryKeysCondition =
       intersection(objectKeys, item2LengthKeys).length === 2 ||
       intersection(objectKeys, item3LengthKeys).length === 3;
-    functionTypeCondition = typeof item.expectToMap === "function";
+    functionTypeCondition = typeof item.expectToMap === 'function';
     expectedExpectToMap = availableExpectToMaps.includes(item.expectToMap);
 
     const criteria = [
@@ -104,7 +104,7 @@ export const isOrganizationArtifact = (candidate) => is(candidate, isOrganizatio
 \*-------------------------------------------------------------------------------------------------------------*/
 
 // Default item key strings
-const actKeys = [...possibleOrganizationKeys, "perform"];
+const actKeys = [...possibleOrganizationKeys, 'perform'];
 
 const actObjectCallback = (candidate) => {
   const candidateKeys = Object.keys(candidate);
@@ -137,7 +137,7 @@ export const isAct = (candidate) => {
 \*-------------------------------------------------------------------------------------------------------------*/
 
 // Default item key strings
-const rehearsalKeys = ["description", "callback"];
+const rehearsalKeys = ['description', 'callback'];
 
 const rehearsalObjectCallback = (candidate) => {
   const candidateKeys = Object.keys(candidate);

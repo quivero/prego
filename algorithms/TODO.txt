@@ -25,9 +25,9 @@ Objects:
        )
   [   ]  act := scriptCallback + [ organization (defaultOrganization) ]
   [   ]  resource: ( text: String, callback: function );
-  [   ]  rehearsal := { "fixture": fixture, "acts": acts }
-  [   ]  play := { "name": string, "rehearsals": rehearsals }
-  [   ]  audition := { "name": string, "plays": plays }
+  [   ]  rehearsal := { 'fixture': fixture, 'acts': acts }
+  [   ]  play := { 'name': string, 'rehearsals': rehearsals }
+  [   ]  audition := { 'name': string, 'plays': plays }
 
 Callbacks:
 
@@ -46,7 +46,7 @@ Callbacks:
 
     Questions:
       1. Must a rehearsal have an organization?
-      2. If the answer for previous question is yes, how can we integrate "setup-teardown" (check URL https://jestjs.io/docs/setup-teardown)
+      2. If the answer for previous question is yes, how can we integrate 'setup-teardown' (check URL https://jestjs.io/docs/setup-teardown)
 
   [   ]  playCallback( (Rehearsal | Array(Rehearsal)) -> void   ) => rehearse(rehearsals)
   [   ]  buildPlay( ( name:string, rehearsals:Function ) -> void ) =>
@@ -82,13 +82,13 @@ Miscelaneous: Decision-making
 
   Objects:
 
-    [ x ] export const NotImplementedError = (message = "") => {
-        this.name = "NotImplementedError";
+    [ x ] export const NotImplementedError = (message = '') => {
+        this.name = 'NotImplementedError';
         this.message = message;
     }
     NotImplementedError.prototype = Error.prototype;
 
-    [ x ] const interfaceError = () => NotImplementedError("This is an interface.");
+    [ x ] const interfaceError = () => NotImplementedError('This is an interface.');
 
     [   ] class Reasoning  {
 

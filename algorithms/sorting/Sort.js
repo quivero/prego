@@ -1,5 +1,5 @@
-import Comparator from "#algorithms/comparator/Comparator";
-import throwError from "#algorithms/sys/sys";
+import Comparator from '#algorithms/comparator/Comparator';
+import throwError from '#algorithms/sys/sys';
 
 /**
  * @typedef {Object} SorterCallbacks
@@ -30,6 +30,6 @@ export default class Sort {
   }
 
   sort() {
-    throwError("sort method must be implemented");
+    throwError('sort method must be implemented');
   }
 }

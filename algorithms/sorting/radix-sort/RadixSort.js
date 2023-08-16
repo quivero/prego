@@ -1,4 +1,4 @@
-import Sort from "../Sort";
+import Sort from '../Sort';
 
 // Using charCode (a = 97, b = 98, etc), we can map characters to buckets from 0 - 25
 const BASE_CHAR_CODE = 97;

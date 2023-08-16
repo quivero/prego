@@ -1,7 +1,7 @@
-import { isArray } from "lodash";
-import { assertionError } from "./errors";
-import { isAssertArtifact, isAssertItem } from "./checkers";
-import { fulfill } from "./utils";
+import { isArray } from 'lodash';
+import { assertionError } from './errors';
+import { isAssertArtifact, isAssertItem } from './checkers';
+import { fulfill } from './utils';
 
 const validAssertItemCallback = (item) => {
   let result, expectation, expectToMap, itemCardinality;

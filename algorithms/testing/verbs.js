@@ -1,8 +1,8 @@
-import { batchAssert } from "./assertions";
-import { buildScene } from "./build";
-import { isAct, isAssertArtifact, isRehearsal } from "./checkers";
+import { batchAssert } from './assertions';
+import { buildScene } from './build';
+import { isAct, isAssertArtifact, isRehearsal } from './checkers';
 
-import { apply } from "arqeo";
+import { apply } from 'arqeo';
 
 const check = (scenes) => batchAssert(scenes);
 

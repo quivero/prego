@@ -1,11 +1,11 @@
-import { isArray, isFunction, isString } from "lodash";
-import { isActArtifact, isAssertItem, isOrganization } from "./checkers";
-import { organizationTypeError, assertionError } from "./errors";
-import { rehearse, validate } from "./assertions";
-import { actCriterium } from "./criteriaStrings";
-import { isCondition } from "./utils";
-import { emptyCallback, identityCallback } from "./defaults";
-import { is } from "arqeo";
+import { isArray, isFunction, isString } from 'lodash';
+import { isActArtifact, isAssertItem, isOrganization } from './checkers';
+import { organizationTypeError, assertionError } from './errors';
+import { rehearse, validate } from './assertions';
+import { actCriterium } from './criteriaStrings';
+import { isCondition } from './utils';
+import { emptyCallback, identityCallback } from './defaults';
+import { is } from 'arqeo';
 
 const buildSceneCallback = (item) => {
   let result, expectation, expectToMap, itemCardinality;
@@ -58,9 +58,9 @@ export const buildOrganization = (setup, prepare, teardown) => {
 
 const fillOrganizationCallback = (organization) => {
   return buildOrganization(
-    organization["setup"] ?? emptyCallback,
-    organization["prepare"] ?? identityCallback,
-    organization["teardown"] ?? emptyCallback
+    organization['setup'] ?? emptyCallback,
+    organization['prepare'] ?? identityCallback,
+    organization['teardown'] ?? emptyCallback
   );
 };
 

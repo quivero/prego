@@ -1,18 +1,18 @@
-import { zip } from "lodash";
-import { Conjunction, Injunction, Premise, Reasoning } from "../classes";
+import { zip } from 'lodash';
+import { Conjunction, Injunction, Premise, Reasoning } from '../classes';
 
 // Reasons
-export const reason = new Reasoning("reason", "This is a reason", true);
+export const reason = new Reasoning('reason', 'This is a reason', true);
 
 // Premises
 export const truePremise = new Premise(
-  "true_premise",
-  "This is a true premise",
+  'true_premise',
+  'This is a true premise',
   true
 );
 export const falsePremise = new Premise(
-  "false_premise",
-  "This is a false premise",
+  'false_premise',
+  'This is a false premise',
   false
 );
 
@@ -24,19 +24,19 @@ export const expectedFalsePremiseConclusion = false;
 export const premises = [truePremise, falsePremise];
 
 export const expectedPremisesEntries = [
-  ["true_premise", true],
-  ["false_premise", false],
+  ['true_premise', true],
+  ['false_premise', false],
 ];
 
-export const expectedPremisesKeys = ["true_premise", "false_premise"];
+export const expectedPremisesKeys = ['true_premise', 'false_premise'];
 export const expectedPremisesArguments = [
   { true_premise: true },
   { false_premise: false },
 ];
 export const expectedPremisesConclusions = [true, false];
 export const expectedPremisesVerbalizations = [
-  "(true_premise:true)",
-  "(false_premise:false)",
+  '(true_premise:true)',
+  '(false_premise:false)',
 ];
 
 // Premise artifacts
@@ -59,13 +59,13 @@ const descriptionCallback = (name, premise) => `This is a [${premise}] ${name}`;
 for (const i in premiseArtifacts) {
   injprops = {
     key: `injunction_${i}`,
-    description: descriptionCallback("injunction", premiseArtifacts[i]),
+    description: descriptionCallback('injunction', premiseArtifacts[i]),
     value: premiseArtifacts[i],
   };
 
   conjprops = {
     key: `conjunction_${i}`,
-    description: descriptionCallback("conjunction", premiseArtifacts[i]),
+    description: descriptionCallback('conjunction', premiseArtifacts[i]),
     value: premiseArtifacts[i],
   };
 
@@ -87,10 +87,10 @@ export const expectedInjConjArguments = [
 // Injunctions
 export const expectedInjunctionsConclusions = [true, true, true, false];
 export const expectedInjunctionsVerbalizations = [
-  "(injunction_0=(true_premise:true)|(true_premise:true):true)",
-  "(injunction_1=(true_premise:true)|(false_premise:false):true)",
-  "(injunction_2=(false_premise:false)|(true_premise:true):true)",
-  "(injunction_3=(false_premise:false)|(false_premise:false):false)",
+  '(injunction_0=(true_premise:true)|(true_premise:true):true)',
+  '(injunction_1=(true_premise:true)|(false_premise:false):true)',
+  '(injunction_2=(false_premise:false)|(true_premise:true):true)',
+  '(injunction_3=(false_premise:false)|(false_premise:false):false)',
 ];
 //
 export const expectedInjunctionThoughts = zip(expectedInjConjArguments, expectedInjunctionsConclusions).map(
@@ -102,10 +102,10 @@ export const expectedInjunctionThoughts = zip(expectedInjConjArguments, expected
 // Conjunctions
 export const expectedConjunctionsConclusions = [true, false, false, false];
 export const expectedConjunctionsVerbalizations = [
-  "(conjunction_0=(true_premise:true)&(true_premise:true):true)",
-  "(conjunction_1=(true_premise:true)&(false_premise:false):false)",
-  "(conjunction_2=(false_premise:false)&(true_premise:true):false)",
-  "(conjunction_3=(false_premise:false)&(false_premise:false):false)",
+  '(conjunction_0=(true_premise:true)&(true_premise:true):true)',
+  '(conjunction_1=(true_premise:true)&(false_premise:false):false)',
+  '(conjunction_2=(false_premise:false)&(true_premise:true):false)',
+  '(conjunction_3=(false_premise:false)&(false_premise:false):false)',
 ];
 
 export const expectedConjunctionThoughts = zip(expectedInjConjArguments, expectedConjunctionsConclusions).map(
@@ -119,7 +119,7 @@ export let singlePremiseConjunction, singlePremiseInjunction;
 
 injprops = {
   key: `singlePremiseInjunction`,
-  description: descriptionCallback("injunction", truePremise),
+  description: descriptionCallback('injunction', truePremise),
   value: truePremise,
 };
 
@@ -130,7 +130,7 @@ export const expectedSinglePremiseInjunctionConclusion = true;
 // Single premise injunctions
 conjprops = {
   key: `singlePremiseConjunction`,
-  description: descriptionCallback("conjunction", truePremise),
+  description: descriptionCallback('conjunction', truePremise),
   value: falsePremise,
 };
 

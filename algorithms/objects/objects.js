@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 /**
  * @abstract returns an object with given keys and initial value
@@ -166,7 +166,7 @@ export const objectFlatten = (obj) => {
   // loop through the object 'ob'
   for (const i in obj) {
     // We check the type of the i using typeof() function and recursively call the function again
-    if (typeof obj[i] === "object" && !Array.isArray(obj[i])) {
+    if (typeof obj[i] === 'object' && !Array.isArray(obj[i])) {
       const temp = objectFlatten(obj[i]);
       for (const j in temp) {
         // Store temp in result

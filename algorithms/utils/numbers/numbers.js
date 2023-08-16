@@ -1,7 +1,7 @@
-import { countDict } from "../arrays/arrays.js";
+import { countDict } from '../arrays/arrays.js';
 
-import { decimalPart } from "../math/numbers.js";
-import { throwError } from "../sys/sys.js";
+import { decimalPart } from '../math/numbers.js';
+import { throwError } from '../sys/sys.js';
 
 /**
  * @abstract returns prime factors for non-zero natural numbers
@@ -9,13 +9,13 @@ import { throwError } from "../sys/sys.js";
  * @param {String} task_msg
  */
 export const primeFactors = (n) => {
-  if (typeof n !== "number") {
+  if (typeof n !== 'number') {
     throwError(`It is impossible to factorize \'${n}\'. It MUST be a number!`);
     return;
   }
 
   if (decimalPart(n) !== 0 || n < 1) {
-    throwError("The provided number must not be zero and must be natural.");
+    throwError('The provided number must not be zero and must be natural.');
     return;
   }
 
@@ -46,7 +46,7 @@ export const primeFactors = (n) => {
  * @return {boolean}
  */
 export const isPrime = (number) => {
-  if (typeof number !== "number") {
+  if (typeof number !== 'number') {
     throwError(
       `It is impossible to factorize \'${number}\'. It MUST be a number!`
     );

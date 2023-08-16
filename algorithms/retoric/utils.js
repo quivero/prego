@@ -1,5 +1,5 @@
-import { apply } from "arqeo";
-import { isReasoning, isPremise } from "./checkers";
+import { apply } from 'arqeo';
+import { isReasoning, isPremise } from './checkers';
 
 /*-------------------------------------------------------------------------------------------------------------*\
  | Boolean operators                                                                                           |

@@ -9,4 +9,4 @@ export const defaultOrganization = {
 };
 
 export const defaultArrayTruthMessage =
-  "The required criteria are not provided.";
+  'The required criteria are not provided.';
