@@ -48,7 +48,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "arqeo": "^0.2.5",
+    "arqeo": "^0.3.0",
     "clean": "^4.0.2",
     "esm": "^3.2.25",
     "express": "^4.18.2",
