@@ -1,4 +1,4 @@
-import { throwError } from "#algorithms/sys/sys.js";
+import { throwError } from '#algorithms/sys/sys.js';
 
 export default class FenwickTree {
   /**
@@ -23,7 +23,7 @@ export default class FenwickTree {
    */
   increase(position, value) {
     if (position < 1 || position > this.arraySize) {
-      throwError("Position is out of allowed range");
+      throwError('Position is out of allowed range');
     }
 
     for (let i = position; i <= this.arraySize; i += i & -i) {
@@ -41,7 +41,7 @@ export default class FenwickTree {
    */
   query(position) {
     if (position < 1 || position > this.arraySize) {
-      throwError("Position is out of allowed range");
+      throwError('Position is out of allowed range');
     }
 
     let sum = 0;
@@ -62,7 +62,7 @@ export default class FenwickTree {
    */
   queryRange(leftIndex, rightIndex) {
     if (leftIndex > rightIndex) {
-      throwError("Left index can not be greater than right one");
+      throwError('Left index can not be greater than right one');
     }
 
     if (leftIndex === 1) {

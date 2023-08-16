@@ -1,4 +1,4 @@
-import graphBridges from "../bridges/graphBridges.js";
+import graphBridges from '../bridges/graphBridges.js';
 
 /**
  * Fleury's algorithm of finding Eulerian Path (visit all graph edges exactly once).

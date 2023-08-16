@@ -1,16 +1,16 @@
-import { createVertices, createEdges } from "../utils/graph.js";
+import { createVertices, createEdges } from '../utils/graph.js';
 
-import GraphVertex from "../GraphVertex";
-import GraphEdge from "../GraphEdge";
+import GraphVertex from '../GraphVertex';
+import GraphEdge from '../GraphEdge';
 
-import { throwError } from "#algorithms/sys/sys.js";
+import { throwError } from '#algorithms/sys/sys.js';
 
-jest.mock("#algorithms/sys/sys.js");
+jest.mock('#algorithms/sys/sys.js');
 
 let result, expected;
 
-describe("GraphVertex", () => {
-  it("should throw an error when trying to create vertex without value", () => {
+describe('GraphVertex', () => {
+  it('should throw an error when trying to create vertex without value', () => {
     new GraphVertex();
 
     result = throwError;
@@ -19,19 +19,19 @@ describe("GraphVertex", () => {
     expect(result).toHaveBeenCalledTimes(expected);
   });
 
-  it("should create graph vertex", () => {
-    const vertex = new GraphVertex("A");
+  it('should create graph vertex', () => {
+    const vertex = new GraphVertex('A');
 
     expect(vertex).toBeDefined();
-    expect(vertex.label).toBe("A");
-    expect(vertex.toString()).toBe("A");
-    expect(vertex.getKey()).toBe("A");
-    expect(vertex.edges.toString()).toBe("");
+    expect(vertex.label).toBe('A');
+    expect(vertex.toString()).toBe('A');
+    expect(vertex.getKey()).toBe('A');
+    expect(vertex.edges.toString()).toBe('');
     expect(vertex.getEdges()).toEqual([]);
   });
 
-  it("should add edges to vertex and check if it exists", () => {
-    const [A, B] = createVertices(["A", "B"]);
+  it('should add edges to vertex and check if it exists', () => {
+    const [A, B] = createVertices(['A', 'B']);
     const edgeAB = new GraphEdge(A, B);
 
     A.addEdge(edgeAB);
@@ -40,11 +40,11 @@ describe("GraphVertex", () => {
     expect(B.hasEdge(edgeAB)).toBe(false);
 
     expect(A.getEdges().length).toBe(1);
-    expect(A.getEdges()[0].toString()).toBe("A_B");
+    expect(A.getEdges()[0].toString()).toBe('A_B');
   });
 
-  it("should delete edges from vertex", () => {
-    const [A, B, C] = createVertices(["A", "B", "C"]);
+  it('should delete edges from vertex', () => {
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
     const [AB, AC] = createEdges([
       [A, B],
       [A, C],
@@ -60,13 +60,13 @@ describe("GraphVertex", () => {
 
     expect(A.getEdges().length).toBe(2);
 
-    expect(A.getEdges()[0].toString()).toBe("A_B");
-    expect(A.getEdges()[1].toString()).toBe("A_C");
+    expect(A.getEdges()[0].toString()).toBe('A_B');
+    expect(A.getEdges()[1].toString()).toBe('A_C');
 
     A.deleteEdge(AB);
     expect(A.hasEdge(AB)).toBe(false);
     expect(A.hasEdge(AC)).toBe(true);
-    expect(A.getEdges()[0].toString()).toBe("A_C");
+    expect(A.getEdges()[0].toString()).toBe('A_C');
 
     A.deleteEdge(AC);
 
@@ -75,8 +75,8 @@ describe("GraphVertex", () => {
     expect(A.getEdges().length).toBe(0);
   });
 
-  it("should delete all edges from vertex", () => {
-    const [A, B, C] = createVertices(["A", "B", "C"]);
+  it('should delete all edges from vertex', () => {
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
 
     const [AB, AC] = createEdges([
       [A, B],
@@ -104,8 +104,8 @@ describe("GraphVertex", () => {
     expect(A.getEdges().length).toBe(0);
   });
 
-  it("should return vertex neighbors in case if current node is start one", () => {
-    const [A, B, C] = createVertices(["A", "B", "C"]);
+  it('should return vertex neighbors in case if current node is start one', () => {
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
 
     const [edgeAB, edgeAC] = createEdges([
       [A, B],
@@ -123,8 +123,8 @@ describe("GraphVertex", () => {
     expect(neighbors[1]).toEqual(C);
   });
 
-  it("should return vertex neighbors in case if current node is end one", () => {
-    const [A, B, C] = createVertices(["A", "B", "C"]);
+  it('should return vertex neighbors in case if current node is end one', () => {
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
 
     const [edgeBA, edgeCA] = createEdges([
       [B, A],
@@ -142,8 +142,8 @@ describe("GraphVertex", () => {
     expect(neighbors[1]).toEqual(C);
   });
 
-  it("should check if vertex has specific neighbor", () => {
-    const [A, B, C] = createVertices(["A", "B", "C"]);
+  it('should check if vertex has specific neighbor', () => {
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
 
     const edgeAB = new GraphEdge(A, B);
 
@@ -153,8 +153,8 @@ describe("GraphVertex", () => {
     expect(A.hasNeighbor(C)).toBe(false);
   });
 
-  it("should edge by vertex", () => {
-    const [A, B, C] = createVertices(["A", "B", "C"]);
+  it('should edge by vertex', () => {
+    const [A, B, C] = createVertices(['A', 'B', 'C']);
 
     const edgeAB = new GraphEdge(A, B);
     A.addEdge(edgeAB);
@@ -163,18 +163,18 @@ describe("GraphVertex", () => {
     expect(A.findEdge(C)).toBeUndefined();
   });
 
-  it("should represent a vertex", () => {
-    const vertex = new GraphVertex("A");
-    expect(vertex.toString()).toEqual("A");
+  it('should represent a vertex', () => {
+    const vertex = new GraphVertex('A');
+    expect(vertex.toString()).toEqual('A');
   });
 
-  it("should represent a vertex with decorator", () => {
-    const vertex = new GraphVertex("A");
-    expect(vertex.toString((value) => `Name: ${value}`)).toEqual("Name: A");
+  it('should represent a vertex with decorator', () => {
+    const vertex = new GraphVertex('A');
+    expect(vertex.toString((value) => `Name: ${value}`)).toEqual('Name: A');
   });
 
-  it("should calculate vertex degree", () => {
-    const [A, B] = createVertices(["A", "B"]);
+  it('should calculate vertex degree', () => {
+    const [A, B] = createVertices(['A', 'B']);
 
     expect(A.getDegree()).toBe(0);
 

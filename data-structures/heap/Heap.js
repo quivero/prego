@@ -1,5 +1,5 @@
-import Comparator from "#algorithms/comparator/Comparator.js";
-import { throwError } from "#algorithms/sys/sys.js";
+import Comparator from '#algorithms/comparator/Comparator.js';
+import { throwError } from '#algorithms/sys/sys.js';
 
 /**
  * Parent class for Min and Max Heaps.
@@ -11,7 +11,7 @@ export default class Heap {
    */
   constructor(comparatorFunction) {
     if (new.target === Heap) {
-      throw new TypeError("Cannot construct Heap instance directly");
+      throw new TypeError('Cannot construct Heap instance directly');
     }
 
     // Array representation of the heap.

@@ -1,17 +1,17 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 import {
   TOKEN_LENGTH,
   createMVertices,
   createRandomMVertices,
-} from "../mesh.js";
+} from '../mesh.js';
 
-import { throwError } from "#algorithms/sys/sys.js";
+import { throwError } from '#algorithms/sys/sys.js';
 
-jest.mock("#algorithms/sys/sys.js");
+jest.mock('#algorithms/sys/sys.js');
 
-describe("MeshVertex", () => {
-  it("should return n random arrays", () => {
+describe('MeshVertex', () => {
+  it('should return n random arrays', () => {
     let n = 2;
     let bounds = [
       [0, 1],
@@ -32,7 +32,7 @@ describe("MeshVertex", () => {
     }
   });
 
-  it("should throw for negative quantity of vertices", () => {
+  it('should throw for negative quantity of vertices', () => {
     let n = -1;
     let bounds = [
       [0, 1],
@@ -44,8 +44,8 @@ describe("MeshVertex", () => {
     expect(throwError).toHaveBeenCalled();
   });
 
-  it("should throw for negative quantity of vertices", () => {
-    let n = "42";
+  it('should throw for negative quantity of vertices', () => {
+    let n = '42';
     let bounds = [
       [0, 1],
       [1, 2],
@@ -56,15 +56,15 @@ describe("MeshVertex", () => {
     expect(throwError).toHaveBeenCalled();
   });
 
-  it("should create mesh vertex", () => {
-    const MVertices = createMVertices(["A"], [[1, 2]]);
+  it('should create mesh vertex', () => {
+    const MVertices = createMVertices(['A'], [[1, 2]]);
 
-    expect(MVertices[0].label).toBe("A");
+    expect(MVertices[0].label).toBe('A');
     expect(MVertices[0].coordinates).toStrictEqual([1, 2]);
   });
 
-  it("should throw error for unequal array lengths", () => {
-    createMVertices(["A", "B"], [[1, 2]]);
+  it('should throw error for unequal array lengths', () => {
+    createMVertices(['A', 'B'], [[1, 2]]);
 
     expect(throwError).toHaveBeenCalled();
   });

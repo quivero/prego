@@ -1,12 +1,12 @@
-import { zip } from "lodash";
+import { zip } from 'lodash';
 
-import MeshVertex from "../MeshVertex.js";
+import MeshVertex from '../MeshVertex.js';
 
-import { generateToken } from "#algorithms/string/string.js";
+import { generateToken } from '#algorithms/string/string.js';
 
-import { throwError } from "#algorithms/sys/sys.js";
+import { throwError } from '#algorithms/sys/sys.js';
 
-import { nRandMinsMaxs, zeros } from "#algorithms/arrays/arrays.js";
+import { nRandMinsMaxs, zeros } from '#algorithms/arrays/arrays.js';
 
 export const TOKEN_LENGTH = 5;
 
@@ -27,8 +27,8 @@ export const createMVertices = (labels, coordinates) => zip(labels, coordinates)
  * @return {MeshVertex[]}
  */
 export const createRandomMVertices = (n, bounds) => {
-  if (n <= 0 || typeof n !== "number") {
-    throwError("The number of vertices must be greater than 0");
+  if (n <= 0 || typeof n !== 'number') {
+    throwError('The number of vertices must be greater than 0');
   } else {
     return zeros(n).map(
       (zero) => new MeshVertex(generateToken(TOKEN_LENGTH), nRandMinsMaxs(bounds))

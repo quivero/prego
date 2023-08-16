@@ -1,17 +1,17 @@
-import GraphVertex from "#dstructures/graph/GraphVertex";
-import GraphEdge from "#dstructures/graph/GraphEdge";
-import Graph from "#dstructures/graph/Graph";
+import GraphVertex from '#dstructures/graph/GraphVertex';
+import GraphEdge from '#dstructures/graph/GraphEdge';
+import Graph from '#dstructures/graph/Graph';
 
-import detectDirectedCycle from "../detectDirectedCycle";
+import detectDirectedCycle from '../detectDirectedCycle';
 
-describe("detectDirectedCycle", () => {
-  it("should detect directed cycle", () => {
-    const vertexA = new GraphVertex("A");
-    const vertexB = new GraphVertex("B");
-    const vertexC = new GraphVertex("C");
-    const vertexD = new GraphVertex("D");
-    const vertexE = new GraphVertex("E");
-    const vertexF = new GraphVertex("F");
+describe('detectDirectedCycle', () => {
+  it('should detect directed cycle', () => {
+    const vertexA = new GraphVertex('A');
+    const vertexB = new GraphVertex('B');
+    const vertexC = new GraphVertex('C');
+    const vertexD = new GraphVertex('D');
+    const vertexE = new GraphVertex('E');
+    const vertexF = new GraphVertex('F');
 
     const edgeAB = new GraphEdge(vertexA, vertexB);
     const edgeBC = new GraphEdge(vertexB, vertexC);

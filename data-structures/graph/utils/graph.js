@@ -1,11 +1,11 @@
-import "lodash.combinations";
-import _ from "lodash";
+import 'lodash.combinations';
+import _ from 'lodash';
 
-import GraphVertex from "../GraphVertex.js";
-import GraphEdge from "../GraphEdge.js";
-import Graph from "../Graph.js";
+import GraphVertex from '../GraphVertex.js';
+import GraphEdge from '../GraphEdge.js';
+import Graph from '../Graph.js';
 
-import { objectInit, objectMap } from "#algorithms/objects/objects";
+import { objectInit, objectMap } from '#algorithms/objects/objects';
 
 export const createVertices = (labels) => {
   const vertices = [];

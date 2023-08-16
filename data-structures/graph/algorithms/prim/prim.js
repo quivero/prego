@@ -1,6 +1,6 @@
-import Graph from "#dstructures/graph/Graph";
-import PriorityQueue from "#dstructures/priority-queue/PriorityQueue";
-import throwError from "#algorithms/sys/sys";
+import Graph from '#dstructures/graph/Graph';
+import PriorityQueue from '#dstructures/priority-queue/PriorityQueue';
+import throwError from '#algorithms/sys/sys';
 
 /**
  * @param {Graph} graph
