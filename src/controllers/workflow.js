@@ -3,7 +3,7 @@ import {
   processBlueprints,
   summarizeBlueprint,
   generateBlueprintDiagrams,
-} from "#utils/workflow/parsers.js";
+} from "#algorithms/workflow/parsers.js";
 
 const project_root_dir = `${process.cwd()}`;
 const samples_relative_folder = "src/samples";
