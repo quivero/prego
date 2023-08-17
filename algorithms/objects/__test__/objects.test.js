@@ -26,15 +26,6 @@ describe('objects', () => {
     expect(JSON.stringify(newObject)).toBe('{"a":2,"b":4,"c":6}');
   });
 
-  it('should return filtered object', () => {
-    const object_ = objectInit(['a', 'b'], 1);
-    object_.a = 2;
-
-    const newObject = objectFilter(object_, (key, value) => value === 2);
-
-    expect(JSON.stringify(newObject)).toBe(JSON.stringify({ a: 2 }));
-  });
-
   it('should return boolean on key existence', () => {
     expect(objectHasKey({ a: 1, b: 2 }, 'a')).toBeTrue();
 
@@ -70,6 +61,13 @@ describe('objects', () => {
     };
 
     expect(output).toEqual(expected);
+
+    const object_ = objectInit(['a', 'b'], 1);
+    object_.a = 2;
+
+    const newObject = objectFilter(object_, (key, value) => value === 2);
+
+    expect(JSON.stringify(newObject)).toBe(JSON.stringify({ a: 2 }));
   });
 
   it('should return reduced object by certain function', () => {

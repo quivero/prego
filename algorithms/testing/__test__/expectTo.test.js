@@ -182,8 +182,6 @@ describe('expectTo', () => {
 
   it('assert less or equal than', () => expectToBeLessThanOrEqual(42, 42));
 
-  it('assert less or equal than', () => expectToBeLessThanOrEqual(42, 42));
-
   it('assert instanceOf', () => {
     class A {}
     expectToBeInstanceOf(new A(), A);
@@ -209,7 +207,7 @@ describe('expectTo', () => {
 
   it('assert candidate toBeEqual expectation', () => expectToBeEqual(42, 42));
 
-  it('assert candidate toBeEqual expectation', () =>
+  it('assert candidate toStrictEqual expectation', () =>
     expectToStrictEqual(42, 42));
 
   it('assert candidate expectToHaveProperty expectation', () => {
@@ -271,26 +269,6 @@ describe('expectTo', () => {
     expectToHaveBeenNthCalledWith(f, expectation_2);
   });
 
-  it('assert Nth call with argument', () => {
-    const functionCaller = (functionCall, arg_1, arg_2) => {
-      functionCall(arg_1);
-      functionCall(arg_2);
-    };
-
-    const string_1 = 'ackbar';
-    const string_2 = 'Boba Fett';
-
-    const expectation_1 = { callIndex: 1, args: [string_1] };
-    const expectation_2 = { callIndex: 2, args: [string_2] };
-
-    const f = jest.fn();
-
-    functionCaller(f, string_1, string_2);
-
-    expectToHaveBeenNthCalledWith(f, expectation_1);
-    expectToHaveBeenNthCalledWith(f, expectation_2);
-  });
-
   it('assert asymmetric matcher', () => {
     candidate = {
       title: '0.1 + 0.2',
@@ -301,7 +279,7 @@ describe('expectTo', () => {
       title: '0.1 + 0.2',
       sum: closeToAsyMatch(0.3, 5),
     };
-
+    
     expectToEqual(candidate, expectation);
   });
 

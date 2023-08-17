@@ -12,9 +12,7 @@ describe('throwError/warn', () => {
     };
 
     expect(throwErrorFn).toThrow();
-  });
 
-  it('should throw error', () => {
     const raiseFn = () => raise('Fire!');
     expect(raiseFn).toThrow(Error);
   });
@@ -47,7 +45,7 @@ describe('throwError/warn', () => {
   });
 });
 
-describe('throwError/warn', () => {
+describe('typeOf', () => {
   it('should return data types', () => {
     trivia = [
       [typeOf('string'), 'string'],
