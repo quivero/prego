@@ -44,11 +44,11 @@ describe('Queue', () => {
   it('should check if queue is empty', () => {
     const queue = new Queue();
 
-    expect(queue.isEmpty()).toBe(true);
+    expect(queue.isEmpty()).toBeTrue();
 
     queue.enqueue(1);
 
-    expect(queue.isEmpty()).toBe(false);
+    expect(queue.isEmpty()).toBeFalse();
   });
 
   it('should dequeue from queue in FIFO order', () => {
@@ -60,6 +60,6 @@ describe('Queue', () => {
     expect(queue.dequeue()).toBe(1);
     expect(queue.dequeue()).toBe(2);
     expect(queue.dequeue()).toBeNull();
-    expect(queue.isEmpty()).toBe(true);
+    expect(queue.isEmpty()).toBeTrue();
   });
 });

@@ -7,14 +7,14 @@ describe('MinHeap', () => {
 
     expect(minHeap).toBeDefined();
     expect(minHeap.peek()).toBeNull();
-    expect(minHeap.isEmpty()).toBe(true);
+    expect(minHeap.isEmpty()).toBeTrue();
   });
 
   it('should add items to the heap and heapify it up', () => {
     const minHeap = new MinHeap();
 
     minHeap.add(5);
-    expect(minHeap.isEmpty()).toBe(false);
+    expect(minHeap.isEmpty()).toBeFalse();
     expect(minHeap.peek()).toBe(5);
     expect(minHeap.toString()).toBe('5');
 

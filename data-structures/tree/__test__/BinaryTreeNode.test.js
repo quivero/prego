@@ -55,13 +55,13 @@ describe('BinaryTreeNode', () => {
 
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 3]);
 
-    expect(rootNode.removeChild(rootNode.left)).toBe(true);
+    expect(rootNode.removeChild(rootNode.left)).toBeTrue();
     expect(rootNode.traverseInOrder()).toEqual([2, 3]);
 
-    expect(rootNode.removeChild(rootNode.right)).toBe(true);
+    expect(rootNode.removeChild(rootNode.right)).toBeTrue();
     expect(rootNode.traverseInOrder()).toEqual([2]);
 
-    expect(rootNode.removeChild(rootNode.right)).toBe(false);
+    expect(rootNode.removeChild(rootNode.right)).toBeFalse();
     expect(rootNode.traverseInOrder()).toEqual([2]);
   });
 
@@ -91,15 +91,15 @@ describe('BinaryTreeNode', () => {
     );
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 5]);
 
-    expect(rootNode.replaceChild(rootNode.right, replacementNode)).toBe(true);
+    expect(rootNode.replaceChild(rootNode.right, replacementNode)).toBeTrue();
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 5]);
 
-    expect(rootNode.replaceChild(rootNode.left, replacementNode)).toBe(true);
+    expect(rootNode.replaceChild(rootNode.left, replacementNode)).toBeTrue();
     expect(rootNode.traverseInOrder()).toEqual([5, 2, 5]);
 
     expect(
       rootNode.replaceChild(new BinaryTreeNode(), new BinaryTreeNode())
-    ).toBe(false);
+    ).toBeFalse();
   });
 
   it('should calculate node height', () => {

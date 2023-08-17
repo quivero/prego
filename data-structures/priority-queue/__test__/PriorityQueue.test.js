@@ -118,7 +118,7 @@ describe('PriorityQueue', () => {
     priorityQueue.add(200);
     priorityQueue.add(15, 15);
 
-    expect(priorityQueue.hasValue(70)).toBe(false);
-    expect(priorityQueue.hasValue(15)).toBe(true);
+    expect(priorityQueue.hasValue(70)).toBeFalse();
+    expect(priorityQueue.hasValue(15)).toBeTrue();
   });
 });

@@ -17,40 +17,40 @@ describe('BinarySearchTreeNode', () => {
     expect(bstNode.left).toBeNull();
     expect(bstNode.right).toBeNull();
   });
-
+  
   it('should insert nodes in correct order', () => {
     const bstNode = new BinarySearchTreeNode(2);
     const insertedNode1 = bstNode.insert(1);
 
     expect(insertedNode1.value).toBe(1);
     expect(bstNode.toString()).toBe('1,2');
-    expect(bstNode.contains(1)).toBe(true);
-    expect(bstNode.contains(3)).toBe(false);
+    expect(bstNode.contains(1)).toBeTrue();
+    expect(bstNode.contains(3)).toBeFalse();
 
     const insertedNode2 = bstNode.insert(3);
 
     expect(insertedNode2.value).toBe(3);
     expect(bstNode.toString()).toBe('1,2,3');
-    expect(bstNode.contains(3)).toBe(true);
-    expect(bstNode.contains(4)).toBe(false);
+    expect(bstNode.contains(3)).toBeTrue();
+    expect(bstNode.contains(4)).toBeFalse();
 
     bstNode.insert(7);
 
     expect(bstNode.toString()).toBe('1,2,3,7');
-    expect(bstNode.contains(7)).toBe(true);
-    expect(bstNode.contains(8)).toBe(false);
+    expect(bstNode.contains(7)).toBeTrue();
+    expect(bstNode.contains(8)).toBeFalse();
 
     bstNode.insert(4);
 
     expect(bstNode.toString()).toBe('1,2,3,4,7');
-    expect(bstNode.contains(4)).toBe(true);
-    expect(bstNode.contains(8)).toBe(false);
+    expect(bstNode.contains(4)).toBeTrue();
+    expect(bstNode.contains(8)).toBeFalse();
 
     bstNode.insert(6);
 
     expect(bstNode.toString()).toBe('1,2,3,4,6,7');
-    expect(bstNode.contains(6)).toBe(true);
-    expect(bstNode.contains(8)).toBe(false);
+    expect(bstNode.contains(6)).toBeTrue();
+    expect(bstNode.contains(8)).toBeFalse();
   });
 
   it('should not insert duplicates', () => {
@@ -58,14 +58,14 @@ describe('BinarySearchTreeNode', () => {
     bstNode.insert(1);
 
     expect(bstNode.toString()).toBe('1,2');
-    expect(bstNode.contains(1)).toBe(true);
-    expect(bstNode.contains(3)).toBe(false);
+    expect(bstNode.contains(1)).toBeTrue();
+    expect(bstNode.contains(3)).toBeFalse();
 
     bstNode.insert(1);
 
     expect(bstNode.toString()).toBe('1,2');
-    expect(bstNode.contains(1)).toBe(true);
-    expect(bstNode.contains(3)).toBe(false);
+    expect(bstNode.contains(1)).toBeTrue();
+    expect(bstNode.contains(3)).toBeFalse();
   });
 
   it('should find min node', () => {
@@ -127,11 +127,11 @@ describe('BinarySearchTreeNode', () => {
 
     const removed1 = bstRootNode.remove(5);
     expect(bstRootNode.toString()).toBe('10,20');
-    expect(removed1).toBe(true);
+    expect(removed1).toBeTrue();
 
     const removed2 = bstRootNode.remove(20);
     expect(bstRootNode.toString()).toBe('10');
-    expect(removed2).toBe(true);
+    expect(removed2).toBeTrue();
   });
 
   it('should remove nodes with one child', () => {
@@ -233,13 +233,13 @@ describe('BinarySearchTreeNode', () => {
     bstNode.insert(obj1);
 
     expect(bstNode.toString()).toBe('obj1,obj2');
-    expect(bstNode.contains(obj1)).toBe(true);
-    expect(bstNode.contains(obj3)).toBe(false);
+    expect(bstNode.contains(obj1)).toBeTrue();
+    expect(bstNode.contains(obj3)).toBeFalse();
 
     bstNode.insert(obj3);
 
     expect(bstNode.toString()).toBe('obj1,obj2,obj3');
-    expect(bstNode.contains(obj3)).toBe(true);
+    expect(bstNode.contains(obj3)).toBeTrue();
 
     expect(bstNode.findMin().value).toEqual(obj1);
   });

@@ -31,11 +31,11 @@ describe('Stack', () => {
   it('should check if stack is empty', () => {
     const stack = new Stack();
 
-    expect(stack.isEmpty()).toBe(true);
+    expect(stack.isEmpty()).toBeTrue();
 
     stack.push(1);
 
-    expect(stack.isEmpty()).toBe(false);
+    expect(stack.isEmpty()).toBeFalse();
   });
 
   it('should pop data from stack', () => {
@@ -47,7 +47,7 @@ describe('Stack', () => {
     expect(stack.pop()).toBe(2);
     expect(stack.pop()).toBe(1);
     expect(stack.pop()).toBeNull();
-    expect(stack.isEmpty()).toBe(true);
+    expect(stack.isEmpty()).toBeTrue();
   });
 
   it('should be possible to push/pop objects', () => {

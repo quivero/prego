@@ -482,21 +482,10 @@ describe('Graph', () => {
     expected = undefined;
 
     expect(result).toBe(expected);
-  });
-
-  it('should get undefined for undefined start vertex index', () => {
-    graph = new Graph();
-
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
-
-    graph.addEdges([AB, BC]);
 
     result = graph.findEdgesByVertexIndicesTuples([[3, 4]]);
     expected = [undefined];
-
+      
     expect(result).toStrictEqual(expected);
   });
 

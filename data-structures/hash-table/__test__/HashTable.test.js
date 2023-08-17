@@ -31,9 +31,9 @@ describe('HashTable', () => {
     hashTable.set('c', 'earth');
     hashTable.set('d', 'ocean');
 
-    expect(hashTable.has('x')).toBe(false);
-    expect(hashTable.has('b')).toBe(true);
-    expect(hashTable.has('c')).toBe(true);
+    expect(hashTable.has('x')).toBeFalse();
+    expect(hashTable.has('b')).toBeTrue();
+    expect(hashTable.has('c')).toBeTrue();
 
     const stringifier = (value) => `${value.key}:${value.value}`;
 
@@ -77,14 +77,14 @@ describe('HashTable', () => {
     hashTable.set('d', 'ocean');
 
     expect(hashTable.getKeys()).toEqual(['a', 'b', 'c', 'd']);
-    expect(hashTable.has('a')).toBe(true);
-    expect(hashTable.has('x')).toBe(false);
+    expect(hashTable.has('a')).toBeTrue();
+    expect(hashTable.has('x')).toBeFalse();
 
     hashTable.delete('a');
 
-    expect(hashTable.has('a')).toBe(false);
-    expect(hashTable.has('b')).toBe(true);
-    expect(hashTable.has('x')).toBe(false);
+    expect(hashTable.has('a')).toBeFalse();
+    expect(hashTable.has('b')).toBeTrue();
+    expect(hashTable.has('x')).toBeFalse();
   });
 
   it('should get all the values', () => {

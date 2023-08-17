@@ -7,14 +7,14 @@ describe('MaxHeap', () => {
 
     expect(maxHeap).toBeDefined();
     expect(maxHeap.peek()).toBeNull();
-    expect(maxHeap.isEmpty()).toBe(true);
+    expect(maxHeap.isEmpty()).toBeTrue();
   });
 
   it('should add items to the heap and heapify it up', () => {
     const maxHeap = new MaxHeap();
 
     maxHeap.add(5);
-    expect(maxHeap.isEmpty()).toBe(false);
+    expect(maxHeap.isEmpty()).toBeFalse();
     expect(maxHeap.peek()).toBe(5);
     expect(maxHeap.toString()).toBe('5');
 
