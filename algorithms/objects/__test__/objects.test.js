@@ -16,7 +16,7 @@ describe('objects', () => {
   it('should return an object initializer', () => {
     const newObject = objectInit(['a', 'b'], []);
 
-    expect(_.isEqual(Object.keys(newObject), ['a', 'b'])).toBe(true);
+    expect(_.isEqual(Object.keys(newObject), ['a', 'b'])).toBeTrue();
   });
 
   it('should return twice the object value', () => {

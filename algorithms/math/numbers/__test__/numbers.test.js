@@ -151,14 +151,14 @@ describe('math', () => {
   });
 
   it('should return false examples of spherical coordinates', () => {
-    expect(isSpherical([])).toBe(false);
-    expect(isSpherical([42])).toBe(false);
+    expect(isSpherical([])).toBeFalse();
+    expect(isSpherical([42])).toBeFalse();
 
-    expect(isSpherical([-Math.PI - 0.001, 0])).toBe(false);
-    expect(isSpherical([Math.PI + 0.001, 0])).toBe(false);
+    expect(isSpherical([-Math.PI - 0.001, 0])).toBeFalse();
+    expect(isSpherical([Math.PI + 0.001, 0])).toBeFalse();
 
-    expect(isSpherical([0, -0.001])).toBe(false);
-    expect(isSpherical([0, 2 * Math.PI + 0.001])).toBe(false);
+    expect(isSpherical([0, -0.001])).toBeFalse();
+    expect(isSpherical([0, 2 * Math.PI + 0.001])).toBeFalse();
   });
 
   it('should verify spherical arguments', () => {
@@ -167,7 +167,7 @@ describe('math', () => {
 
     for (let coord_1 of phis_1) {
       for (let coord_2 of phis_2) {
-        expect(isSpherical([coord_1, coord_2])).toBe(true);
+        expect(isSpherical([coord_1, coord_2])).toBeTrue();
       }
     }
   });
