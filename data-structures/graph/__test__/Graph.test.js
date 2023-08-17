@@ -203,7 +203,7 @@ describe('Graph', () => {
     expect(result).toBe(expected);
   });
 
-  it('should return edges from index chain', () => {
+  it('should throw error for inexistent vertex from index chain', () => {
     graph = new Graph(true);
     [AB, BC] = createEdges([
       [A, B],
@@ -405,9 +405,7 @@ describe('Graph', () => {
     expected = ['A_B'];
 
     expect(result).toEqual(expected);
-  });
 
-  it('should get edges by vertex keys', () => {
     graph = new Graph();
 
     [AB, BC] = createEdges([
@@ -420,9 +418,7 @@ describe('Graph', () => {
     const edge = graph.findEdgeByVertexIndices(0, 1);
 
     expect(edge.getKey()).toBe('A_B');
-  });
 
-  it('should get edges by vertex keys', () => {
     graph = new Graph();
 
     [AB, BC] = createEdges([
@@ -436,9 +432,7 @@ describe('Graph', () => {
     expected = undefined;
 
     expect(result).toBe(expected);
-  });
 
-  it('should get edges by vertex keys', () => {
     graph = new Graph();
 
     [AB, BC] = createEdges([
@@ -520,7 +514,7 @@ describe('Graph', () => {
   });
 
   it('should add edges to undirected graph', () => {
-    const graph = new Graph();
+    graph = new Graph();
 
     const AB = new GraphEdge(A, B);
 
@@ -623,7 +617,7 @@ describe('Graph', () => {
     expect(result).toEqual(expected);
   });
 
-  it('Cycles in a finite graph must be finite', () => {
+  it('Cycles in a finite graph 1 must be finite', () => {
     // A directed graph
     graph = new Graph(true);
 
@@ -664,7 +658,7 @@ describe('Graph', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('Cycles in a finite graph must be finite', () => {
+  it('Cycles in a finite graph 2 must be finite', () => {
     graph = new Graph(true);
 
     [AB, BC, CD, CE, EB, CF, FB] = createEdges([
@@ -687,7 +681,7 @@ describe('Graph', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should find Eulerian Circuit in graph', () => {
+  it('should return Eulerian Circuit in graph', () => {
     graph = new Graph();
 
     [AB, BC, CD, DE, EF] = createEdges([
@@ -705,7 +699,7 @@ describe('Graph', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should find Eulerian Circuit in graph', () => {
+  it('should return true if find Eulerian Circuit in graph', () => {
     graph = new Graph(true);
 
     [AB, BC, CD, DE, EF, BE] = createEdges([
@@ -948,7 +942,7 @@ describe('Graph', () => {
 
   it('should return false for non-bipartite graph', () => {
     // A directed graph
-    const graph = new Graph(false);
+    graph = new Graph(false);
 
     edges_vertices = [
       [A, B],
@@ -1002,7 +996,7 @@ describe('Graph', () => {
 
   it('should return circuits in a directed graph', () => {
     // A directed graph
-    const graph = new Graph(true);
+    graph = new Graph(true);
 
     edges_vertices = [
       [A, B],
@@ -1026,7 +1020,7 @@ describe('Graph', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should return strongly connected dictionary in a graph', () => {
+  it('should return strongly connected dictionary in a graph 1', () => {
     // A directed graph
     graph = new Graph(true);
 
@@ -1048,7 +1042,7 @@ describe('Graph', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should return strongly connected dictionary in a graph', () => {
+  it('should return strongly connected dictionary in a graph 2', () => {
     // A directed graph
     graph = new Graph(true);
 
@@ -1070,7 +1064,7 @@ describe('Graph', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should return articulation points in a graph', () => {
+  it('should return articulation points in a graph 1', () => {
     // A directed graph
     graph = new Graph(false);
 
@@ -1094,7 +1088,7 @@ describe('Graph', () => {
     expect(result).toStrictEqual(expected);
   });
 
-  it('should find articulation points in simple graph', () => {
+  it('should find articulation points in simple graph 2', () => {
     graph = new Graph();
 
     edges_vertices = [
@@ -1394,7 +1388,7 @@ describe('Graph', () => {
   });
 
   it('should return true for strongly connected graph', () => {
-    const graph = new Graph(true);
+    graph = new Graph(true);
 
     edges_vertices = [
       [A, B],
@@ -1423,7 +1417,7 @@ describe('Graph', () => {
 
   it('should return bridges', () => {
     // A directed graph
-    const graph = new Graph(false);
+    graph = new Graph(false);
 
     // Add edges
     graph.addEdges(
@@ -1448,7 +1442,7 @@ describe('Graph', () => {
 
   it('should return bridges ends', () => {
     // A directed graph
-    const graph = new Graph(false);
+    graph = new Graph(false);
 
     // Add edges
     graph.addEdges(
@@ -1474,7 +1468,7 @@ describe('Graph', () => {
 
   it('should return bridges dictionary', () => {
     // A directed graph
-    const graph = new Graph(true);
+    graph = new Graph(true);
 
     // Vertices
     const AB = new GraphEdge(A, B);
@@ -1495,7 +1489,7 @@ describe('Graph', () => {
 
   it('should return vertex by index', () => {
     // A directed graph
-    const graph = new Graph(true);
+    let graph = new Graph(true);
 
     edges_vertices = [
       [A, B],
@@ -1619,24 +1613,6 @@ describe('Graph', () => {
     batchAssert(trivia);
   });
 
-  it('should return islands properties', () => {
-    // A directed graph
-    //   ,C,       ,E,
-    // A -> B -> D -> F
-    const graph = new Graph(true);
-
-    // Vertices
-    AB = new GraphEdge(A, B);
-
-    // Add edges
-    graph.addEdges([AB]);
-
-    result = graph.getIslandInnerReachability();
-    expected = { 0: { 1: [1] }, 1: { 0: [0] } };
-
-    expect(result).toEqual(expected);
-  });
-
   it('Cycles in a finite graph must be finite', () => {
     // A directed graph
     graph = new Graph(true);
@@ -1722,7 +1698,7 @@ describe('Graph', () => {
   });
 
   it('should return vertex neighbors dictionary', () => {
-    const graph = new Graph(true);
+    graph = new Graph(true);
 
     edges_vertices = [
       [A, B],
@@ -1741,7 +1717,7 @@ describe('Graph', () => {
   });
 
   it('should return reachable nodes from from_vertex_key', () => {
-    const graph = new Graph(true);
+    let graph = new Graph(true);
 
     graph.addVertex(D);
 
@@ -1779,7 +1755,7 @@ describe('Graph', () => {
   });
 
   it('should return true for predecessor node', () => {
-    const graph = new Graph(true);
+    let graph = new Graph(true);
 
     graph.addEdges(
       createEdges([
@@ -1794,9 +1770,7 @@ describe('Graph', () => {
     ];
 
     batchAssert(trivia);
-  });
 
-  it('should return true for predecessor node', () => {
     graph = new Graph(true);
 
     [AB, BC] = createEdges([
@@ -1812,23 +1786,6 @@ describe('Graph', () => {
     ];
 
     batchAssert(trivia);
-  });
-
-  it('should return from-reachability list of all nodes', () => {
-    graph = new Graph(true);
-
-    graph.addEdges(
-      createEdges([
-        [A, B],
-        [A, C],
-      ]),
-    );
-    graph.addVertex(D);
-
-    result = graph.getReachabilityList(0);
-    expected = { 0: [1, 2], 1: [], 2: [], 3: [] };
-
-    expect(result).toEqual(expected);
   });
 
   it('should return from-reachability list of all nodes', () => {
@@ -1884,7 +1841,7 @@ describe('Graph', () => {
   });
 
   it('should return graph density', () => {
-    const graph = new Graph(true);
+    graph = new Graph(true);
 
     graph.addEdges(
       createEdges([
@@ -1978,7 +1935,7 @@ describe('Graph', () => {
   });
 
   it('should get indexes to vertices', () => {
-    const graph = new Graph();
+    graph = new Graph();
 
     graph.addVertices([A, B, C]);
 
@@ -2341,29 +2298,7 @@ describe('Graph', () => {
     batchAssert(trivia);
   });
 
-  it('should return true for hamiltonian graph', () => {
-    graph = new Graph();
-
-    edges_vertices = [
-      [A, B],
-      [A, E],
-      [A, C],
-      [B, E],
-      [B, C],
-      [B, D],
-      [C, D],
-      [D, E],
-    ];
-
-    graph.addEdges(createEdges(edges_vertices));
-
-    result = graph.isCyclicHamiltonian();
-    expected = true;
-
-    expect(result).toBe(expected);
-  });
-
-  it('should find hamiltonian paths in graph', () => {
+  it('should not find hamiltonian paths in graph', () => {
     graph = new Graph();
 
     AB = new GraphEdge(A, B);
@@ -2392,6 +2327,11 @@ describe('Graph', () => {
     ];
 
     graph.addEdges(createEdges(edges_vertices));
+
+    result = graph.isCyclicHamiltonian();
+    expected = true;
+
+    expect(result).toBe(expected);
 
     const assertHamiltonianCycles = [];
 
@@ -2554,7 +2494,7 @@ describe('Graph', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return source nodes', () => {
+  it('should return source nodes on graph 1', () => {
     graph = new Graph(true);
 
     edges_vertices = [
@@ -2576,7 +2516,7 @@ describe('Graph', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return source nodes', () => {
+  it('should return source nodes on graph 2', () => {
     graph = new Graph(true);
 
     edges_vertices = [
@@ -2600,7 +2540,7 @@ describe('Graph', () => {
       [C, D],
     ];
 
-    const graph = new Graph(true);
+    graph = new Graph(true);
     graph.addEdges(createEdges(edges_vertices));
 
     trivia = [
@@ -2645,7 +2585,7 @@ describe('Graph', () => {
   });
 
   it('should warn about reversing a undirected graph', () => {
-    const graph = new Graph(false);
+    graph = new Graph(false);
 
     graph.addEdges(createEdgesFromVerticesValues([['A', 'B']]));
 

@@ -19,7 +19,7 @@ describe('throwError/warn', () => {
     expect(raiseFn).toThrow(Error);
   });
 
-  it('should throw Error', () => {
+  it('should throw TypeError', () => {
     const raiseFn = () => raise('Wrong is not right!', TypeError);
     expect(raiseFn).toThrow(TypeError);
   });

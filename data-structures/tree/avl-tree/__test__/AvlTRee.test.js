@@ -1,8 +1,10 @@
 import AvlTree from '../AvlTree';
 
+let tree;
+
 describe('AvlTree', () => {
   it('should do simple left-left rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(4);
     tree.insert(3);
@@ -27,7 +29,7 @@ describe('AvlTree', () => {
   });
 
   it('should do complex left-left rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(30);
     tree.insert(20);
@@ -50,7 +52,7 @@ describe('AvlTree', () => {
   });
 
   it('should do simple right-right rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(2);
     tree.insert(3);
@@ -75,7 +77,7 @@ describe('AvlTree', () => {
   });
 
   it('should do complex right-right rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(30);
     tree.insert(20);
@@ -98,7 +100,7 @@ describe('AvlTree', () => {
   });
 
   it('should do left-right rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(30);
     tree.insert(20);
@@ -110,7 +112,7 @@ describe('AvlTree', () => {
   });
 
   it('should do right-left rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(30);
     tree.insert(40);
@@ -123,7 +125,7 @@ describe('AvlTree', () => {
 
   it('should create balanced tree: case #1', () => {
     // @see: https://www.youtube.com/watch?v=rbg7Qf8GkQ4&t=839s
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(1);
     tree.insert(2);
@@ -166,7 +168,7 @@ describe('AvlTree', () => {
 
   it('should create balanced tree: case #2', () => {
     // @see https://www.youtube.com/watch?v=7m94k2Qhg68
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(43);
     tree.insert(18);
@@ -187,7 +189,7 @@ describe('AvlTree', () => {
   });
 
   it('should do left right rotation and keeping left right node safe', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(30);
     tree.insert(15);
@@ -209,7 +211,7 @@ describe('AvlTree', () => {
   });
 
   it('should do left right rotation and keeping left right node safe', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(30);
     tree.insert(15);
@@ -231,7 +233,7 @@ describe('AvlTree', () => {
   });
 
   it('should remove values from the tree with right-right rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(10);
     tree.insert(20);
@@ -250,7 +252,7 @@ describe('AvlTree', () => {
   });
 
   it('should remove values from the tree with left-left rotation', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(10);
     tree.insert(20);
@@ -269,7 +271,7 @@ describe('AvlTree', () => {
   });
 
   it('should keep balance after removal', () => {
-    const tree = new AvlTree();
+    tree = new AvlTree();
 
     tree.insert(1);
     tree.insert(2);

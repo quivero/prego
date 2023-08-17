@@ -15,7 +15,7 @@ describe('Mesh', () => {
     expect(mesh).toBeDefined();
   });
 
-  it('should return two added vertices and the distance between them is one', () => {
+  it('should calculate distance between vertices', () => {
     const metric_fun = (coord_1, coord_2) =>
       Math.sqrt(
         (coord_2[1] - coord_1[1]) ** 2 + (coord_2[0] - coord_1[0]) ** 2,
@@ -31,7 +31,7 @@ describe('Mesh', () => {
     expect(mesh.distance('A', 'B')).toBe(1);
   });
 
-  it('should return two added vertices and the distance between them is one', () => {
+  it('should return path distance', () => {
     const distance_fun = (coord_1, coord_2) =>
       Math.sqrt(
         (coord_2[1] - coord_1[1]) ** 2 + (coord_2[0] - coord_1[0]) ** 2,
@@ -49,7 +49,7 @@ describe('Mesh', () => {
     expect(mesh.getPathLength([0, 1, 2])).toBe(1 + Math.sqrt(2));
   });
 
-  it('should return two added vertices and the distance between them is one', () => {
+  it('should return path distance with n_norm', () => {
     const distance_fun = (coord_1, coord_2) =>
       distance(coord_1, coord_2, 'n_norm', { exponent: 2 });
 

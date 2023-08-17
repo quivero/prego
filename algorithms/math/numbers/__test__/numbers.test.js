@@ -136,20 +136,11 @@ describe('math', () => {
     expect(dot([1, 0, 0], [0, 1, 0])).toBe(0);
     expect(dot([1, 0, 0], [1, 0, 0])).toBe(1);
     expect(dot([1, 1, 1], [1, 1, 1])).toBe(3);
-  });
-
-  it('should return dot product between vectors', () => {
     expect(vecArg([1, 0, 0], [0, 0, 1], 2)).toBe(Math.PI / 2);
-  });
-
-  it('should return dot product between vectors', () => {
     expect(vecArg([1, 0, 0], [0, 0, 1], 2)).toBe(Math.PI / 2);
-  });
-
-  it('should return dot product between vectors', () => {
     expect(vecArg([1, 0, 0], [1, 1, 0], 2)).toBeCloseTo(Math.PI / 4);
   });
-
+ 
   it('should return false examples of spherical coordinates', () => {
     expect(isSpherical([])).toBeFalse();
     expect(isSpherical([42])).toBeFalse();

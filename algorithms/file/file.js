@@ -67,7 +67,7 @@ export const saveJSONtoFile = (root_path, json_object, name) => {
   // write JSON string to a file
   fs.writeFile(`${root_path}/${name}.json`, json_str, (err) => {
     if (err) {
-      log_message(logger, 'error', error);
+      log_message(logger, 'error', err);
     }
 
     log_message(
