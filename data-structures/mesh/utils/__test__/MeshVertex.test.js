@@ -21,11 +21,11 @@ describe('MeshVertex', () => {
     const m_vertices = createRandomMVertices(n, bounds);
 
     for (let i in _.range(n)) {
-      expect(m_vertices[i].label.length).toBe(TOKEN_LENGTH);
+      expect(m_vertices[i].label).toHaveLength(TOKEN_LENGTH);
 
       for (let j in _.range(bounds.length)) {
         expect(m_vertices[i].coordinates[j]).toBeGreaterThanOrEqual(
-          bounds[j][0]
+          bounds[j][0],
         );
         expect(m_vertices[i].coordinates[j]).toBeLessThanOrEqual(bounds[j][1]);
       }

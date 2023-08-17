@@ -181,7 +181,7 @@ describe('LinkedList', () => {
     expect(node.value.value).toBe(2);
     expect(node.value.key).toBe('test2');
     expect(
-      linkedList.find({ callback: (value) => value.key === 'test5' })
+      linkedList.find({ callback: (value) => value.key === 'test5' }),
     ).toBeNull();
   });
 

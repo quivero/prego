@@ -5,13 +5,13 @@ export default class Knapsack {
    * @param {KnapsackItem[]} possibleItems
    * @param {number} weightLimit
    */
-  constructor(possibleItems, weightLimit) {
+  constructor (possibleItems, weightLimit) {
     this.selectedItems = [];
     this.weightLimit = weightLimit;
     this.possibleItems = possibleItems;
   }
 
-  sortPossibleItemsByWeight() {
+  sortPossibleItemsByWeight () {
     this.possibleItems = new MergeSort({
       /**
        * @var KnapsackItem itemA
@@ -27,7 +27,7 @@ export default class Knapsack {
     }).sort(this.possibleItems);
   }
 
-  sortPossibleItemsByValue() {
+  sortPossibleItemsByValue () {
     this.possibleItems = new MergeSort({
       /**
        * @var KnapsackItem itemA
@@ -43,7 +43,7 @@ export default class Knapsack {
     }).sort(this.possibleItems);
   }
 
-  sortPossibleItemsByValuePerWeightRatio() {
+  sortPossibleItemsByValuePerWeightRatio () {
     this.possibleItems = new MergeSort({
       /**
        * @var KnapsackItem itemA
@@ -61,7 +61,7 @@ export default class Knapsack {
 
   // Solve 0/1 knapsack problem
   // Dynamic Programming approach.
-  solveZeroOneKnapsackProblem() {
+  solveZeroOneKnapsackProblem () {
     // We do two sorts because in case of equal weights but different values
     // we need to take the most valuable items first.
     this.sortPossibleItemsByValue();
@@ -120,7 +120,7 @@ export default class Knapsack {
           knapsackMatrix[itemIndex][weightIndex] = Math.max(
             currentItemValue +
               knapsackMatrix[itemIndex - 1][weightIndex - currentItemWeight],
-            knapsackMatrix[itemIndex - 1][weightIndex]
+            knapsackMatrix[itemIndex - 1][weightIndex],
           );
         }
       }
@@ -166,7 +166,7 @@ export default class Knapsack {
   }
 
   // Solve unbounded knapsack problem: Greedy approach.
-  solveUnboundedKnapsackProblem() {
+  solveUnboundedKnapsackProblem () {
     this.sortPossibleItemsByValue();
     this.sortPossibleItemsByValuePerWeightRatio();
 
@@ -179,7 +179,7 @@ export default class Knapsack {
         // Detect amount of current items we may push to knapsack.
         const availableWeight = this.weightLimit - this.totalWeight;
         const maxPossibleItemsCount = Math.floor(
-          availableWeight / currentItem.weight
+          availableWeight / currentItem.weight,
         );
 
         if (maxPossibleItemsCount > currentItem.itemsInStock) {
@@ -197,19 +197,19 @@ export default class Knapsack {
     }
   }
 
-  get totalValue() {
+  get totalValue () {
     /** @var {KnapsackItem} item */
     return this.selectedItems.reduce(
       (accumulator, item) => accumulator + item.totalValue,
-      0
+      0,
     );
   }
 
-  get totalWeight() {
+  get totalWeight () {
     /** @var {KnapsackItem} item */
     return this.selectedItems.reduce(
       (accumulator, item) => accumulator + item.totalWeight,
-      0
+      0,
     );
   }
 }

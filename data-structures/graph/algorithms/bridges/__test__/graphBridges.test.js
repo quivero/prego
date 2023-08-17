@@ -21,7 +21,7 @@ describe('graphBridges', () => {
 
     const bridges = Object.values(graphBridges(graph));
 
-    expect(bridges.length).toBe(3);
+    expect(bridges).toHaveLength(3);
 
     expect(bridges[0].getKey()).toBe(edgeCD.getKey());
     expect(bridges[1].getKey()).toBe(edgeBC.getKey());
@@ -45,7 +45,7 @@ describe('graphBridges', () => {
 
     const bridges = Object.values(graphBridges(graph));
 
-    expect(bridges.length).toBe(1);
+    expect(bridges).toHaveLength(1);
     expect(bridges[0].getKey()).toBe(edgeCD.getKey());
   });
 
@@ -85,7 +85,7 @@ describe('graphBridges', () => {
 
     const bridges = Object.values(graphBridges(graph));
 
-    expect(bridges.length).toBe(3);
+    expect(bridges).toHaveLength(3);
     expect(bridges[0].getKey()).toBe(edgeFH.getKey());
     expect(bridges[1].getKey()).toBe(edgeDE.getKey());
     expect(bridges[2].getKey()).toBe(edgeCD.getKey());
@@ -127,7 +127,7 @@ describe('graphBridges', () => {
 
     const bridges = Object.values(graphBridges(graph));
 
-    expect(bridges.length).toBe(3);
+    expect(bridges).toHaveLength(3);
     expect(bridges[0].getKey()).toBe(edgeFH.getKey());
     expect(bridges[1].getKey()).toBe(edgeDE.getKey());
     expect(bridges[2].getKey()).toBe(edgeCD.getKey());
@@ -152,7 +152,7 @@ describe('graphBridges', () => {
 
     const bridges = Object.values(graphBridges(graph));
 
-    expect(bridges.length).toBe(2);
+    expect(bridges).toHaveLength(2);
     expect(bridges[0].getKey()).toBe(edgeDE.getKey());
     expect(bridges[1].getKey()).toBe(edgeCD.getKey());
   });
@@ -190,7 +190,7 @@ describe('graphBridges', () => {
 
     const bridges = Object.values(graphBridges(graph));
 
-    expect(bridges.length).toBe(1);
+    expect(bridges).toHaveLength(1);
     expect(bridges[0].getKey()).toBe(edgeCD.getKey());
   });
 });

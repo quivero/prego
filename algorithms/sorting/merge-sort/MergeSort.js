@@ -1,7 +1,7 @@
 import Sort from '../Sort';
 
 export default class MergeSort extends Sort {
-  sort(originalArray) {
+  sort (originalArray) {
     // Call visiting callback.
     this.callbacks.visitingCallback(null);
 
@@ -23,7 +23,7 @@ export default class MergeSort extends Sort {
     return this.mergeSortedArrays(leftSortedArray, rightSortedArray);
   }
 
-  mergeSortedArrays(leftArray, rightArray) {
+  mergeSortedArrays (leftArray, rightArray) {
     const sortedArray = [];
 
     // Use array pointers to exclude old elements after they have been added to the sorted array.
@@ -37,7 +37,7 @@ export default class MergeSort extends Sort {
       if (
         this.comparator.lessThanOrEqual(
           leftArray[leftIndex],
-          rightArray[rightIndex]
+          rightArray[rightIndex],
         )
       ) {
         minElement = leftArray[leftIndex];

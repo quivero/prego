@@ -85,8 +85,8 @@ describe('floydWarshall', () => {
     expect(nextVertices[vertexAIndex][vertexBIndex]).toBe(vertexA);
     expect(nextVertices[vertexAIndex][vertexGIndex]).toBe(vertexE);
     expect(nextVertices[vertexAIndex][vertexCIndex]).toBe(vertexA);
-    expect(nextVertices[vertexAIndex][vertexAIndex]).toBe(null);
-    expect(nextVertices[vertexAIndex][vertexHIndex]).toBe(null);
+    expect(nextVertices[vertexAIndex][vertexAIndex]).toBeNull();
+    expect(nextVertices[vertexAIndex][vertexHIndex]).toBeNull();
   });
 
   it('should find minimum paths to all vertices for directed graph', () => {
@@ -135,7 +135,7 @@ describe('floydWarshall', () => {
     expect(nextVertices[vertexAIndex][vertexDIndex]).toBe(vertexC);
     expect(nextVertices[vertexAIndex][vertexCIndex]).toBe(vertexB);
     expect(nextVertices[vertexBIndex][vertexDIndex]).toBe(vertexC);
-    expect(nextVertices[vertexAIndex][vertexAIndex]).toBe(null);
+    expect(nextVertices[vertexAIndex][vertexAIndex]).toBeNull();
     expect(nextVertices[vertexAIndex][vertexBIndex]).toBe(vertexA);
   });
 
@@ -202,8 +202,8 @@ describe('floydWarshall', () => {
     expect(distances[vertexFIndex][vertexDIndex]).toBe(9);
     expect(distances[vertexFIndex][vertexEIndex]).toBe(8);
 
-    expect(nextVertices[vertexFIndex][vertexGIndex]).toBe(null);
-    expect(nextVertices[vertexFIndex][vertexFIndex]).toBe(null);
+    expect(nextVertices[vertexFIndex][vertexGIndex]).toBeNull();
+    expect(nextVertices[vertexFIndex][vertexFIndex]).toBeNull();
     expect(nextVertices[vertexAIndex][vertexBIndex]).toBe(vertexC);
     expect(nextVertices[vertexAIndex][vertexCIndex]).toBe(vertexA);
     expect(nextVertices[vertexFIndex][vertexBIndex]).toBe(vertexE);

@@ -27,7 +27,7 @@ describe('QuickSortInPlace', () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
       ones_arr,
-      EQUAL_ARRAY_VISITING_COUNT
+      EQUAL_ARRAY_VISITING_COUNT,
     );
   });
 
@@ -35,7 +35,7 @@ describe('QuickSortInPlace', () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
       sorted_arr,
-      SORTED_ARRAY_VISITING_COUNT
+      SORTED_ARRAY_VISITING_COUNT,
     );
   });
 
@@ -43,7 +43,7 @@ describe('QuickSortInPlace', () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
       arr,
-      NOT_SORTED_ARRAY_VISITING_COUNT
+      NOT_SORTED_ARRAY_VISITING_COUNT,
     );
   });
 
@@ -51,7 +51,7 @@ describe('QuickSortInPlace', () => {
     SortTester.testAlgorithmTimeComplexity(
       QuickSortInPlace,
       reverse_arr,
-      REVERSE_SORTED_ARRAY_VISITING_COUNT
+      REVERSE_SORTED_ARRAY_VISITING_COUNT,
     );
   });
 });

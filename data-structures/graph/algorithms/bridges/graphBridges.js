@@ -4,7 +4,7 @@ import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
  * Helper class for visited vertex metadata.
  */
 class VisitMetadata {
-  constructor({ discoveryTime, lowDiscoveryTime }) {
+  constructor ({ discoveryTime, lowDiscoveryTime }) {
     this.discoveryTime = discoveryTime;
     this.lowDiscoveryTime = lowDiscoveryTime;
   }
@@ -14,7 +14,7 @@ class VisitMetadata {
  * @param {Graph} graph
  * @return {Object}
  */
-export default function graphBridges(graph) {
+export default function graphBridges (graph) {
   // Set of vertices we've already visited during DFS.
   const visitedSet = {};
 
@@ -55,7 +55,7 @@ export default function graphBridges(graph) {
       visitedSet[currentVertex.getKey()].lowDiscoveryTime = currentVertex
         .getNeighbors()
         .filter(
-          (earlyNeighbor) => earlyNeighbor.getKey() !== previousVertex.getKey()
+          (earlyNeighbor) => earlyNeighbor.getKey() !== previousVertex.getKey(),
         )
         .reduce(
           /**
@@ -69,7 +69,7 @@ export default function graphBridges(graph) {
               ? neighborLowTime
               : lowestDiscoveryTime;
           },
-          visitedSet[currentVertex.getKey()].lowDiscoveryTime
+          visitedSet[currentVertex.getKey()].lowDiscoveryTime,
         );
 
       // Compare low discovery times. In case if current low discovery time is less than the one

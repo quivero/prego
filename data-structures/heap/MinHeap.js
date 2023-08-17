@@ -10,7 +10,7 @@ export default class MinHeap extends Heap {
    * @param {*} secondElement
    * @return {boolean}
    */
-  pairIsInCorrectOrder(firstElement, secondElement) {
+  pairIsInCorrectOrder (firstElement, secondElement) {
     return this.compare.lessThanOrEqual(firstElement, secondElement);
   }
 }

@@ -9,7 +9,7 @@ export default class Heap {
    * @constructs Heap
    * @param {Function} [comparatorFunction]
    */
-  constructor(comparatorFunction) {
+  constructor (comparatorFunction) {
     if (new.target === Heap) {
       throw new TypeError('Cannot construct Heap instance directly');
     }
@@ -23,7 +23,7 @@ export default class Heap {
    * @param {number} parentIndex
    * @return {number}
    */
-  getLeftChildIndex(parentIndex) {
+  getLeftChildIndex (parentIndex) {
     return 2 * parentIndex + 1;
   }
 
@@ -31,7 +31,7 @@ export default class Heap {
    * @param {number} parentIndex
    * @return {number}
    */
-  getRightChildIndex(parentIndex) {
+  getRightChildIndex (parentIndex) {
     return 2 * parentIndex + 2;
   }
 
@@ -39,7 +39,7 @@ export default class Heap {
    * @param {number} childIndex
    * @return {number}
    */
-  getParentIndex(childIndex) {
+  getParentIndex (childIndex) {
     return Math.floor((childIndex - 1) / 2);
   }
 
@@ -47,7 +47,7 @@ export default class Heap {
    * @param {number} childIndex
    * @return {boolean}
    */
-  hasParent(childIndex) {
+  hasParent (childIndex) {
     return this.getParentIndex(childIndex) >= 0;
   }
 
@@ -55,7 +55,7 @@ export default class Heap {
    * @param {number} parentIndex
    * @return {boolean}
    */
-  hasLeftChild(parentIndex) {
+  hasLeftChild (parentIndex) {
     return this.getLeftChildIndex(parentIndex) < this.heapContainer.length;
   }
 
@@ -63,7 +63,7 @@ export default class Heap {
    * @param {number} parentIndex
    * @return {boolean}
    */
-  hasRightChild(parentIndex) {
+  hasRightChild (parentIndex) {
     return this.getRightChildIndex(parentIndex) < this.heapContainer.length;
   }
 
@@ -71,7 +71,7 @@ export default class Heap {
    * @param {number} parentIndex
    * @return {*}
    */
-  leftChild(parentIndex) {
+  leftChild (parentIndex) {
     return this.heapContainer[this.getLeftChildIndex(parentIndex)];
   }
 
@@ -79,7 +79,7 @@ export default class Heap {
    * @param {number} parentIndex
    * @return {*}
    */
-  rightChild(parentIndex) {
+  rightChild (parentIndex) {
     return this.heapContainer[this.getRightChildIndex(parentIndex)];
   }
 
@@ -87,7 +87,7 @@ export default class Heap {
    * @param {number} childIndex
    * @return {*}
    */
-  parent(childIndex) {
+  parent (childIndex) {
     return this.heapContainer[this.getParentIndex(childIndex)];
   }
 
@@ -95,7 +95,7 @@ export default class Heap {
    * @param {number} indexOne
    * @param {number} indexTwo
    */
-  swap(indexOne, indexTwo) {
+  swap (indexOne, indexTwo) {
     const tmp = this.heapContainer[indexTwo];
     this.heapContainer[indexTwo] = this.heapContainer[indexOne];
     this.heapContainer[indexOne] = tmp;
@@ -104,7 +104,7 @@ export default class Heap {
   /**
    * @return {*}
    */
-  peek() {
+  peek () {
     if (this.heapContainer.length === 0) {
       return null;
     }
@@ -115,7 +115,7 @@ export default class Heap {
   /**
    * @return {*}
    */
-  poll() {
+  poll () {
     if (this.heapContainer.length === 0) {
       return null;
     }
@@ -137,7 +137,7 @@ export default class Heap {
    * @param {*} item
    * @return {Heap}
    */
-  add(item) {
+  add (item) {
     this.heapContainer.push(item);
     this.heapifyUp();
     return this;
@@ -148,7 +148,7 @@ export default class Heap {
    * @param {Comparator} [comparator]
    * @return {Heap}
    */
-  remove(item, comparator = this.compare) {
+  remove (item, comparator = this.compare) {
     // Find number of items to remove.
     const numberOfItemsToRemove = this.find(item, comparator).length;
 
@@ -191,7 +191,7 @@ export default class Heap {
    * @param {Comparator} [comparator]
    * @return {Number[]}
    */
-  find(item, comparator = this.compare) {
+  find (item, comparator = this.compare) {
     const foundItemIndices = [];
 
     for (
@@ -210,21 +210,21 @@ export default class Heap {
   /**
    * @return {boolean}
    */
-  isEmpty() {
+  isEmpty () {
     return !this.heapContainer.length;
   }
 
   /**
    * @return {string}
    */
-  toString() {
+  toString () {
     return this.heapContainer.toString();
   }
 
   /**
    * @param {number} [customStartIndex]
    */
-  heapifyUp(customStartIndex) {
+  heapifyUp (customStartIndex) {
     // Take the last element (last in array or the bottom left in a tree)
     // in the heap container and lift it up until it is in the correct
     // order with respect to its parent element.
@@ -234,7 +234,7 @@ export default class Heap {
       this.hasParent(currentIndex) &&
       !this.pairIsInCorrectOrder(
         this.parent(currentIndex),
-        this.heapContainer[currentIndex]
+        this.heapContainer[currentIndex],
       )
     ) {
       this.swap(currentIndex, this.getParentIndex(currentIndex));
@@ -245,7 +245,7 @@ export default class Heap {
   /**
    * @param {number} [customStartIndex]
    */
-  heapifyDown(customStartIndex = 0) {
+  heapifyDown (customStartIndex = 0) {
     // Compare the parent element to its children and swap parent with the appropriate
     // child (smallest child for MinHeap, largest child for MaxHeap).
     // Do the same for next children after swap.
@@ -257,7 +257,7 @@ export default class Heap {
         this.hasRightChild(currentIndex) &&
         this.pairIsInCorrectOrder(
           this.rightChild(currentIndex),
-          this.leftChild(currentIndex)
+          this.leftChild(currentIndex),
         )
       ) {
         nextIndex = this.getRightChildIndex(currentIndex);
@@ -268,7 +268,7 @@ export default class Heap {
       if (
         this.pairIsInCorrectOrder(
           this.heapContainer[currentIndex],
-          this.heapContainer[nextIndex]
+          this.heapContainer[nextIndex],
         )
       ) {
         break;
@@ -289,7 +289,7 @@ export default class Heap {
    * @return {boolean}
    */
   /* istanbul ignore next */
-  pairIsInCorrectOrder(firstElement, secondElement) {
+  pairIsInCorrectOrder (firstElement, secondElement) {
     throwError(`
       You have to implement heap pair comparision method
       for ${firstElement} and ${secondElement} values.

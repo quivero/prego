@@ -7,7 +7,7 @@ import throwError from '#algorithms/sys/sys';
  * @param {Graph} graph
  * @return {Graph}
  */
-export default function kruskal(graph) {
+export default function kruskal (graph) {
   // It should fire error if graph is directed since the algorithm works only
   // for undirected graphs.
   if (graph.isDirected) {

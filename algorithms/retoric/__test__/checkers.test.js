@@ -22,26 +22,30 @@ let result, expectation;
 
 describe('dialetic-checkers', () => {
   it('must check true for premises', () => {
-    expect(aqo.is(premises, isPremise)).toEqual(true);
-    expect(aqo.are(premiseArtifacts, isPremise)).toEqual(true);
+    expect(aqo.is(premises, isPremise)).toBeTrue();
+    expect(aqo.are(premiseArtifacts, isPremise)).toBeTrue();
   });
+
   it('must check true for injunctions', () => {
-    expect(are(injunctions, isInjunction)).toEqual(true);
+    expect(are(injunctions, isInjunction)).toBeTrue();
   });
+
   it('must check true for conjunctions', () => {
-    expect(are(conjunctions, isConjunction)).toEqual(true);
+    expect(are(conjunctions, isConjunction)).toBeTrue();
   });
+
   it('must assert is{Premise|Conjunction|Injunction}Artifact', () => {
-    expect(isReasoningArtifact(premises)).toEqual(true);
+    expect(isReasoningArtifact(premises)).toBeTrue();
 
-    expect(isPremiseArtifact(premises)).toEqual(true);
-    expect(isInjunctionArtifact(injunctions)).toEqual(true);
-    expect(isConjunctionArtifact(conjunctions)).toEqual(true);
+    expect(isPremiseArtifact(premises)).toBeTrue();
+    expect(isInjunctionArtifact(injunctions)).toBeTrue();
+    expect(isConjunctionArtifact(conjunctions)).toBeTrue();
 
-    expect(isPremiseArtifact(conjunctions)).toEqual(false);
-    expect(isInjunctionArtifact(premises)).toEqual(false);
-    expect(isConjunctionArtifact(injunctions)).toEqual(false);
+    expect(isPremiseArtifact(conjunctions)).toBeFalse();
+    expect(isInjunctionArtifact(premises)).toBeFalse();
+    expect(isConjunctionArtifact(injunctions)).toBeFalse();
   });
+
   it('must assert defined variables', () => {
     result = isDefined(42);
     expectation = true;

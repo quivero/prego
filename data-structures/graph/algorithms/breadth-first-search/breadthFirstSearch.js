@@ -16,7 +16,7 @@ import Queue from '#dstructures/queue/Queue';
  * @param {Callbacks} [callbacks]
  * @returns {Callbacks}
  */
-function initCallbacks(callbacks = {}) {
+function initCallbacks (callbacks = {}) {
   const initiatedCallback = callbacks;
 
   const stubCallback = () => {};
@@ -45,10 +45,10 @@ function initCallbacks(callbacks = {}) {
  * @param {GraphVertex} startVertex
  * @param {Callbacks} [originalCallbacks]
  */
-export default function breadthFirstSearch(
+export default function breadthFirstSearch (
   graph,
   startVertex,
-  originalCallbacks
+  originalCallbacks,
 ) {
   const callbacks = initCallbacks(originalCallbacks);
   const vertexQueue = new Queue();

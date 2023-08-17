@@ -14,7 +14,7 @@ let sorter, callbacks;
 let trivia, result, expected;
 
 export class SortTester {
-  static testSort(SortingClass) {
+  static testSort (SortingClass) {
     sorter = new SortingClass();
 
     trivia = [
@@ -36,7 +36,7 @@ export class SortTester {
     }
   }
 
-  static testNegativeNumbersSort(SortingClass) {
+  static testNegativeNumbersSort (SortingClass) {
     sorter = new SortingClass();
 
     result = sorter.sort(negative_arr);
@@ -45,7 +45,7 @@ export class SortTester {
     expect(result).toEqual(expected);
   }
 
-  static testSortWithCustomComparator(SortingClass) {
+  static testSortWithCustomComparator (SortingClass) {
     callbacks = {
       compareCallback: (a, b) => {
         if (a.length === b.length) {
@@ -73,7 +73,7 @@ export class SortTester {
     }
   }
 
-  static testSortStability(SortingClass) {
+  static testSortStability (SortingClass) {
     callbacks = {
       compareCallback: (a, b) => {
         if (a.length === b.length) {
@@ -102,10 +102,10 @@ export class SortTester {
     }
   }
 
-  static testAlgorithmTimeComplexity(
+  static testAlgorithmTimeComplexity (
     SortingClass,
     arrayToBeSorted,
-    numberOfVisits
+    numberOfVisits,
   ) {
     const visitingCallback = jest.fn();
     callbacks = { visitingCallback };

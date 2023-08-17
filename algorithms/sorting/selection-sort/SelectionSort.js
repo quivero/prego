@@ -1,7 +1,7 @@
 import Sort from '../Sort';
 
 export default class SelectionSort extends Sort {
-  sort(originalArray) {
+  sort (originalArray) {
     // Clone original array to prevent its modification.
     const array = [...originalArray];
 

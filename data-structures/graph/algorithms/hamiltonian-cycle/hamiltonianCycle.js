@@ -7,11 +7,11 @@ import GraphVertex from '#dstructures/graph/GraphVertex.js';
  * @param {GraphVertex} vertexCandidate
  * @return {boolean}
  */
-function isSafe(
+function isSafe (
   adjacencyMatrix,
   verticesKeystoIndices,
   cycle,
-  vertexCandidate
+  vertexCandidate,
 ) {
   const endVertex = cycle[cycle.length - 1];
 
@@ -30,7 +30,7 @@ function isSafe(
 
   // Check if vertexCandidate is being added to the path for the first time.
   const candidateDuplicate = cycle.find(
-    (vertex) => vertex.getKey() === vertexCandidate.getKey()
+    (vertex) => vertex.getKey() === vertexCandidate.getKey(),
   );
 
   return !candidateDuplicate;
@@ -42,7 +42,7 @@ function isSafe(
  * @param {GraphVertex[]} cycle
  * @return {boolean}
  */
-function isCycle(adjacencyMatrix, verticesKeystoIndices, cycle) {
+function isCycle (adjacencyMatrix, verticesKeystoIndices, cycle) {
   // Check if first and last vertices in hamiltonian path are adjacent.
 
   // Get start and end vertices from the path.
@@ -67,7 +67,7 @@ function isCycle(adjacencyMatrix, verticesKeystoIndices, cycle) {
  * @param {GraphVertex[][]} cycles
  * @param {GraphVertex[]} cycle
  */
-function* hamiltonianCycleRecursive({
+function* hamiltonianCycleRecursive ({
   adjacencyMatrix,
   vertices,
   verticesKeystoIndices,
@@ -75,7 +75,7 @@ function* hamiltonianCycleRecursive({
 }) {
   // Clone cycle in order to prevent it from modification by other DFS branches.
   const currentCycle = [...cycle].map(
-    (vertex) => new GraphVertex(vertex.label)
+    (vertex) => new GraphVertex(vertex.label),
   );
 
   if (vertices.length === currentCycle.length) {
@@ -98,7 +98,7 @@ function* hamiltonianCycleRecursive({
         adjacencyMatrix,
         verticesKeystoIndices,
         currentCycle,
-        vertexCandidate
+        vertexCandidate,
       )
     ) {
       // Add candidate vertex to cycle path.
@@ -125,7 +125,7 @@ function* hamiltonianCycleRecursive({
  * @param {Graph} graph
  * @return {GraphVertex[][]}
  */
-export default function* hamiltonianCycle(graph) {
+export default function* hamiltonianCycle (graph) {
   // Gather some information about the graph that we will need to during
   // the problem solving.
   const verticesKeystoIndices = graph.getVerticesKeystoIndices();

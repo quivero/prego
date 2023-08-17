@@ -6,7 +6,7 @@ export default class SegmentTree {
    * @param {function} operation - binary function (i.e. sum, min)
    * @param {number} operationFallback - operation fallback value (i.e. 0 for sum, Infinity for min)
    */
-  constructor(inputArray, operation, operationFallback) {
+  constructor (inputArray, operation, operationFallback) {
     this.inputArray = inputArray;
     this.operation = operation;
     this.operationFallback = operationFallback;
@@ -21,7 +21,7 @@ export default class SegmentTree {
    * @param {number[]} inputArray
    * @return {number[]}
    */
-  initSegmentTree(inputArray) {
+  initSegmentTree (inputArray) {
     let segmentTreeArrayLength;
     const inputArrayLength = inputArray.length;
 
@@ -45,7 +45,7 @@ export default class SegmentTree {
   /**
    * Build segment tree.
    */
-  buildSegmentTree() {
+  buildSegmentTree () {
     const leftIndex = 0;
     const rightIndex = this.inputArray.length - 1;
     const position = 0;
@@ -59,7 +59,7 @@ export default class SegmentTree {
    * @param {number} rightInputIndex
    * @param {number} position
    */
-  buildTreeRecursively(leftInputIndex, rightInputIndex, position) {
+  buildTreeRecursively (leftInputIndex, rightInputIndex, position) {
     // If low input index and high input index are equal that would mean
     // the we have finished splitting and we are already came to the leaf
     // of the segment tree. We need to copy this leaf value from input
@@ -75,20 +75,20 @@ export default class SegmentTree {
     this.buildTreeRecursively(
       leftInputIndex,
       middleIndex,
-      this.getLeftChildIndex(position)
+      this.getLeftChildIndex(position),
     );
     // Process right half of the input array.
     this.buildTreeRecursively(
       middleIndex + 1,
       rightInputIndex,
-      this.getRightChildIndex(position)
+      this.getRightChildIndex(position),
     );
 
     // Once every tree leaf is not empty we're able to build tree bottom up using
     // provided operation function.
     this.segmentTree[position] = this.operation(
       this.segmentTree[this.getLeftChildIndex(position)],
-      this.segmentTree[this.getRightChildIndex(position)]
+      this.segmentTree[this.getRightChildIndex(position)],
     );
   }
 
@@ -99,7 +99,7 @@ export default class SegmentTree {
    * @param {number} queryRightIndex
    * @return {number}
    */
-  rangeQuery(queryLeftIndex, queryRightIndex) {
+  rangeQuery (queryLeftIndex, queryRightIndex) {
     const leftIndex = 0;
     const rightIndex = this.inputArray.length - 1;
     const position = 0;
@@ -109,7 +109,7 @@ export default class SegmentTree {
       queryRightIndex,
       leftIndex,
       rightIndex,
-      position
+      position,
     );
   }
 
@@ -123,12 +123,12 @@ export default class SegmentTree {
    * @param {number} position - root position in binary tree
    * @return {number}
    */
-  rangeQueryRecursive(
+  rangeQueryRecursive (
     queryLeftIndex,
     queryRightIndex,
     leftIndex,
     rightIndex,
-    position
+    position,
   ) {
     if (queryLeftIndex <= leftIndex && queryRightIndex >= rightIndex) {
       // Total overlap.
@@ -148,7 +148,7 @@ export default class SegmentTree {
       queryRightIndex,
       leftIndex,
       middleIndex,
-      this.getLeftChildIndex(position)
+      this.getLeftChildIndex(position),
     );
 
     const rightOperationResult = this.rangeQueryRecursive(
@@ -156,7 +156,7 @@ export default class SegmentTree {
       queryRightIndex,
       middleIndex + 1,
       rightIndex,
-      this.getRightChildIndex(position)
+      this.getRightChildIndex(position),
     );
 
     return this.operation(leftOperationResult, rightOperationResult);
@@ -167,7 +167,7 @@ export default class SegmentTree {
    * @param {number} parentIndex
    * @return {number}
    */
-  getLeftChildIndex(parentIndex) {
+  getLeftChildIndex (parentIndex) {
     return 2 * parentIndex + 1;
   }
 
@@ -176,7 +176,7 @@ export default class SegmentTree {
    * @param {number} parentIndex
    * @return {number}
    */
-  getRightChildIndex(parentIndex) {
+  getRightChildIndex (parentIndex) {
     return 2 * parentIndex + 2;
   }
 }

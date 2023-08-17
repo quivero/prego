@@ -5,7 +5,7 @@ import DisjointSet from '#dstructures/disjoint-set/DisjointSet';
  *
  * @param {Graph} graph
  */
-export default function detectUndirectedCycleUsingDisjointSet(graph) {
+export default function detectUndirectedCycleUsingDisjointSet (graph) {
   // Create initial singleton disjoint sets for each graph vertex.
   /** @param {GraphVertex} graphVertex */
   const keyExtractor = (graphVertex) => graphVertex.getKey();

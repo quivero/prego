@@ -2,9 +2,9 @@
 // Check https://jestjs.io/docs/expect
 // Anyone interested to extend this behavior must refer to URL content above with parsimony
 
-/*-------------------------------------------------*\
+/* -------------------------------------------------*\
  | Matchers                                        |
-\*-------------------------------------------------*/
+\*------------------------------------------------- */
 // [ x ] .toHaveBeenCalled()
 // [ x ] .toHaveReturned()
 // [ x ] .toBeDefined()
@@ -111,7 +111,7 @@ export const expectToHaveBeenLastCalledWith = (result, ...args) =>
 export const expectToHaveBeenNthCalledWith = (functionHandler, expectation) => {
   expect(functionHandler).toHaveBeenNthCalledWith(
     expectation.callIndex,
-    ...expectation.args
+    ...expectation.args,
   );
 };
 
@@ -153,9 +153,9 @@ export const availableExpectToMaps = [
   expectToHaveBeenNthCalledWith,
 ];
 
-/*-------------------------------------------------*\
+/* -------------------------------------------------*\
  | Asymmetric matchers                             |
-\*-------------------------------------------------*/
+\*------------------------------------------------- */
 export const anythingAsyMatch = () => expect.anything();
 export const anyAsyMatch = (constructor) => expect.any(constructor);
 export const arrayContainingAsyMatch = (array) => expect.arrayContaining(array);
@@ -176,9 +176,9 @@ export const stringMatchingAsyMatch = (string_regexp) =>
 export const notStringMatchingAsyMatch = (string_regexp) =>
   expect.not.stringMatching(string_regexp);
 
-/*-------------------------------------------------*\
+/* -------------------------------------------------*\
  | Assertion matchers                              |
-\*-------------------------------------------------*/
+\*------------------------------------------------- */
 export const hasAssertions = () => expect.hasAssertions();
 export const expectAssertions = (number) => {
   hasAssertions();

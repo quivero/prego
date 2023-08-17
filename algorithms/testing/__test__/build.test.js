@@ -9,6 +9,7 @@ describe('checkers', () => {
     const assertItem = [areAssertItems(assertFixtures), expectToBeEqual, true];
     assert(assertItem);
   });
+
   it('must assert scenes a.k.a. assertItem', () => {
     const assertItem2 = assertFixtures[0];
     const assertItem3 = assertFixtures[1];

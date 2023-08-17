@@ -8,9 +8,9 @@ import { availableExpectToMaps } from './expectTo';
 
 import { is } from 'arqeo';
 
-/*-------------------------------------------------------------------------------------------------------------*\
+/* -------------------------------------------------------------------------------------------------------------*\
  | Assert items                                                                                                |
-\*-------------------------------------------------------------------------------------------------------------*/
+\*------------------------------------------------------------------------------------------------------------- */
 
 // Default item key strings
 let item2LengthKeys, item3LengthKeys;
@@ -63,19 +63,18 @@ export const areAssertItems = (candidates) => are(candidates, isAssertItem);
 export const isAssertArtifact = (candidate) =>
   is(candidate, isAssertItem);
 
-
-/*-------------------------------------------------------------------------------------------------------------*\
+/* -------------------------------------------------------------------------------------------------------------*\
  | Scene                                                                                                       |
-\*-------------------------------------------------------------------------------------------------------------*/
+\*------------------------------------------------------------------------------------------------------------- */
 
 export const isScene = (candidate) =>
   isAssertItem(candidate) && !isArray(candidate);
 
 export const areScenes = (candidates) => are(candidates, isScene);
 
-/*-------------------------------------------------------------------------------------------------------------*\
+/* -------------------------------------------------------------------------------------------------------------*\
  | Organization                                                                                                |
-\*-------------------------------------------------------------------------------------------------------------*/
+\*------------------------------------------------------------------------------------------------------------- */
 
 // Possible organization key strings
 export const possibleOrganizationKeys = Object.keys(defaultOrganization);
@@ -83,7 +82,7 @@ export const possibleOrganizationKeys = Object.keys(defaultOrganization);
 export const isOrganization = (candidate) => {
   const candidateKeys = Object.keys(candidate);
   const organizationCandidateKeysUnion = uniq(
-    union(possibleOrganizationKeys, candidateKeys)
+    union(possibleOrganizationKeys, candidateKeys),
   );
 
   const isObject_ = isObject(candidate);
@@ -99,42 +98,42 @@ export const areOrganizations = (candidates) => are(candidates, isOrganization);
 
 export const isOrganizationArtifact = (candidate) => is(candidate, isOrganization);
 
-/*-------------------------------------------------------------------------------------------------------------*\
+/* -------------------------------------------------------------------------------------------------------------*\
  | Act                                                                                                         |
-\*-------------------------------------------------------------------------------------------------------------*/
+\*------------------------------------------------------------------------------------------------------------- */
 
 // Default item key strings
 const actKeys = [...possibleOrganizationKeys, 'perform'];
 
 const actObjectCallback = (candidate) => {
   const candidateKeys = Object.keys(candidate);
-    const actCandidateKeysUnion = uniq(union(actKeys, candidateKeys));
-    const actCandidateKeysIntersec = intersection(actKeys, candidateKeys);
-    const actCandidateValuesAreFunctions = are(
-      Object.values(candidate),
-      isFunction
-    );
+  const actCandidateKeysUnion = uniq(union(actKeys, candidateKeys));
+  const actCandidateKeysIntersec = intersection(actKeys, candidateKeys);
+  const actCandidateValuesAreFunctions = are(
+    Object.values(candidate),
+    isFunction,
+  );
 
-    const objectKeysUnionLowerEqualThan4 = actCandidateKeysUnion.length <= 4;
-    const objectKeysIntersecGreaterEqualThan1 =
+  const objectKeysUnionLowerEqualThan4 = actCandidateKeysUnion.length <= 4;
+  const objectKeysIntersecGreaterEqualThan1 =
       actCandidateKeysIntersec.length >= 1;
 
-    const criteria = [
-      objectKeysUnionLowerEqualThan4,
-      objectKeysIntersecGreaterEqualThan1,
-      actCandidateValuesAreFunctions,
-    ];
+  const criteria = [
+    objectKeysUnionLowerEqualThan4,
+    objectKeysIntersecGreaterEqualThan1,
+    actCandidateValuesAreFunctions,
+  ];
 
-    return batchAnd(criteria);
+  return batchAnd(criteria);
 }
 
 export const isAct = (candidate) => {
   return isObject(candidate) ? actObjectCallback(candidate) : false;
 };
 
-/*-------------------------------------------------------------------------------------------------------------*\
+/* -------------------------------------------------------------------------------------------------------------*\
  | Rehearsal                                                                                                   |
-\*-------------------------------------------------------------------------------------------------------------*/
+\*------------------------------------------------------------------------------------------------------------- */
 
 // Default item key strings
 const rehearsalKeys = ['description', 'callback'];
@@ -147,7 +146,7 @@ const rehearsalObjectCallback = (candidate) => {
   const intersecKeysEqual2 = intersection(candidateKeys, rehearsalKeys).length === 2;
 
   const objectKeysLengthEqual2 = candidateKeys.length <= 2;
-    actCandidateKeysIntersec.length >= 1;
+  actCandidateKeysIntersec.length >= 1;
 
   const criteria = [
     rehearsalDescriptionIsString,

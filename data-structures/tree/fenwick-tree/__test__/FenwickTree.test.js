@@ -3,21 +3,21 @@ import FenwickTree from '../FenwickTree';
 describe('FenwickTree', () => {
   it('should create empty fenwick tree of correct size', () => {
     const tree1 = new FenwickTree(5);
-    expect(tree1.treeArray.length).toBe(5 + 1);
+    expect(tree1.treeArray).toHaveLength(5 + 1);
 
     for (let i = 0; i < 5; i += 1) {
       expect(tree1.treeArray[i]).toBe(0);
     }
 
     const tree2 = new FenwickTree(50);
-    expect(tree2.treeArray.length).toBe(50 + 1);
+    expect(tree2.treeArray).toHaveLength(50 + 1);
   });
 
   it('should create correct fenwick tree', () => {
     const inputArray = [3, 2, -1, 6, 5, 4, -3, 3, 7, 2, 3];
 
     const tree = new FenwickTree(inputArray.length);
-    expect(tree.treeArray.length).toBe(inputArray.length + 1);
+    expect(tree.treeArray).toHaveLength(inputArray.length + 1);
 
     inputArray.forEach((value, index) => {
       tree.increase(index + 1, value);
@@ -105,10 +105,10 @@ describe('FenwickTree', () => {
       tree.queryRange(3, 2);
     };
 
-    expect(increaseAtInvalidLowIndex).toThrowError();
-    expect(increaseAtInvalidHighIndex).toThrowError();
-    expect(queryInvalidLowIndex).toThrowError();
-    expect(queryInvalidHighIndex).toThrowError();
-    expect(rangeQueryInvalidIndex).toThrowError();
+    expect(increaseAtInvalidLowIndex).toThrow();
+    expect(increaseAtInvalidHighIndex).toThrow();
+    expect(queryInvalidLowIndex).toThrow();
+    expect(queryInvalidHighIndex).toThrow();
+    expect(rangeQueryInvalidIndex).toThrow();
   });
 });

@@ -7,7 +7,7 @@ export default class BinarySearchTreeNode extends BinaryTreeNode {
    * @param {*} [value] - node value.
    * @param {function} [compareFunction] - comparator function for node values.
    */
-  constructor(value = null, compareFunction = undefined) {
+  constructor (value = null, compareFunction = undefined) {
     super(value);
 
     // This comparator is used to compare node values with each other.
@@ -19,7 +19,7 @@ export default class BinarySearchTreeNode extends BinaryTreeNode {
    * @param {*} value
    * @return {BinarySearchTreeNode}
    */
-  insert(value) {
+  insert (value) {
     if (this.nodeValueComparator.equal(this.value, null)) {
       this.value = value;
 
@@ -57,7 +57,7 @@ export default class BinarySearchTreeNode extends BinaryTreeNode {
    * @param {*} value
    * @return {BinarySearchTreeNode}
    */
-  find(value) {
+  find (value) {
     // Check the root.
     if (this.nodeValueComparator.equal(this.value, value)) {
       return this;
@@ -80,7 +80,7 @@ export default class BinarySearchTreeNode extends BinaryTreeNode {
    * @param {*} value
    * @return {boolean}
    */
-  contains(value) {
+  contains (value) {
     return !!this.find(value);
   }
 
@@ -88,7 +88,7 @@ export default class BinarySearchTreeNode extends BinaryTreeNode {
    * @param {*} value
    * @return {boolean}
    */
-  remove(value) {
+  remove (value) {
     const nodeToRemove = this.find(value);
 
     if (!nodeToRemove) {
@@ -142,7 +142,7 @@ export default class BinarySearchTreeNode extends BinaryTreeNode {
   /**
    * @return {BinarySearchTreeNode}
    */
-  findMin() {
+  findMin () {
     if (!this.left) {
       return this;
     }

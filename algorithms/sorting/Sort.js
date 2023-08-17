@@ -10,7 +10,7 @@ import throwError from '#algorithms/sys/sys';
  */
 
 export default class Sort {
-  constructor(originalCallbacks) {
+  constructor (originalCallbacks) {
     this.callbacks = Sort.initSortingCallbacks(originalCallbacks);
     this.comparator = new Comparator(this.callbacks.compareCallback);
   }
@@ -19,7 +19,7 @@ export default class Sort {
    * @param {SorterCallbacks} originalCallbacks
    * @returns {SorterCallbacks}
    */
-  static initSortingCallbacks(originalCallbacks) {
+  static initSortingCallbacks (originalCallbacks) {
     const callbacks = originalCallbacks || {};
     const stubCallback = () => {};
 
@@ -29,7 +29,7 @@ export default class Sort {
     return callbacks;
   }
 
-  sort() {
+  sort () {
     throwError('sort method must be implemented');
   }
 }

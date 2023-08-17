@@ -6,7 +6,7 @@ export default class MeshEdge extends GraphEdge {
    * @param {GraphVertex} endVertex
    * @param {number} [weight=1]
    */
-  constructor(startVertex, endVertex, weight) {
+  constructor (startVertex, endVertex, weight) {
     this.startVertex = startVertex;
     this.endVertex = endVertex;
     this.weight = weight;
@@ -15,7 +15,7 @@ export default class MeshEdge extends GraphEdge {
   /**
    * @return {string}
    */
-  getKey() {
+  getKey () {
     const startVertexKey = this.startVertex.getKey();
     const endVertexKey = this.endVertex.getKey();
 
@@ -25,7 +25,7 @@ export default class MeshEdge extends GraphEdge {
   /**
    * @return {GraphEdge}
    */
-  reverse() {
+  reverse () {
     const tmp = this.startVertex;
     this.startVertex = this.endVertex;
     this.endVertex = tmp;
@@ -36,7 +36,7 @@ export default class MeshEdge extends GraphEdge {
   /**
    * @return {string}
    */
-  toString() {
+  toString () {
     return this.getKey();
   }
 }

@@ -1,7 +1,7 @@
 import Sort from '../Sort';
 
 export default class ShellSort extends Sort {
-  sort(originalArray) {
+  sort (originalArray) {
     // Prevent original array from mutations.
     const array = [...originalArray];
 
@@ -23,7 +23,7 @@ export default class ShellSort extends Sort {
           if (
             this.comparator.lessThan(
               array[gapShiftedIndex],
-              array[currentIndex]
+              array[currentIndex],
             )
           ) {
             const tmp = array[currentIndex];

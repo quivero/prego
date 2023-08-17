@@ -14,7 +14,7 @@
  * @param {Callbacks} [callbacks]
  * @returns {Callbacks}
  */
-function initCallbacks(callbacks = {}) {
+function initCallbacks (callbacks = {}) {
   const initiatedCallback = callbacks;
 
   const stubCallback = () => {};
@@ -44,11 +44,11 @@ function initCallbacks(callbacks = {}) {
  * @param {GraphVertex} previousVertex
  * @param {Callbacks} callbacks
  */
-function depthFirstSearchRecursive(
+function depthFirstSearchRecursive (
   graph,
   currentVertex,
   previousVertex,
-  callbacks
+  callbacks,
 ) {
   callbacks.enterVertex({ currentVertex, previousVertex });
 
@@ -68,12 +68,12 @@ function depthFirstSearchRecursive(
  * @param {GraphVertex} startVertex
  * @param {Callbacks} [callbacks]
  */
-export default function depthFirstSearch(graph, startVertex, callbacks) {
+export default function depthFirstSearch (graph, startVertex, callbacks) {
   const previousVertex = null;
   depthFirstSearchRecursive(
     graph,
     startVertex,
     previousVertex,
-    initCallbacks(callbacks)
+    initCallbacks(callbacks),
   );
 }

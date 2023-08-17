@@ -1,12 +1,12 @@
 export class NotImplementedError extends Error {
-  constructor(message = '') {
+  constructor (message = '') {
     super(message);
     this.name = 'NotImplementedError';
   }
 }
 
 export class InterfaceError extends NotImplementedError {
-  constructor() {
+  constructor () {
     super('This is an interface.');
     this.name = 'InterfaceError';
   }

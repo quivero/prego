@@ -6,7 +6,7 @@ import graphBridges from '../bridges/graphBridges.js';
  * @param {Graph} graph
  * @return {GraphVertex[]}
  */
-export default function eulerianPath(graph) {
+export default function eulerianPath (graph) {
   if (!graph.isEulerian()) {
     return [];
   }

@@ -25,13 +25,13 @@ jest.mock('#algorithms/sys/sys');
 describe('numbers', () => {
   it.each([
     [ primeFactors(1), { 1: 1 } ],
-    [ primeFactors(10), { 2: 1, 5: 1, } ],
-    [ primeFactors(100), { 2: 2, 5: 2, } ],
-    [ primeFactors(1000), { 2: 3, 5: 3, } ],
-    [ primeFactors(10000), { 2: 4, 5: 4, } ],
+    [ primeFactors(10), { 2: 1, 5: 1 } ],
+    [ primeFactors(100), { 2: 2, 5: 2 } ],
+    [ primeFactors(1000), { 2: 3, 5: 3 } ],
+    [ primeFactors(10000), { 2: 4, 5: 4 } ],
   ])(
     'should return number decimal part',
-    (result, expectation) => expect(result).toEqual(expectation)
+    (result, expectation) => expect(result).toEqual(expectation),
   );
 
   it('should return converted radian to degree', () => {
@@ -64,8 +64,8 @@ describe('numbers', () => {
   });
 
   it('should return true/false for prime/non-prime number ', () => {
-    expect(isPrime(7)).toEqual(true);
-    expect(isPrime(8)).toEqual(false);
+    expect(isPrime(7)).toBeTrue();
+    expect(isPrime(8)).toBeFalse();
   });
 
   it('should throw error for inappropriate entry on function isPrime', () => {
@@ -75,8 +75,8 @@ describe('numbers', () => {
   });
 
   it('should return true for prime number and false for ', () => {
-    expect(isPrime(7)).toEqual(true);
-    expect(isPrime(8)).toEqual(false);
+    expect(isPrime(7)).toBeTrue();
+    expect(isPrime(8)).toBeFalse();
   });
 
   it('should throw error for negative number', () => {
@@ -111,10 +111,10 @@ describe('math', () => {
   });
 
   it('should return xor table of truth', () => {
-    expect(xor(0, 0)).toEqual(false);
-    expect(xor(1, 1)).toEqual(false);
-    expect(xor(0, 1)).toEqual(true);
-    expect(xor(1, 0)).toEqual(true);
+    expect(xor(0, 0)).toBeFalse();
+    expect(xor(1, 1)).toBeFalse();
+    expect(xor(0, 1)).toBeTrue();
+    expect(xor(1, 0)).toBeTrue();
   });
 
   it('should throw error for xor with non 0/1 input', () => {
@@ -128,7 +128,7 @@ describe('math', () => {
     expect(nNorm(sphericalToCartesian([Math.PI / 2, 0], 1), 2)).toBeCloseTo(1);
 
     expect(
-      nNorm(sphericalToCartesian([Math.PI / 2, Math.PI / 2], 1), 2)
+      nNorm(sphericalToCartesian([Math.PI / 2, Math.PI / 2], 1), 2),
     ).toBeCloseTo(1);
   });
 

@@ -34,7 +34,7 @@ describe('topologicalSort', () => {
     const sortedVertices = topologicalSort(graph);
 
     expect(sortedVertices).toBeDefined();
-    expect(sortedVertices.length).toBe(graph.getAllVertices().length);
+    expect(sortedVertices).toHaveLength(graph.getAllVertices().length);
     expect(sortedVertices).toEqual([B, D, A, C, E, H, F, G]);
   });
 });

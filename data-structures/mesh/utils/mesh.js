@@ -15,7 +15,7 @@ export const TOKEN_LENGTH = 5;
  * @param {*[]} coordinates
  */
 export const createMVertices = (labels, coordinates) => zip(labels, coordinates).map(
-  ([label, coordinate]) => new MeshVertex(label, coordinate)
+  ([label, coordinate]) => new MeshVertex(label, coordinate),
 )
 
 /**
@@ -31,7 +31,7 @@ export const createRandomMVertices = (n, bounds) => {
     throwError('The number of vertices must be greater than 0');
   } else {
     return zeros(n).map(
-      (zero) => new MeshVertex(generateToken(TOKEN_LENGTH), nRandMinsMaxs(bounds))
+      (zero) => new MeshVertex(generateToken(TOKEN_LENGTH), nRandMinsMaxs(bounds)),
     );
   }
 };

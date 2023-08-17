@@ -49,7 +49,7 @@ export const primeFactors = (n) => {
 export const isPrime = (number) => {
   if (typeof number !== 'number') {
     throwError(
-      `It is impossible to factorize \'${number}\'. It MUST be a number!`
+      `It is impossible to factorize \'${number}\'. It MUST be a number!`,
     );
     return;
   } else {
@@ -178,13 +178,13 @@ export const isSpherical = (u) => {
       .slice(0, u.length - 1)
       .reduce(
         (result, elem) => result && elem >= -Math.PI && elem <= Math.PI,
-        true
+        true,
       ) &&
     u
       .slice(u.length - 1, u.length)
       .reduce(
         (result, elem) => result && elem >= 0 && elem <= 2 * Math.PI,
-        true
+        true,
       )
   );
 };

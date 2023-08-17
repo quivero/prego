@@ -30,8 +30,8 @@ const logging = (label_msg = 'default') => {
       format.colorize(),
       format.printf(
         (info) =>
-          `[${info.timestamp} - ${label_msg}] ${info.level}: ${info.message}`
-      )
+          `[${info.timestamp} - ${label_msg}] ${info.level}: ${info.message}`,
+      ),
     ),
     transports: [new transports.Console()],
     exceptionHandlers: [
@@ -49,7 +49,7 @@ const logging = (label_msg = 'default') => {
  * @abstract log message through transport using custom logger
  *
  */
-export const log_message = (logger, level, message) => logger.log({ level, message, });
+export const log_message = (logger, level, message) => logger.log({ level, message });
 
 /**
  * @abstract reporter for messages
@@ -74,5 +74,5 @@ export const morganMiddleware = logger(
       // Configure Morgan to use our custom logger with the http severity
       write: (message) => reporter.log('info', message),
     },
-  }
+  },
 );

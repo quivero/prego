@@ -117,10 +117,10 @@ describe('MinHeap', () => {
 
     expect(minHeap.toString()).toBe('3,11,10,12,11');
 
-    expect(minHeap.remove(3).toString()).toEqual('10,11,11,12');
-    expect(minHeap.remove(3).peek()).toEqual(10);
-    expect(minHeap.remove(11).toString()).toEqual('10,12');
-    expect(minHeap.remove(3).peek()).toEqual(10);
+    expect(minHeap.remove(3).toString()).toBe('10,11,11,12');
+    expect(minHeap.remove(3).peek()).toBe(10);
+    expect(minHeap.remove(11).toString()).toBe('10,12');
+    expect(minHeap.remove(3).peek()).toBe(10);
   });
 
   it('should be possible to remove items from heap with heapify up', () => {
@@ -138,15 +138,15 @@ describe('MinHeap', () => {
     minHeap.add(1);
 
     expect(minHeap.toString()).toBe('1,2,4,6,3,5,6,10,8,7');
-    expect(minHeap.remove(8).toString()).toEqual('1,2,4,6,3,5,6,10,7');
-    expect(minHeap.remove(7).toString()).toEqual('1,2,4,6,3,5,6,10');
-    expect(minHeap.remove(1).toString()).toEqual('2,3,4,6,10,5,6');
-    expect(minHeap.remove(2).toString()).toEqual('3,6,4,6,10,5');
-    expect(minHeap.remove(6).toString()).toEqual('3,5,4,10');
-    expect(minHeap.remove(10).toString()).toEqual('3,5,4');
-    expect(minHeap.remove(5).toString()).toEqual('3,4');
-    expect(minHeap.remove(3).toString()).toEqual('4');
-    expect(minHeap.remove(4).toString()).toEqual('');
+    expect(minHeap.remove(8).toString()).toBe('1,2,4,6,3,5,6,10,7');
+    expect(minHeap.remove(7).toString()).toBe('1,2,4,6,3,5,6,10');
+    expect(minHeap.remove(1).toString()).toBe('2,3,4,6,10,5,6');
+    expect(minHeap.remove(2).toString()).toBe('3,6,4,6,10,5');
+    expect(minHeap.remove(6).toString()).toBe('3,5,4,10');
+    expect(minHeap.remove(10).toString()).toBe('3,5,4');
+    expect(minHeap.remove(5).toString()).toBe('3,4');
+    expect(minHeap.remove(3).toString()).toBe('4');
+    expect(minHeap.remove(4).toString()).toBe('');
   });
 
   it('should be possible to remove items from heap with custom finding comparator', () => {

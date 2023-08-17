@@ -42,7 +42,7 @@ export const buildScene = (item) => {
     buildSceneCallback,
     item,
     assertionError_.message,
-    assertionError_.type
+    assertionError_.type,
   );
 };
 
@@ -60,7 +60,7 @@ const fillOrganizationCallback = (organization) => {
   return buildOrganization(
     organization['setup'] ?? emptyCallback,
     organization['prepare'] ?? identityCallback,
-    organization['teardown'] ?? emptyCallback
+    organization['teardown'] ?? emptyCallback,
   );
 };
 
@@ -69,7 +69,7 @@ export const fillOrganization = (candidate) => {
 
   return isCondition(
     isOrganization(candidate), fillOrganizationCallback,
-    candidate, OrganizationError.message, OrganizationError.type
+    candidate, OrganizationError.message, OrganizationError.type,
   );
 };
 
@@ -117,7 +117,7 @@ export const buildRehearsal = (description, acts) => {
     rehearsalCallback,
     rehearsalArgs,
     actCriterium,
-    TypeError
+    TypeError,
   );
 };
 

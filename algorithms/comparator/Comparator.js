@@ -4,7 +4,7 @@ export default class Comparator {
    * @param {function(a: *, b: *)} [compareFunction] - It may be custom compare function that, let's
    * say may compare custom objects together.
    */
-  constructor(compareFunction) {
+  constructor (compareFunction) {
     this.compare = compareFunction || Comparator.defaultCompareFunction;
   }
 
@@ -14,7 +14,7 @@ export default class Comparator {
    * @param {(string|number)} b
    * @returns {number}
    */
-  static defaultCompareFunction(a, b) {
+  static defaultCompareFunction (a, b) {
     if (a === b) {
       return 0;
     }
@@ -28,7 +28,7 @@ export default class Comparator {
    * @param {*} b
    * @return {boolean}
    */
-  equal(a, b) {
+  equal (a, b) {
     return this.compare(a, b) === 0;
   }
 
@@ -38,7 +38,7 @@ export default class Comparator {
    * @param {*} b
    * @return {boolean}
    */
-  lessThan(a, b) {
+  lessThan (a, b) {
     return this.compare(a, b) < 0;
   }
 
@@ -48,7 +48,7 @@ export default class Comparator {
    * @param {*} b
    * @return {boolean}
    */
-  greaterThan(a, b) {
+  greaterThan (a, b) {
     return this.compare(a, b) > 0;
   }
 
@@ -58,7 +58,7 @@ export default class Comparator {
    * @param {*} b
    * @return {boolean}
    */
-  lessThanOrEqual(a, b) {
+  lessThanOrEqual (a, b) {
     return this.lessThan(a, b) || this.equal(a, b);
   }
 
@@ -68,14 +68,14 @@ export default class Comparator {
    * @param {*} b
    * @return {boolean}
    */
-  greaterThanOrEqual(a, b) {
+  greaterThanOrEqual (a, b) {
     return this.greaterThan(a, b) || this.equal(a, b);
   }
 
   /**
    * Reverses the comparison order.
    */
-  reverse() {
+  reverse () {
     const compareOriginal = this.compare;
     this.compare = (a, b) => compareOriginal(b, a);
   }

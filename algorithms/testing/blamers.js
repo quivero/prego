@@ -5,7 +5,7 @@ import { arrayTruthError } from './errors';
 export const blameArrayElements = (
   array,
   truthCallback,
-  truthMessage = defaultArrayTruthMessage
+  truthMessage = defaultArrayTruthMessage,
 ) => {
   const truthArray = array.map(truthCallback);
   const falseElements = whosFalse(truthArray);
@@ -17,6 +17,6 @@ export const blameArrayElements = (
     (x) => x,
     truthCondition,
     truthError.message,
-    truthError.type
+    truthError.type,
   );
 };

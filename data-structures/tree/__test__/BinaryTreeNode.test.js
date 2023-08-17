@@ -79,15 +79,15 @@ describe('BinaryTreeNode', () => {
 
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 3, 5]);
 
-    expect(rootNode.replaceChild(rootNode.right, rootNode.right.right)).toBe(
-      true
+    expect(rootNode.replaceChild(rootNode.right, rootNode.right.right)).toBeTrue(
+      
     );
     expect(rootNode.right.value).toBe(5);
     expect(rootNode.right.right).toBeNull();
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 5]);
 
-    expect(rootNode.replaceChild(rootNode.right, rootNode.right.right)).toBe(
-      false
+    expect(rootNode.replaceChild(rootNode.right, rootNode.right.right)).toBeFalse(
+      
     );
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 5]);
 
@@ -98,7 +98,7 @@ describe('BinaryTreeNode', () => {
     expect(rootNode.traverseInOrder()).toEqual([5, 2, 5]);
 
     expect(
-      rootNode.replaceChild(new BinaryTreeNode(), new BinaryTreeNode())
+      rootNode.replaceChild(new BinaryTreeNode(), new BinaryTreeNode()),
     ).toBeFalse();
   });
 
@@ -206,21 +206,21 @@ describe('BinaryTreeNode', () => {
     const uncle = new BinaryTreeNode('uncle');
     const child = new BinaryTreeNode('child');
 
-    expect(grandParent.uncle).not.toBeDefined();
-    expect(parent.uncle).not.toBeDefined();
+    expect(grandParent.uncle).toBeUndefined();
+    expect(parent.uncle).toBeUndefined();
 
     grandParent.setLeft(parent);
 
-    expect(parent.uncle).not.toBeDefined();
-    expect(child.uncle).not.toBeDefined();
+    expect(parent.uncle).toBeUndefined();
+    expect(child.uncle).toBeUndefined();
 
     parent.setLeft(child);
 
-    expect(child.uncle).not.toBeDefined();
+    expect(child.uncle).toBeUndefined();
 
     grandParent.setRight(uncle);
 
-    expect(parent.uncle).not.toBeDefined();
+    expect(parent.uncle).toBeUndefined();
     expect(child.uncle).toBeDefined();
     expect(child.uncle).toEqual(uncle);
   });
@@ -231,21 +231,21 @@ describe('BinaryTreeNode', () => {
     const uncle = new BinaryTreeNode('uncle');
     const child = new BinaryTreeNode('child');
 
-    expect(grandParent.uncle).not.toBeDefined();
-    expect(parent.uncle).not.toBeDefined();
+    expect(grandParent.uncle).toBeUndefined();
+    expect(parent.uncle).toBeUndefined();
 
     grandParent.setRight(parent);
 
-    expect(parent.uncle).not.toBeDefined();
-    expect(child.uncle).not.toBeDefined();
+    expect(parent.uncle).toBeUndefined();
+    expect(child.uncle).toBeUndefined();
 
     parent.setRight(child);
 
-    expect(child.uncle).not.toBeDefined();
+    expect(child.uncle).toBeUndefined();
 
     grandParent.setLeft(uncle);
 
-    expect(parent.uncle).not.toBeDefined();
+    expect(parent.uncle).toBeUndefined();
     expect(child.uncle).toBeDefined();
     expect(child.uncle).toEqual(uncle);
   });

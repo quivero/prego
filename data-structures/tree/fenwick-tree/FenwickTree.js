@@ -7,7 +7,7 @@ export default class FenwickTree {
    *
    * @param  {number} arraySize
    */
-  constructor(arraySize) {
+  constructor (arraySize) {
     this.arraySize = arraySize;
 
     // Fill tree array with zeros.
@@ -21,7 +21,7 @@ export default class FenwickTree {
    * @param  {number} value
    * @return {FenwickTree}
    */
-  increase(position, value) {
+  increase (position, value) {
     if (position < 1 || position > this.arraySize) {
       throwError('Position is out of allowed range');
     }
@@ -39,7 +39,7 @@ export default class FenwickTree {
    * @param  {number} position
    * @return {number}
    */
-  query(position) {
+  query (position) {
     if (position < 1 || position > this.arraySize) {
       throwError('Position is out of allowed range');
     }
@@ -60,7 +60,7 @@ export default class FenwickTree {
    * @param  {number} rightIndex
    * @return {number}
    */
-  queryRange(leftIndex, rightIndex) {
+  queryRange (leftIndex, rightIndex) {
     if (leftIndex > rightIndex) {
       throwError('Left index can not be greater than right one');
     }

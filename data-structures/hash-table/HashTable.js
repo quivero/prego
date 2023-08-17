@@ -10,7 +10,7 @@ export default class HashTable {
   /**
    * @param {number} hashTableSize
    */
-  constructor(hashTableSize = defaultHashTableSize) {
+  constructor (hashTableSize = defaultHashTableSize) {
     // Create hash table of certain size and fill each bucket with empty linked list.
     this.buckets = Array(hashTableSize)
       .fill(null)
@@ -26,7 +26,7 @@ export default class HashTable {
    * @param {string} key
    * @return {number}
    */
-  hash(key) {
+  hash (key) {
     // For simplicity reasons we will just use character codes sum of all characters of the key
     // to calculate the hash.
     //
@@ -39,7 +39,7 @@ export default class HashTable {
     // PRIME is just any prime number like 31.
     const hash = Array.from(key).reduce(
       (hashAccumulator, keySymbol) => hashAccumulator + keySymbol.charCodeAt(0),
-      0
+      0,
     );
 
     // Reduce hash number so it would fit hash table size.
@@ -50,7 +50,7 @@ export default class HashTable {
    * @param {string} key
    * @param {*} value
    */
-  set(key, value) {
+  set (key, value) {
     const keyHash = this.hash(key);
     this.keys[key] = keyHash;
     const bucketLinkedList = this.buckets[keyHash];
@@ -71,7 +71,7 @@ export default class HashTable {
    * @param {string} key
    * @return {*}
    */
-  delete(key) {
+  delete (key) {
     const keyHash = this.hash(key);
     delete this.keys[key];
     const bucketLinkedList = this.buckets[keyHash];
@@ -90,7 +90,7 @@ export default class HashTable {
    * @param {string} key
    * @return {*}
    */
-  get(key) {
+  get (key) {
     const bucketLinkedList = this.buckets[this.hash(key)];
     const node = bucketLinkedList.find({
       callback: (nodeValue) => nodeValue.key === key,
@@ -103,14 +103,14 @@ export default class HashTable {
    * @param {string} key
    * @return {boolean}
    */
-  has(key) {
+  has (key) {
     return Object.hasOwnProperty.call(this.keys, key);
   }
 
   /**
    * @return {string[]}
    */
-  getKeys() {
+  getKeys () {
     return Object.keys(this.keys);
   }
 
@@ -119,7 +119,7 @@ export default class HashTable {
    *
    * @return {*[]}
    */
-  getValues() {
+  getValues () {
     return this.buckets.reduce((values, bucket) => {
       const bucketValues = bucket
         .toArray()

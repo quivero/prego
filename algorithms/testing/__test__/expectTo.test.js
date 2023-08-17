@@ -47,13 +47,16 @@ let candidate, expectation;
 
 describe('expectTo', () => {
   it('assert defined values', () => expectToBeDefined(42));
+
   it('assert undefined values', () => expectToBeUndefined(undefined));
+
   it('assert toHaveReturned', () => {
     const drink = jest.fn(() => true);
 
     drink();
     expectToHaveReturned(drink);
   });
+
   it('assert call and call number', () => {
     const eat = jest.fn(() => false);
     const drink = jest.fn(() => true);
@@ -67,6 +70,7 @@ describe('expectTo', () => {
     expectToHaveBeenCalledTimes(eat, 1);
     expectToHaveBeenCalledTimes(drink, 1);
   });
+
   it('assert returned times', () => {
     const drink = jest.fn(() => true);
 
@@ -75,6 +79,7 @@ describe('expectTo', () => {
 
     expectToHaveReturnedTimes(drink, 2);
   });
+
   it('assert returned value', () => {
     const beverage = { name: 'La Croix' };
     const drink = jest.fn((beverage) => beverage.name);
@@ -83,6 +88,7 @@ describe('expectTo', () => {
 
     expectToHaveReturnedWith(drink, 'La Croix');
   });
+
   test('assert last returned value', () => {
     const beverage1 = { name: 'La Croix (Lemon)' };
     const beverage2 = { name: 'La Croix (Orange)' };
@@ -93,6 +99,7 @@ describe('expectTo', () => {
 
     expectToHaveLastReturnedWith(drink, 'La Croix (Orange)');
   });
+
   test('the house has my desired features', () => {
     const houseForSale = {
       bath: true,
@@ -113,6 +120,7 @@ describe('expectTo', () => {
 
     expectToMatchObject(houseForSale, desiredHouse);
   });
+
   it('assert error throw', () => {
     const errorThrower = () => {
       throw Error('Fire!');
@@ -137,7 +145,7 @@ describe('expectTo', () => {
     // objectContaining, with nested object, containing partial props/values
     expectToEqual(
       candidate,
-      notObjectContainingAsyMatch({ position: { x: expect.any(Number) } })
+      notObjectContainingAsyMatch({ position: { x: expect.any(Number) } }),
     );
 
     // objectContaining, with nested object, also declared with objectContaining,
@@ -154,46 +162,66 @@ describe('expectTo', () => {
     expectToHaveLength('abc', 3);
     expectToHaveLength('', 0);
   });
+
   it('assert contain item', () => {
     expectToContain([1, 2, 3], 1);
   });
+
   it('assert contain equal item', () => {
     expectToContainEqual([1, { foo: 'bar' }, 3], { foo: 'bar' });
   });
+
   it('assert equality', () => expectToEqual(42, 42));
+
   it('assert greater than', () => expectToBeGreaterThan(42, 42 - 0.1));
+
   it('assert greater or equal than', () =>
     expectToBeGreaterThanOrEqual(42, 42));
+
   it('assert less than', () => expectToBeLessThan(42, 42 + 0.1));
+
   it('assert less or equal than', () => expectToBeLessThanOrEqual(42, 42));
+
   it('assert less or equal than', () => expectToBeLessThanOrEqual(42, 42));
+
   it('assert instanceOf', () => {
     class A {}
     expectToBeInstanceOf(new A(), A);
     expectToBeInstanceOf(() => {}, Function);
   });
+
   it('assert match', () => {
     const long_string = 'the quick fox jumped over the lazy dog';
 
     expectToMatch(long_string, /lazy dog/);
     expectToMatch(long_string, new RegExp('lazy dog'));
   });
+
   it('assert truthy', () => expectToBeTruthy(true));
+
   it('assert falsy', () => expectToBeFalsy(false));
+
   it('assert null', () => expectToBeNull(null));
+
   it('assert NaN', () => expectToBeNaN(NaN));
+
   it('assert candidate toBe expectation', () => expectToBe(42, 42));
+
   it('assert candidate toBeEqual expectation', () => expectToBeEqual(42, 42));
+
   it('assert candidate toBeEqual expectation', () =>
     expectToStrictEqual(42, 42));
+
   it('assert candidate expectToHaveProperty expectation', () => {
     const object = { a: 1, b: 2 };
 
     expectToHaveProperty(object, 'a');
     expectToHaveProperty(object, 'b');
   });
+
   it('assert candidate toBeEqual expectation', () =>
     expectToBeCloseTo(3.14, 3.15, 1));
+
   it('assert call with on argument', () => {
     const functionCaller = (functionCall, arg) => {
       functionCall(arg);
@@ -206,6 +234,7 @@ describe('expectTo', () => {
 
     expectToHaveBeenCalledWith(f, string);
   });
+
   it('assert last call with on argument', () => {
     const functionCaller = (functionCall, arg_1, arg_2) => {
       functionCall(arg_1);
@@ -221,6 +250,7 @@ describe('expectTo', () => {
 
     expectToHaveBeenLastCalledWith(f, string_2);
   });
+
   it('assert Nth call with argument', () => {
     const functionCaller = (functionCall, arg_1, arg_2) => {
       functionCall(arg_1);
@@ -240,6 +270,7 @@ describe('expectTo', () => {
     expectToHaveBeenNthCalledWith(f, expectation_1);
     expectToHaveBeenNthCalledWith(f, expectation_2);
   });
+
   it('assert Nth call with argument', () => {
     const functionCaller = (functionCall, arg_1, arg_2) => {
       functionCall(arg_1);
@@ -259,6 +290,7 @@ describe('expectTo', () => {
     expectToHaveBeenNthCalledWith(f, expectation_1);
     expectToHaveBeenNthCalledWith(f, expectation_2);
   });
+
   it('assert asymmetric matcher', () => {
     candidate = {
       title: '0.1 + 0.2',
@@ -272,6 +304,7 @@ describe('expectTo', () => {
 
     expectToEqual(candidate, expectation);
   });
+
   it('assert asymmetric matcher arrayContainingAsyMatch', () => {
     candidate = ['Alice', 'Bob', 'Charlie'];
 
@@ -279,36 +312,42 @@ describe('expectTo', () => {
       expectToEqual(candidate, arrayContainingAsyMatch([name]));
     }
   });
+
   it('assert asymmetric matcher notArrayContainingAsyMatch', () => {
     candidate = ['Alice', 'Bob', 'Charlie'];
     expectation = notArrayContainingAsyMatch(['Denise']);
 
     expectToEqual(candidate, expectation);
   });
+
   it('assert asymmetric matcher stringContainingAsyMatch', () => {
     candidate = 'Hello world!';
     expectation = stringContainingAsyMatch('world');
 
     expectToEqual(candidate, expectation);
   });
+
   it('assert asymmetric matcher stringContainingAsyMatch', () => {
     candidate = 'Hello world!';
     expectation = notStringContainingAsyMatch('Mars');
 
     expectToEqual(candidate, expectation);
   });
+
   it('assert asymmetric matcher notObjectContainingAsyMatch', () => {
     candidate = { bar: 'baz' };
     expectation = { foo: anyAsyMatch(String) };
 
     expectToEqual(candidate, notObjectContainingAsyMatch(expectation));
   });
+
   it('assert asymmetric matcher stringMatchingAsyMatch', () => {
     candidate = 'Hello world!';
     expectation = stringMatchingAsyMatch('world');
 
     expectToEqual(candidate, expectation);
   });
+
   it('assert asymmetric matcher notStringMatchingAsyMatch', () => {
     candidate = 'Hello world!';
     expectation = notStringMatchingAsyMatch('Mars');

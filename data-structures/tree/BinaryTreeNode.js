@@ -5,7 +5,7 @@ export default class BinaryTreeNode {
   /**
    * @param {*} [value] - node value.
    */
-  constructor(value = null) {
+  constructor (value = null) {
     this.left = null;
     this.right = null;
     this.parent = null;
@@ -21,7 +21,7 @@ export default class BinaryTreeNode {
   /**
    * @return {number}
    */
-  get leftHeight() {
+  get leftHeight () {
     if (!this.left) {
       return 0;
     }
@@ -32,7 +32,7 @@ export default class BinaryTreeNode {
   /**
    * @return {number}
    */
-  get rightHeight() {
+  get rightHeight () {
     if (!this.right) {
       return 0;
     }
@@ -43,14 +43,14 @@ export default class BinaryTreeNode {
   /**
    * @return {number}
    */
-  get height() {
+  get height () {
     return Math.max(this.leftHeight, this.rightHeight);
   }
 
   /**
    * @return {number}
    */
-  get balanceFactor() {
+  get balanceFactor () {
     return this.leftHeight - this.rightHeight;
   }
 
@@ -58,7 +58,7 @@ export default class BinaryTreeNode {
    * Get parent's sibling if it exists.
    * @return {BinaryTreeNode}
    */
-  get uncle() {
+  get uncle () {
     // Check if current node has parent.
     if (!this.parent) {
       return undefined;
@@ -89,7 +89,7 @@ export default class BinaryTreeNode {
    * @param {*} value
    * @return {BinaryTreeNode}
    */
-  setValue(value) {
+  setValue (value) {
     this.value = value;
 
     return this;
@@ -99,7 +99,7 @@ export default class BinaryTreeNode {
    * @param {BinaryTreeNode} node
    * @return {BinaryTreeNode}
    */
-  setLeft(node) {
+  setLeft (node) {
     // Reset parent for left node since it is going to be detached.
     if (this.left) {
       this.left.parent = null;
@@ -120,7 +120,7 @@ export default class BinaryTreeNode {
    * @param {BinaryTreeNode} node
    * @return {BinaryTreeNode}
    */
-  setRight(node) {
+  setRight (node) {
     // Reset parent for right node since it is going to be detached.
     if (this.right) {
       this.right.parent = null;
@@ -141,7 +141,7 @@ export default class BinaryTreeNode {
    * @param {BinaryTreeNode} nodeToRemove
    * @return {boolean}
    */
-  removeChild(nodeToRemove) {
+  removeChild (nodeToRemove) {
     if (this.left && this.nodeComparator.equal(this.left, nodeToRemove)) {
       this.left = null;
       return true;
@@ -160,7 +160,7 @@ export default class BinaryTreeNode {
    * @param {BinaryTreeNode} replacementNode
    * @return {boolean}
    */
-  replaceChild(nodeToReplace, replacementNode) {
+  replaceChild (nodeToReplace, replacementNode) {
     if (!nodeToReplace || !replacementNode) {
       return false;
     }
@@ -182,7 +182,7 @@ export default class BinaryTreeNode {
    * @param {BinaryTreeNode} sourceNode
    * @param {BinaryTreeNode} targetNode
    */
-  static copyNode(sourceNode, targetNode) {
+  static copyNode (sourceNode, targetNode) {
     targetNode.setValue(sourceNode.value);
     targetNode.setLeft(sourceNode.left);
     targetNode.setRight(sourceNode.right);
@@ -191,7 +191,7 @@ export default class BinaryTreeNode {
   /**
    * @return {*[]}
    */
-  traverseInOrder() {
+  traverseInOrder () {
     let traverse = [];
 
     // Add left node.
@@ -213,7 +213,7 @@ export default class BinaryTreeNode {
   /**
    * @return {string}
    */
-  toString() {
+  toString () {
     return this.traverseInOrder().toString();
   }
 }

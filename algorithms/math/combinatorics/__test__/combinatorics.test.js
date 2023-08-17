@@ -13,13 +13,13 @@ describe('combinatorics', () => {
   it('should throw an error for negative number', () => {
     const partitionWithNegativeNumber = () => partitions(-42);
 
-    expect(partitionWithNegativeNumber).toThrowError(Error);
+    expect(partitionWithNegativeNumber).toThrow(Error);
   });
 
   it('should throw an error for decimal number', () => {
     const partitionWithDecimalNumber = () => partitions(4.2);
 
-    expect(partitionWithDecimalNumber).toThrowError();
+    expect(partitionWithDecimalNumber).toThrow();
   });
 });
 
@@ -36,7 +36,7 @@ describe('cardvecCombinations', () => {
   });
 
   it('should throw error ', () => {
-    function cardvecSumDifferentFromPointsLength() {
+    function cardvecSumDifferentFromPointsLength () {
       return cardvecCombinations([1, 2, 3], [1, 1]);
     }
 

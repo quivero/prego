@@ -111,19 +111,19 @@ describe('Array', () => {
   });
 
   it('should return true for control_ array  equal to treatment_', () => {
-    expect(isCyclicEqual('ABCD', 'DABC')).toStrictEqual(true);
+    expect(isCyclicEqual('ABCD', 'DABC')).toBeTrue();
   });
 
   it('should return true control_ array is not equal to treatment_', () => {
-    expect(isCyclicEqual('ABCD', 'ABDC')).toStrictEqual(false);
+    expect(isCyclicEqual('ABCD', 'ABDC')).toBeFalse();
   });
 
   it('should return true control_ array has not the same length as treatment_', () => {
-    expect(isCyclicEqual('ABCD', 'ABC')).toStrictEqual(false);
+    expect(isCyclicEqual('ABCD', 'ABC')).toBeFalse();
   });
 
   it('should reorder elements from chain in a cyclic form', () => {
-    expect(cyclicSort('ABCD', 2)).toStrictEqual('CDAB');
+    expect(cyclicSort('ABCD', 2)).toBe('CDAB');
   });
 
   it('should call raise for array length greater than given index', () => {
@@ -192,9 +192,7 @@ describe('Array', () => {
   });
 
   it('should return remove elements from array', () => {
-    expect(_.isEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toEqual(
-      true
-    );
+    expect(_.isEqual(removeElements([1, 2, 3, 4], [1, 2]), [3, 4])).toBeTrue();
   });
 
   it('should return sequential blobs of numbers in number array', () => {
@@ -266,19 +264,19 @@ describe('Array', () => {
 
 describe('hasElement', () => {
   it('should return true for element on array', () => {
-    expect(hasElement([1, 2, 3], 3)).toStrictEqual(true);
+    expect(hasElement([1, 2, 3], 3)).toBeTrue();
   });
 
   it('should return true for array on array of elements', () => {
     expect(
-      hasElement([ [1, 2], [1, 2, 3] ], [1, 2])
-    ).toStrictEqual(true);
+      hasElement([ [1, 2], [1, 2, 3] ], [1, 2]),
+    ).toBeTrue();
   });
 
   it('should return false for non-existent array on array of elements', () => {
     expect(
-      hasElement([ [1, 2], [1, 2, 3] ], [1])
-    ).toStrictEqual(false);
+      hasElement([ [1, 2], [1, 2, 3] ], [1]),
+    ).toBeFalse();
   });
 });
 
@@ -316,18 +314,18 @@ describe('euler', () => {
   it('should warn once for duplicated set entries', () => {
     euler({ a: [1, 1, 2] });
 
-    expect(console.warn).toBeCalledTimes(1);
-    expect(console.warn).toBeCalledWith('Each array MUST NOT have duplicates');
+    expect(console.warn).toHaveBeenCalledOnce();
+    expect(console.warn).toHaveBeenCalledWith('Each array MUST NOT have duplicates');
   });
 
   it('should warn once for duplicated set entries', () => {
     euler({ a: [1, 1, 2] });
-    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledOnce();
   });
 
   it('should raise error once for duplicated set entries', () => {
     euler({ a: [1, 1, 2] });
-    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledOnce();
   });
 
   it('should return a multiple set interactions - Sample 1', () => {

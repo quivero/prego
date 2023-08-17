@@ -6,7 +6,7 @@ describe('SegmentTree', () => {
     const segmentTree = new SegmentTree(array, Math.min, Infinity);
 
     expect(segmentTree.segmentTree).toEqual([-1, -1, 2]);
-    expect(segmentTree.segmentTree.length).toBe(2 * array.length - 1);
+    expect(segmentTree.segmentTree).toHaveLength(2 * array.length - 1);
   });
 
   it('should build tree for input array #1 with length of power of two', () => {
@@ -14,7 +14,7 @@ describe('SegmentTree', () => {
     const segmentTree = new SegmentTree(array, Math.min, Infinity);
 
     expect(segmentTree.segmentTree).toEqual([-1, -1, 0, -1, 2, 4, 0]);
-    expect(segmentTree.segmentTree.length).toBe(2 * array.length - 1);
+    expect(segmentTree.segmentTree).toHaveLength(2 * array.length - 1);
   });
 
   it('should build tree for input array #0 with length not of power of two', () => {
@@ -22,7 +22,7 @@ describe('SegmentTree', () => {
     const segmentTree = new SegmentTree(array, Math.min, Infinity);
 
     expect(segmentTree.segmentTree).toEqual([0, 0, 2, 0, 1, null, null]);
-    expect(segmentTree.segmentTree.length).toBe(2 * 4 - 1);
+    expect(segmentTree.segmentTree).toHaveLength(2 * 4 - 1);
   });
 
   it('should build tree for input array #1 with length not of power of two', () => {
@@ -46,7 +46,7 @@ describe('SegmentTree', () => {
       null,
       null,
     ]);
-    expect(segmentTree.segmentTree.length).toBe(2 * 8 - 1);
+    expect(segmentTree.segmentTree).toHaveLength(2 * 8 - 1);
   });
 
   it('should build max array', () => {
@@ -54,7 +54,7 @@ describe('SegmentTree', () => {
     const segmentTree = new SegmentTree(array, Math.max, -Infinity);
 
     expect(segmentTree.segmentTree).toEqual([4, 2, 4, -1, 2, 4, 0]);
-    expect(segmentTree.segmentTree.length).toBe(2 * array.length - 1);
+    expect(segmentTree.segmentTree).toHaveLength(2 * array.length - 1);
   });
 
   it('should build sum array', () => {
@@ -62,7 +62,7 @@ describe('SegmentTree', () => {
     const segmentTree = new SegmentTree(array, (a, b) => a + b, 0);
 
     expect(segmentTree.segmentTree).toEqual([5, 1, 4, -1, 2, 4, 0]);
-    expect(segmentTree.segmentTree.length).toBe(2 * array.length - 1);
+    expect(segmentTree.segmentTree).toHaveLength(2 * array.length - 1);
   });
 
   it('should do min range query on power of two length array', () => {

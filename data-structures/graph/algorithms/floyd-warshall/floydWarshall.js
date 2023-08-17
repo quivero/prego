@@ -2,7 +2,7 @@
  * @param {Graph} graph
  * @return {{distances: number[][], nextVertices: GraphVertex[][]}}
  */
-export default function floydWarshall(graph) {
+export default function floydWarshall (graph) {
   // Get all graph vertices.
   const vertices = graph.getAllVertices();
 

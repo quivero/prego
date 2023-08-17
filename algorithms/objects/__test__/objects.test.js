@@ -23,7 +23,7 @@ describe('objects', () => {
     const myObject = { a: 1, b: 2, c: 3 };
     const newObject = objectMap(myObject, (key, value) => value * 2);
 
-    expect(JSON.stringify(newObject)).toBe("{\"a\":2,\"b\":4,\"c\":6}");
+    expect(JSON.stringify(newObject)).toBe('{"a":2,"b":4,"c":6}');
   });
 
   it('should return filtered object', () => {
@@ -36,18 +36,18 @@ describe('objects', () => {
   });
 
   it('should return boolean on key existence', () => {
-    expect(objectHasKey({ a: 1, b: 2 }, 'a')).toEqual(true);
+    expect(objectHasKey({ a: 1, b: 2 }, 'a')).toBeTrue();
 
-    expect(objectHasKey({ a: 1, b: 2 }, 'c')).toEqual(false);
+    expect(objectHasKey({ a: 1, b: 2 }, 'c')).toBeFalse();
   });
 
   it('should return boolean on keys existence', () => {
     const object = { a: 1, b: 2, c: 3 };
 
-    expect(objectHasKeys(object, ['a'])).toEqual(true);
-    expect(objectHasKeys(object, ['a', 'b'])).toEqual(true);
-    expect(objectHasKeys(object, ['d'])).toEqual(false);
-    expect(objectHasKeys(object, ['a', 'd'])).toEqual(false);
+    expect(objectHasKeys(object, ['a'])).toBeTrue();
+    expect(objectHasKeys(object, ['a', 'b'])).toBeTrue();
+    expect(objectHasKeys(object, ['d'])).toBeFalse();
+    expect(objectHasKeys(object, ['a', 'd'])).toBeFalse();
   });
 
   it('should return filtered object', () => {
@@ -81,7 +81,7 @@ describe('objects', () => {
         result[key] = 2 * value;
         return result;
       },
-      {}
+      {},
     );
 
     expect(JSON.stringify(newObject)).toBe(JSON.stringify({ a: 2, b: 2 }));
@@ -94,7 +94,7 @@ describe('objects', () => {
     const diff_object = objectDifference(
       obj_1,
       obj_2,
-      (r_key, r_value, l_key, l_value) => r_key === l_key
+      (r_key, r_value, l_key, l_value) => r_key === l_key,
     );
 
     expect(diff_object).toEqual({ a: 1 });
@@ -109,7 +109,7 @@ describe('objects', () => {
       obj_2,
       (r_key, r_value, l_key, l_value) => r_key === l_key,
       (r_key, r_value, l_key, l_value) => r_key,
-      (r_key, r_value, l_key, l_value) => l_value
+      (r_key, r_value, l_key, l_value) => l_value,
     );
 
     expect(intersec_object).toEqual({ b: 2 });
@@ -123,15 +123,15 @@ describe('objects', () => {
       objectEqual(obj1, obj2, () => {
         const intersec_keys = _.intersection(
           Object.keys(obj1),
-          Object.keys(obj2)
+          Object.keys(obj2),
         );
 
         return objectReduce(
           intersec_keys,
           (is_equal, ikey_id, ikey) => is_equal && obj1[ikey] === obj2[ikey],
-          true
+          true,
         );
-      })
-    ).toEqual(true);
+      }),
+    ).toBeTrue();
   });
 });

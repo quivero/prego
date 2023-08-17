@@ -3,10 +3,10 @@ import HashTable from '../HashTable';
 describe('HashTable', () => {
   it('should create hash table of certain size', () => {
     const defaultHashTable = new HashTable();
-    expect(defaultHashTable.buckets.length).toBe(32);
+    expect(defaultHashTable.buckets).toHaveLength(32);
 
     const biggerHashTable = new HashTable(64);
-    expect(biggerHashTable.buckets.length).toBe(64);
+    expect(biggerHashTable.buckets).toHaveLength(64);
   });
 
   it('should generate proper hash for specified keys', () => {
@@ -43,13 +43,13 @@ describe('HashTable', () => {
 
     expect(hashTable.get('a')).toBe('sky');
     expect(hashTable.get('d')).toBe('ocean');
-    expect(hashTable.get('x')).not.toBeDefined();
+    expect(hashTable.get('x')).toBeUndefined();
 
     hashTable.delete('a');
 
     expect(hashTable.delete('not-existing')).toBeNull();
 
-    expect(hashTable.get('a')).not.toBeDefined();
+    expect(hashTable.get('a')).toBeUndefined();
     expect(hashTable.get('d')).toBe('ocean');
 
     hashTable.set('d', 'ocean-new');

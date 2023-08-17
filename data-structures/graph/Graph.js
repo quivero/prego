@@ -34,7 +34,7 @@ import GraphEdge from './GraphEdge.js';
  * Helper class for visited vertex metadata.
  */
 class VisitMetadata {
-  constructor({ discoveryTime, lowDiscoveryTime }) {
+  constructor ({ discoveryTime, lowDiscoveryTime }) {
     this.discoveryTime = discoveryTime;
     this.lowDiscoveryTime = lowDiscoveryTime;
     // We need this in order to check graph root node, whether it has two
@@ -50,7 +50,7 @@ export default class Graph {
   /**
    * @param {boolean} isDirected
    */
-  constructor(isDirected = false) {
+  constructor (isDirected = false) {
     this.vertices = {};
     this.edges = {};
     this.isDirected = isDirected;
@@ -61,7 +61,7 @@ export default class Graph {
   /**
    * @returns {Array} Graph cycles
    */
-  get cycles() {
+  get cycles () {
     return this.cyclicCircuits();
   }
 
@@ -69,7 +69,7 @@ export default class Graph {
    * @returns {} Graph density defined by number
    * of edges divided by number of possible edges
    */
-  get density() {
+  get density () {
     const n_vertices = this.getNumVertices();
     const n_dense = (n_vertices / 2) * (n_vertices - 1);
     const n_edges = this.getAllEdges().length;
@@ -83,11 +83,11 @@ export default class Graph {
    * @param {GraphVertex} newVertex
    * @returns {Graph}
    */
-  addVertex(newVertex) {
+  addVertex (newVertex) {
     // Check if vertex has been already added.
     if (Object.keys(this.vertices).includes(newVertex.label)) {
       throwError(
-        'Vertex has already been added before. Please, choose other key!'
+        'Vertex has already been added before. Please, choose other key!',
       );
     }
 
@@ -99,7 +99,7 @@ export default class Graph {
    * @param {GraphVertex} seekVertex
    * @returns {boolean}
    */
-  hasVertex(seekVertexKey) {
+  hasVertex (seekVertexKey) {
     return this.vertices[seekVertexKey] !== undefined;
   }
 
@@ -107,7 +107,7 @@ export default class Graph {
    * @param {GraphVertex[]} vertices
    * @returns {Graph}
    */
-  addVertices(newVertices) {
+  addVertices (newVertices) {
     newVertices.forEach((vertex) => this.addVertex(vertex));
   }
 
@@ -115,7 +115,7 @@ export default class Graph {
    * @param {string} vertexKey
    * @returns GraphVertex
    */
-  getVertexByKey(vertexKey) {
+  getVertexByKey (vertexKey) {
     return this.vertices[vertexKey];
   }
 
@@ -123,7 +123,7 @@ export default class Graph {
    * @param {integer} vertexIndex
    * @returns GraphVertex
    */
-  getVertexByIndex(vertexIndex) {
+  getVertexByIndex (vertexIndex) {
     const indices_to_vertices = this.getVerticesIndicestoKeys();
     return this.vertices[indices_to_vertices[vertexIndex]];
   }
@@ -132,67 +132,67 @@ export default class Graph {
    * @param {GraphVertex} vertex
    * @returns {GraphVertex[]}
    */
-  getNeighbors(vertex) {
+  getNeighbors (vertex) {
     return vertex.getNeighbors();
   }
 
   /**
    * @return {GraphVertex[]}
    */
-  getAllVertices() {
+  getAllVertices () {
     return Object.values(this.vertices);
   }
 
   /**
    * @return {Array[string]}
    */
-  getAllVerticesKeys() {
+  getAllVerticesKeys () {
     return Object.keys(this.vertices);
   }
 
   /**
    * @return {Integer}
    */
-  getNumVertices() {
+  getNumVertices () {
     return this.getAllVertices().length;
   }
 
   /**
    * @return {GraphEdge[]}
    */
-  getAllEdges() {
+  getAllEdges () {
     return Object.values(this.edges);
   }
 
   /**
    * @return {GraphEdge[]}
    */
-  getAllEdgesKeys() {
+  getAllEdgesKeys () {
     return Object.keys(this.edges);
   }
 
   /**
    * @return {Array[string]}
    */
-  getVerticesKeys() {
+  getVerticesKeys () {
     return Object.keys(this.vertices);
   }
 
   /**
    * @return {GraphVertex[]}
    */
-  getVerticesByKeys(vertex_keys) {
+  getVerticesByKeys (vertex_keys) {
     return vertex_keys.map((vertex_key) => this.vertices[vertex_key]);
   }
 
   /**
    * @return {GraphVertex[]}
    */
-  getVerticesByIndexes(vertex_indexes) {
+  getVerticesByIndexes (vertex_indexes) {
     const index_to_key = this.getVerticesIndicestoKeys();
 
     return this.getVerticesByKeys(
-      vertex_indexes.map((vertex_index) => index_to_key[vertex_index])
+      vertex_indexes.map((vertex_index) => index_to_key[vertex_index]),
     );
   }
 
@@ -200,7 +200,7 @@ export default class Graph {
    * @param {String[]} vertexKeys
    * @returns {GraphEdge[]}
    */
-  getEdgesByVertexKeys(vertexKeys, exclusive = false) {
+  getEdgesByVertexKeys (vertexKeys, exclusive = false) {
     const edges = this.getAllEdges();
 
     let operator_fun = () => 42;
@@ -218,7 +218,7 @@ export default class Graph {
         if (
           operator_fun(
             vertexKeys.includes(edge.startVertex.getKey()),
-            vertexKeys.includes(edge.endVertex.getKey())
+            vertexKeys.includes(edge.endVertex.getKey()),
           )
         ) {
           return _.cloneDeep(edge);
@@ -232,9 +232,9 @@ export default class Graph {
    * @param {String[]} vertexKeys
    * @returns {String[]}
    */
-  getEdgesKeysByVertexKeys(vertexKeys, exclusive = false) {
+  getEdgesKeysByVertexKeys (vertexKeys, exclusive = false) {
     return this.getEdgesByVertexKeys(vertexKeys, exclusive).map((edge) =>
-      edge.getKey()
+      edge.getKey(),
     );
   }
 
@@ -242,7 +242,7 @@ export default class Graph {
    * @param {Array[integer]} chain
    * @returns GraphVertex
    */
-  getEdgesFromChain(index_chain) {
+  getEdgesFromChain (index_chain) {
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
     const edges = [];
 
@@ -269,14 +269,14 @@ export default class Graph {
    * @param {Array[integer]} vertexIndexes
    * @returns GraphVertex
    */
-  getEdgesByVertexIndexes(verticesIndexes, exclusive = false) {
+  getEdgesByVertexIndexes (verticesIndexes, exclusive = false) {
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
 
     return this.getEdgesByVertexKeys(
       verticesIndexes.map(
-        (vertexIndexes) => vertices_indexes_to_keys[vertexIndexes]
+        (vertexIndexes) => vertices_indexes_to_keys[vertexIndexes],
       ),
-      exclusive
+      exclusive,
     );
   }
 
@@ -284,7 +284,7 @@ export default class Graph {
    * @param {integer} vertexIndex
    * @returns GraphVertex
    */
-  convertVerticesIndexestoKeys(vertexIndexes) {
+  convertVerticesIndexestoKeys (vertexIndexes) {
     const vertexKeys = [];
     const vertices_indexes_to_keys = this.getVerticesIndicestoKeys();
 
@@ -299,7 +299,7 @@ export default class Graph {
    * @param {string} vertexKey
    * @returns GraphVertex
    */
-  convertVerticesKeystoIndexes(vertexKeys) {
+  convertVerticesKeystoIndexes (vertexKeys) {
     const vertexIndexes = [];
     const vertices_keys_to_indexes = this.getVerticesKeystoIndices();
 
@@ -314,7 +314,7 @@ export default class Graph {
    * @param {GraphEdge} edge
    * @returns {Array[Integer]}
    */
-  convertEdgeToVerticesIndices(edge) {
+  convertEdgeToVerticesIndices (edge) {
     const keys_to_indices = this.getVerticesKeystoIndices();
 
     return [
@@ -327,7 +327,7 @@ export default class Graph {
    * @param {GraphEdge} edge
    * @returns {Array[Integer]}
    */
-  convertEdgesToVerticesIndices(edges) {
+  convertEdgesToVerticesIndices (edges) {
     return edges.map((edge) => this.convertEdgeToVerticesIndices(edge));
   }
 
@@ -335,7 +335,7 @@ export default class Graph {
    * @param {GraphVertex[]} vertices
    * @returns {String[]}
    */
-  convertVerticestoVerticesKeys(vertices) {
+  convertVerticestoVerticesKeys (vertices) {
     return vertices.map((vertex) => vertex.getKey());
   }
 
@@ -343,9 +343,9 @@ export default class Graph {
    * @param {GraphVertex[]} vertices
    * @returns {String[]}
    */
-  convertVerticestoVerticesIndices(vertices) {
+  convertVerticestoVerticesIndices (vertices) {
     return this.convertVerticesKeystoIndexes(
-      this.convertVerticestoVerticesKeys(vertices)
+      this.convertVerticestoVerticesKeys(vertices),
     );
   }
 
@@ -356,7 +356,7 @@ export default class Graph {
    * @param {Integer} vertices
    * @returns {Object}
    */
-  getAdjacencyList(type = 0) {
+  getAdjacencyList (type = 0) {
     const adjList = {};
     const vertices_keys_to_indexes = this.getVerticesKeystoIndices();
     const vertex_keys = Object.keys(vertices_keys_to_indexes);
@@ -417,7 +417,7 @@ export default class Graph {
    * @param {Integer} type
    * @return {object}
    */
-  getInOutDegreeList(type = 0) {
+  getInOutDegreeList (type = 0) {
     const adjList = this.getAdjacencyList(type);
 
     return objectMap(adjList, (value) => value.length);
@@ -427,7 +427,7 @@ export default class Graph {
    * @abstract sinkNodes are vertices without to-nodes
    * @returns {GraphEdge[]}
    */
-  sinkNodes() {
+  sinkNodes () {
     const loose_nodes = [];
     const forward_star = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
@@ -445,7 +445,7 @@ export default class Graph {
    * @abstract sourceNodes are vertices without from-nodes
    * @returns {GraphEdge[]}
    */
-  sourceNodes() {
+  sourceNodes () {
     const orphan_nodes = [];
     const inverse_star = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
@@ -459,14 +459,14 @@ export default class Graph {
     return orphan_nodes;
   }
 
-  getVerticesNeighbours(vertices_indices) {
+  getVerticesNeighbours (vertices_indices) {
     const forward_star = this.getAdjacencyList(0);
     const reverse_star = this.getAdjacencyList(1);
     const neighbours = objectInit(vertices_indices, []);
 
     vertices_indices.forEach((vertex_index) => {
       neighbours[vertex_index] = _.uniq(
-        _.union(forward_star[vertex_index], reverse_star[vertex_index])
+        _.union(forward_star[vertex_index], reverse_star[vertex_index]),
       );
     });
 
@@ -477,11 +477,11 @@ export default class Graph {
    * @param {GraphEdge} edge
    * @returns {Graph}
    */
-  addEdge(edge) {
+  addEdge (edge) {
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
       warn(
-        `Edge ${edge.getKey()} has already been added before. Please, choose other key!`
+        `Edge ${edge.getKey()} has already been added before. Please, choose other key!`,
       );
       return;
     }
@@ -524,7 +524,7 @@ export default class Graph {
    * @param {GraphEdge} seekEdge
    * @returns {boolean}
    */
-  hasEdge(seekEdgeKey) {
+  hasEdge (seekEdgeKey) {
     return this.edges[seekEdgeKey] !== undefined;
   }
 
@@ -532,7 +532,7 @@ export default class Graph {
    * @param {GraphEdge[]} edges
    * @returns {}
    */
-  addEdges(edges) {
+  addEdges (edges) {
     edges.forEach((edge) => {
       this.addEdge(edge);
     });
@@ -541,7 +541,7 @@ export default class Graph {
   /**
    * @param {GraphEdge} edge
    */
-  deleteEdge(edge) {
+  deleteEdge (edge) {
     // Delete edge from the list of edges.
     if (this.edges[edge.getKey()]) {
       delete this.edges[edge.getKey()];
@@ -561,7 +561,7 @@ export default class Graph {
   /**
    * @param {Array[GraphEdge]} edges
    */
-  deleteEdges(edges) {
+  deleteEdges (edges) {
     edges.forEach((edge) => {
       this.deleteEdge(edge);
     });
@@ -572,7 +572,7 @@ export default class Graph {
    * @param {GraphVertex} endVertex
    * @return {(GraphEdge|null)}
    */
-  findEdge(startVertex, endVertex) {
+  findEdge (startVertex, endVertex) {
     const vertex = this.getVertexByKey(startVertex.getKey());
 
     if (!vertex) {
@@ -587,7 +587,7 @@ export default class Graph {
    * @param {GraphVertex} endVertex
    * @return {(GraphEdge|null)}
    */
-  findEdgeByVertexIndices(startVertex_index, endVertex_index) {
+  findEdgeByVertexIndices (startVertex_index, endVertex_index) {
     const vertex = this.getVertexByIndex(startVertex_index);
 
     if (!vertex) {
@@ -602,32 +602,32 @@ export default class Graph {
    * @param {GraphVertex} endVertex
    * @return {(GraphEdge|null)}
    */
-  findEdgesByVertexIndicesTuples(vertex_indexes_tuples) {
+  findEdgesByVertexIndicesTuples (vertex_indexes_tuples) {
     return vertex_indexes_tuples.map((vertex_indexes_tuple) =>
       this.findEdgeByVertexIndices(
         vertex_indexes_tuple[0],
-        vertex_indexes_tuple[1]
-      )
+        vertex_indexes_tuple[1],
+      ),
     );
   }
 
   /**
    * @return {number}
    */
-  getWeight() {
+  getWeight () {
     return this.getAllEdges().reduce(
       (weight, graphEdge) => weight + graphEdge.weight,
-      0
+      0,
     );
   }
 
-  getForwardDegrees() {
+  getForwardDegrees () {
     const adjList = this.getAdjacencyList(0);
 
     return Object.values(adjList).map((to_neighbours) => to_neighbours.length);
   }
 
-  getReverseDegrees() {
+  getReverseDegrees () {
     const adjList = this.getAdjacencyList(1);
 
     return Object.values(adjList).map((to_neighbours) => to_neighbours.length);
@@ -636,7 +636,7 @@ export default class Graph {
   /**
    * @return {object}
    */
-  getVerticesKeystoIndices() {
+  getVerticesKeystoIndices () {
     const verticesIndices = {};
     this.getAllVertices().forEach((vertex, index) => {
       verticesIndices[vertex.getKey()] = index;
@@ -648,7 +648,7 @@ export default class Graph {
   /**
    * @return {object}
    */
-  getVerticesIndicestoKeys() {
+  getVerticesIndicestoKeys () {
     const keys_to_indices = this.getVerticesKeystoIndices();
     const values = Object.values(keys_to_indices);
     const keys = Object.keys(keys_to_indices);
@@ -666,7 +666,7 @@ export default class Graph {
   /**
    * @return {GraphVertex}
    */
-  getVertexIndex(vertex) {
+  getVertexIndex (vertex) {
     const verticesIndices = this.getVerticesKeystoIndices();
     return verticesIndices[vertex.getKey()];
   }
@@ -674,7 +674,7 @@ export default class Graph {
   /**
    * @return {*[][]}
    */
-  getAdjacencyMatrix() {
+  getAdjacencyMatrix () {
     const vertices = this.getAllVertices();
     const verticesIndices = this.getVerticesKeystoIndices();
 
@@ -691,7 +691,7 @@ export default class Graph {
 
         adjacencyMatrix[vertexIndex][neighborIndex] = this.findEdge(
           vertex,
-          neighbor
+          neighbor,
         ).weight;
       });
     });
@@ -703,7 +703,7 @@ export default class Graph {
    * @abstract Reverse all the edges in directed graph.
    * @return {Graph}
    */
-  reverse() {
+  reverse () {
     const is_reversed = {};
     let edge_key, reversed_edge_key;
 
@@ -759,14 +759,14 @@ export default class Graph {
    * @abstract Copy graph
    * @return {Graph}
    */
-  copy() {
+  copy () {
     return _.cloneDeep(this);
   }
 
   /**
    * @returns {Graph} clone of this graph, but undirected
    */
-  retrieveUndirected() {
+  retrieveUndirected () {
     const undirected_graph = new Graph(false);
 
     undirected_graph.addVertices(_.cloneDeep(this.getAllVertices()));
@@ -777,9 +777,9 @@ export default class Graph {
           new GraphEdge(
             undirected_graph.vertices[edge.startVertex.getKey()],
             undirected_graph.vertices[edge.endVertex.getKey()],
-            edge.weight
-          )
-      )
+            edge.weight,
+          ),
+      ),
     );
 
     return undirected_graph;
@@ -789,7 +789,7 @@ export default class Graph {
    * @abstract Utilitary for isCyclic validator
    * @return {*[][]}
    */
-  #isCyclicUtil(index, visited, recStack) {
+  #isCyclicUtil (index, visited, recStack) {
     const adjList = this.getAdjacencyList();
 
     // Mark the current node as visited and part of recursion stack
@@ -821,7 +821,7 @@ export default class Graph {
    * @abstract validates if a graph is cyclic
    * @return {Boolean} is_cyclic
    */
-  isCyclic() {
+  isCyclic () {
     // Mark all the vertices as not visited and
     // not part of recursion stack
     const n_vertices = this.getNumVertices();
@@ -850,7 +850,7 @@ export default class Graph {
    * @param {Array} visited
    * @return {Boolean} is_cyclic
    */
-  DFSUtil(v, visited) {
+  DFSUtil (v, visited) {
     const adjList = this.getAdjacencyList();
 
     // Mark the current node as visited
@@ -869,7 +869,7 @@ export default class Graph {
    * @abstract returns eulerian walks
    * @return {Array} epath
    */
-  getEulerianPath() {
+  getEulerianPath () {
     const eulerian_path = eulerianPath(this);
     const verticesIndices = this.getVerticesKeystoIndices();
 
@@ -891,7 +891,7 @@ export default class Graph {
    * @abstract returns hamiltonian walks
    * @return {Array} hamiltonian_paths
    */
-  *getHamiltonianCycles() {
+  *getHamiltonianCycles () {
     for (const hamiltonian_cycle of hamiltonianCycle(this)) {
       yield this.convertVerticestoVerticesIndices(hamiltonian_cycle);
     }
@@ -901,7 +901,7 @@ export default class Graph {
    * @abstract returns true if graph is hamiltonian
    * @return {Array} hamiltonian_paths
    */
-  isCyclicHamiltonian() {
+  isCyclicHamiltonian () {
     const cycles = [];
 
     for (const hamiltonian_cycle of hamiltonianCycle(this)) {
@@ -919,7 +919,7 @@ export default class Graph {
    * from-to paths)
    * @return {Array} SC_components
    */
-  getStronglyConnectedComponents() {
+  getStronglyConnectedComponents () {
     const SC_sets = stronglyConnectedComponents(this);
 
     const verticesIndices = this.getVerticesKeystoIndices();
@@ -947,23 +947,23 @@ export default class Graph {
    * @abstract returns an object with key as SCC index and value as vertices indices
    * @return {Array} SC_components
    */
-  getStronglyConnectedComponentsIndices() {
+  getStronglyConnectedComponentsIndices () {
     const SCC = this.getStronglyConnectedComponents();
 
     return objectMap(
       objectInit(_.range(SCC.length), []),
-      (key, value) => SCC[Number(key)]
+      (key, value) => SCC[Number(key)],
     );
   }
 
-  getMapSCCToBindingPoints() {
+  getMapSCCToBindingPoints () {
     const binding_points = this.bindingPoints();
     let SCC_indices = this.getStronglyConnectedComponentsIndices();
 
     SCC_indices = objectMap(SCC_indices, (key, SCC_vertices) =>
       SCC_vertices.filter((SCC_vertex_id) =>
-        binding_points.includes(SCC_vertex_id)
-      )
+        binding_points.includes(SCC_vertex_id),
+      ),
     );
 
     return SCC_indices;
@@ -973,7 +973,7 @@ export default class Graph {
    * @abstract returns true if there is only one component on the graph
    * @return {Boolean} is_connected
    */
-  isConnected() {
+  isConnected () {
     return (
       this.retrieveUndirected().getStronglyConnectedComponents().length === 1
     );
@@ -983,7 +983,7 @@ export default class Graph {
    * @abstract returns true if graph is strongly connected
    * @return {Boolean} is_strongly_connected
    */
-  isStronglyConnected() {
+  isStronglyConnected () {
     const n_vertices = this.getNumVertices();
 
     // Step 1: Mark all the vertices as not visited (For first DFS)
@@ -1016,7 +1016,7 @@ export default class Graph {
    *    true  --> If graph has an Euler Circuit (Eulerian)
    * @return {Boolean} is_eulerian
    */
-  isEulerian() {
+  isEulerian () {
     const adjList = this.getAdjacencyList();
     const reverse_star = this.getAdjacencyList(1);
     const n_vertices = this.getNumVertices();
@@ -1061,7 +1061,7 @@ export default class Graph {
    * @abstract returns true for an eulerian cycle
    * @return {Boolean} is_eulerian_cycle
    */
-  isEulerianCycle() {
+  isEulerianCycle () {
     const num_vertices = this.getNumVertices();
     const forward_star = this.getAdjacencyList(0);
     const reverse_star = this.getAdjacencyList(1);
@@ -1080,7 +1080,7 @@ export default class Graph {
    * @abstract returns true if the graph may be bipartite
    * @return {Boolean} is_eulerian_cycle
    */
-  isBipartite() {
+  isBipartite () {
     const num_vertices = this.getNumVertices();
     const adjList = this.getAdjacencyList();
 
@@ -1140,7 +1140,7 @@ export default class Graph {
    * @abstract find all bridges. It uses recursive function bridgeUtil()
    * @return {Array}
    */
-  bridges(undirect = false) {
+  bridges (undirect = false) {
     const bridges = graphBridges(undirect ? this.retrieveUndirected() : this);
     const vertices_keys_to_indices = this.getVerticesKeystoIndices();
 
@@ -1154,7 +1154,7 @@ export default class Graph {
    * @abstract returns a map from bridge-ends to from-to bridge end object
    * @return {Array}
    */
-  getBridgeEndIODict() {
+  getBridgeEndIODict () {
     const bridges = this.bridges(true);
     const bridge_keys = _.uniq(_.flatten(bridges));
 
@@ -1167,23 +1167,23 @@ export default class Graph {
       (bridge_dict, __, bridge_end_key) => {
         neighbours = _.remove(
           _.flatten(
-            bridges.filter((bridge) => bridge.includes(bridge_end_key))
+            bridges.filter((bridge) => bridge.includes(bridge_end_key)),
           ),
-          (elem) => elem !== bridge_end_key
+          (elem) => elem !== bridge_end_key,
         );
 
         bridge_dict[bridge_end_key] = {
           to: neighbours.filter((neighbour) =>
-            forward_star[bridge_end_key].includes(neighbour)
+            forward_star[bridge_end_key].includes(neighbour),
           ),
           from: neighbours.filter((neighbour) =>
-            inverse_star[bridge_end_key].includes(neighbour)
+            inverse_star[bridge_end_key].includes(neighbour),
           ),
         };
 
         return bridge_dict;
       },
-      {}
+      {},
     );
   }
 
@@ -1191,7 +1191,7 @@ export default class Graph {
    * @abstract returns a map from island id to object with its bridge ends and inner vertices
    * @return {object}
    */
-  islands() {
+  islands () {
     const graph_copy = this.copy();
 
     const undirected_bridges = this.bridges(true);
@@ -1210,11 +1210,11 @@ export default class Graph {
     return objectMap(islands_dict, (key, habitants) => ({
       bridge_ends: sort(
         habitants.filter((habitant) => bridge_ends.includes(habitant)),
-        1
+        1,
       ),
       inner_vertices: sort(
         habitants.filter((habitant) => !bridge_ends.includes(habitant)),
-        1
+        1,
       ),
     }));
   }
@@ -1223,18 +1223,18 @@ export default class Graph {
    * @abstract returns a map from island id to habitants object
    * @return {object}
    */
-  islandsHabitants() {
+  islandsHabitants () {
     return objectReduce(
       this.islands(),
       (result, island_id, habitants_) => {
         result[island_id] = _.union(
           habitants_.bridge_ends,
-          habitants_.inner_vertices
+          habitants_.inner_vertices,
         );
 
         return result;
       },
-      {}
+      {},
     );
   }
 
@@ -1242,7 +1242,7 @@ export default class Graph {
    * @abstract returns an object map from an island id to an array of bridge end indexes
    * @return {Object}
    */
-  getIslandToBridgeEndList() {
+  getIslandToBridgeEndList () {
     return objectMap(this.islands(), (key, habitants) => habitants.bridge_ends);
   }
 
@@ -1250,7 +1250,7 @@ export default class Graph {
    * @abstract returns an object map from a bridge end index to an island id
    * @return {Object}
    */
-  getBridgeEndToIsland() {
+  getBridgeEndToIsland () {
     return objectReduce(
       this.getIslandToBridgeEndList(),
       (result, island_id, bridge_ends) => {
@@ -1260,7 +1260,7 @@ export default class Graph {
 
         return result;
       },
-      {}
+      {},
     );
   }
 
@@ -1268,9 +1268,9 @@ export default class Graph {
    * @abstract returns a map from island id to bridge end id
    * @return {Number}
    */
-  getIslandFromBridgeEnd(bridge_end_index) {
+  getIslandFromBridgeEnd (bridge_end_index) {
     const index_candidates = objectKeyFind(this.islands(), (key, habitants) =>
-      habitants.bridge_ends.includes(bridge_end_index)
+      habitants.bridge_ends.includes(bridge_end_index),
     );
 
     return Number(index_candidates[0]);
@@ -1280,7 +1280,7 @@ export default class Graph {
    * @abstract returns an island map to input-output bridge ends
    * @return {object}
    */
-  getIslandBridgeEndIODict() {
+  getIslandBridgeEndIODict () {
     const bridge_end_io_dict = this.getBridgeEndIODict();
 
     const islands_io_fun = (result_, id_, bridge_end_id) => {
@@ -1299,7 +1299,7 @@ export default class Graph {
       result[island_id] = objectReduce(
         habitant_groups.bridge_ends,
         islands_io_fun,
-        { source: [], target: [] }
+        { source: [], target: [] },
       );
 
       return result;
@@ -1312,7 +1312,7 @@ export default class Graph {
    * @abstract returns a map from island ids to from-to bridge end ids
    * @return {Array}
    */
-  getIslandsToFromBridgeEnd() {
+  getIslandsToFromBridgeEnd () {
     const island_bridge_end_list = this.getIslandToBridgeEndList();
     const bridge_end_InOut = this.getBridgeEndIODict();
     let bridges_iterfun;
@@ -1326,7 +1326,7 @@ export default class Graph {
         from_to.to = _.uniq(from_to.to.concat(bridge_end_InOut[bridge_end].to));
 
         from_to.from = _.uniq(
-          from_to.from.concat(bridge_end_InOut[bridge_end].from)
+          from_to.from.concat(bridge_end_InOut[bridge_end].from),
         );
 
         result[island_id] = from_to;
@@ -1340,7 +1340,7 @@ export default class Graph {
     return objectReduce(
       island_bridge_end_list,
       fromBridgeToIsland_reduce_fun,
-      {}
+      {},
     );
   }
 
@@ -1348,7 +1348,7 @@ export default class Graph {
    * @abstract returns a map from inner island reachibility from vertex to vertex
    * @return {Array}
    */
-  getIslandInnerReachability() {
+  getIslandInnerReachability () {
     const islands = this.islandsHabitants();
     const reachability_list = this.getReachabilityList();
 
@@ -1362,7 +1362,7 @@ export default class Graph {
         const intersec_fun = (result_, __, habitant) => {
           result_[habitant] = _.intersection(
             reachability_list[habitant],
-            habitants
+            habitants,
           );
           return result_;
         };
@@ -1380,14 +1380,14 @@ export default class Graph {
    * @abstract returns a map from islands to islands
    * @return {Array}
    */
-  getIslandIOReachability() {
+  getIslandIOReachability () {
     const reachability_list = this.getReachabilityList();
 
     const IO_fun = (result, island_id, habitants) => {
       const from_id_reachibility_fun = (result_, id_, in_bridge_end) => {
         result_[in_bridge_end] = _.intersection(
           reachability_list[in_bridge_end],
-          habitants.source
+          habitants.source,
         );
 
         return result_;
@@ -1396,7 +1396,7 @@ export default class Graph {
       result[island_id] = objectReduce(
         habitants.target,
         from_id_reachibility_fun,
-        {}
+        {},
       );
 
       return result;
@@ -1409,9 +1409,9 @@ export default class Graph {
    * @abstract returns a map from islands to islands
    * @return {Array}
    */
-  getIslandsSubgraphs() {
+  getIslandsSubgraphs () {
     return objectMap(this.islandsHabitants(), (island_id, habitants) =>
-      this.buildSubgraph(habitants)
+      this.buildSubgraph(habitants),
     );
   }
 
@@ -1419,7 +1419,7 @@ export default class Graph {
    * @abstract returns a map from islands to islands
    * @return {Array}
    */
-  getIslandsAdjacencyList() {
+  getIslandsAdjacencyList () {
     const bridge_end_to_island = this.getBridgeEndToIsland();
     const bendToIsland_map_fun = (to_bridge_end) =>
       bridge_end_to_island[to_bridge_end];
@@ -1433,19 +1433,19 @@ export default class Graph {
    * @abstract returns a map from islands to from-to islands
    * @return {Array}
    */
-  getIslandsFromToIslands() {
+  getIslandsFromToIslands () {
     const bridge_end_to_island = this.getBridgeEndToIsland();
 
     return objectMap(
       this.getIslandsToFromBridgeEnd(),
       (island_id, from_to_dict) => ({
         to: from_to_dict.to.map(
-          (to_bridge_end) => bridge_end_to_island[to_bridge_end]
+          (to_bridge_end) => bridge_end_to_island[to_bridge_end],
         ),
         from: from_to_dict.from.map(
-          (to_bridge_end) => bridge_end_to_island[to_bridge_end]
+          (to_bridge_end) => bridge_end_to_island[to_bridge_end],
         ),
-      })
+      }),
     );
   }
 
@@ -1453,7 +1453,7 @@ export default class Graph {
    * @abstract returns an island graph
    * @return {Array}
    */
-  getIslandGraph() {
+  getIslandGraph () {
     const islandAdjList = this.getIslandsAdjacencyList();
     const island_graph = new Graph(this.isDirected);
 
@@ -1468,9 +1468,9 @@ export default class Graph {
 
             return result;
           },
-          []
-        )
-      )
+          [],
+        ),
+      ),
     );
 
     return island_graph;
@@ -1480,7 +1480,7 @@ export default class Graph {
    * @abstract A bridge end is either a bridge head or tail
    * @return {Array}
    */
-  bridgeEnds() {
+  bridgeEnds () {
     return _.uniq(_.flatten(this.bridges()).sort());
   }
 
@@ -1488,7 +1488,7 @@ export default class Graph {
    * @abstract A binding point is either an articulation point or a bridge end
    * @return {Array}
    */
-  bindingPoints() {
+  bindingPoints () {
     return _.uniq(this.bridgeEnds().concat(this.articulationPoints()));
   }
 
@@ -1496,7 +1496,7 @@ export default class Graph {
    * @abstract find all bridge edges.
    * @return {Array}
    */
-  getBridgeEdges() {
+  getBridgeEdges () {
     return this.findEdgesByVertexIndicesTuples(this.bridges());
   }
 
@@ -1505,7 +1505,7 @@ export default class Graph {
    *
    * @return {Object}
    */
-  articulationPoints() {
+  articulationPoints () {
     const vertex_key_to_index = this.getVerticesKeystoIndices();
 
     // Set of vertices we've already visited during DFS.
@@ -1557,7 +1557,7 @@ export default class Graph {
           .getNeighbors()
           .filter(
             (earlyNeighbor) =>
-              earlyNeighbor.getKey() !== previousVertex.getKey()
+              earlyNeighbor.getKey() !== previousVertex.getKey(),
           )
           /**
            * @param {number} lowestDiscoveryTime
@@ -1617,14 +1617,14 @@ export default class Graph {
    * @param {GraphVertex} to_index
    * @return {Array[Array]} cycle
    */
-  #tarjanCycleMethod(
+  #tarjanCycleMethod (
     origin_index,
     curr_index,
     finish_recur,
     points,
     marked_stack,
     marked,
-    is_finish
+    is_finish,
   ) {
     const adjList = this.getAdjacencyList();
     const n_vertices = this.getNumVertices();
@@ -1664,7 +1664,7 @@ export default class Graph {
               points,
               marked_stack,
               marked,
-              is_finish
+              is_finish,
             );
           }
         }
@@ -1692,7 +1692,7 @@ export default class Graph {
    *
    * @return {Array[Array]} cycle
    */
-  cyclicCircuits() {
+  cyclicCircuits () {
     if (!this.isCyclic()) {
       return [];
     }
@@ -1727,9 +1727,9 @@ export default class Graph {
 
             return result;
           },
-          []
-        )
-      )
+          [],
+        ),
+      ),
     );
 
     return this.#cycles;
@@ -1740,7 +1740,7 @@ export default class Graph {
    *
    * @return {Array[Array]} cycle
    */
-  girph() {
+  girph () {
     return Math.min(...this.cyclicCircuits().map((cycle) => cycle.length));
   }
 
@@ -1752,7 +1752,7 @@ export default class Graph {
    *
    * @return {Array[Array]} cycle
    */
-  volume(vertices_indices, type = 0) {
+  volume (vertices_indices, type = 0) {
     const degree_list = this.getInOutDegreeList(type);
 
     return vertices_indices.reduce((vol, id_) => vol + degree_list[id_], 0);
@@ -1763,7 +1763,7 @@ export default class Graph {
    *
    * @return {object}
    */
-  getCycleIndices(recalculate = false) {
+  getCycleIndices (recalculate = false) {
     const cycles_indices = {};
     let cycles = [];
 
@@ -1785,8 +1785,8 @@ export default class Graph {
    *
    * @return {object}
    */
-  *getCyclesVenn(cycle_indices) {
-    yield* eulerGenerator(cycle_indices);
+  *getCyclesVenn (cycle_indices) {
+    yield * eulerGenerator(cycle_indices);
   }
 
   /**
@@ -1795,11 +1795,11 @@ export default class Graph {
    * @param {Array} subgraph_vertex_indexes
    * @return {object}
    */
-  buildSubgraph(subgraph_vertex_indexes) {
+  buildSubgraph (subgraph_vertex_indexes) {
     // Construct a graph from indices anew
     const subgraph_edges = this.getEdgesByVertexIndexes(
       subgraph_vertex_indexes,
-      true
+      true,
     );
 
     const new_vertices = {};
@@ -1824,7 +1824,7 @@ export default class Graph {
       return new GraphEdge(
         new_vertices[start_key],
         new_vertices[end_key],
-        edge.weight
+        edge.weight,
       );
     });
 
@@ -1842,7 +1842,7 @@ export default class Graph {
    * @param {Integer} from_vertex_key
    * @return {Integer}
    */
-  countUnreachebleNodes(from_vertex_key) {
+  countUnreachebleNodes (from_vertex_key) {
     const vertices_keys_to_indices =
       this.getVerticesKeystoIndices(from_vertex_key);
     const from_vertex_index = vertices_keys_to_indices[from_vertex_key];
@@ -1877,7 +1877,7 @@ export default class Graph {
    * @param {Integer} visited: visited nodes list
    * @return {Array} reachableNodes
    */
-  #reachUtil(src, visited) {
+  #reachUtil (src, visited) {
     const adjList = this.getAdjacencyList();
 
     // Mark all the vertices as not visited
@@ -1922,7 +1922,7 @@ export default class Graph {
    * @param {string} from_vertex_key: source node
    * @return {Array} reachableNodes
    */
-  reachableNodes(from_vertex_key) {
+  reachableNodes (from_vertex_key) {
     const vertices_keys_to_indices = this.getVerticesKeystoIndices();
     const from_vertex_id = vertices_keys_to_indices[from_vertex_key];
 
@@ -1945,14 +1945,14 @@ export default class Graph {
    * @param {string} type
    * @return {Array} reachableNodes
    */
-  getReachabilityList(type = 0) {
+  getReachabilityList (type = 0) {
     const vertices_indices = Object.keys(this.getAdjacencyList());
     const reachability_list = objectInit(vertices_indices, []);
     const incoming_list = objectInit(vertices_indices, []);
 
     vertices_indices.forEach((vertex_index) => {
       reachability_list[vertex_index] = this.reachableNodes(
-        this.convertVerticesIndexestoKeys([vertex_index])
+        this.convertVerticesIndexestoKeys([vertex_index]),
       );
     });
 
@@ -1978,7 +1978,7 @@ export default class Graph {
    * @param {string} to_vertex_key: destination node
    * @return {Boolean} reachableNodes
    */
-  isReachable(from_vertex_key, to_vertex_key) {
+  isReachable (from_vertex_key, to_vertex_key) {
     const vertices_keys_to_indices = this.getVerticesKeystoIndices();
     const to_vertex_id = vertices_keys_to_indices[to_vertex_key];
     const r_nodes_ids = this.reachableNodes(from_vertex_key);
@@ -1993,7 +1993,7 @@ export default class Graph {
    * @param {string} from_vertex_key: source node
    * @return {Array} reachableNodes
    */
-  isPredecessor(vertex_key, predecessor_candidate_key) {
+  isPredecessor (vertex_key, predecessor_candidate_key) {
     const vertices_keys_to_indices = this.getVerticesKeystoIndices();
 
     const vertex_id = vertices_keys_to_indices[vertex_key];
@@ -2014,7 +2014,7 @@ export default class Graph {
    * @param {Array} local_path_list        : array with trail sequence
    * @return {Array}
    */
-  #recurAcyclicPaths(from_index, to_index, is_visited, local_path_list, paths) {
+  #recurAcyclicPaths (from_index, to_index, is_visited, local_path_list, paths) {
     const adj_list = this.getAdjacencyList();
 
     const adj_len = adj_list[from_index].length;
@@ -2044,7 +2044,7 @@ export default class Graph {
           to_index,
           is_visited,
           local_path_list,
-          paths
+          paths,
         );
 
         // remove current node  in path[]
@@ -2064,7 +2064,7 @@ export default class Graph {
    * @param {GraphVertex} to
    * @return {Array[Integer]} paths
    */
-  acyclicPaths(from, to) {
+  acyclicPaths (from, to) {
     const verticesKeystoIndices = this.getVerticesKeystoIndices();
 
     const from_index = verticesKeystoIndices[from];
@@ -2096,14 +2096,14 @@ export default class Graph {
    * @param {Array} cycle_nodes_indexes
    * @return {Array[Integer]} allPaths for given acyclic path
    */
-  #allPathsUtil(acyclic_path_indexes, cycle_nodes_indexes) {
+  #allPathsUtil (acyclic_path_indexes, cycle_nodes_indexes) {
     const acyclic_path_keys =
       this.convertVerticesIndexestoKeys(acyclic_path_indexes);
 
     // Intersection nodes between path and cycle
     const intersect_nodes = _.intersection(
       acyclic_path_indexes,
-      cycle_nodes_indexes
+      cycle_nodes_indexes,
     );
 
     // Forward and reverse list dictionary
@@ -2142,14 +2142,14 @@ export default class Graph {
       // An outflow vertex has edges that do not belong to the acyclic path
       const to_vertices_indexes = _.intersection(
         forward_star[intersect_node_id],
-        cycle_nodes_indexes
+        cycle_nodes_indexes,
       );
       const to_edges_candidates = this.convertVerticesIndexestoKeys(
-        to_vertices_indexes
+        to_vertices_indexes,
       ).map((vertex_key) => `${intersect_node_key}_${vertex_key}`);
       const to_edges = _.difference(
         to_edges_candidates,
-        _.intersection(path_edges, to_edges_candidates)
+        _.intersection(path_edges, to_edges_candidates),
       );
 
       if (to_vertices_indexes.length !== 0 && to_edges.length !== 0) {
@@ -2159,14 +2159,14 @@ export default class Graph {
       // Likewise to inflow vertices
       const from_vertices_indexes = _.intersection(
         reverse_star[intersect_node_id],
-        cycle_nodes_indexes
+        cycle_nodes_indexes,
       );
       const from_edges_candidates = this.convertVerticesIndexestoKeys(
-        from_vertices_indexes
+        from_vertices_indexes,
       ).map((vertex_key) => `${vertex_key}_${intersect_node_key}`);
       const from_edges = _.difference(
         from_edges_candidates,
-        _.intersection(path_edges, from_edges_candidates)
+        _.intersection(path_edges, from_edges_candidates),
       );
 
       if (from_vertices_indexes.length !== 0 && from_edges.length !== 0) {
@@ -2196,7 +2196,7 @@ export default class Graph {
 
       for (let out_in_flow of cycle_subgraph.allPaths(
         startVertex,
-        finishVertex
+        finishVertex,
       )) {
         const out_in_keys =
           cycle_subgraph.convertVerticesIndexestoKeys(out_in_flow);
@@ -2221,7 +2221,7 @@ export default class Graph {
           new_route = [].concat(
             acyclic_path_indexes.slice(0, start_node_index + 1),
             out_in_flow.slice(1, -1),
-            acyclic_path_indexes.slice(finish_node_index)
+            acyclic_path_indexes.slice(finish_node_index),
           );
           new_routes.push(new_route);
         }
@@ -2238,7 +2238,7 @@ export default class Graph {
    * @param {string} to_key
    * @return {Array[Integer]} allPaths for given acyclic path and
    */
-  allPaths(from_key, to_key = from_key) {
+  allPaths (from_key, to_key = from_key) {
     // Acyclic paths for acyclic graph
     if (!this.isCyclic()) {
       return this.acyclicPaths(from_key, to_key);
@@ -2291,12 +2291,12 @@ export default class Graph {
 
         for (const cycles_connection of this.getCyclesVenn(cycle_indices)) {
           connected_cycles_indexes = _.split(cycles_connection[0], ',').map(
-            (cycle_index) => Number(cycle_index)
+            (cycle_index) => Number(cycle_index),
           );
 
           const cycle_nodes = new Set();
           connected_cycles_indexes.forEach((cycle_index) =>
-            cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes)
+            cycle_indices[cycle_index].forEach(cycle_nodes.add, cycle_nodes),
           );
 
           cycle_nodes_arr = [...cycle_nodes];
@@ -2321,7 +2321,7 @@ export default class Graph {
    *
    * @return {Graph} graph
    */
-  empty() {
+  empty () {
     this.deleteEdges(this.getAllEdges());
 
     return this;
@@ -2333,7 +2333,7 @@ export default class Graph {
    * @param {Array} chain_candidate
    * @return {Object} nodes_to_cycles
    */
-  isEmpty() {
+  isEmpty () {
     return Object.keys(this.edges).length == 0;
   }
 
@@ -2343,7 +2343,7 @@ export default class Graph {
    * @param {Array} chain_candidate
    * @return {Object} nodes_to_cycles
    */
-  isChain(chain_candidate) {
+  isChain (chain_candidate) {
     let is_chain = true;
     const adjList = this.getAdjacencyList(0);
 
@@ -2359,7 +2359,7 @@ export default class Graph {
    *
    * @return {Object} nodes_to_cycles
    */
-  getCycles() {
+  getCycles () {
     const n_vertices = this.getNumVertices();
     const cycles = this.cyclicCircuits();
     const nodes_to_cycles = {};
@@ -2393,7 +2393,7 @@ export default class Graph {
    *
    * @return {Object} graph_json
    */
-  serialize() {
+  serialize () {
     return {
       isDirected: this.isDirected,
       nodes: this.getAllVertices().map((vertex) => ({
@@ -2413,7 +2413,7 @@ export default class Graph {
    * @param serialized_graph
    * @return {Graph} this
    */
-  deserialize(graph_json) {
+  deserialize (graph_json) {
     if (graph_json.isDirected !== this.isDirected) {
       throwError('This direction is different from serialization direction.');
     } else {
@@ -2427,28 +2427,28 @@ export default class Graph {
             }
             return null;
           }),
-          (key, value) => value !== null
-        )
+          (key, value) => value !== null,
+        ),
       );
 
       this.addEdges(
         objectFilter(
           graph_json.edges.map((edge_json) => {
             const has_edge = this.getAllEdgesKeys().includes(
-              `${edge_json.source}_${edge_json.target}`
+              `${edge_json.source}_${edge_json.target}`,
             );
 
             if (!has_edge) {
               return new GraphEdge(
                 this.vertices[edge_json.source],
                 this.vertices[edge_json.target],
-                edge_json.weight
+                edge_json.weight,
               );
             }
             return null;
           }),
-          (key, value) => value !== null
-        )
+          (key, value) => value !== null,
+        ),
       );
 
       return this;
@@ -2458,7 +2458,7 @@ export default class Graph {
   /**
    * @return {object}
    */
-  describe() {
+  describe () {
     const is_cyclic = this.isCyclic();
     const is_eulerian = this.isEulerian();
 
@@ -2482,7 +2482,7 @@ export default class Graph {
   /**
    * @return {Object}
    */
-  toString() {
+  toString () {
     return Object.keys(this.edges).toString();
   }
 }

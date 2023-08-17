@@ -8,12 +8,12 @@ export const reason = new Reasoning('reason', 'This is a reason', true);
 export const truePremise = new Premise(
   'true_premise',
   'This is a true premise',
-  true
+  true,
 );
 export const falsePremise = new Premise(
   'false_premise',
   'This is a false premise',
-  false
+  false,
 );
 
 export const expectedTruePremiseArgument = { true_premise: true };
@@ -95,8 +95,8 @@ export const expectedInjunctionsVerbalizations = [
 //
 export const expectedInjunctionThoughts = zip(expectedInjConjArguments, expectedInjunctionsConclusions).map(
   ([argument, conclusion]) => {
-    return { arguments: argument, conclusion: conclusion, }
-  }
+    return { arguments: argument, conclusion: conclusion }
+  },
 );
 
 // Conjunctions
@@ -110,8 +110,8 @@ export const expectedConjunctionsVerbalizations = [
 
 export const expectedConjunctionThoughts = zip(expectedInjConjArguments, expectedConjunctionsConclusions).map(
   ([argument, conclusion]) => {
-    return { arguments: argument, conclusion: conclusion, }
-  }
+    return { arguments: argument, conclusion: conclusion }
+  },
 );
 
 // Single premise conjunctions

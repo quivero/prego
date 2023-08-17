@@ -11,23 +11,23 @@ describe('throwError/warn', () => {
       return throwError('Fire!');
     };
 
-    expect(throwErrorFn).toThrowError();
+    expect(throwErrorFn).toThrow();
   });
 
   it('should throw error', () => {
     const raiseFn = () => raise('Fire!');
-    expect(raiseFn).toThrowError(Error);
+    expect(raiseFn).toThrow(Error);
   });
 
   it('should throw Error', () => {
     const raiseFn = () => raise('Wrong is not right!', TypeError);
-    expect(raiseFn).toThrowError(TypeError);
+    expect(raiseFn).toThrow(TypeError);
   });
 
   it('should raise TypeError', () => {
     const raiseFn = () => raise('Wrong is not right!', TypeError);
 
-    expect(raiseFn).toThrowError(TypeError);
+    expect(raiseFn).toThrow(TypeError);
   });
 
   it('should call log on report', () => {

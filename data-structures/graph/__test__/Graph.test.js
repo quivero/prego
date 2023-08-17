@@ -419,7 +419,7 @@ describe('Graph', () => {
 
     const edge = graph.findEdgeByVertexIndices(0, 1);
 
-    expect(edge.getKey()).toEqual('A_B');
+    expect(edge.getKey()).toBe('A_B');
   });
 
   it('should get edges by vertex keys', () => {
@@ -1183,7 +1183,7 @@ describe('Graph', () => {
         [B, C],
         [C, D],
         [A, C],
-      ])
+      ]),
     );
 
     const articulationPointsSet = graph.articulationPoints();
@@ -1212,7 +1212,7 @@ describe('Graph', () => {
     const articulationPointsSet = Object.values(graph.articulationPoints());
     const vertices_indices = graph.getVerticesKeystoIndices();
 
-    expect(articulationPointsSet.length).toBe(1);
+    expect(articulationPointsSet).toHaveLength(1);
     expect(articulationPointsSet[0]).toBe(vertices_indices[C.getKey()]);
   });
 
@@ -1434,7 +1434,7 @@ describe('Graph', () => {
         [C, E],
         [D, E],
         [E, F],
-      ])
+      ]),
     );
 
     result = graph.bridges();
@@ -1459,7 +1459,7 @@ describe('Graph', () => {
         [C, E],
         [D, E],
         [E, F],
-      ])
+      ]),
     );
 
     const edges = graph.getBridgeEdges();
@@ -1535,7 +1535,7 @@ describe('Graph', () => {
         [D, E],
         [D, F],
         [E, F],
-      ])
+      ]),
     );
 
     const islands_graphs = graph.getIslandsSubgraphs();
@@ -1646,7 +1646,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [B, C],
-      ])
+      ]),
     );
 
     result = graph.cyclicCircuits();
@@ -1707,7 +1707,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
 
     const neighbors = graph.getNeighbors(A);
@@ -1749,7 +1749,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
 
     result = graph.reachableNodes('A');
@@ -1767,7 +1767,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
 
     trivia = [
@@ -1785,7 +1785,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [B, C],
-      ])
+      ]),
     );
 
     trivia = [
@@ -1821,7 +1821,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
     graph.addVertex(D);
 
@@ -1838,7 +1838,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
     graph.addVertex(D);
 
@@ -1855,7 +1855,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
     graph.addVertex(D);
 
@@ -1874,7 +1874,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
 
     result = graph.countUnreachebleNodes('A');
@@ -1890,7 +1890,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [A, C],
-      ])
+      ]),
     );
 
     const { density } = graph;
@@ -1909,7 +1909,7 @@ describe('Graph', () => {
     result = warn;
     expected = 1;
 
-    expect(result).toBeCalledTimes(expected);
+    expect(result).toHaveBeenCalledTimes(expected);
   });
 
   it('should return the list of all added edges', () => {
@@ -1919,7 +1919,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [B, C],
-      ])
+      ]),
     );
 
     edges = graph.getAllEdges();
@@ -2034,7 +2034,7 @@ describe('Graph', () => {
       createEdges([
         [A, B],
         [B, C],
-      ])
+      ]),
     );
 
     result = graph_.isCyclic();
@@ -2131,7 +2131,7 @@ describe('Graph', () => {
         [E, B],
         [C, F],
         [F, B],
-      ])
+      ]),
     );
 
     result = graph.girph();
@@ -2406,7 +2406,7 @@ describe('Graph', () => {
       [
         isCyclicEqual(
           hamiltonianCycleSet[0].slice(1),
-          assertHamiltonianCycles[0]
+          assertHamiltonianCycles[0],
         ),
         expectToBe,
         true,
@@ -2414,7 +2414,7 @@ describe('Graph', () => {
       [
         isCyclicEqual(
           hamiltonianCycleSet[1].slice(1),
-          assertHamiltonianCycles[1]
+          assertHamiltonianCycles[1],
         ),
         expectToBe,
         true,
@@ -2422,7 +2422,7 @@ describe('Graph', () => {
       [
         isCyclicEqual(
           hamiltonianCycleSet[2].slice(1),
-          assertHamiltonianCycles[2]
+          assertHamiltonianCycles[2],
         ),
         expectToBe,
         true,
@@ -2430,7 +2430,7 @@ describe('Graph', () => {
       [
         isCyclicEqual(
           hamiltonianCycleSet[3].slice(1),
-          assertHamiltonianCycles[3]
+          assertHamiltonianCycles[3],
         ),
         expectToBe,
         true,
@@ -2651,7 +2651,7 @@ describe('Graph', () => {
 
     graph.reverse();
 
-    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledOnce();
   });
 
   it('should return vertices indices', () => {

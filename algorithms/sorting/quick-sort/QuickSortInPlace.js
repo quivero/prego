@@ -12,11 +12,11 @@ export default class QuickSortInPlace extends Sort {
    * @param {boolean} recursiveCall
    * @return {*[]} - Sorted array.
    */
-  sort(
+  sort (
     originalArray,
     inputLowIndex = 0,
     inputHighIndex = originalArray.length - 1,
-    recursiveCall = false
+    recursiveCall = false,
   ) {
     // Copies array on initial call, and then sorts in place.
     const array = recursiveCall ? originalArray : [...originalArray];

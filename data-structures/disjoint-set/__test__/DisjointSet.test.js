@@ -2,13 +2,13 @@ import DisjointSet from '../DisjointSet';
 
 describe('DisjointSet', () => {
   it('should throw error when trying to union and check not existing sets', () => {
-    function mergeNotExistingSets() {
+    function mergeNotExistingSets () {
       const disjointSet = new DisjointSet();
 
       disjointSet.union('A', 'B');
     }
 
-    function checkNotExistingSets() {
+    function checkNotExistingSets () {
       const disjointSet = new DisjointSet();
 
       disjointSet.inSameSet('A', 'B');

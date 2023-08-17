@@ -50,7 +50,7 @@ describe('eulerianPath', () => {
 
     const eulerianPathSet = eulerianPath(graph);
 
-    expect(eulerianPathSet.length).toBe(graphEdgesCount + 1);
+    expect(eulerianPathSet).toHaveLength(graphEdgesCount + 1);
 
     expect(eulerianPathSet[0].getKey()).toBe(vertexA.getKey());
     expect(eulerianPathSet[1].getKey()).toBe(vertexB.getKey());
@@ -103,7 +103,7 @@ describe('eulerianPath', () => {
 
     const eulerianPathSet = eulerianPath(graph);
 
-    expect(eulerianPathSet.length).toBe(graphEdgesCount + 1);
+    expect(eulerianPathSet).toHaveLength(graphEdgesCount + 1);
 
     expect(eulerianPathSet[0].getKey()).toBe(vertexC.getKey());
     expect(eulerianPathSet[1].getKey()).toBe(vertexA.getKey());

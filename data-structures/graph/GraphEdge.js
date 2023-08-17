@@ -4,7 +4,7 @@ export default class GraphEdge {
    * @param {GraphVertex} endVertex
    * @param {number} [weight=1]
    */
-  constructor(startVertex, endVertex, weight = 0) {
+  constructor (startVertex, endVertex, weight = 0) {
     this.startVertex = startVertex;
     this.endVertex = endVertex;
     this.weight = weight;
@@ -13,7 +13,7 @@ export default class GraphEdge {
   /**
    * @return {string}
    */
-  getKeyTuple() {
+  getKeyTuple () {
     const startVertexKey = this.startVertex.getKey();
     const endVertexKey = this.endVertex.getKey();
 
@@ -23,7 +23,7 @@ export default class GraphEdge {
   /**
    * @return {string}
    */
-  getKey() {
+  getKey () {
     const startVertexKey = this.startVertex.getKey();
     const endVertexKey = this.endVertex.getKey();
 
@@ -33,7 +33,7 @@ export default class GraphEdge {
   /**
    * @return {GraphEdge}
    */
-  reverse() {
+  reverse () {
     const tmp = this.startVertex;
     this.startVertex = this.endVertex;
     this.endVertex = tmp;
@@ -44,7 +44,7 @@ export default class GraphEdge {
   /**
    * @return {string}
    */
-  toString() {
+  toString () {
     return this.getKey();
   }
 }

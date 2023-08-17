@@ -140,7 +140,7 @@ describe('distance', () => {
     const coord_2 = [Math.PI / 2, 0];
 
     expect(distance(coord_1, coord_2, 'sphere', { radius: 1 })).toBeCloseTo(
-      (2 * Math.PI) / 4
+      (2 * Math.PI) / 4,
     );
   });
 
@@ -149,11 +149,11 @@ describe('distance', () => {
     const coord_2 = [2, 2];
 
     expect(distance(coord_1, coord_2, 'n_norm', { exponent: 1 })).toBeCloseTo(
-      2
+      2,
     );
 
     expect(distance(coord_1, coord_2, 'n_norm', { exponent: 2 })).toBeCloseTo(
-      Math.sqrt(2)
+      Math.sqrt(2),
     );
   });
 
@@ -172,7 +172,7 @@ describe('distance', () => {
     const coord_2 = [2, 2];
 
     expect(
-      distance(coord_1, coord_2, 'n_norm', { exponent: Infinity })
+      distance(coord_1, coord_2, 'n_norm', { exponent: Infinity }),
     ).toBeCloseTo(3);
   });
 
@@ -191,17 +191,17 @@ describe('distance', () => {
       coordinate_2,
       method,
       method_config,
-      expected_value
+      expected_value,
     ) => {
       result = travelTime(
         average_speed,
         coordinate_1,
         coordinate_2,
         method,
-        method_config
+        method_config,
       );
 
       expect(result).toBeCloseTo(expected_value);
-    }
+    },
   );
 });

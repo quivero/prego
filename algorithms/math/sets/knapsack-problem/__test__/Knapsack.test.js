@@ -175,11 +175,11 @@ describe('Knapsack', () => {
     knapsack.solveUnboundedKnapsackProblem();
 
     [knapsack.totalValue, 84 + 84 + 20 + 10],
-      [knapsack.totalWeight, 17],
-      [knapsack.selectedItems.length, 3],
-      [knapsack.selectedItems[0].toString(), 'v84 w7 x2'],
-      [knapsack.selectedItems[1].toString(), 'v20 w2 x1'],
-      [knapsack.selectedItems[2].toString(), 'v10 w1 x1'];
+    [knapsack.totalWeight, 17],
+    [knapsack.selectedItems.length, 3],
+    [knapsack.selectedItems[0].toString(), 'v84 w7 x2'],
+    [knapsack.selectedItems[1].toString(), 'v20 w2 x1'],
+    [knapsack.selectedItems[2].toString(), 'v10 w1 x1'];
 
     for (const item of trivia) {
       result = item[0];
@@ -205,13 +205,13 @@ describe('Knapsack', () => {
     knapsack.solveUnboundedKnapsackProblem();
 
     [knapsack.totalValue, 3 * 84 + 2 * 5 + 1 * 12 + 6 * 10 + 8 * 20],
-      [knapsack.totalWeight, 3 * 7 + 2 * 2 + 1 * 3 + 6 * 1 + 8 * 2],
-      [knapsack.selectedItems.length, 5],
-      [knapsack.selectedItems[0].toString(), 'v84 w7 x3'],
-      [knapsack.selectedItems[1].toString(), 'v20 w2 x8'],
-      [knapsack.selectedItems[2].toString(), 'v10 w1 x6'],
-      [knapsack.selectedItems[3].toString(), 'v12 w3 x1'],
-      [knapsack.selectedItems[4].toString(), 'v5 w2 x2'];
+    [knapsack.totalWeight, 3 * 7 + 2 * 2 + 1 * 3 + 6 * 1 + 8 * 2],
+    [knapsack.selectedItems.length, 5],
+    [knapsack.selectedItems[0].toString(), 'v84 w7 x3'],
+    [knapsack.selectedItems[1].toString(), 'v20 w2 x8'],
+    [knapsack.selectedItems[2].toString(), 'v10 w1 x6'],
+    [knapsack.selectedItems[3].toString(), 'v12 w3 x1'],
+    [knapsack.selectedItems[4].toString(), 'v5 w2 x2'];
 
     for (const item of trivia) {
       result = item[0];

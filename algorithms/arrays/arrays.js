@@ -209,15 +209,15 @@ export const sequentialArrayBlobs = (arr) => {
 
   for (const index of _.range(arr.length)) {
 
-      if (arr[index] - arr[index - 1] > 1) {
-        blobs[counter] = arr.slice(head_index, index);
-        head_index = index;
-        counter += 1;
-      }
+    if (arr[index] - arr[index - 1] > 1) {
+      blobs[counter] = arr.slice(head_index, index);
+      head_index = index;
+      counter += 1;
+    }
 
-      if (index === arr.length - 1) {
-        blobs[counter] = arr.slice(head_index, index + 1);
-      }
+    if (index === arr.length - 1) {
+      blobs[counter] = arr.slice(head_index, index + 1);
+    }
 
   }
 
@@ -293,7 +293,7 @@ export const removeArrayDuplicates = (list) => {
   return unique;
 };
 
-export function* mSetsOfnTuples(array, m, n) {
+export function* mSetsOfnTuples (array, m, n) {
   let arr_diff;
 
   if (m > Math.floor(array.length / n)) {
@@ -329,7 +329,7 @@ export const getUniques = (vec) => Array.from(new Set(vec));
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
+export function* fullPolytopeIndexesFn (length, curr_dim, dim) {
   for (const i of _.range(0, length)) {
     if (curr_dim === 1) {
       yield i;
@@ -337,7 +337,7 @@ export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
       for (const tail_indexes of fullPolytopeIndexesFn(
         length,
         curr_dim - 1,
-        dim
+        dim,
       )) {
         yield [i].concat(tail_indexes);
       }
@@ -351,7 +351,7 @@ export function* fullPolytopeIndexesFn(length, curr_dim, dim) {
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
+export function* upperTriangularIndexesFn (length, curr_dim, dim, index = 0) {
   for (const i of _.range(index, length)) {
     if (curr_dim === 1) {
       yield i;
@@ -360,7 +360,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
         length,
         curr_dim - 1,
         dim,
-        i
+        i,
       )) {
         yield [i].concat(tail_indexes);
       }
@@ -374,7 +374,7 @@ export function* upperTriangularIndexesFn(length, curr_dim, dim, index = 0) {
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* hyperIndexes(length, dim, formationFn) {
+export function* hyperIndexes (length, dim, formationFn) {
   if (dim <= 0 || length <= 0) {
     raise('Dimension and length must be positive natural numbers!');
   }
@@ -390,8 +390,8 @@ export function* hyperIndexes(length, dim, formationFn) {
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* fullPolytopeHyperindexes(length, dim) {
-  yield* hyperIndexes(length, dim, fullPolytopeIndexesFn);
+export function* fullPolytopeHyperindexes (length, dim) {
+  yield * hyperIndexes(length, dim, fullPolytopeIndexesFn);
 }
 
 /**
@@ -400,13 +400,13 @@ export function* fullPolytopeHyperindexes(length, dim) {
  * @param {Array} vec
  * @return {Array} arr_with_uniques
  */
-export function* upperTriangularHyperindexes(length, dim) {
-  yield* hyperIndexes(length, dim, upperTriangularIndexesFn);
+export function* upperTriangularHyperindexes (length, dim) {
+  yield * hyperIndexes(length, dim, upperTriangularIndexesFn);
 }
 
 const SETKEY_DELIMITER = ',';
 
-export function* eulerGenerator(sets) {
+export function* eulerGenerator (sets) {
   /**
    *   @abstract returns each tuple [key, elems] of the Euler diagram
    *   systematic in a generator-wise fashion
@@ -429,7 +429,7 @@ export function* eulerGenerator(sets) {
     sets.constructor !== [].constructor
   ) {
     throw new TypeError(
-      'Ill-conditioned input. It must be either a json-like or array of arrays object!'
+      'Ill-conditioned input. It must be either a json-like or array of arrays object!',
     );
   }
 
@@ -447,12 +447,11 @@ export function* eulerGenerator(sets) {
         result[key] = unique(sets[key]);
         return result;
       },
-      {}
+      {},
     );
   }
 
-  if (Object.values(sets).length === 0)
-    throw new TypeError('There must at least ONE set!');
+  if (Object.values(sets).length === 0) { throw new TypeError('There must at least ONE set!'); }
 
   if (Object.values(sets).length === 1) yield Object.entries(sets)[0];
 
@@ -483,7 +482,7 @@ export function* eulerGenerator(sets) {
           result[compl_set_key] = sets[compl_set_key];
           return result;
         },
-        {}
+        {},
       );
 
       for (const [ comb_str, celements ] of eulerGenerator(compl_sets)) {
@@ -503,7 +502,7 @@ export function* eulerGenerator(sets) {
         if (comb_intersec.length !== 0) {
           // 2. Intersection of analysis element and exclusive group
           comb_intersec_key = [set_key].concat(
-            comb_str.split(SETKEY_DELIMITER)
+            comb_str.split(SETKEY_DELIMITER),
           ).join(SETKEY_DELIMITER);
 
           yield [comb_intersec_key, comb_intersec];

@@ -3,7 +3,7 @@ import LinkedList from '../linked-list/LinkedList.js';
 export default class Queue {
   #length;
 
-  constructor() {
+  constructor () {
     // We're going to implement Queue based on LinkedList since the two
     // structures are quite similar. Namely, they both operate mostly on
     // the elements at the beginning and the end. Compare enqueue/dequeue
@@ -12,14 +12,14 @@ export default class Queue {
     this.#length = 0;
   }
 
-  get length() {
+  get length () {
     return this.linkedList.length;
   }
 
   /**
    * @return {boolean}
    */
-  isEmpty() {
+  isEmpty () {
     return !this.linkedList.head;
   }
 
@@ -27,7 +27,7 @@ export default class Queue {
    * Read the element at the front of the queue without removing it.
    * @return {*}
    */
-  peek() {
+  peek () {
     if (!this.linkedList.head) {
       return null;
     }
@@ -40,7 +40,7 @@ export default class Queue {
    * This element will be processed after all elements ahead of it.
    * @param {*} value
    */
-  enqueue(value) {
+  enqueue (value) {
     this.linkedList.append(value);
   }
 
@@ -49,7 +49,7 @@ export default class Queue {
    * If the queue is empty, return null.
    * @return {*}
    */
-  dequeue() {
+  dequeue () {
     const removedHead = this.linkedList.deleteHead();
     return removedHead ? removedHead.value : null;
   }
@@ -58,7 +58,7 @@ export default class Queue {
    * @param [callback]
    * @return {string}
    */
-  toString(callback) {
+  toString (callback) {
     // Return string representation of the queue's linked list.
     return this.linkedList.toString(callback);
   }

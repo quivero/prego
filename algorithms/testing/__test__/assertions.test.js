@@ -37,6 +37,7 @@ describe('batchAssert', () => {
 
     batchAssert(assertFixtures);
   });
+
   it('must throw error on invalid batchAssert', () => {
     const batchThrowError = () => batchAssertGuard(['42', '42']);
 

@@ -39,7 +39,7 @@ describe('hamiltonianCycle', () => {
       hamiltonianCycleSet.push(h_cycle);
     }
 
-    expect(hamiltonianCycleSet.length).toBe(8);
+    expect(hamiltonianCycleSet).toHaveLength(8);
 
     expect(hamiltonianCycleSet[0][0].getKey()).toBe(vertexA.getKey());
     expect(hamiltonianCycleSet[0][1].getKey()).toBe(vertexB.getKey());
@@ -89,6 +89,6 @@ describe('hamiltonianCycle', () => {
       hamiltonianCycleSet.push(h_cycle);
     }
 
-    expect(hamiltonianCycleSet.length).toBe(0);
+    expect(hamiltonianCycleSet).toHaveLength(0);
   });
 });

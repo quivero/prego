@@ -23,7 +23,7 @@ export const warn = (msg) => log('warn', msg);
  *
  * @param {String} task_msg
  */
-export const raise = (msg, errorClass=Error) => {
+export const raise = (msg, errorClass = Error) => {
   log('error', msg);
   throw new errorClass(msg);
 };
@@ -50,8 +50,8 @@ export const typeOf = (value) => {
       return value === null
         ? 'null'
         : _.lowerCase(
-            Object.prototype.toString.call(value).match(/^\[object (.*)\]$/)[1]
-          );
+          Object.prototype.toString.call(value).match(/^\[object (.*)\]$/)[1],
+        );
 
     case 'function':
       return 'function';

@@ -1,7 +1,7 @@
 import Sort from '../Sort';
 
 export default class InsertionSort extends Sort {
-  sort(originalArray) {
+  sort (originalArray) {
     const array = [...originalArray];
 
     // Go through all array elements...

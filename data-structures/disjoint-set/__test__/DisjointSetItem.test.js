@@ -23,14 +23,14 @@ describe('DisjointSetItem', () => {
     expect(itemB.getRank()).toBe(0);
     expect(itemD.getRank()).toBe(0);
 
-    expect(itemA.getChildren().length).toBe(1);
-    expect(itemC.getChildren().length).toBe(1);
+    expect(itemA.getChildren()).toHaveLength(1);
+    expect(itemC.getChildren()).toHaveLength(1);
 
     expect(itemA.getChildren()[0]).toEqual(itemB);
     expect(itemC.getChildren()[0]).toEqual(itemD);
 
-    expect(itemB.getChildren().length).toBe(0);
-    expect(itemD.getChildren().length).toBe(0);
+    expect(itemB.getChildren()).toHaveLength(0);
+    expect(itemD.getChildren()).toHaveLength(0);
 
     expect(itemA.getRoot()).toEqual(itemA);
     expect(itemB.getRoot()).toEqual(itemA);
@@ -50,9 +50,9 @@ describe('DisjointSetItem', () => {
     expect(itemC.isRoot()).toBeFalse();
     expect(itemD.isRoot()).toBeFalse();
 
-    expect(itemA.getRank()).toEqual(3);
-    expect(itemB.getRank()).toEqual(0);
-    expect(itemC.getRank()).toEqual(1);
+    expect(itemA.getRank()).toBe(3);
+    expect(itemB.getRank()).toBe(0);
+    expect(itemC.getRank()).toBe(1);
   });
 
   it('should do basic manipulation with disjoint set item with custom key extractor', () => {
@@ -79,14 +79,14 @@ describe('DisjointSetItem', () => {
     expect(itemB.getRank()).toBe(0);
     expect(itemD.getRank()).toBe(0);
 
-    expect(itemA.getChildren().length).toBe(1);
-    expect(itemC.getChildren().length).toBe(1);
+    expect(itemA.getChildren()).toHaveLength(1);
+    expect(itemC.getChildren()).toHaveLength(1);
 
     expect(itemA.getChildren()[0]).toEqual(itemB);
     expect(itemC.getChildren()[0]).toEqual(itemD);
 
-    expect(itemB.getChildren().length).toBe(0);
-    expect(itemD.getChildren().length).toBe(0);
+    expect(itemB.getChildren()).toHaveLength(0);
+    expect(itemD.getChildren()).toHaveLength(0);
 
     expect(itemA.getRoot()).toEqual(itemA);
     expect(itemB.getRoot()).toEqual(itemA);
@@ -106,8 +106,8 @@ describe('DisjointSetItem', () => {
     expect(itemC.isRoot()).toBeFalse();
     expect(itemD.isRoot()).toBeFalse();
 
-    expect(itemA.getRank()).toEqual(3);
-    expect(itemB.getRank()).toEqual(0);
-    expect(itemC.getRank()).toEqual(1);
+    expect(itemA.getRank()).toBe(3);
+    expect(itemB.getRank()).toBe(0);
+    expect(itemC.getRank()).toBe(1);
   });
 });

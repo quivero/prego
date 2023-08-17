@@ -8,7 +8,7 @@ export default class LinkedList {
 
   #length;
 
-  constructor(comparatorFunction) {
+  constructor (comparatorFunction) {
     /** @var LinkedListNode */
     this.head = null;
 
@@ -21,7 +21,7 @@ export default class LinkedList {
     this.compare = new Comparator(comparatorFunction);
   }
 
-  get length() {
+  get length () {
     return this.toArray().length;
   }
 
@@ -29,7 +29,7 @@ export default class LinkedList {
    * @param {*} value
    * @return {LinkedList}
    */
-  prepend(value) {
+  prepend (value) {
     // Make new node to be a head.
     const newNode = new LinkedListNode(value, this.head);
     this.head = newNode;
@@ -46,7 +46,7 @@ export default class LinkedList {
    * @param {*} value
    * @return {LinkedList}
    */
-  append(value) {
+  append (value) {
     const newNode = new LinkedListNode(value);
 
     // If there is no head yet let's make new node a head.
@@ -68,7 +68,7 @@ export default class LinkedList {
    * @param {*} value
    * @return {LinkedListNode}
    */
-  delete(value) {
+  delete (value) {
     if (!this.head) {
       return null;
     }
@@ -110,7 +110,7 @@ export default class LinkedList {
    * @param {function} [findParams.callback]
    * @return {LinkedListNode}
    */
-  find({ value = undefined, callback = undefined }) {
+  find ({ value = undefined, callback = undefined }) {
     if (!this.head) {
       return null;
     }
@@ -137,7 +137,7 @@ export default class LinkedList {
   /**
    * @return {LinkedListNode}
    */
-  deleteTail() {
+  deleteTail () {
     const deletedTail = this.tail;
 
     if (this.head === this.tail) {
@@ -168,7 +168,7 @@ export default class LinkedList {
   /**
    * @return {LinkedListNode}
    */
-  deleteHead() {
+  deleteHead () {
     if (!this.head) {
       return null;
     }
@@ -189,7 +189,7 @@ export default class LinkedList {
    * @param {*[]} values - Array of values that need to be converted to linked list.
    * @return {LinkedList}
    */
-  fromArray(values) {
+  fromArray (values) {
     values.forEach((value) => this.append(value));
 
     return this;
@@ -198,7 +198,7 @@ export default class LinkedList {
   /**
    * @return {LinkedListNode[]}
    */
-  toArray() {
+  toArray () {
     const nodes = [];
 
     let currentNode = this.head;
@@ -214,7 +214,7 @@ export default class LinkedList {
    * @param {function} [callback]
    * @return {string}
    */
-  toString(callback) {
+  toString (callback) {
     return this.toArray()
       .map((node) => node.toString(callback))
       .toString();
@@ -224,7 +224,7 @@ export default class LinkedList {
    * Reverse a linked list.
    * @returns {LinkedList}
    */
-  reverse() {
+  reverse () {
     let currNode = this.head;
     let prevNode = null;
     let nextNode = null;

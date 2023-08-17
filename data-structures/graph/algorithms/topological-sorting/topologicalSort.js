@@ -4,7 +4,7 @@ import depthFirstSearch from '#galgorithms/depth-first-search/depthFirstSearch';
 /**
  * @param {Graph} graph
  */
-export default function topologicalSort(graph) {
+export default function topologicalSort (graph) {
   // Create a set of all vertices we want to visit.
   const unvisitedSet = {};
   graph.getAllVertices().forEach((vertex) => {

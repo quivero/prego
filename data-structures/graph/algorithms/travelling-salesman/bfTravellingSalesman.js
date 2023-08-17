@@ -4,7 +4,7 @@
  * @param {GraphVertex[][]} [paths]
  * @param {GraphVertex[]} [path]
  */
-function findAllPaths(startVertex, paths = [], path = []) {
+function findAllPaths (startVertex, paths = [], path = []) {
   // Clone path.
   const currentPath = [...path];
 
@@ -50,7 +50,7 @@ function findAllPaths(startVertex, paths = [], path = []) {
  * @param {GraphVertex[]} cycle
  * @return {number}
  */
-function getCycleWeight(adjacencyMatrix, verticesKeystoIndices, cycle) {
+function getCycleWeight (adjacencyMatrix, verticesKeystoIndices, cycle) {
   let weight = 0;
 
   for (let cycleIndex = 1; cycleIndex < cycle.length; cycleIndex += 1) {
@@ -70,7 +70,7 @@ function getCycleWeight(adjacencyMatrix, verticesKeystoIndices, cycle) {
  * @param {Graph} graph
  * @return {GraphVertex[]}
  */
-export default function bfTravellingSalesman(graph) {
+export default function bfTravellingSalesman (graph) {
   // Pick starting point from where we will traverse the graph.
   const startVertex = graph.getAllVertices()[0];
 
@@ -101,7 +101,7 @@ export default function bfTravellingSalesman(graph) {
     const currentCycleWeight = getCycleWeight(
       adjacencyMatrix,
       verticesKeystoIndices,
-      currentCycle
+      currentCycle,
     );
 
     // If current cycle weight is smaller then previous ones treat current cycle as most optimal.

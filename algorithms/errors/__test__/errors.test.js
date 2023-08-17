@@ -14,6 +14,7 @@ describe('Errors', () => {
 
     expect(error.name).toMatch('NotImplementedError');
   });
+
   it('must check interfaceError', () => {
     let message, error;
     message = 'This is an interface';

@@ -11,28 +11,28 @@ export default {
   collectCoverage: true,
 
   // The directory where Jest should output its coverage files.
-  coverageDirectory: "./coverage/",
+  coverageDirectory: './coverage/',
   
-  setupFilesAfterEnv: ["jest-extended/all"],
+  setupFilesAfterEnv: ['jest-extended/all'],
   
   // If the test path matches any of the patterns, it will be skipped.
   testPathIgnorePatterns: [
-    "<rootDir>/node_modules/",
-    "<rootDir>/algorithms/logging/",
+    '<rootDir>/node_modules/',
+    '<rootDir>/algorithms/logging/',
   ],
 
   // If the file path matches any of the patterns, coverage information will be skipped.
   coveragePathIgnorePatterns: [
-    "<rootDir>/node_modules/",
-    "<rootDir>/utils/testing/__test__/fixtures.js",
-    "<rootDir>/algorithms/logging",
+    '<rootDir>/node_modules/',
+    '<rootDir>/utils/testing/__test__/fixtures.js',
+    '<rootDir>/algorithms/logging',
   ],
 
   // This option sets the URL for the jsdom environment.
   // It is reflected in properties such as location.href.
   // @see: https://github.com/facebook/jest/issues/6769
   testEnvironmentOptions: {
-    url: "http://localhost/",
+    url: 'http://localhost/',
   },
 
   // @see: https://jestjs.io/docs/en/configuration#coveragethreshold-object
@@ -47,17 +47,17 @@ export default {
 
   // Handle module aliases (this will be automatically configured for you soon)
   moduleNameMapper: {
-    "^#math/(.*)$": "<rootDir>/algorithms/math/$1",
-    "^#gutils/(.*)$": "<rootDir>/data-structures/graph/utils/$1",
-    "^#algorithms/(.*)$": "<rootDir>/algorithms/$1",
-    "^#galgorithms/(.*)$": "<rootDir>/data-structures/graph/algorithms/$1",
-    "^#dstructures/(.*)$": "<rootDir>/data-structures/$1",
+    '^#math/(.*)$': '<rootDir>/algorithms/math/$1',
+    '^#gutils/(.*)$': '<rootDir>/data-structures/graph/utils/$1',
+    '^#algorithms/(.*)$': '<rootDir>/algorithms/$1',
+    '^#galgorithms/(.*)$': '<rootDir>/data-structures/graph/algorithms/$1',
+    '^#dstructures/(.*)$': '<rootDir>/data-structures/$1',
   },
 
   notify: true,
 
   reporters: [
-    ["jest-slow-test-reporter", { numTests: 20, color: true }],
-    "jest-progress-bar-reporter",
+    ['jest-slow-test-reporter', { numTests: 20, color: true }],
+    'jest-progress-bar-reporter',
   ],
 };

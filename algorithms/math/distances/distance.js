@@ -33,7 +33,7 @@ export const nNormDistance = (coordinate_1, coordinate_2, n) => {
   }
 
   const coord_diffs = _.zip(coordinate_1, coordinate_2).map(
-    ([coord_1, coord_2]) => Math.abs(coord_1 - coord_2)
+    ([coord_1, coord_2]) => Math.abs(coord_1 - coord_2),
   );
 
   return n === Infinity ? Math.max(...coord_diffs) : nNorm(coord_diffs, n);
@@ -126,8 +126,8 @@ export const distance = (coordinate_1, coordinate_2, method, methodConfig) => {
       return !objectHasKey(methodConfig, 'radius')
         ? raise(notification_message.replace('_placeholder_', 'radius'))
         : are_spherical
-        ? raise('Provided coordinates are not spherical!')
-        : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
+          ? raise('Provided coordinates are not spherical!')
+          : nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius);
 
     default:
       raise("There are only available methods: ['n_norm', 'sphere']");
@@ -149,5 +149,5 @@ export const travelTime = (
   coordinate_1,
   coordinate_2,
   method,
-  methodConfig
+  methodConfig,
 ) => distance(coordinate_1, coordinate_2, method, methodConfig) / average_speed;

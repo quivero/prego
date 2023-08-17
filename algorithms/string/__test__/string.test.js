@@ -2,7 +2,7 @@ import { codify, decodify, generateToken } from '../string.js';
 
 describe('string', () => {
   it('should return a hash with given length', () => {
-    expect(generateToken(10).length).toBe(10);
+    expect(generateToken(10)).toHaveLength(10);
   });
 
   it('should codify and decodify a string', () => {

@@ -5,7 +5,7 @@ import depthFirstSearch from '#galgorithms/depth-first-search/depthFirstSearch';
  *
  * @param {Graph} graph
  */
-export default function detectUndirectedCycle(graph) {
+export default function detectUndirectedCycle (graph) {
   let cycle = null;
 
   // List of vertices that we have visited.

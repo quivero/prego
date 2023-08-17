@@ -117,10 +117,10 @@ describe('MaxHeap', () => {
 
     expect(maxHeap.toString()).toBe('12,11,10,3,11');
 
-    expect(maxHeap.remove(12).toString()).toEqual('11,11,10,3');
-    expect(maxHeap.remove(12).peek()).toEqual(11);
-    expect(maxHeap.remove(11).toString()).toEqual('10,3');
-    expect(maxHeap.remove(10).peek()).toEqual(3);
+    expect(maxHeap.remove(12).toString()).toBe('11,11,10,3');
+    expect(maxHeap.remove(12).peek()).toBe(11);
+    expect(maxHeap.remove(11).toString()).toBe('10,3');
+    expect(maxHeap.remove(10).peek()).toBe(3);
   });
 
   it('should be possible to remove items from heap with heapify up', () => {
@@ -138,15 +138,15 @@ describe('MaxHeap', () => {
     maxHeap.add(1);
 
     expect(maxHeap.toString()).toBe('10,8,6,7,6,4,5,3,2,1');
-    expect(maxHeap.remove(4).toString()).toEqual('10,8,6,7,6,1,5,3,2');
-    expect(maxHeap.remove(3).toString()).toEqual('10,8,6,7,6,1,5,2');
-    expect(maxHeap.remove(5).toString()).toEqual('10,8,6,7,6,1,2');
-    expect(maxHeap.remove(10).toString()).toEqual('8,7,6,2,6,1');
-    expect(maxHeap.remove(6).toString()).toEqual('8,7,1,2');
-    expect(maxHeap.remove(2).toString()).toEqual('8,7,1');
-    expect(maxHeap.remove(1).toString()).toEqual('8,7');
-    expect(maxHeap.remove(7).toString()).toEqual('8');
-    expect(maxHeap.remove(8).toString()).toEqual('');
+    expect(maxHeap.remove(4).toString()).toBe('10,8,6,7,6,1,5,3,2');
+    expect(maxHeap.remove(3).toString()).toBe('10,8,6,7,6,1,5,2');
+    expect(maxHeap.remove(5).toString()).toBe('10,8,6,7,6,1,2');
+    expect(maxHeap.remove(10).toString()).toBe('8,7,6,2,6,1');
+    expect(maxHeap.remove(6).toString()).toBe('8,7,1,2');
+    expect(maxHeap.remove(2).toString()).toBe('8,7,1');
+    expect(maxHeap.remove(1).toString()).toBe('8,7');
+    expect(maxHeap.remove(7).toString()).toBe('8');
+    expect(maxHeap.remove(8).toString()).toBe('');
   });
 
   it('should be possible to remove items from heap with custom finding comparator', () => {

@@ -10,6 +10,7 @@ describe('utils', () => {
 
     assert(assertItem);
   });
+
   it('must assert on default truth message', () => {
     const assertItems = [
       [isOrganization(defaultOrganization), expectToBe, true],

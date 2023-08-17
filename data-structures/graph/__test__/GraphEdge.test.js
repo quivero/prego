@@ -17,7 +17,7 @@ describe('GraphEdge', () => {
 
     expect(edge.startVertex).toEqual(startVertex);
     expect(edge.endVertex).toEqual(endVertex);
-    expect(edge.weight).toEqual(0);
+    expect(edge.weight).toBe(0);
   });
 
   it('should create graph edge with predefined weight', () => {
@@ -26,7 +26,7 @@ describe('GraphEdge', () => {
 
     expect(edge.startVertex).toEqual(startVertex);
     expect(edge.endVertex).toEqual(endVertex);
-    expect(edge.weight).toEqual(10);
+    expect(edge.weight).toBe(10);
   });
 
   it('should be possible to do edge reverse', () => {
@@ -35,26 +35,26 @@ describe('GraphEdge', () => {
 
     expect(edge.startVertex).toEqual(vertexA);
     expect(edge.endVertex).toEqual(vertexB);
-    expect(edge.weight).toEqual(10);
+    expect(edge.weight).toBe(10);
 
     edge.reverse();
 
     expect(edge.startVertex).toEqual(vertexB);
     expect(edge.endVertex).toEqual(vertexA);
-    expect(edge.weight).toEqual(10);
+    expect(edge.weight).toBe(10);
   });
 
   it('should be possible to do edge reverse', () => {
     const [edgeAB] = createEdgesFromVerticesValues([['A', 'B']]);
 
-    expect(edgeAB.startVertex.getKey()).toEqual('A');
-    expect(edgeAB.endVertex.getKey()).toEqual('B');
-    expect(edgeAB.weight).toEqual(0);
+    expect(edgeAB.startVertex.getKey()).toBe('A');
+    expect(edgeAB.endVertex.getKey()).toBe('B');
+    expect(edgeAB.weight).toBe(0);
   });
 
   it('should be possible to do edge reverse', () => {
     const graph = createCompleteUndirectedGraph(['A', 'B', 'C']);
 
-    expect(Object.keys(graph.edges).length).toEqual(3);
+    expect(Object.keys(graph.edges)).toHaveLength(3);
   });
 });

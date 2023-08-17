@@ -5,7 +5,7 @@ import depthFirstSearch from '#galgorithms/depth-first-search/depthFirstSearch';
  *
  * @param {Graph} graph
  */
-export default function detectDirectedCycle(graph) {
+export default function detectDirectedCycle (graph) {
   let cycle = null;
 
   // Will store parents (previous vertices) for all visited nodes.

@@ -10,7 +10,7 @@ export default class MaxHeap extends Heap {
    * @param {*} secondElement
    * @return {boolean}
    */
-  pairIsInCorrectOrder(firstElement, secondElement) {
+  pairIsInCorrectOrder (firstElement, secondElement) {
     return this.compare.greaterThanOrEqual(firstElement, secondElement);
   }
 }

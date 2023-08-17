@@ -5,7 +5,7 @@ export default class QuickSort extends Sort {
    * @param {*[]} originalArray
    * @return {*[]}
    */
-  sort(originalArray) {
+  sort (originalArray) {
     // Clone original array to prevent it from modification.
     const array = [...originalArray];
 

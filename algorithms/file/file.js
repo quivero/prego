@@ -12,7 +12,7 @@ export const createDirectory = (root_path, name) => {
     log_message(
       logger,
       'info',
-      `Directory ${root_path}/${name} already exists!`
+      `Directory ${root_path}/${name} already exists!`,
     );
   } else {
     fs.mkdirSync(folder_path, (err) => {
@@ -23,7 +23,7 @@ export const createDirectory = (root_path, name) => {
       log_message(
         logger,
         'info',
-        `Directory ${name} created successfully at path ${root_path}!`
+        `Directory ${name} created successfully at path ${root_path}!`,
       );
     });
   }
@@ -31,7 +31,7 @@ export const createDirectory = (root_path, name) => {
 
 export const saveFilenameContentObject = (obj, root_path) => {
   objectForEach(obj, (filename, content) =>
-    saveStringtoFile(`${root_path}`, `${filename}`, content)
+    saveStringtoFile(`${root_path}`, `${filename}`, content),
   );
 };
 
@@ -73,7 +73,7 @@ export const saveJSONtoFile = (root_path, json_object, name) => {
     log_message(
       logger,
       'info',
-      `JSON file saved at file ${root_path}/${name}.json`
+      `JSON file saved at file ${root_path}/${name}.json`,
     );
   });
 };
@@ -92,7 +92,7 @@ export const loadJSONfromFile = (root_path, name) => {
       if (error) {
         log_message(logger, 'error', error);
       }
-    }
+    },
   );
 
   return JSON.parse(filedata);

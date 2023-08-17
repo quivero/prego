@@ -12,28 +12,28 @@ import {
 export class Reasoning {
   _booleanReduceMap = undefined;
 
-  constructor(key, description, value) {
+  constructor (key, description, value) {
     this.key = key;
     this.description = description;
     this.value = value;
   }
 
   // Children MUST override this method
-  toPremise() {
+  toPremise () {
     throw new InterfaceError();
   }
 
   // Children MUST override this method
-  toArgument() {
+  toArgument () {
     throw new InterfaceError();
   }
 
-  toConclusion() {
+  toConclusion () {
     throw new InterfaceError();
   }
 
   // Children MUST override this method
-  toThought() {
+  toThought () {
     const thought = {
       arguments: this.toArgument(),
       conclusion: this.toConclusion(),
@@ -42,57 +42,57 @@ export class Reasoning {
     return thought;
   }
 
-  toString() {
+  toString () {
     return this.verbalize();
   }
 
-  argue() {
+  argue () {
     return this.toArgument();
   }
 
-  conclude() {
+  conclude () {
     return this.toConclusion();
   }
 
-  think() {
+  think () {
     return this.toThought();
   }
 
   // Children MUST override this method
-  verbalize() {
+  verbalize () {
     throw new InterfaceError();
   }
 }
 
 export class Premise extends Reasoning {
-  constructor(key, description, value) {
+  constructor (key, description, value) {
     super(key, description, value);
   }
 
-  toArgument() {
+  toArgument () {
     return Object.fromEntries([[this.key, this.value]]);
   }
 
-  toConclusion() {
+  toConclusion () {
     return this.value;
   }
 
-  toPremise() {
+  toPremise () {
     return this;
   }
 
-  verbalize() {
+  verbalize () {
     return `(${this.key}:${this.value})`;
   }
 }
 
 export class Conjunction extends Reasoning {
-  constructor(key, description, value) {
+  constructor (key, description, value) {
     super(key, description, value);
     this._booleanReduceMap = batchAnd;
   }
 
-  toPremise() {
+  toPremise () {
     const talkMap = (premise) => premise.verbalize();
     const arguments_ = andify(applyReasoningArtifact(this.value, talkMap));
     const conjunctionAsPremiseKey = `${this.key}=${arguments_}`;
@@ -100,15 +100,15 @@ export class Conjunction extends Reasoning {
     return new Premise(
       conjunctionAsPremiseKey,
       this.description,
-      this.conclude()
+      this.conclude(),
     );
   }
 
-  toArgument() {
+  toArgument () {
     return Object.fromEntries(getPremisesEntries(this.value));
   }
 
-  toConclusion() {
+  toConclusion () {
     const concludeMap = (premise) => premise.conclude();
     const conclusion = applyReasoningArtifact(this.value, concludeMap);
     const IsBooleanCondition = isBoolean(conclusion);
@@ -116,18 +116,18 @@ export class Conjunction extends Reasoning {
     return IsBooleanCondition ? conclusion : this._booleanReduceMap(conclusion);
   }
 
-  verbalize() {
+  verbalize () {
     return this.toPremise().toString();
   }
 }
 
 export class Injunction extends Reasoning {
-  constructor(key, description, value) {
+  constructor (key, description, value) {
     super(key, description, value);
     this._booleanReduceMap = batchOr;
   }
 
-  toPremise() {
+  toPremise () {
     const talkMap = (premise) => premise.verbalize();
     const arguments_ = orify(applyReasoningArtifact(this.value, talkMap));
     const injunctionAsPremiseKey = `${this.key}=${arguments_}`;
@@ -135,15 +135,15 @@ export class Injunction extends Reasoning {
     return new Premise(
       injunctionAsPremiseKey,
       this.description,
-      this.conclude()
+      this.conclude(),
     );
   }
 
-  toArgument() {
+  toArgument () {
     return Object.fromEntries(getPremisesEntries(this.value));
   }
 
-  toConclusion() {
+  toConclusion () {
     const concludeMap = (premise) => premise.conclude();
     const conclusion = applyReasoningArtifact(this.value, concludeMap);
     const IsBooleanCondition = isBoolean(conclusion);
@@ -151,7 +151,7 @@ export class Injunction extends Reasoning {
     return IsBooleanCondition ? conclusion : this._booleanReduceMap(conclusion);
   }
 
-  verbalize() {
+  verbalize () {
     return this.toPremise().toString();
   }
 }

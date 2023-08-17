@@ -23,7 +23,7 @@ describe('stronglyConnectedComponents', () => {
     const components = stronglyConnectedComponents(graph);
 
     expect(components).toBeDefined();
-    expect(components.length).toBe(2);
+    expect(components).toHaveLength(2);
 
     expect(components[0][0].getKey()).toBe(vertexA.getKey());
     expect(components[0][1].getKey()).toBe(vertexC.getKey());
@@ -80,7 +80,7 @@ describe('stronglyConnectedComponents', () => {
     const components = stronglyConnectedComponents(graph);
 
     expect(components).toBeDefined();
-    expect(components.length).toBe(4);
+    expect(components).toHaveLength(4);
 
     expect(components[0][0].getKey()).toBe(vertexG.getKey());
     expect(components[0][1].getKey()).toBe(vertexJ.getKey());

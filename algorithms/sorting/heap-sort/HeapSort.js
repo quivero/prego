@@ -2,7 +2,7 @@ import Sort from '../Sort';
 import MinHeap from '#dstructures/heap/MinHeap.js';
 
 export default class HeapSort extends Sort {
-  sort(originalArray) {
+  sort (originalArray) {
     const sortedArray = [];
     const minHeap = new MinHeap(this.callbacks.compareCallback);
 

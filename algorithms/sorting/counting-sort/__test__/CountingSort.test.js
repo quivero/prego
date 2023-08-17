@@ -41,7 +41,7 @@ describe('CountingSort', () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
       ones_arr,
-      EQUAL_ARRAY_VISITING_COUNT
+      EQUAL_ARRAY_VISITING_COUNT,
     );
   });
 
@@ -49,7 +49,7 @@ describe('CountingSort', () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
       sorted_arr,
-      SORTED_ARRAY_VISITING_COUNT
+      SORTED_ARRAY_VISITING_COUNT,
     );
   });
 
@@ -57,7 +57,7 @@ describe('CountingSort', () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
       arr,
-      NOT_SORTED_ARRAY_VISITING_COUNT
+      NOT_SORTED_ARRAY_VISITING_COUNT,
     );
   });
 
@@ -65,7 +65,7 @@ describe('CountingSort', () => {
     SortTester.testAlgorithmTimeComplexity(
       CountingSort,
       reverse_arr,
-      REVERSE_SORTED_ARRAY_VISITING_COUNT
+      REVERSE_SORTED_ARRAY_VISITING_COUNT,
     );
   });
 });

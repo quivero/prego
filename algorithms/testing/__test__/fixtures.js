@@ -2,16 +2,16 @@ import _ from 'lodash';
 import { zip } from 'lodash';
 import {
   buildOrganization,
-  buildAct
+  buildAct,
 } from '../build';
 
 import { emptyCallback, identityCallback } from '../defaults';
 
 import { expectToBeDefined, expectToBe } from '../expectTo';
 
-/*-------------------------
+/* -------------------------
  | assert design
- *-------------------------*/
+ *------------------------- */
 export const assertFixtures = [
   [42, expectToBeDefined],
   ['42', expectToBe, '42'],
@@ -25,9 +25,9 @@ export const validAssertLength3Item = assertFixtures[1];
 export const invalidAssertItemLength = ['42'];
 export const invalidAssertCallbackItem = ['42', '42'];
 
-/*-------------------------
+/* -------------------------
  | atest design
- *-------------------------*/
+ *------------------------- */
 export let validAtestAct;
 let setup, prepare, perform, teardown, organization;
 
@@ -71,9 +71,9 @@ export const invalidOrganizations = [
   invalidOrganization,
 ];
 
-/*-------------------------
+/* -------------------------
  | assert design
- *-------------------------*/
+ *------------------------- */
 const add = (a, b) => a + b;
 const addCallback = (fixture) => add(fixture.a, fixture.b);
 
@@ -152,7 +152,7 @@ oneToManyAdditionPerform = (augmented_fixture_) =>
   zip(
     augmented_fixture_.map(addCallback),
     oneToManyAdditionAssertionMap,
-    oneToManyAdditionExpectation
+    oneToManyAdditionExpectation,
   );
 
 manyToOneAdditionPerform = [oneToOneAdditionPerform, oneToOneAdditionPerform];

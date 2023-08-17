@@ -39,7 +39,7 @@ export const resetVertices = (vertices) =>
 export const createEdgesFromVerticesValues = (vertices_values_tuples) => {
   const vertex_id_to_obj = objectMap(
     objectInit(_.uniq(_.flatten(vertices_values_tuples)), {}),
-    (vertex_key, obj) => new GraphVertex(vertex_key)
+    (vertex_key, obj) => new GraphVertex(vertex_key),
   );
 
   const edge_value_to_id_mapper = (vertices_values_tuple) => [
@@ -54,7 +54,7 @@ export const createCompleteUndirectedGraph = (vertices_keys) => {
   const graph = new Graph(false);
 
   graph.addEdges(
-    createEdgesFromVerticesValues(_.combinations(vertices_keys, 2))
+    createEdgesFromVerticesValues(_.combinations(vertices_keys, 2)),
   );
 
   return graph;

@@ -30,7 +30,7 @@ export const objectMap = (object, mapFn) =>
       result[key] = mapFn(key, object[key]);
       return result;
     },
-    {}
+    {},
   );
 
 /**
@@ -44,7 +44,7 @@ export const objectReduce = (object, reduceFn, init_val) =>
   _.reduce(
     Object.entries(_.cloneDeep(object)),
     (result, [key, value]) => reduceFn(result, key, value),
-    init_val
+    init_val,
   );
 
 /**
@@ -100,9 +100,9 @@ export const objectDifference = (l_object, r_object, equalFn) =>
     (curr_diff, r_key, r_value) =>
       objectFilter(
         curr_diff,
-        (l_key, l_value) => !equalFn(r_key, r_value, l_key, l_value)
+        (l_key, l_value) => !equalFn(r_key, r_value, l_key, l_value),
       ),
-    l_object
+    l_object,
   );
 
 /**
@@ -118,7 +118,7 @@ export const objectIntersection = (
   r_object,
   equalFn,
   keyFn,
-  valueFn
+  valueFn,
 ) => {
   let intersec_fun, key;
 
@@ -136,7 +136,7 @@ export const objectIntersection = (
 
       return curr_intersec;
     },
-    {}
+    {},
   );
 };
 
@@ -205,6 +205,6 @@ export const objectHasKeys = (object, keys) => {
     keys,
     (ObjecthasKeysSoFar, key) =>
       ObjecthasKeysSoFar && objectHasKey(object, key),
-    true
+    true,
   );
 };

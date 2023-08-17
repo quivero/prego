@@ -5,7 +5,7 @@ export default class DisjointSet {
   /**
    * @param {function(value: *)} [keyCallback]
    */
-  constructor(keyCallback) {
+  constructor (keyCallback) {
     this.keyCallback = keyCallback;
     this.items = {};
   }
@@ -14,7 +14,7 @@ export default class DisjointSet {
    * @param {*} itemValue
    * @return {DisjointSet}
    */
-  makeSet(itemValue) {
+  makeSet (itemValue) {
     const disjointSetItem = new DisjointSetItem(itemValue, this.keyCallback);
     const setItemKey = disjointSetItem.getKey();
 
@@ -32,10 +32,10 @@ export default class DisjointSet {
    * @param {*} itemValue
    * @return {(string|null)}
    */
-  find(itemValue) {
+  find (itemValue) {
     const templateDisjointItem = new DisjointSetItem(
       itemValue,
-      this.keyCallback
+      this.keyCallback,
     );
 
     // Try to find item itself;
@@ -55,7 +55,7 @@ export default class DisjointSet {
    * @param {*} valueB
    * @return {DisjointSet}
    */
-  union(valueA, valueB) {
+  union (valueA, valueB) {
     const rootKeyA = this.find(valueA);
     const rootKeyB = this.find(valueB);
 
@@ -89,7 +89,7 @@ export default class DisjointSet {
    * @param {*} valueB
    * @return {boolean}
    */
-  inSameSet(valueA, valueB) {
+  inSameSet (valueA, valueB) {
     const rootKeyA = this.find(valueA);
     const rootKeyB = this.find(valueB);
 

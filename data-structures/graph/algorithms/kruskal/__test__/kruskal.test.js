@@ -8,13 +8,13 @@ jest.mock('#algorithms/sys/sys');
 
 describe('kruskal', () => {
   it('should fire an error for directed graph', () => {
-    function applyPrimToDirectedGraph() {
+    function applyPrimToDirectedGraph () {
       const graph = new Graph(true);
 
       kruskal(graph);
     }
 
-    expect(applyPrimToDirectedGraph).toThrowError();
+    expect(applyPrimToDirectedGraph).toThrow();
   });
 
   it('should find minimum spanning tree', () => {
@@ -52,16 +52,16 @@ describe('kruskal', () => {
       edgeFG,
     ]);
 
-    expect(graph.getWeight()).toEqual(46);
+    expect(graph.getWeight()).toBe(46);
 
     const minimumSpanningTree = kruskal(graph);
 
     expect(minimumSpanningTree.getWeight()).toBe(24);
-    expect(minimumSpanningTree.getAllVertices().length).toBe(
-      graph.getAllVertices().length
+    expect(minimumSpanningTree.getAllVertices()).toHaveLength(
+      graph.getAllVertices().length,
     );
-    expect(minimumSpanningTree.getAllEdges().length).toBe(
-      graph.getAllVertices().length - 1
+    expect(minimumSpanningTree.getAllEdges()).toHaveLength(
+      graph.getAllVertices().length - 1,
     );
     expect(minimumSpanningTree.toString()).toBe('E_C,A_B,A_D,A_C,F_C,F_G');
   });
@@ -82,16 +82,16 @@ describe('kruskal', () => {
 
     graph.addEdges([edgeAB, edgeAD, edgeBC, edgeBD, edgeCD]);
 
-    expect(graph.getWeight()).toEqual(9);
+    expect(graph.getWeight()).toBe(9);
 
     const minimumSpanningTree = kruskal(graph);
 
     expect(minimumSpanningTree.getWeight()).toBe(3);
-    expect(minimumSpanningTree.getAllVertices().length).toBe(
-      graph.getAllVertices().length
+    expect(minimumSpanningTree.getAllVertices()).toHaveLength(
+      graph.getAllVertices().length,
     );
-    expect(minimumSpanningTree.getAllEdges().length).toBe(
-      graph.getAllVertices().length - 1
+    expect(minimumSpanningTree.getAllEdges()).toHaveLength(
+      graph.getAllVertices().length - 1,
     );
     expect(minimumSpanningTree.toString()).toBe('A_B,B_C,C_D');
   });

@@ -206,7 +206,7 @@ describe('BinarySearchTreeNode', () => {
     bstRootNode.insert(10);
     bstRootNode.insert(20);
 
-    function removeNotExistingElementFromTree() {
+    function removeNotExistingElementFromTree () {
       bstRootNode.remove(30);
     }
 

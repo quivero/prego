@@ -4,7 +4,7 @@ import Comparator from '#algorithms/comparator/Comparator.js';
 // It is the same as min heap except that when comparing two elements
 // we take into account its priority instead of the element's value.
 export default class PriorityQueue extends MinHeap {
-  constructor() {
+  constructor () {
     // Call MinHip constructor first.
     super();
 
@@ -22,7 +22,7 @@ export default class PriorityQueue extends MinHeap {
    * @param {number} [priority] - items priority.
    * @return {PriorityQueue}
    */
-  add(item, priority = 0) {
+  add (item, priority = 0) {
     this.priorities.set(item, priority);
     super.add(item);
     return this;
@@ -34,7 +34,7 @@ export default class PriorityQueue extends MinHeap {
    * @param {Comparator} [customFindingComparator] - custom function for finding the item to remove
    * @return {PriorityQueue}
    */
-  remove(item, customFindingComparator) {
+  remove (item, customFindingComparator) {
     super.remove(item, customFindingComparator);
     this.priorities.delete(item);
     return this;
@@ -46,7 +46,7 @@ export default class PriorityQueue extends MinHeap {
    * @param {number} priority - new item's priority.
    * @return {PriorityQueue}
    */
-  changePriority(item, priority) {
+  changePriority (item, priority) {
     this.remove(item, new Comparator(this.compareValue));
     this.add(item, priority);
     return this;
@@ -57,7 +57,7 @@ export default class PriorityQueue extends MinHeap {
    * @param {*} item
    * @return {Number[]}
    */
-  findByValue(item) {
+  findByValue (item) {
     return this.find(item, new Comparator(this.compareValue));
   }
 
@@ -66,7 +66,7 @@ export default class PriorityQueue extends MinHeap {
    * @param {*} item
    * @return {boolean}
    */
-  hasValue(item) {
+  hasValue (item) {
     return this.findByValue(item).length > 0;
   }
 
@@ -76,7 +76,7 @@ export default class PriorityQueue extends MinHeap {
    * @param {*} b
    * @return {number}
    */
-  comparePriority(a, b) {
+  comparePriority (a, b) {
     if (this.priorities.get(a) === this.priorities.get(b)) {
       return 0;
     }
@@ -89,7 +89,7 @@ export default class PriorityQueue extends MinHeap {
    * @param {*} b
    * @return {number}
    */
-  compareValue(a, b) {
+  compareValue (a, b) {
     if (a === b) {
       return 0;
     }

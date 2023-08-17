@@ -39,7 +39,7 @@ describe('GraphVertex', () => {
     expect(A.hasEdge(edgeAB)).toBeTrue();
     expect(B.hasEdge(edgeAB)).toBeFalse();
 
-    expect(A.getEdges().length).toBe(1);
+    expect(A.getEdges()).toHaveLength(1);
     expect(A.getEdges()[0].toString()).toBe('A_B');
   });
 
@@ -58,7 +58,7 @@ describe('GraphVertex', () => {
     expect(A.hasEdge(AC)).toBeTrue();
     expect(C.hasEdge(AC)).toBeFalse();
 
-    expect(A.getEdges().length).toBe(2);
+    expect(A.getEdges()).toHaveLength(2);
 
     expect(A.getEdges()[0].toString()).toBe('A_B');
     expect(A.getEdges()[1].toString()).toBe('A_C');
@@ -72,7 +72,7 @@ describe('GraphVertex', () => {
 
     expect(A.hasEdge(AB)).toBeFalse();
     expect(A.hasEdge(AC)).toBeFalse();
-    expect(A.getEdges().length).toBe(0);
+    expect(A.getEdges()).toHaveLength(0);
   });
 
   it('should delete all edges from vertex', () => {
@@ -91,7 +91,7 @@ describe('GraphVertex', () => {
     expect(A.hasEdge(AC)).toBeTrue();
     expect(C.hasEdge(AC)).toBeFalse();
 
-    expect(A.getEdges().length).toBe(2);
+    expect(A.getEdges()).toHaveLength(2);
 
     A.deleteAllEdges();
 
@@ -101,7 +101,7 @@ describe('GraphVertex', () => {
     expect(A.hasEdge(AC)).toBeFalse();
     expect(C.hasEdge(AC)).toBeFalse();
 
-    expect(A.getEdges().length).toBe(0);
+    expect(A.getEdges()).toHaveLength(0);
   });
 
   it('should return vertex neighbors in case if current node is start one', () => {
@@ -118,7 +118,7 @@ describe('GraphVertex', () => {
 
     const neighbors = A.getNeighbors();
 
-    expect(neighbors.length).toBe(2);
+    expect(neighbors).toHaveLength(2);
     expect(neighbors[0]).toEqual(B);
     expect(neighbors[1]).toEqual(C);
   });
@@ -137,7 +137,7 @@ describe('GraphVertex', () => {
 
     const neighbors = A.getNeighbors();
 
-    expect(neighbors.length).toBe(2);
+    expect(neighbors).toHaveLength(2);
     expect(neighbors[0]).toEqual(B);
     expect(neighbors[1]).toEqual(C);
   });
@@ -165,12 +165,12 @@ describe('GraphVertex', () => {
 
   it('should represent a vertex', () => {
     const vertex = new GraphVertex('A');
-    expect(vertex.toString()).toEqual('A');
+    expect(vertex.toString()).toBe('A');
   });
 
   it('should represent a vertex with decorator', () => {
     const vertex = new GraphVertex('A');
-    expect(vertex.toString((value) => `Name: ${value}`)).toEqual('Name: A');
+    expect(vertex.toString((value) => `Name: ${value}`)).toBe('Name: A');
   });
 
   it('should calculate vertex degree', () => {
@@ -191,6 +191,6 @@ describe('GraphVertex', () => {
     A.addEdge(edgeAB);
     expect(A.getDegree()).toBe(3);
 
-    expect(A.getEdges().length).toEqual(3);
+    expect(A.getEdges()).toHaveLength(3);
   });
 });

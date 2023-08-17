@@ -74,10 +74,10 @@ describe('breadthFirstSearch', () => {
     ) {
       const params = enterVertexCallback.mock.calls[callIndex][0];
       expect(params.currentVertex).toEqual(
-        enterVertexParamsMap[callIndex].currentVertex
+        enterVertexParamsMap[callIndex].currentVertex,
       );
       expect(params.previousVertex).toEqual(
-        enterVertexParamsMap[callIndex].previousVertex
+        enterVertexParamsMap[callIndex].previousVertex,
       );
     }
 
@@ -99,10 +99,10 @@ describe('breadthFirstSearch', () => {
     ) {
       const params = leaveVertexCallback.mock.calls[callIndex][0];
       expect(params.currentVertex).toEqual(
-        leaveVertexParamsMap[callIndex].currentVertex
+        leaveVertexParamsMap[callIndex].currentVertex,
       );
       expect(params.previousVertex).toEqual(
-        leaveVertexParamsMap[callIndex].previousVertex
+        leaveVertexParamsMap[callIndex].previousVertex,
       );
     }
   });
@@ -170,10 +170,10 @@ describe('breadthFirstSearch', () => {
     for (let callIndex = 0; callIndex < 7; callIndex += 1) {
       const params = enterVertexCallback.mock.calls[callIndex][0];
       expect(params.currentVertex).toEqual(
-        enterVertexParamsMap[callIndex].currentVertex
+        enterVertexParamsMap[callIndex].currentVertex,
       );
       expect(params.previousVertex).toEqual(
-        enterVertexParamsMap[callIndex].previousVertex
+        enterVertexParamsMap[callIndex].previousVertex,
       );
     }
 
@@ -190,10 +190,10 @@ describe('breadthFirstSearch', () => {
     for (let callIndex = 0; callIndex < 7; callIndex += 1) {
       const params = leaveVertexCallback.mock.calls[callIndex][0];
       expect(params.currentVertex).toEqual(
-        leaveVertexParamsMap[callIndex].currentVertex
+        leaveVertexParamsMap[callIndex].currentVertex,
       );
       expect(params.previousVertex).toEqual(
-        leaveVertexParamsMap[callIndex].previousVertex
+        leaveVertexParamsMap[callIndex].previousVertex,
       );
     }
   });

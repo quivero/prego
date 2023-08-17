@@ -8,6 +8,7 @@ describe('Errors', () => {
 
     expectToMatch(orgError.message, '[]');
   });
+
   it('must match on truthError message the truthMessage and falseIndexesString', () => {
     const truthMessage = '\n This array must have only true values. :/';
     const falseIndexes = [0, 1];
@@ -18,6 +19,7 @@ describe('Errors', () => {
     expectToMatch(truthError.message, truthMessage);
     expectToMatch(truthError.message, falseIndexesString);
   });
+
   it('must match defaultArrayTruthMessage on truthError message without truthMessage', () => {
     const falseIndexes = [0, 1];
     const falseIndexesString = `[${falseIndexes}]`;

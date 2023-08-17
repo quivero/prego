@@ -5,7 +5,7 @@ import depthFirstSearch from '../depth-first-search/depthFirstSearch.js';
  * @param {Graph} graph
  * @return {Stack}
  */
-function getVerticesSortedByDfsFinishTime(graph) {
+function getVerticesSortedByDfsFinishTime (graph) {
   // Set of all visited vertices during DFS pass.
   const visitedVerticesSet = {};
 
@@ -60,7 +60,7 @@ function getVerticesSortedByDfsFinishTime(graph) {
  * @param {Stack} verticesByFinishTime
  * @return {*[]}
  */
-function getSCCSets(graph, verticesByFinishTime) {
+function getSCCSets (graph, verticesByFinishTime) {
   // Array of arrays of strongly connected vertices.
   const stronglyConnectedComponentsSets = [];
 
@@ -120,7 +120,7 @@ function getSCCSets(graph, verticesByFinishTime) {
  * @param {Graph} graph
  * @return {*[]}
  */
-export default function stronglyConnectedComponents(graph) {
+export default function stronglyConnectedComponents (graph) {
   // In this algorithm we will need to do TWO DFS PASSES overt the graph.
 
   // Get stack of vertices ordered by DFS finish time.

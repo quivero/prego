@@ -48,7 +48,7 @@ export const primeFactors = (n) => {
 export const isPrime = (number) => {
   if (typeof number !== 'number') {
     throwError(
-      `It is impossible to factorize \'${number}\'. It MUST be a number!`
+      `It is impossible to factorize \'${number}\'. It MUST be a number!`,
     );
     return;
   } else {
