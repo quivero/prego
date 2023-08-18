@@ -140,7 +140,7 @@ describe('math', () => {
     expect(vecArg([1, 0, 0], [0, 0, 1], 2)).toBe(Math.PI / 2);
     expect(vecArg([1, 0, 0], [1, 1, 0], 2)).toBeCloseTo(Math.PI / 4);
   });
- 
+
   it('should return false examples of spherical coordinates', () => {
     expect(isSpherical([])).toBeFalse();
     expect(isSpherical([42])).toBeFalse();

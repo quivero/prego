@@ -50,12 +50,6 @@ describe('Array', () => {
     expect(object_).toEqual(['a', 1, { a: 1 }]);
   });
 
-  it('should return unique array elements', () => {
-    const object_ = unique(['a', 1, { a: 1 }, 'a']);
-
-    expect(object_).toEqual(['a', 1, { a: 1 }]);
-  });
-
   it('should get a random number between 0 and 1', () => {
     const num = randMinMax(0, 1);
 
@@ -152,25 +146,22 @@ describe('Array', () => {
 
   it('should return 1 set on given objects', () => {
     const arr = [1, 2, 3];
-    const m = 1;
-    const n = 3;
+    let m = 1;
+    let n = 3;
 
     expected = [1, 2, 3];
 
-    const set_gen = mSetsOfnTuples(arr, m, n);
+    let set_gen = mSetsOfnTuples(arr, m, n);
 
     candidate = set_gen.next().value;
     expect(arr).toStrictEqual(expected);
-  });
 
-  it('should return 1 set on given objects', () => {
-    const arr = [1, 2, 3];
-    const m = 2;
-    const n = 1;
+    m = 2;
+    n = 1;
 
     expected = [[1], [2]];
 
-    const set_gen = mSetsOfnTuples(arr, m, n);
+    set_gen = mSetsOfnTuples(arr, m, n);
     candidate = set_gen.next().value;
 
     expect(candidate).toStrictEqual(expected);
@@ -277,114 +268,5 @@ describe('hasElement', () => {
     expect(
       hasElement([ [1, 2], [1, 2, 3] ], [1]),
     ).toBeFalse();
-  });
-});
-
-global.console.error = jest.fn();
-global.console.warn = jest.fn();
-
-describe('euler', () => {
-  beforeAll(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    jest.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
-  afterAll(() => {
-    console.error.mockRestore();
-    console.warn.mockRestore();
-  });
-
-  afterEach(() => {
-    console.error.mockClear();
-    console.warn.mockClear();
-  });
-
-  it('should throw Typerror for ill-conditioned input', () => {
-    const illConditionedInput = () => euler('');
-
-    expect(illConditionedInput).toThrow(TypeError);
-  });
-
-  it('should throw Typerror for ill-conditioned input', () => {
-    const illConditionedInput = () => euler([]);
-
-    expect(illConditionedInput).toThrow('There must at least ONE set!');
-  });
-
-  it('should warn once for duplicated set entries', () => {
-    euler({ a: [1, 1, 2] });
-
-    expect(console.warn).toHaveBeenCalledOnce();
-    expect(console.warn).toHaveBeenCalledWith('Each array MUST NOT have duplicates');
-  });
-
-  it('should warn once for duplicated set entries', () => {
-    euler({ a: [1, 1, 2] });
-    expect(console.warn).toHaveBeenCalledOnce();
-  });
-
-  it('should raise error once for duplicated set entries', () => {
-    euler({ a: [1, 1, 2] });
-    expect(console.warn).toHaveBeenCalledOnce();
-  });
-
-  it('should return a multiple set interactions - Sample 1', () => {
-    const list_1 = [1, 2, 3];
-    const list_2 = [2, 4, 5];
-    const list_3 = [2, 6, 7];
-
-    const result = {
-      0: [1, 3],
-      1: [4, 5],
-      2: [6, 7],
-      '0,1,2': [2],
-    };
-
-    expect(euler([list_1, list_2, list_3])).toEqual(result);
-    expect(euler([list_1, list_2, list_3])).toEqual(result);
-  });
-
-  it('should return a multiple set interactions - Sample 2', () => {
-    const list_1 = [1, 2, 3];
-    const list_2 = [2, 4, 5];
-    const list_3 = [2, 6, 7];
-
-    const result = {
-      0: [1, 3],
-      1: [4, 5],
-      2: [6, 7],
-      '0,1,2': [2],
-    };
-
-    expect(euler([list_1, list_2, list_3])).toEqual(result);
-    expect(euler([list_1, list_2, list_3])).toEqual(result);
-  });
-
-  it('should return a multiple set interactions - Sample 3', () => {
-    const list_1 = [1, 2, 3];
-    const list_2 = [2, 4, 5];
-    const list_3 = [2, 6, 7];
-
-    const result = {
-      0: [1, 3],
-      1: [4, 5],
-      2: [6, 7],
-      '0,1,2': [2],
-    };
-
-    expect(euler([list_1, list_2, list_3])).toEqual(result);
-    expect(euler([list_1, list_2, list_3])).toEqual(result);
-  });
-
-  it('should validate empty exclusivity from Euler Diagram', () => {
-    const list_1 = [1, 2, 3, 4, 5, 6];
-    const list_2 = [4, 5, 6];
-
-    const result = {
-      0: [1, 2, 3],
-      '0,1': [4, 5, 6],
-    };
-
-    expect(euler([list_1, list_2])).toEqual(result);
   });
 });

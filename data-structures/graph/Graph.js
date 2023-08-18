@@ -10,7 +10,6 @@ import graphBridges from '#galgorithms/bridges/graphBridges';
 
 import {
   cartesianProduct,
-  eulerGenerator,
   removeArrayDuplicates,
   getAllIndexes,
   hasElement,
@@ -29,6 +28,8 @@ import {
 
 import GraphVertex from './GraphVertex.js';
 import GraphEdge from './GraphEdge.js';
+
+import { eulerGen } from 'eulejs'
 
 /**
  * Helper class for visited vertex metadata.
@@ -1102,7 +1103,7 @@ export default class Graph {
         q.push({ first: i, second: 0 });
         col[i] = 0;
 
-        while (q.length != 0) {
+        while (q.length !== 0) {
           const p = q[0];
           q.shift();
 
@@ -1786,7 +1787,7 @@ export default class Graph {
    * @return {object}
    */
   *getCyclesVenn (cycle_indices) {
-    yield * eulerGenerator(cycle_indices);
+    yield * eulerGen(cycle_indices);
   }
 
   /**
@@ -1956,7 +1957,7 @@ export default class Graph {
       );
     });
 
-    if (type == 0) {
+    if (type === 0) {
       return reachability_list;
     }
 

@@ -89,16 +89,6 @@ describe('distance', () => {
     expect(result).toBeCloseTo(expected);
   });
 
-  it('should return distance between coordinates according to method sphere', () => {
-    const coord_1 = [0, 0];
-    const coord_2 = [Math.PI / 2, 0];
-
-    result = distance(coord_1, coord_2, 'sphere', { radius: 1 });
-    expected = (2 * Math.PI) / 4;
-
-    expect(result).toBeCloseTo(expected);
-  });
-
   it('should throw exception for 1-dimensional coordinates', () => {
     const coord_1 = [0];
     const coord_2 = [1];

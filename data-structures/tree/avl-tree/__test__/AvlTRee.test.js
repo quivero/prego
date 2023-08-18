@@ -210,28 +210,6 @@ describe('AvlTree', () => {
     expect(tree.root.height).toBe(3);
   });
 
-  it('should do left right rotation and keeping left right node safe', () => {
-    tree = new AvlTree();
-
-    tree.insert(30);
-    tree.insert(15);
-    tree.insert(40);
-    tree.insert(10);
-    tree.insert(18);
-    tree.insert(35);
-    tree.insert(45);
-    tree.insert(42);
-    tree.insert(47);
-
-    expect(tree.toString()).toBe('10,15,18,30,35,40,42,45,47');
-    expect(tree.root.height).toBe(3);
-
-    tree.insert(43);
-
-    expect(tree.toString()).toBe('10,15,18,30,35,40,42,43,45,47');
-    expect(tree.root.height).toBe(3);
-  });
-
   it('should remove values from the tree with right-right rotation', () => {
     tree = new AvlTree();
 

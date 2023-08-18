@@ -71,7 +71,7 @@ describe('checkers', () => {
     batchAssert(assertItems);
   });
 
-  it('must return true for valid assert item', () => {
+  it('must return true for valid assert items and scenes', () => {
     assertItems = [
       [ areAssertItems(assertFixtures), expectToBe, true ],
       [ areScenes(assertFixtures), expectToBe, false ],
@@ -80,7 +80,7 @@ describe('checkers', () => {
     batchAssert(assertItems);
   });
 
-  it('must return true for valid assert item', () => {
+  it('must return true for valid acts and artifacts', () => {
     assertItems = [
       [ isAct(additionAct), expectToBe, true ],
       [ isActArtifact([additionAct, additionAct]), expectToBe, true ],

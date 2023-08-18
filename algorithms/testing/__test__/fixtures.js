@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { zip } from 'lodash';
 import {
   buildOrganization,

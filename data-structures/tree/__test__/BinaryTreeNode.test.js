@@ -80,14 +80,14 @@ describe('BinaryTreeNode', () => {
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 3, 5]);
 
     expect(rootNode.replaceChild(rootNode.right, rootNode.right.right)).toBeTrue(
-      
+
     );
     expect(rootNode.right.value).toBe(5);
     expect(rootNode.right.right).toBeNull();
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 5]);
 
     expect(rootNode.replaceChild(rootNode.right, rootNode.right.right)).toBeFalse(
-      
+
     );
     expect(rootNode.traverseInOrder()).toEqual([1, 2, 5]);
 

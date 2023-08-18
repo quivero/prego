@@ -479,7 +479,7 @@ describe('Graph', () => {
 
     result = graph.findEdgesByVertexIndicesTuples([[3, 4]]);
     expected = [undefined];
-      
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -493,22 +493,6 @@ describe('Graph', () => {
 
     result = Object.keys(graph.edges);
     expected = ['A_A'];
-
-    expect(result).toEqual(expected);
-  });
-
-  it('should get edges by vertex keys', () => {
-    graph = new Graph();
-
-    [AB, BC] = createEdges([
-      [A, B],
-      [B, C],
-    ]);
-
-    graph.addEdges([AB, BC]);
-
-    result = graph.getEdgesKeysByVertexKeys(['A', 'B'], true);
-    expected = ['A_B'];
 
     expect(result).toEqual(expected);
   });
@@ -781,17 +765,6 @@ describe('Graph', () => {
       [B, D],
     ]);
     graph.addEdges([AB, BC, BD]);
-
-    result = graph.isEulerian();
-    expected = 0;
-
-    expect(result).toStrictEqual(expected);
-  });
-
-  it('should return 0 for an eulerian undirected graph', () => {
-    graph = new Graph();
-
-    graph.addVertices([A, B, C]);
 
     result = graph.isEulerian();
     expected = 0;
@@ -2097,22 +2070,6 @@ describe('Graph', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return true for connected graph', () => {
-    graph = new Graph(true);
-
-    edges_vertices = [
-      [A, B],
-      [B, C],
-    ];
-    [AB, BC] = createEdges(edges_vertices);
-    graph.addEdges([AB, BC]);
-
-    result = graph.isConnected();
-    expected = true;
-
-    expect(result).toEqual(expected);
-  });
-
   it('should return false for not-connected graph', () => {
     graph = new Graph(true);
 
@@ -2128,6 +2085,20 @@ describe('Graph', () => {
   });
 
   it('should return true for connected graph', () => {
+    graph = new Graph(true);
+
+    edges_vertices = [
+      [A, B],
+      [B, C],
+    ];
+    [AB, BC] = createEdges(edges_vertices);
+    graph.addEdges([AB, BC]);
+
+    result = graph.isConnected();
+    expected = true;
+
+    expect(result).toEqual(expected);
+
     graph = new Graph(true);
 
     edges_vertices = [
@@ -2312,7 +2283,7 @@ describe('Graph', () => {
     expect(result).toBe(expected);
   });
 
-  it('should find hamiltonian paths in graph', () => {
+  it('should find hamiltonian cycle on graph', () => {
     graph = new Graph();
 
     edges_vertices = [

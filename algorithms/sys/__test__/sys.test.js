@@ -12,21 +12,13 @@ describe('throwError/warn', () => {
     };
 
     expect(throwErrorFn).toThrow();
-  });
 
-  it('should throw error', () => {
     const raiseFn = () => raise('Fire!');
     expect(raiseFn).toThrow(Error);
   });
 
   it('should throw TypeError', () => {
     const raiseFn = () => raise('Wrong is not right!', TypeError);
-    expect(raiseFn).toThrow(TypeError);
-  });
-
-  it('should raise TypeError', () => {
-    const raiseFn = () => raise('Wrong is not right!', TypeError);
-
     expect(raiseFn).toThrow(TypeError);
   });
 
@@ -47,7 +39,7 @@ describe('throwError/warn', () => {
   });
 });
 
-describe('throwError/warn', () => {
+describe('typeOf', () => {
   it('should return data types', () => {
     trivia = [
       [typeOf('string'), 'string'],

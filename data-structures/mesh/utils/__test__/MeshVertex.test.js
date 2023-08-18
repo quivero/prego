@@ -42,11 +42,9 @@ describe('MeshVertex', () => {
     createRandomMVertices(n, bounds);
 
     expect(throwError).toHaveBeenCalled();
-  });
 
-  it('should throw for negative quantity of vertices', () => {
-    let n = '42';
-    let bounds = [
+    n = '42';
+    bounds = [
       [0, 1],
       [1, 2],
     ];
