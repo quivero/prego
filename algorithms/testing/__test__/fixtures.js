@@ -79,6 +79,7 @@ const addCallback = (fixture) => add(fixture.a, fixture.b);
 let addItem, addItems;
 
 addItem = [add(1, 2), expectToBe, 3];
+addItems = [addItem, [add(2, 3), expectToBe, 5]];
 
 export let additionFixtures;
 export let additionScenes;
@@ -95,10 +96,13 @@ let oneToOneAdditionPerform,
   manyToManyAdditionPerform;
 
 let oneToOneAdditionExpectation,
-  oneToManyAdditionExpectation;
+  oneToManyAdditionExpectation,
+  manyToManyAdditionExpectation;
 
 let oneToOneAdditionAssertionMap,
-  oneToManyAdditionAssertionMap;
+  oneToManyAdditionAssertionMap,
+  manyToOneAdditionAssertionMap,
+  manyToManyAdditionAssertionMap;
 
 // Fixtures
 oneToOneAdditionFixture = { a: 1, b: 2 };
