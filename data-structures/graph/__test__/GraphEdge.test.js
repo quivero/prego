@@ -51,7 +51,7 @@ describe('GraphEdge', () => {
     expect(edgeAB.endVertex.getKey()).toBe('B');
     expect(edgeAB.weight).toBe(0);
   });
-  
+
   it('should be possible to create complete undirected graph from vertices', () => {
     const graph = createCompleteUndirectedGraph(['A', 'B', 'C']);
 

@@ -79,7 +79,7 @@ describe('checkers', () => {
 
     batchAssert(assertItems);
   });
-  
+
   it('must return true for valid acts and artifacts', () => {
     assertItems = [
       [ isAct(additionAct), expectToBe, true ],
