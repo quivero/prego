@@ -17,7 +17,7 @@ describe('BinarySearchTreeNode', () => {
     expect(bstNode.left).toBeNull();
     expect(bstNode.right).toBeNull();
   });
-  
+
   it('should insert nodes in correct order', () => {
     const bstNode = new BinarySearchTreeNode(2);
     const insertedNode1 = bstNode.insert(1);

@@ -279,7 +279,7 @@ describe('expectTo', () => {
       title: '0.1 + 0.2',
       sum: closeToAsyMatch(0.3, 5),
     };
-    
+
     expectToEqual(candidate, expectation);
   });
 

@@ -479,7 +479,7 @@ describe('Graph', () => {
 
     result = graph.findEdgesByVertexIndicesTuples([[3, 4]]);
     expected = [undefined];
-      
+
     expect(result).toStrictEqual(expected);
   });
 
@@ -2096,9 +2096,9 @@ describe('Graph', () => {
 
     result = graph.isConnected();
     expected = true;
-    
+
     expect(result).toEqual(expected);
-    
+
     graph = new Graph(true);
 
     edges_vertices = [
