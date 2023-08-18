@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { zip } from 'lodash';
 import {
   buildOrganization,
@@ -80,7 +79,6 @@ const addCallback = (fixture) => add(fixture.a, fixture.b);
 let addItem, addItems;
 
 addItem = [add(1, 2), expectToBe, 3];
-addItems = [addItem, [add(2, 3), expectToBe, 5]];
 
 export let additionFixtures;
 export let additionScenes;
@@ -97,13 +95,10 @@ let oneToOneAdditionPerform,
   manyToManyAdditionPerform;
 
 let oneToOneAdditionExpectation,
-  oneToManyAdditionExpectation,
-  manyToManyAdditionExpectation;
+  oneToManyAdditionExpectation;
 
 let oneToOneAdditionAssertionMap,
-  oneToManyAdditionAssertionMap,
-  manyToOneAdditionAssertionMap,
-  manyToManyAdditionAssertionMap;
+  oneToManyAdditionAssertionMap;
 
 // Fixtures
 oneToOneAdditionFixture = { a: 1, b: 2 };

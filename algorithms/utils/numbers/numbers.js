@@ -1,4 +1,4 @@
-import { countDict } from '../arrays/arrays.js';
+import { countDict } from '#algorithms/arrays/arrays.js';
 
 import { decimalPart } from '../math/numbers.js';
 import { throwError } from '../sys/sys.js';

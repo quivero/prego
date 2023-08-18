@@ -174,12 +174,14 @@ describe('Knapsack', () => {
 
     knapsack.solveUnboundedKnapsackProblem();
 
-    [knapsack.totalValue, 84 + 84 + 20 + 10],
-    [knapsack.totalWeight, 17],
-    [knapsack.selectedItems.length, 3],
-    [knapsack.selectedItems[0].toString(), 'v84 w7 x2'],
-    [knapsack.selectedItems[1].toString(), 'v20 w2 x1'],
-    [knapsack.selectedItems[2].toString(), 'v10 w1 x1'];
+    trivia=[
+      [knapsack.totalValue, 84 + 84 + 20 + 10],
+      [knapsack.totalWeight, 17],
+      [knapsack.selectedItems.length, 3],
+      [knapsack.selectedItems[0].toString(), 'v84 w7 x2'],
+      [knapsack.selectedItems[1].toString(), 'v20 w2 x1'],
+      [knapsack.selectedItems[2].toString(), 'v10 w1 x1']
+    ];
 
     for (const item of trivia) {
       result = item[0];
