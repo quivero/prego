@@ -44,15 +44,15 @@ describe('GraphEdge', () => {
     expect(edge.weight).toBe(10);
   });
 
-  it('should be possible to do edge reverse', () => {
+  it('should be possible to create edge from vertex', () => {
     const [edgeAB] = createEdgesFromVerticesValues([['A', 'B']]);
 
     expect(edgeAB.startVertex.getKey()).toBe('A');
     expect(edgeAB.endVertex.getKey()).toBe('B');
     expect(edgeAB.weight).toBe(0);
   });
-
-  it('should be possible to do edge reverse', () => {
+  
+  it('should be possible to create complete undirected graph from vertices', () => {
     const graph = createCompleteUndirectedGraph(['A', 'B', 'C']);
 
     expect(Object.keys(graph.edges)).toHaveLength(3);

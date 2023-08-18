@@ -217,7 +217,7 @@ describe('expectTo', () => {
     expectToHaveProperty(object, 'b');
   });
 
-  it('assert candidate toBeEqual expectation', () =>
+  it('assert candidate expectToBeCloseTo expectation', () =>
     expectToBeCloseTo(3.14, 3.15, 1));
 
   it('assert call with on argument', () => {
@@ -305,7 +305,7 @@ describe('expectTo', () => {
     expectToEqual(candidate, expectation);
   });
 
-  it('assert asymmetric matcher stringContainingAsyMatch', () => {
+  it('assert asymmetric matcher notStringContainingAsyMatch', () => {
     candidate = 'Hello world!';
     expectation = notStringContainingAsyMatch('Mars');
 

@@ -22,12 +22,6 @@ describe('throwError/warn', () => {
     expect(raiseFn).toThrow(TypeError);
   });
 
-  it('should raise TypeError', () => {
-    const raiseFn = () => raise('Wrong is not right!', TypeError);
-
-    expect(raiseFn).toThrow(TypeError);
-  });
-
   it('should call log on report', () => {
     report('News!');
     expect(log).toHaveBeenCalled();

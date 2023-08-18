@@ -50,12 +50,6 @@ describe('Array', () => {
     expect(object_).toEqual(['a', 1, { a: 1 }]);
   });
 
-  it('should return unique array elements', () => {
-    const object_ = unique(['a', 1, { a: 1 }, 'a']);
-
-    expect(object_).toEqual(['a', 1, { a: 1 }]);
-  });
-
   it('should get a random number between 0 and 1', () => {
     const num = randMinMax(0, 1);
 
