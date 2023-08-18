@@ -10,7 +10,7 @@ import { throwError } from '../sys/sys.js';
  */
 export const primeFactors = (n) => {
   if (typeof n !== 'number') {
-    throwError(`It is impossible to factorize \'${n}\'. It MUST be a number!`);
+    throwError(`It is impossible to factorize '${n}'. It MUST be a number!`);
     return;
   }
 

@@ -1103,7 +1103,7 @@ export default class Graph {
         q.push({ first: i, second: 0 });
         col[i] = 0;
 
-        while (q.length != 0) {
+        while (q.length !== 0) {
           const p = q[0];
           q.shift();
 
@@ -1957,7 +1957,7 @@ export default class Graph {
       );
     });
 
-    if (type == 0) {
+    if (type === 0) {
       return reachability_list;
     }
 
