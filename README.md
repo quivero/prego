@@ -4,7 +4,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/330043511b8240faa6161331a11e2abb)](https://app.codacy.com/gh/quivero/prego?utm_source=github.com&utm_medium=referral&utm_content=quivero/prego&utm_campaign=Badge_Grade_Settings)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
-[![npm version](https://img.shields.io/npm/v/dot-quiver)](https://www.npmjs.com/package/quivero-api)
+[![npm version](https://img.shields.io/npm/v/quivero-api)](https://www.npmjs.com/package/quivero-api)
 [![Code coverage report](https://codecov.io/gh/quivero/prego/branch/main/graph/badge.svg?token=U6VOO56PDL)](https://app.codecov.io/gh/quivero/prego)
 [![downloads](https://img.shields.io/npm/dm/quivero-api)](https://www.npmjs.com/package/quivero-api)
 
