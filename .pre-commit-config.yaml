@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -48,7 +48,7 @@ repos:
         args: [--lines-after-imports, "-1"]
 
   - repo: https://github.com/psf/black
-    rev: 24.8.0
+    rev: 24.10.0
     hooks:
       - id: black
 
@@ -58,6 +58,6 @@ repos:
       - id: flake8
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: v3.8.0
+    rev: v4.0.0
     hooks:
       - id: validate_manifest
