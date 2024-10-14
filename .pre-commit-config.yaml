@@ -18,7 +18,7 @@ repos:
       - id: check-docstring-first
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.17.0
+    rev: v3.18.0
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
@@ -58,6 +58,6 @@ repos:
       - id: flake8
 
   - repo: https://github.com/pre-commit/pre-commit
-    rev: v4.0.0
+    rev: v4.0.1
     hooks:
       - id: validate_manifest
